@@ -19,7 +19,8 @@ export function runSPDCore(state) {
     risk,
     scenario,
     decision,
-    timestamp: new Date().toISOString()
+    timestamp: new
+ Date().toISOString()
   };
 }
 
