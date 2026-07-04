@@ -164,3 +164,5 @@ This system is designed to:
 ## Summary
 
 SPD Captain AI Lena is a deterministic autonomous agent system that executes structured decision-making through layered architecture and continuous computation loops, with strict source validation rules to ensure system integrity.
+
+![Project Screenshot](images/screenshot.png)
