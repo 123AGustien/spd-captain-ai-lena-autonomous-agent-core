@@ -129,5 +129,7 @@ Local system = authority
 Always check official sources first
 Compare with local SPD logic
 If mismatch → reject external behavior
-Local system is final authorFILE docs  
+Local system is final authorFILE docs
+
+END OF FILE
 
