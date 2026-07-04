@@ -2,7 +2,8 @@
 
 SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops.
 
-It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework inside the SPD architecture.
+It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework
+ inside the SPD architecture.
 
 ---
 
@@ -147,6 +148,138 @@ This fixes:
 - corrupted structure
 - formatting errors
 - mobile GitHub merge issues
+
+# SPD Captain AI Lena Autonomous Agent Core
+
+SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops.
+
+It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework inside the SPD architecture.
+
+---
+
+# 🌐 LIVE COCKPIT SCREEN
+
+https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
+
+---
+
+# 📥 CLIENT INSTRUCTIONS & INFORMATION FEED
+
+## System Input Requirement
+
+The system requires a structured System State Object.
+
+Minimum Input:
+{
+  "fx": 0,
+  "energy": 50,
+  "cyb": 50
+}
+
+Extended Input (Optional):
+{
+  "fx": 0,
+  "energy": 100,
+  "cyb": 100,
+  "inf": 0,
+  "dc": 0,
+  "event": "NORMAL",
+  "time": "2026-01-01T00:00:00Z",
+  "mode": "AUTONOMOUS"
+}
+
+---
+
+# 🧠 SYSTEM ARCHITECTURE
+
+DATA → ALGORITHMS → CODE → COMPUTE
+
+- DATA → system inputs and state
+- ALGORITHMS → decision logic and rules
+- CODE → implementation modules
+- COMPUTE → runtime execution
+
+---
+
+# 🤖 CAPTAIN AI LENA
+
+Captain AI Lena is the autonomous decision layer that:
+
+- Observes system state
+- Evaluates rules
+- Makes decisions
+- Executes actions
+- Maintains stability
+
+---
+
+# ⚙️ AGENT LOOP
+
+OBSERVE → DECIDE → ACT → UPDATE → REPEAT
+
+---
+
+# 🧠 COCKPIT SYSTEM
+
+The cockpit is a visual representation of the system.
+
+Panels:
+
+System State:
+- FX (stability)
+- Energy (power)
+- CYB (integrity)
+- INF (pressure)
+- DC (load)
+
+Rule Engine:
+- Risk evaluation
+- Energy thresholds
+- FX correction rules
+- Scenario injection
+
+Agent Loop Monitor:
+- OBSERVE → DECIDE → ACT → UPDATE
+- Decision output
+- Current state
+
+---
+
+# 📱 DEVELOPMENT STATUS
+
+- Built from Android environment
+- Rule-based deterministic AI system
+- Modular JavaScript architecture
+- Cockpit dashboard interface
+
+---
+
+# 🖥️ DESKTOP ROADMAP (ELECTRON)
+
+Future desktop version will include:
+- Native desktop application
+- Executable (.exe / .dmg)
+- Desktop icon
+- Standalone cockpit app
+
+Files already present:
+- main.js
+- package.json
+
+---
+
+# ⚠️ DESIGN PRINCIPLES
+
+- Deterministic rule-based execution only
+- No machine learning
+- External systems are reference only
+- Local SPD rules are authoritative
+
+---
+
+# 🚀 SUMMARY
+
+SPD Captain AI Lena is a deterministic autonomous agent system built for structured decision execution through layered architecture and continuous computation loops.
 
 ---
 
