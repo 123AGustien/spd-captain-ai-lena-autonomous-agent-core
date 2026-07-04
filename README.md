@@ -1,3 +1,7 @@
+👉 https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core⁠�
+And your live cockpit screen:
+👉 https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html⁠�
+
 # SPD Captain AI Lena Autonomous Agent Core
 
 SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops.
