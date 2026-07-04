@@ -1,3 +1,100 @@
+
+# 🧠 SPD COMPUTE ARCHITECTURE MODEL
+
+This system is built on a deterministic execution framework:
+
+DATA → ALGORITHMS → COMPUTE
+
+---
+
+## 📊 1. DATA LAYER (STATE INPUT)
+
+The system receives structured state:
+
+{
+  fx: number,
+  energy: number,
+  cyb: number,
+  inf?: number,
+  dc?: number
+}
+
+Purpose:
+- Represents real-world or simulated conditions
+- Acts as raw system input
+- No logic applied here
+
+---
+
+## 🧮 2. ALGORITHM LAYER (DECISION LOGIC)
+
+Transforms raw data into evaluative states.
+
+Modules:
+
+### FX MODULE
+- Evaluates economic/system stability
+- Detects FX instability thresholds
+
+### ENERGY MODULE
+- Checks system power availability
+- Detects overload or depletion
+
+### RISK MODULE
+- Combines FX + ENERGY + CYB
+- Outputs risk state:
+  - LOW RISK
+  - MEDIUM RISK
+  - HIGH RISK
+
+### SCENARIO ENGINE
+- Injects external events
+- Simulates stress conditions
+- Example: FX_SHOCK, ENERGY_SPIKE
+
+---
+
+## ⚙️ 3. COMPUTE LAYER (CAPTAIN AI LENA ENGINE)
+
+This is the execution brain:
+
+INPUT → RULES → DECISION → OUTPUT
+
+Process:
+
+1. Observe system state
+2. Run all modules
+3. Evaluate risk
+4. Apply decision logic
+5. Output system response
+
+---
+
+## 🤖 CAPTAIN AI LENA DECISION CORE
+
+Decision rules:
+
+- If HIGH RISK → ACTIVATE STABILIZATION MODE
+- If ENERGY LOW → REDUCE SYSTEM LOAD
+- If FX unstable → FX CORRECTION ACTIVE
+- Else → SYSTEM STABLE
+
+---
+
+## 🔄 FULL LOOP
+
+OBSERVE → ANALYZE → DECIDE → EXECUTE → UPDATE
+
+This loop runs continuously in simulation mode.
+
+---
+
+## 🧠 DESIGN PRINCIPLE
+
+- Deterministic logic only
+- No machine learning
+- No randomness dependency
+- All outputs are explainable and rule-based
 👉 https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core⁠�
 And your live cockpit screen:
 👉 https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html⁠�
