@@ -1,3 +1,5 @@
+Cockpit screen:
+https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
 Development Status
 
