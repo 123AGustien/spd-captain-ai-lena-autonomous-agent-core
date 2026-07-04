@@ -1,0 +1,11 @@
+export function riskModule(cyb, energy, fx) {
+  let risk = 0;
+
+  if (cyb < 50) risk++;
+  if (energy < 30) risk++;
+  if (fx > 10) risk++;
+
+  if (risk >= 2) return "HIGH RISK";
+  if (risk === 1) return "MEDIUM RISK";
+  return "LOW RISK";
+}
