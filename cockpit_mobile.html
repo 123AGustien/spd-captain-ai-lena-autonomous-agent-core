@@ -1,1 +1,59 @@
-g
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPD Mobile Cockpit</title>
+</head>
+
+<body style="background:#000; color:#0f0; font-family:monospace; padding:10px;">
+
+<h2>🧠 CAPTAIN AI LENA (MOBILE)</h2>
+
+<div>
+  <label>FX</label><br>
+  <input id="fx" type="number" value="0"><br><br>
+
+  <label>ENERGY</label><br>
+  <input id="energy" type="number" value="50"><br><br>
+
+  <label>CYB</label><br>
+  <input id="cyb" type="number" value="50"><br><br>
+
+  <button onclick="run()">RUN SYSTEM</button>
+</div>
+
+<pre id="output" style="margin-top:20px; background:#111; padding:10px;"></pre>
+
+<script>
+function run() {
+
+  let fx = Number(document.getElementById("fx").value);
+  let energy = Number(document.getElementById("energy").value);
+  let cyb = Number(document.getElementById("cyb").value);
+
+  let risk = 0;
+
+  if (cyb < 50) risk++;
+  if (energy < 30) risk++;
+  if (fx > 10) risk++;
+
+  let decision = "SYSTEM STABLE";
+
+  if (risk >= 2) decision = "ACTIVATE STABILIZATION MODE";
+  else if (energy < 30) decision = "REDUCE SYSTEM LOAD";
+  else if (fx > 10) decision = "FX CORRECTION ACTIVE";
+
+  document.getElementById("output").innerText =
+`INPUT:
+FX: ${fx}
+ENERGY: ${energy}
+CYB: ${cyb}
+
+OUTPUT:
+Risk Level: ${risk}
+Decision: ${decision}`;
+}
+</script>
+
+</body>
+</html>
