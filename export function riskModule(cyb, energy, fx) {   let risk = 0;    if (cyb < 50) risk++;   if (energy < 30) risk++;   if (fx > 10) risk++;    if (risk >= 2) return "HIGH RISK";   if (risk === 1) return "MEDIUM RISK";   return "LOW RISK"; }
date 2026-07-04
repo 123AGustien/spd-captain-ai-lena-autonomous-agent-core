@@ -1,0 +1,15 @@
+export function scenarioEngine(event) {
+  switch (event) {
+    case "FX_SHOCK":
+      return "TRIGGER FX CORRECTION";
+
+    case "ENERGY_SPIKE":
+      return "LOAD BALANCING ACTIVE";
+
+    case "CYBER_EVENT":
+      return "SECURITY MODE ENABLED";
+
+    default:
+      return "NO ACTION";
+  }
+}
