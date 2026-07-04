@@ -1,3 +1,32 @@
+
+Development Status
+
+Current Platform
+
+The SPD Captain AI Lena Autonomous Agent Core is currently being developed primarily from an Android device.
+
+The current repository focuses on:
+
+- Rule-based AI agent logic
+- Captain AI Lena decision engine
+- Cockpit dashboard interface
+- Modular JavaScript components
+- System architecture documentation
+
+Desktop Application Roadmap
+
+Desktop application support using Electron is planned for a future development stage when the project is built on a desktop computer.
+
+The repository already includes the initial Electron configuration files ("main.js" and "package.json") as the foundation for future desktop packaging.
+
+When development moves to a desktop environment, the project will be extended to provide:
+
+- Native desktop application
+- Executable package
+- Desktop icon
+- Standalone Captain AI Lena cockpit application
+
+Until then, development remains focused on expanding the autonomous agent, decision engine, cockpit interface, and SPD architecture.
 # spd-captain-ai-lena-autonomous-agent-core
 
 SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops. It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework inside the SPD architecture.
