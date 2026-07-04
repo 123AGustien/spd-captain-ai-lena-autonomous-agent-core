@@ -1,3 +1,25 @@
+
+## 📥 CLIENT INSTRUCTIONS & INFORMATION FEED
+
+This section defines how external users (clients / systems / developers) must provide data into the SPD Captain AI Lena Autonomous Agent Core.
+
+The system operates on a structured **input feed model**.  
+All decision-making is driven by this input.
+
+---
+
+## 🧠 1. CLIENT INPUT REQUIREMENT
+
+To activate the system, the client must provide a **System State Object**.
+
+### Minimum Required Input:
+
+```json
+{
+  "fx": 0,
+  "energy": 50,
+  "cyb": 50
+}
 Cockpit screen:
 https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
