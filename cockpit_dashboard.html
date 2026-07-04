@@ -1,25 +1,73 @@
-import { fxModule } from "./fx.js";
-import { energyModule } from "./energy.js";
-import { riskModule } from "./risk.js";
-import { scenarioEngine } from "./scenario.js";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SPD Captain AI Lena Cockpit</title>
+  <style>
+    body {
+      background: #0b0f14;
+      color: #00ff88;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
-export function captainAILena(state) {
-  const fx = fxModule(state.fx);
-  const energy = energyModule(state.energy);
-  const risk = riskModule(state.cyb, state.energy, state.fx);
+    .panel {
+      border: 1px solid #00ff88;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
 
-  return {
-    fx,
-    energy,
-    risk,
-    scenario: scenarioEngine(state.event),
-    decision: decide(risk, energy, fx)
-  };
-}
+    .title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
 
-function decide(risk, energy, fx) {
-  if (risk === "HIGH RISK") return "ACTIVATE STABILIZATION MODE";
-  if (energy === "LOW ENERGY MODE") return "REDUCE SYSTEM LOAD";
-  if (fx.includes("STABILIZATION")) return "FX CORRECTION ACTIVE";
-  return "SYSTEM STABLE";
-}
+    .status {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🧠 Captain AI Lena Cockpit</h1>
+
+  <div class="panel">
+    <div class="title">📊 System State</div>
+    <div class="status" id="state">Waiting for data...</div>
+  </div>
+
+  <div class="panel">
+    <div class="title">⚙️ Decision Output</div>
+    <div class="status" id="decision">Idle</div>
+  </div>
+
+  <div class="panel">
+    <div class="title">🔄 Agent Loop Status</div>
+    <div class="status">OBSERVE → DECIDE → ACT → UPDATE</div>
+  </div>
+
+  <script type="module">
+    import { captainAILena } from "./captainAILena.js";
+
+    // SAMPLE SYSTEM STATE
+    const state = {
+      fx: 12,
+      energy: 25,
+      cyb: 40,
+      event: "FX_SHOCK"
+    };
+
+    const result = captainAILena(state);
+
+    document.getElementById("state").innerText =
+      JSON.stringify(state, null, 2);
+
+    document.getElementById("decision").innerText =
+      JSON.stringify(result, null, 2);
+  </script>
+
+</body>
+</html>
