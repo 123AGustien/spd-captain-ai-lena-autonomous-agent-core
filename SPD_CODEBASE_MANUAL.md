@@ -1,5 +1,5 @@
 
-modularfpgrade# SPD CODEBASE MANUAL — CAPTAIN AI LENA SYSTEM MEMORY
+SPD CODEBASE MANUAL — CAPTAIN AI LENA SYSTEM MEMORY
 
 ## Overview
 This file is the unified knowledge base for the SPD Captain AI Lena Autonomous Agent Core.
