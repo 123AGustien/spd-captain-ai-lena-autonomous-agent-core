@@ -1,4 +1,6 @@
-Your site is live at https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
+Yourour👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
+
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
 Last deployed by @123AGustien 123AGustien 7 minutes ago/
 
 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
