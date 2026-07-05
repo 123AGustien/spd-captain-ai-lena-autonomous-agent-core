@@ -4,7 +4,7 @@ ROOTOOTCOCKPITCKPIT (Main Screen)
  MOBILE SIMULATION SCREEN
 👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
 DESKTOP / DASHBOARD SCREEN (if enabled)
-👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.htmlare
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
 
 # 🧠 SPD COMPUTE ARCHITECTURE MODEL
