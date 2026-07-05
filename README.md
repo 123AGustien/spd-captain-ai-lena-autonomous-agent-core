@@ -2,6 +2,8 @@ So the plan is clean:
 ✔ build → test → deploy → pause
 ✔ come back → modify → redeploy
 
+You define the screen → I help implement it → we keep it deployable on GitHub Pages.
+
 ROOTOOTCOCKPITCKPIT (Main Screen)
 👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
 
