@@ -1,4 +1,4 @@
-httpss://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
+
 
 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
