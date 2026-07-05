@@ -1,1 +1,104 @@
-g
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPD Standard Simulation Screen</title>
+
+  <style>
+    body {
+      background: #05070a;
+      color: #00ff99;
+      font-family: monospace;
+      padding: 15px;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    .panel {
+      border: 1px solid #00ff99;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      background: #111;
+      color: #00ff99;
+      border: 1px solid #00ff99;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+
+    .flow {
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🧠 SPD STANDARD SIMULATION SCREEN</h2>
+
+<div class="panel">
+  <label>FX</label>
+  <input id="fx" type="number" value="10">
+
+  <label>ENERGY</label>
+  <input id="energy" type="number" value="50">
+
+  <label>CYB</label>
+  <input id="cyb" type="number" value="50">
+
+  <button onclick="runSim()">RUN SIMULATION</button>
+</div>
+
+<div class="panel">
+  <h3>📊 INPUT STATE</h3>
+  <pre id="input"></pre>
+</div>
+
+<div class="panel">
+  <h3>⚙️ ENGINE OUTPUT</h3>
+  <pre id="output"></pre>
+</div>
+
+<div class="panel">
+  <h3>🔁 SYSTEM FLOW</h3>
+  <div class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
+</div>
+
+<script type="module">
+  import { runEngine } from "./engine.js";
+
+  window.runSim = function () {
+
+    // 1. INPUT
+    const state = {
+      fx: Number(document.getElementById("fx").value),
+      energy: Number(document.getElementById("energy").value),
+      cyb: Number(document.getElementById("cyb").value)
+    };
+
+    // 2. ENGINE
+    const result = runEngine(state);
+
+    // 3. DISPLAY INPUT
+    document.getElementById("input").innerText =
+      JSON.stringify(state, null, 2);
+
+    // 4. DISPLAY OUTPUT
+    document.getElementById("output").innerText =
+      JSON.stringify(result, null, 2);
+  };
+</script>
+
+</body>
+</html>
