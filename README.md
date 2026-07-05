@@ -1,3 +1,7 @@
+So the plan is clean:
+✔ build → test → deploy → pause
+✔ come back → modify → redeploy
+
 ROOTOOTCOCKPITCKPIT (Main Screen)
 👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
 
