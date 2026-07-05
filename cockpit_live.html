@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPD AI LENA LIVE COCKPIT</title>
+<title>SPD AI LENA CONTROLLED LIVE COCKPIT</title>
 
 <style>
 body {
@@ -47,13 +47,13 @@ h2 {
 
 <body>
 
-<h2>🧠 CAPTAIN AI LENA — LIVE COCKPIT</h2>
+<h2>🧠 CAPTAIN AI LENA — CONTROLLED LIVE COCKPIT</h2>
 
 <div class="grid">
 
 <div class="panel">
-<h3>INPUT STATE</h3>
-<pre id="input">LIVE SYSTEM RUNNING...</pre>
+<h3>INPUT STATE (FIXED)</h3>
+<pre id="input"></pre>
 </div>
 
 <div class="panel">
@@ -80,9 +80,9 @@ h2 {
 
 <script>
 /* =========================
-   INITIAL STATE
+   FIXED STATE (NO DRIFT)
 ========================= */
-let state = {
+const state = {
   fx: 10,
   energy: 50,
   cyb: 50
@@ -94,9 +94,12 @@ let tick = 0;
    MODULES
 ========================= */
 
-function fxModule(fx) {
-  if (fx > 30) return "FX STABILIZATION ACTIVE";
-  return "FX STABLE";
+function riskModule(fx, energy, cyb) {
+  const score = fx + (100 - energy) + cyb;
+
+  if (score > 140) return "HIGH RISK";
+  if (score > 90) return "MEDIUM RISK";
+  return "LOW RISK";
 }
 
 function energyModule(e) {
@@ -104,12 +107,9 @@ function energyModule(e) {
   return "NORMAL ENERGY";
 }
 
-function riskModule(fx, energy, cyb) {
-  const score = fx + (100 - energy) + cyb;
-
-  if (score > 140) return "HIGH RISK";
-  if (score > 90) return "MEDIUM RISK";
-  return "LOW RISK";
+function fxModule(fx) {
+  if (fx > 30) return "FX STABILIZATION ACTIVE";
+  return "FX STABLE";
 }
 
 function decide(risk, energy, fx) {
@@ -120,14 +120,10 @@ function decide(risk, energy, fx) {
 }
 
 /* =========================
-   LIVE ENGINE LOOP
+   LIVE LOOP (NO STATE CHANGE)
 ========================= */
 
 function runLiveCycle() {
-
-  // 🔄 SYSTEM DRIFT (makes it dynamic)
-  state.energy -= 0.3;
-  state.fx += 0.1;
 
   const fx = fxModule(state.fx);
   const energy = energyModule(state.energy);
@@ -135,17 +131,18 @@ function runLiveCycle() {
 
   const decision = decide(risk, energy, fx);
 
-  /* OUTPUT */
+  document.getElementById("input").innerText =
+    JSON.stringify(state, null, 2);
+
   document.getElementById("risk").innerText = risk;
 
   document.getElementById("output").innerText =
 `FX: ${fx}
-ENERGY: ${state.energy.toFixed(1)}
+ENERGY: ${energy}
 RISK: ${risk}`;
 
   document.getElementById("decision").innerText = decision;
 
-  /* FLOW ANIMATION */
   const flow = ["OBSERVE", "DECIDE", "ACT", "UPDATE"];
   document.getElementById("flow").innerText =
     "FLOW → " + flow[tick % 4];
@@ -154,9 +151,8 @@ RISK: ${risk}`;
 }
 
 /* =========================
-   START AUTONOMOUS LOOP
+   START LOOP (STATIC STATE, LIVE FLOW)
 ========================= */
-
 setInterval(runLiveCycle, 1000);
 
 </script>
