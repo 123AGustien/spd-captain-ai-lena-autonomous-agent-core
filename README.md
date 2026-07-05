@@ -1,4 +1,27 @@
-ROOT COCKPIT (Main Screen)
+ROOTOOTCOCKPITCKPIT (Main Screen)
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
+
+ MOBILE SIMULATION SCREEN
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
+DESKTOP / DASHBOARD SCREEN (if enabled)
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.htmlare
+arere your live SCREEN (GitHub Pages UI) links:
+🧠 ROOT COCKPIT (Main Screen)
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/⁠�
+📱 MOBILE SIMULATION SCREEN
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html⁠�
+🖥️ DESKTOP / DASHBOARD SCREEN (if enabled)
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html⁠�
+Your real MOBILE simulation screen link is:
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html⁠�
+🧠 Your ROOT live system (entry cockpit):
+👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/⁠�
+
+
+Your site is live at https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
+Last deployed by @123AGustien 123AGustien 7 minutes ago/
+
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/COCKPITOCKPIT (Main Screen)
 👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/⁠�
 📱 MOBILE SIMULATION SCREEN
 👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html⁠�
