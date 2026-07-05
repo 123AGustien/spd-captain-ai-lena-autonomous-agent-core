@@ -25,29 +25,52 @@
 <pre id="output" style="margin-top:20px; background:#111; padding:10px;"></pre>
 
 <script>
+const GOLDEN_RATIO = 1.61803398875;
+
 function run() {
 
+  // =========================
+  // RAW INPUT
+  // =========================
   let fx = Number(document.getElementById("fx").value);
   let energy = Number(document.getElementById("energy").value);
   let cyb = Number(document.getElementById("cyb").value);
 
+  // =========================
+  // NORMALIZATION LAYER (SAFE)
+  // =========================
+  let norm_fx = fx / GOLDEN_RATIO;
+  let norm_energy = energy / GOLDEN_RATIO;
+  let norm_cyb = cyb; // optional (kept raw)
+
+  // =========================
+  // RISK ENGINE (USES NORMALIZED VALUES ONLY)
+  // =========================
   let risk = 0;
 
-  if (cyb < 50) risk++;
-  if (energy < 30) risk++;
-  if (fx > 10) risk++;
+  if (norm_cyb < 50) risk++;
+  if (norm_energy < 30) risk++;
+  if (norm_fx > 10) risk++;
 
   let decision = "SYSTEM STABLE";
 
   if (risk >= 2) decision = "ACTIVATE STABILIZATION MODE";
-  else if (energy < 30) decision = "REDUCE SYSTEM LOAD";
-  else if (fx > 10) decision = "FX CORRECTION ACTIVE";
+  else if (norm_energy < 30) decision = "REDUCE SYSTEM LOAD";
+  else if (norm_fx > 10) decision = "FX CORRECTION ACTIVE";
 
+  // =========================
+  // OUTPUT
+  // =========================
   document.getElementById("output").innerText =
-`INPUT:
+`INPUT (RAW):
 FX: ${fx}
 ENERGY: ${energy}
 CYB: ${cyb}
+
+INPUT (NORMALIZED - GOLDEN RATIO):
+FX: ${norm_fx.toFixed(2)}
+ENERGY: ${norm_energy.toFixed(2)}
+CYB: ${norm_cyb}
 
 OUTPUT:
 Risk Level: ${risk}
