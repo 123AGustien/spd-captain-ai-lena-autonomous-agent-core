@@ -23,29 +23,63 @@ export function alignmentCheck(actionContext) {
     isUnclearContext
   } = actionContext;
 
+  // 🥇 GOLDEN RULE OVERRIDE
   if (checkGoldenRule(actionContext)) {
-    return { allowed: false, reason: "BLOCKED_BY_GOLDEN_RULE" };
+    return {
+      allowed: false,
+      reason: "BLOCKED_BY_GOLDEN_RULE"
+    };
   }
 
-  if (ALIGNMENT_RULES.stateFirstCheck && isRedefinitionAttempt && systemStateExists) {
-    return { allowed: false, reason: "NO_REDEFINITION_ALLOWED" };
+  // 🔴 RULE 1 — STATE-FIRST CHECK
+  if (
+    ALIGNMENT_RULES.stateFirstCheck &&
+    isRedefinitionAttempt &&
+    systemStateExists
+  ) {
+    return {
+      allowed: false,
+      reason: "NO_REDEFINITION_ALLOWED"
+    };
   }
 
-  if (ALIGNMENT_RULES.noParallelSystems && isRedefinitionAttempt) {
-    return { allowed: false, reason: "PARALLEL_SYSTEM_DETECTED" };
+  // 🔴 RULE 2 — NO PARALLEL SYSTEMS
+  if (
+    ALIGNMENT_RULES.noParallelSystems &&
+    isRedefinitionAttempt
+  ) {
+    return {
+      allowed: false,
+      reason: "PARALLEL_SYSTEM_DETECTED"
+    };
   }
 
+  // 🔴 RULE 3 — NO UNREQUESTED EXPANSION
   if (
     ALIGNMENT_RULES.noUnrequestedExpansion &&
     isExpansionRequest &&
     isRedefinitionAttempt
   ) {
-    return { allowed: false, reason: "UNREQUESTED_EXPANSION_BLOCKED" };
+    return {
+      allowed: false,
+      reason: "UNREQUESTED_EXPANSION_BLOCKED"
+    };
   }
 
-  if (ALIGNMENT_RULES.requireClarificationIfUnclear && isUnclearContext) {
-    return { allowed: false, reason: "CLARIFICATION_REQUIRED" };
+  // 🔴 RULE 4 — CLARIFY BEFORE BUILDING
+  if (
+    ALIGNMENT_RULES.requireClarificationIfUnclear &&
+    isUnclearContext
+  ) {
+    return {
+      allowed: false,
+      reason: "CLARIFICATION_REQUIRED"
+    };
   }
 
-  return { allowed: true, reason: "ALIGNMENT_OK" };
+  // 🟢 APPROVED
+  return {
+    allowed: true,
+    reason: "ALIGNMENT_OK"
+  };
 }
