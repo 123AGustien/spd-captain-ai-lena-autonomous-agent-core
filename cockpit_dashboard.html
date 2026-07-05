@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>SPD Captain AI Lena Cockpit</title>
+
   <style>
     body {
       background: #0b0f14;
@@ -23,51 +24,99 @@
       color: #ffffff;
     }
 
-    .status {
-      font-size: 14px;
-      line-height: 1.6;
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .muted {
+      color: #aaaaaa;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>🧠 Captain AI Lena Cockpit</h1>
+<h1>🧠 Captain AI Lena Cockpit</h1>
 
-  <div class="panel">
-    <div class="title">📊 System State</div>
-    <div class="status" id="state">Waiting for data...</div>
-  </div>
+<!-- RAW STATE -->
+<div class="panel">
+  <div class="title">📊 Raw System State</div>
+  <pre id="state">Waiting...</pre>
+</div>
 
-  <div class="panel">
-    <div class="title">⚙️ Decision Output</div>
-    <div class="status" id="decision">Idle</div>
-  </div>
+<!-- NORMALIZED STATE -->
+<div class="panel">
+  <div class="title">⚖️ Normalized State (Golden Ratio)</div>
+  <pre id="normalized">Waiting...</pre>
+</div>
 
-  <div class="panel">
-    <div class="title">🔄 Agent Loop Status</div>
-    <div class="status">OBSERVE → DECIDE → ACT → UPDATE</div>
-  </div>
+<!-- DECISION -->
+<div class="panel">
+  <div class="title">⚙️ Decision Output</div>
+  <pre id="decision">Idle</pre>
+</div>
 
-  <script type="module">
-    import { captainAILena } from "./captainAILena.js";
+<!-- CONSTANTS -->
+<div class="panel">
+  <div class="title">📐 System Constants</div>
+  <pre id="constants"></pre>
+</div>
 
-    // SAMPLE SYSTEM STATE
-    const state = {
-      fx: 12,
-      energy: 25,
-      cyb: 40,
-      event: "FX_SHOCK"
-    };
+<!-- TRACE -->
+<div class="panel">
+  <div class="title">🔄 Agent Loop</div>
+  <div class="muted">OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE</div>
+  <pre id="trace"></pre>
+</div>
 
-    const result = captainAILena(state);
+<script type="module">
+  import { captainAILena } from "./captainAILena.js";
+  import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
-    document.getElementById("state").innerText =
-      JSON.stringify(state, null, 2);
+  // ======================
+  // SYSTEM STATE
+  // ======================
+  const state = {
+    fx: 12,
+    energy: 25,
+    cyb: 40,
+    event: "FX_SHOCK"
+  };
 
-    document.getElementById("decision").innerText =
-      JSON.stringify(result, null, 2);
-  </script>
+  // ======================
+  // NORMALIZATION LAYER
+  // ======================
+  const normalizedState = {
+    ...state,
+    fx: state.fx / GOLDEN_RATIO,
+    energy: state.energy / GOLDEN_RATIO
+  };
+
+  // ======================
+  // ENGINE EXECUTION
+  // ======================
+  const result = captainAILena(normalizedState);
+
+  // ======================
+  // RENDER UI
+  // ======================
+  document.getElementById("state").innerText =
+    JSON.stringify(state, null, 2);
+
+  document.getElementById("normalized").innerText =
+    JSON.stringify(normalizedState, null, 2);
+
+  document.getElementById("decision").innerText =
+    JSON.stringify(result, null, 2);
+
+  document.getElementById("constants").innerText =
+    JSON.stringify({ GOLDEN_RATIO }, null, 2);
+
+  document.getElementById("trace").innerText =
+    "OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE";
+</script>
 
 </body>
 </html>
