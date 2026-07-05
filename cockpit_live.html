@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPD AI LENA LIVE ENGINE</title>
+<title>SPD AI LENA MOBILE HARDENED COCKPIT</title>
 
 <style>
 body {
@@ -12,32 +12,36 @@ body {
   color: #00ff99;
 }
 
-h2 { text-align:center; color:white; }
+h2 {
+  text-align: center;
+  color: white;
+  margin: 10px 0;
+}
 
 .grid {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  padding:10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px;
 }
 
 .panel {
-  border:1px solid #00ff99;
-  padding:10px;
-  border-radius:6px;
-  background:#0b0f14;
+  border: 1px solid #00ff99;
+  border-radius: 6px;
+  padding: 10px;
+  background: #0b0f14;
 }
 
 .flow {
-  color:#888;
-  font-size:13px;
+  color: #888;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 CAPTAIN AI LENA — LIVE ENGINE</h2>
+<h2>🧠 CAPTAIN AI LENA — MOBILE HARDENED COCKPIT</h2>
 
 <div class="grid">
 
@@ -69,11 +73,28 @@ h2 { text-align:center; color:white; }
 </div>
 
 <script>
-const state = { fx:10, energy:50, cyb:50 };
+
+/* =========================
+   STATE (NO DRIFT)
+========================= */
+const state = {
+  fx: 10,
+  energy: 50,
+  cyb: 50
+};
+
+/* =========================
+   ENGINE CONTROL
+========================= */
 let tick = 0;
+let lastRun = 0;
+
+/* =========================
+   MODULES
+========================= */
 
 function riskModule(fx, energy, cyb){
-  const score = fx + (100-energy) + cyb;
+  const score = fx + (100 - energy) + cyb;
   if(score > 140) return "HIGH RISK";
   if(score > 90) return "MEDIUM RISK";
   return "LOW RISK";
@@ -94,33 +115,53 @@ function decide(risk, energy, fx){
   return "SYSTEM STABLE";
 }
 
+/* =========================
+   CORE ENGINE
+========================= */
+
 function runLiveCycle(){
 
   const fx = fxModule(state.fx);
   const energy = energyModule(state.energy);
-  const risk = riskModule(state.fx,state.energy,state.cyb);
-  const decision = decide(risk,energy,fx);
+  const risk = riskModule(state.fx, state.energy, state.cyb);
+  const decision = decide(risk, energy, fx);
 
   document.getElementById("input").innerText =
-    JSON.stringify(state,null,2);
+    JSON.stringify(state, null, 2);
 
   document.getElementById("risk").innerText = risk;
 
   document.getElementById("output").innerText =
-`FX:${fx}
-ENERGY:${energy}
-RISK:${risk}`;
+`FX: ${fx}
+ENERGY: ${energy}
+RISK: ${risk}`;
 
   document.getElementById("decision").innerText = decision;
 
-  const flow=["OBSERVE","DECIDE","ACT","UPDATE"];
+  const flow = ["OBSERVE","DECIDE","ACT","UPDATE"];
   document.getElementById("flow").innerText =
-    "FLOW → " + flow[tick%4];
+    "FLOW → " + flow[tick % 4];
 
   tick++;
 }
 
-setInterval(runLiveCycle,1000);
+/* =========================
+   MOBILE HARDENED LOOP
+========================= */
+
+function loop(timestamp){
+
+  if(timestamp - lastRun > 1000){
+    runLiveCycle();
+    lastRun = timestamp;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+/* START ENGINE */
+requestAnimationFrame(loop);
+
 </script>
 
 </body>
