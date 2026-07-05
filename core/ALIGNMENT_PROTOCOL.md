@@ -1,32 +1,3 @@
-# 🧠 ALIGNMENT PROTOCOL v1.1 (SPD CORE RULE)
-
-## PURPOSE
-This file defines how the system must behave when interacting with existing SPD architecture.
-
----
-
-## RULE 1 — STATE-FIRST CHECK
-Do not redefine existing system components. Reference only.
-
-## RULE 2 — NO PARALLEL SYSTEMS
-No duplicate frameworks or alternative versions of existing logic.
-
-## RULE 3 — NO UNREQUESTED EXPANSION
-No redesign unless explicitly requested.
-
-## RULE 4 — CLARIFY BEFORE BUILDING
-If unclear, ask before generating structure.
-
----
-
-## GOLDEN PRINCIPLE
-The user’s system is the source of truth.
-
----
-
-## VERSION
-ALIGNMENT PROTOCOL v1.1
-
 # 🧠 ALIGNMENT PROTOCOL v1.2 (SPD CORE RULE)
 
 ## 🧭 PURPOSE
@@ -39,7 +10,7 @@ It prevents drift, duplication, and unauthorized redesign of existing system com
 ## 🔴 SOURCE OF TRUTH HIERARCHY
 
 ### 🥇 PRIMARY SOURCE OF TRUTH
-> **GOLDEN RULE (SPD CORE INVARIANT)**
+**GOLDEN RULE (SPD CORE INVARIANT)**
 
 - The Golden Rule is the highest authority in the system
 - It overrides all logic, modules, and decisions
@@ -87,6 +58,7 @@ Unless explicitly requested by the user.
 ## 🔴 RULE 4 — CLARIFY BEFORE BUILDING
 
 If system state is unclear:
+
 - Ask a direct question
 - Do NOT assume or generate a new structure
 
@@ -108,5 +80,5 @@ If system state is unclear:
 ---
 
 ## VERSION
-ALIGNMENT PROTOCOL v1.2
+ALIGNMENT PROTOCOL v1.2 (ACTIVE)
 SPD CORE MODULE
