@@ -2,168 +2,6 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPD AI LENA CONTROLLED LIVE COCKPIT</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: monospace;
-  background: #05070a;
-  color: #00ff99;
-}
-
-h2 {
-  text-align: center;
-  color: white;
-  margin: 10px 0;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  padding: 10px;
-}
-
-@media (min-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.panel {
-  border: 1px solid #00ff99;
-  border-radius: 6px;
-  padding: 10px;
-  background: #0b0f14;
-}
-
-.flow {
-  color: #888;
-  font-size: 13px;
-}
-</style>
-</head>
-
-<body>
-
-<h2>🧠 CAPTAIN AI LENA — CONTROLLED LIVE COCKPIT</h2>
-
-<div class="grid">
-
-<div class="panel">
-<h3>INPUT STATE (FIXED)</h3>
-<pre id="input"></pre>
-</div>
-
-<div class="panel">
-<h3>RISK ENGINE</h3>
-<div id="risk">LOW</div>
-</div>
-
-<div class="panel">
-<h3>OUTPUT</h3>
-<pre id="output">Idle</pre>
-</div>
-
-<div class="panel">
-<h3>DECISION CORE</h3>
-<pre id="decision">Waiting...</pre>
-</div>
-
-<div class="panel">
-<h3>FLOW</h3>
-<div id="flow" class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
-</div>
-
-</div>
-
-<script>
-/* =========================
-   FIXED STATE (NO DRIFT)
-========================= */
-const state = {
-  fx: 10,
-  energy: 50,
-  cyb: 50
-};
-
-let tick = 0;
-
-/* =========================
-   MODULES
-========================= */
-
-function riskModule(fx, energy, cyb) {
-  const score = fx + (100 - energy) + cyb;
-
-  if (score > 140) return "HIGH RISK";
-  if (score > 90) return "MEDIUM RISK";
-  return "LOW RISK";
-}
-
-function energyModule(e) {
-  if (e < 30) return "LOW ENERGY MODE";
-  return "NORMAL ENERGY";
-}
-
-function fxModule(fx) {
-  if (fx > 30) return "FX STABILIZATION ACTIVE";
-  return "FX STABLE";
-}
-
-function decide(risk, energy, fx) {
-  if (risk === "HIGH RISK") return "ACTIVATE STABILIZATION MODE";
-  if (energy === "LOW ENERGY MODE") return "REDUCE SYSTEM LOAD";
-  if (fx.includes("STABILIZATION")) return "FX CORRECTION ACTIVE";
-  return "SYSTEM STABLE";
-}
-
-/* =========================
-   LIVE LOOP (NO STATE CHANGE)
-========================= */
-
-function runLiveCycle() {
-
-  const fx = fxModule(state.fx);
-  const energy = energyModule(state.energy);
-  const risk = riskModule(state.fx, state.energy, state.cyb);
-
-  const decision = decide(risk, energy, fx);
-
-  document.getElementById("input").innerText =
-    JSON.stringify(state, null, 2);
-
-  document.getElementById("risk").innerText = risk;
-
-  document.getElementById("output").innerText =
-`FX: ${fx}
-ENERGY: ${energy}
-RISK: ${risk}`;
-
-  document.getElementById("decision").innerText = decision;
-
-  const flow = ["OBSERVE", "DECIDE", "ACT", "UPDATE"];
-  document.getElementById("flow").innerText =
-    "FLOW → " + flow[tick % 4];
-
-  tick++;
-}
-
-/* =========================
-   START LOOP (STATIC STATE, LIVE FLOW)
-========================= */
-setInterval(runLiveCycle, 1000);
-
-</script>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPD AI LENA LIVE ENGINE</title>
 
 <style>
@@ -174,28 +12,25 @@ body {
   color: #00ff99;
 }
 
-h2 {
-  text-align: center;
-  color: white;
-}
+h2 { text-align:center; color:white; }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  padding: 10px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  padding:10px;
 }
 
 .panel {
-  border: 1px solid #00ff99;
-  padding: 10px;
-  border-radius: 6px;
-  background: #0b0f14;
+  border:1px solid #00ff99;
+  padding:10px;
+  border-radius:6px;
+  background:#0b0f14;
 }
 
 .flow {
-  color: #888;
-  font-size: 13px;
+  color:#888;
+  font-size:13px;
 }
 </style>
 </head>
@@ -213,93 +48,79 @@ h2 {
 
 <div class="panel">
 <h3>RISK</h3>
-<div id="risk">...</div>
+<div id="risk"></div>
 </div>
 
 <div class="panel">
 <h3>OUTPUT</h3>
-<pre id="output">Idle</pre>
+<pre id="output"></pre>
 </div>
 
 <div class="panel">
 <h3>DECISION</h3>
-<pre id="decision">Waiting...</pre>
+<pre id="decision"></pre>
 </div>
 
 <div class="panel">
 <h3>FLOW</h3>
-<div id="flow" class="flow">STARTING...</div>
+<div id="flow" class="flow"></div>
 </div>
 
 </div>
 
 <script>
-/* STEP 1 — STATE (NO DRIFT) */
-const state = {
-  fx: 10,
-  energy: 50,
-  cyb: 50
-};
-
+const state = { fx:10, energy:50, cyb:50 };
 let tick = 0;
 
-/* STEP 2 — MODULES */
-function riskModule(fx, energy, cyb) {
-  const score = fx + (100 - energy) + cyb;
-  if (score > 140) return "HIGH RISK";
-  if (score > 90) return "MEDIUM RISK";
+function riskModule(fx, energy, cyb){
+  const score = fx + (100-energy) + cyb;
+  if(score > 140) return "HIGH RISK";
+  if(score > 90) return "MEDIUM RISK";
   return "LOW RISK";
 }
 
-function energyModule(e) {
-  if (e < 30) return "LOW ENERGY MODE";
-  return "NORMAL ENERGY";
+function energyModule(e){
+  return e < 30 ? "LOW ENERGY MODE" : "NORMAL ENERGY";
 }
 
-function fxModule(fx) {
-  if (fx > 30) return "FX STABLE";
-  return "FX WEAK";
+function fxModule(fx){
+  return fx > 30 ? "FX STABLE" : "FX WEAK";
 }
 
-function decide(risk, energy, fx) {
-  if (risk === "HIGH RISK") return "ACTIVATE STABILIZATION";
-  if (energy === "LOW ENERGY MODE") return "REDUCE LOAD";
-  if (fx === "FX WEAK") return "FX CORRECTION";
+function decide(risk, energy, fx){
+  if(risk==="HIGH RISK") return "ACTIVATE STABILIZATION";
+  if(energy==="LOW ENERGY MODE") return "REDUCE LOAD";
+  if(fx==="FX WEAK") return "FX CORRECTION";
   return "SYSTEM STABLE";
 }
 
-/* STEP 3 — ENGINE LOOP */
-function runLiveCycle() {
-
-  console.log("ENGINE RUNNING TICK:", tick);
+function runLiveCycle(){
 
   const fx = fxModule(state.fx);
   const energy = energyModule(state.energy);
-  const risk = riskModule(state.fx, state.energy, state.cyb);
-  const decision = decide(risk, energy, fx);
+  const risk = riskModule(state.fx,state.energy,state.cyb);
+  const decision = decide(risk,energy,fx);
 
   document.getElementById("input").innerText =
-    JSON.stringify(state, null, 2);
+    JSON.stringify(state,null,2);
 
   document.getElementById("risk").innerText = risk;
 
   document.getElementById("output").innerText =
-`FX: ${fx}
-ENERGY: ${energy}
-RISK: ${risk}`;
+`FX:${fx}
+ENERGY:${energy}
+RISK:${risk}`;
 
   document.getElementById("decision").innerText = decision;
 
-  const flow = ["OBSERVE", "DECIDE", "ACT", "UPDATE"];
+  const flow=["OBSERVE","DECIDE","ACT","UPDATE"];
   document.getElementById("flow").innerText =
-    "FLOW → " + flow[tick % 4];
+    "FLOW → " + flow[tick%4];
 
   tick++;
 }
 
-/* STEP 4 — START ENGINE (THIS IS THE ACTIVATION) */
-setInterval(runLiveCycle, 1000);
-
+setInterval(runLiveCycle,1000);
 </script>
 
 </body>
