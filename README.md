@@ -10,6 +10,42 @@ DATA → ALGORITHMS → COMPUTE
 ## 📊 1. DATA LAYER (STATE INPUT)
 
 The system receives structured state:
+🔒 Backend Source of Truth
+
+Workflow Authority
+
+The backend is the authoritative source for all system workflows, decision logic, and execution.
+
+If any mismatch exists between:
+
+- Frontend cockpit displays
+- User interface behavior
+- Documentation
+- Examples
+- Simulations
+- External references
+- Third-party implementations
+
+the backend implementation shall be treated as the source of truth.
+
+Development Rule
+
+All development must follow this workflow:
+
+Client Input → Backend Processing → Decision Engine → System Output → Frontend Display
+
+The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
+
+Source Validation Rule
+
+When integrating external libraries, frameworks, examples, tutorials, or reference implementations:
+
+1. Read the official documentation and source code.
+2. Compare external behavior with the SPD backend implementation.
+3. If any mismatch is detected, verify the backend logic before making changes.
+4. Do not modify the SPD workflow solely to match an external implementation without technical validation.
+
+This ensures that the backend remains the authoritative execution layer for the SPD Captain AI Lena Autonomous Agent Core.
 
 {
   fx: number,
