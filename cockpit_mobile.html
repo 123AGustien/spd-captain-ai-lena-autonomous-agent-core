@@ -3,79 +3,108 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SPD Mobile Cockpit</title>
+
+  <style>
+    body {
+      background: #000;
+      color: #00ff88;
+      font-family: monospace;
+      padding: 12px;
+    }
+
+    h2 {
+      color: #ffffff;
+    }
+
+    .panel {
+      border: 1px solid #00ff88;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 6px;
+    }
+
+    label {
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      background: #111;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00ff88;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
 </head>
 
-<body style="background:#000; color:#0f0; font-family:monospace; padding:10px;">
+<body>
 
-<h2>🧠 CAPTAIN AI LENA (MOBILE)</h2>
+<h2>🧠 CAPTAIN AI LENA (MOBILE COCKPIT)</h2>
 
-<div>
-  <label>FX</label><br>
-  <input id="fx" type="number" value="0"><br><br>
+<div class="panel">
+  <label>FX</label>
+  <input id="fx" type="number" value="0">
 
-  <label>ENERGY</label><br>
-  <input id="energy" type="number" value="50"><br><br>
+  <label>ENERGY</label>
+  <input id="energy" type="number" value="50">
 
-  <label>CYB</label><br>
-  <input id="cyb" type="number" value="50"><br><br>
+  <label>CYB</label>
+  <input id="cyb" type="number" value="50">
 
   <button onclick="run()">RUN SYSTEM</button>
 </div>
 
-<pre id="output" style="margin-top:20px; background:#111; padding:10px;"></pre>
+<div class="panel">
+  <h3>📊 SYSTEM OUTPUT</h3>
+  <pre id="output">Waiting for execution...</pre>
+</div>
 
-<script>
-const GOLDEN_RATIO = 1.61803398875;
-
-function run() {
-
-  // =========================
-  // RAW INPUT
-  // =========================
-  let fx = Number(document.getElementById("fx").value);
-  let energy = Number(document.getElementById("energy").value);
-  let cyb = Number(document.getElementById("cyb").value);
+<script type="module">
+  import { runEngine } from "./engine.js";
 
   // =========================
-  // NORMALIZATION LAYER (SAFE)
+  // SYSTEM EXECUTION ENTRY
   // =========================
-  let norm_fx = fx / GOLDEN_RATIO;
-  let norm_energy = energy / GOLDEN_RATIO;
-  let norm_cyb = cyb; // optional (kept raw)
+  window.run = function () {
 
-  // =========================
-  // RISK ENGINE (USES NORMALIZED VALUES ONLY)
-  // =========================
-  let risk = 0;
+    // STEP 1: COLLECT INPUT ONLY
+    const state = {
+      fx: Number(document.getElementById("fx").value),
+      energy: Number(document.getElementById("energy").value),
+      cyb: Number(document.getElementById("cyb").value)
+    };
 
-  if (norm_cyb < 50) risk++;
-  if (norm_energy < 30) risk++;
-  if (norm_fx > 10) risk++;
+    // STEP 2: SEND TO ENGINE (NO LOGIC HERE)
+    const result = runEngine(state);
 
-  let decision = "SYSTEM STABLE";
-
-  if (risk >= 2) decision = "ACTIVATE STABILIZATION MODE";
-  else if (norm_energy < 30) decision = "REDUCE SYSTEM LOAD";
-  else if (norm_fx > 10) decision = "FX CORRECTION ACTIVE";
-
-  // =========================
-  // OUTPUT
-  // =========================
-  document.getElementById("output").innerText =
-`INPUT (RAW):
-FX: ${fx}
-ENERGY: ${energy}
-CYB: ${cyb}
-
-INPUT (NORMALIZED - GOLDEN RATIO):
-FX: ${norm_fx.toFixed(2)}
-ENERGY: ${norm_energy.toFixed(2)}
-CYB: ${norm_cyb}
+    // STEP 3: RENDER OUTPUT ONLY
+    document.getElementById("output").innerText =
+`INPUT:
+${JSON.stringify(result.input, null, 2)}
 
 OUTPUT:
-Risk Level: ${risk}
-Decision: ${decision}`;
-}
+${JSON.stringify(result.output, null, 2)}
+
+STATUS: ${result.status}
+TIME: ${result.timestamp}`;
+  };
 </script>
 
 </body>
