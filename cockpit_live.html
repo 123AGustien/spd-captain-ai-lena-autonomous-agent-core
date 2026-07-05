@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPD AI LENA LIVE COCKPIT</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: monospace;
+  background: #05070a;
+  color: #00ff99;
+}
+
+h2 {
+  text-align: center;
+  color: white;
+  margin: 10px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.panel {
+  border: 1px solid #00ff99;
+  border-radius: 6px;
+  padding: 10px;
+  background: #0b0f14;
+}
+
+.flow {
+  color: #888;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🧠 CAPTAIN AI LENA — LIVE COCKPIT</h2>
+
+<div class="grid">
+
+<div class="panel">
+<h3>INPUT STATE</h3>
+<pre id="input">LIVE SYSTEM RUNNING...</pre>
+</div>
+
+<div class="panel">
+<h3>RISK ENGINE</h3>
+<div id="risk">LOW</div>
+</div>
+
+<div class="panel">
+<h3>OUTPUT</h3>
+<pre id="output">Idle</pre>
+</div>
+
+<div class="panel">
+<h3>DECISION CORE</h3>
+<pre id="decision">Waiting...</pre>
+</div>
+
+<div class="panel">
+<h3>FLOW</h3>
+<div id="flow" class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
+</div>
+
+</div>
+
+<script>
+/* =========================
+   INITIAL STATE
+========================= */
+let state = {
+  fx: 10,
+  energy: 50,
+  cyb: 50
+};
+
+let tick = 0;
+
+/* =========================
+   MODULES
+========================= */
+
+function fxModule(fx) {
+  if (fx > 30) return "FX STABILIZATION ACTIVE";
+  return "FX STABLE";
+}
+
+function energyModule(e) {
+  if (e < 30) return "LOW ENERGY MODE";
+  return "NORMAL ENERGY";
+}
+
+function riskModule(fx, energy, cyb) {
+  const score = fx + (100 - energy) + cyb;
+
+  if (score > 140) return "HIGH RISK";
+  if (score > 90) return "MEDIUM RISK";
+  return "LOW RISK";
+}
+
+function decide(risk, energy, fx) {
+  if (risk === "HIGH RISK") return "ACTIVATE STABILIZATION MODE";
+  if (energy === "LOW ENERGY MODE") return "REDUCE SYSTEM LOAD";
+  if (fx.includes("STABILIZATION")) return "FX CORRECTION ACTIVE";
+  return "SYSTEM STABLE";
+}
+
+/* =========================
+   LIVE ENGINE LOOP
+========================= */
+
+function runLiveCycle() {
+
+  // 🔄 SYSTEM DRIFT (makes it dynamic)
+  state.energy -= 0.3;
+  state.fx += 0.1;
+
+  const fx = fxModule(state.fx);
+  const energy = energyModule(state.energy);
+  const risk = riskModule(state.fx, state.energy, state.cyb);
+
+  const decision = decide(risk, energy, fx);
+
+  /* OUTPUT */
+  document.getElementById("risk").innerText = risk;
+
+  document.getElementById("output").innerText =
+`FX: ${fx}
+ENERGY: ${state.energy.toFixed(1)}
+RISK: ${risk}`;
+
+  document.getElementById("decision").innerText = decision;
+
+  /* FLOW ANIMATION */
+  const flow = ["OBSERVE", "DECIDE", "ACT", "UPDATE"];
+  document.getElementById("flow").innerText =
+    "FLOW → " + flow[tick % 4];
+
+  tick++;
+}
+
+/* =========================
+   START AUTONOMOUS LOOP
+========================= */
+
+setInterval(runLiveCycle, 1000);
+
+</script>
+
+</body>
+</html>
