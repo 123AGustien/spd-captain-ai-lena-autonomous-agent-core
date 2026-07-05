@@ -1,5 +1,7 @@
 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
 
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
+
 # 🧠 SPD COMPUTE ARCHITECTURE MODEL
 
 This system is built on a deterministic execution framework:
