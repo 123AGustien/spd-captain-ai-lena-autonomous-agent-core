@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="en">
 <head>
-  <title>SPD Captain AI Lena Cockpit</title>
-
-  <style>
+  <meta charset="UTF-8">  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>SPD v13 — Captain AI Lena Resilience Cockpit</title>  <style>
     body {
       background: #0b0f14;
       color: #00ff88;
       font-family: Arial, sans-serif;
       padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      color: #ffffff;
+    }
+
+    h2 {
+      color: #00ff88;
+      margin-top: 0;
     }
 
     .panel {
@@ -16,107 +23,428 @@
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 8px;
+      background: #10161d;
     }
 
     .title {
       font-size: 18px;
       margin-bottom: 10px;
       color: #ffffff;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #00ff88;
+      color: #000000;
+      border: none;
+      padding: 12px 18px;
+      margin: 5px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
     }
 
     pre {
       white-space: pre-wrap;
       word-break: break-word;
+      overflow-x: auto;
     }
 
     .muted {
       color: #aaaaaa;
       font-size: 13px;
     }
-  </style>
-</head>
 
-<body>
+    .pass {
+      color: #00ff88;
+      font-weight: bold;
+    }
 
-<h1>🧠 Captain AI Lena Cockpit</h1>
+    .fail {
+      color: #ff5555;
+      font-weight: bold;
+    }
+  </style></head><body><h1>🧠 SPD v13 — Captain AI Lena Resilience Cockpit</h1><div class="status" id="systemStatus">
+  SYSTEM INITIALIZING...
+</div><!-- CONTROL PANEL --><div class="panel">
+  <div class="title">🎛️ System Controls</div><button onclick="runLiveSystem()">RUN SYSTEM</button>
+<button onclick="runSelfTest()">RUN SELF-TEST</button>
 
-<!-- RAW STATE -->
-<div class="panel">
+</div><!-- RAW SYSTEM STATE --><div class="panel">
   <div class="title">📊 Raw System State</div>
   <pre id="state">Waiting...</pre>
-</div>
+</div><!-- GOLDEN RULE PIPELINE --><div class="panel">
+  <div class="title">🧭 Golden Rule Pipeline</div>  <div class="muted">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>  <pre id="pipeline">Waiting...</pre></div><!-- ASSESSMENT --><div class="panel">
+  <div class="title">⚠️ System Assessment</div>
+  <pre id="assessment">Waiting...</pre>
+</div><!-- DECISION --><div class="panel">
+  <div class="title">⚙️ Captain AI Lena Decision</div>
+  <pre id="decision">Waiting...</pre>
+</div><!-- ACTION --><div class="panel">
+  <div class="title">🚨 Action Sequence</div>
+  <pre id="actions">Waiting...</pre>
+</div><!-- AUDIT --><div class="panel">
+  <div class="title">🧾 SPD v13 Audit Record</div>  <pre id="audit">No audit record yet.</pre></div><!-- SELF TEST --><div class="panel">
+  <div class="title">🧪 SPD v13 Self-Test</div>  <pre id="selfTest">Self-test not executed.</pre></div><!-- CONSTANTS --><div class="panel">
+  <div class="title">📐 System Constants</div>  <pre id="constants">Waiting...</pre></div><!-- AGENT LOOP --><div class="panel">
+  <div class="title">🔄 Agent Loop Monitor</div>  <div class="muted">
+    DATA → ALGORITHMS → COMPUTE
+  </div>  <pre id="trace">
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </pre></div><script type="module">
 
-<!-- NORMALIZED STATE -->
-<div class="panel">
-  <div class="title">⚖️ Normalized State (Golden Ratio)</div>
-  <pre id="normalized">Waiting...</pre>
-</div>
+  import {
+    runGoldenRule,
+    PHI,
+    GOLDEN_RULE_STAGES
+  } from "./goldenRuleEngine.js";
 
-<!-- DECISION -->
-<div class="panel">
-  <div class="title">⚙️ Decision Output</div>
-  <pre id="decision">Idle</pre>
-</div>
 
-<!-- CONSTANTS -->
-<div class="panel">
-  <div class="title">📐 System Constants</div>
-  <pre id="constants"></pre>
-</div>
+  // ============================================================
+  // CURRENT SYSTEM STATE
+  // ============================================================
 
-<!-- TRACE -->
-<div class="panel">
-  <div class="title">🔄 Agent Loop</div>
-  <div class="muted">OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE</div>
-  <pre id="trace"></pre>
-</div>
+  const systemState = {
 
-<script type="module">
-  import { captainAILena } from "./captainAILena.js";
-  import { GOLDEN_RATIO } from "./constants/math.constants.js";
-
-  // ======================
-  // SYSTEM STATE
-  // ======================
-  const state = {
     fx: 12,
+
     energy: 25,
+
     cyb: 40,
-    event: "FX_SHOCK"
+
+    inf: 10,
+
+    dc: 20,
+
+    event: "FX_SHOCK",
+
+    mode: "AUTONOMOUS"
+
   };
 
-  // ======================
-  // NORMALIZATION LAYER
-  // ======================
-  const normalizedState = {
-    ...state,
-    fx: state.fx / GOLDEN_RATIO,
-    energy: state.energy / GOLDEN_RATIO
+
+  // ============================================================
+  // RUN LIVE SYSTEM
+  // ============================================================
+
+  window.runLiveSystem = function () {
+
+    try {
+
+      const result = runGoldenRule(systemState);
+
+
+      // SYSTEM STATUS
+
+      document.getElementById("systemStatus").innerText =
+        "SYSTEM STATUS: " + result.status;
+
+
+      // RAW STATE
+
+      document.getElementById("state").innerText =
+        JSON.stringify(
+          result.observedState,
+          null,
+          2
+        );
+
+
+      // PIPELINE
+
+      document.getElementById("pipeline").innerText =
+        result.pipeline.join(
+          " → "
+        );
+
+
+      // ASSESSMENT
+
+      document.getElementById("assessment").innerText =
+        JSON.stringify(
+          result.assessment,
+          null,
+          2
+        );
+
+
+      // DECISION
+
+      document.getElementById("decision").innerText =
+        JSON.stringify(
+          result.decision,
+          null,
+          2
+        );
+
+
+      // ACTION SEQUENCE
+
+      document.getElementById("actions").innerText =
+        JSON.stringify(
+          result.actionSequence,
+          null,
+          2
+        );
+
+
+      // AUDIT RECORD
+
+      document.getElementById("audit").innerText =
+        JSON.stringify(
+          {
+            timestamp:
+              new Date().toISOString(),
+
+            engine:
+              result.engine,
+
+            pipeline:
+              result.pipeline,
+
+            observedState:
+              result.observedState,
+
+            verifiedState:
+              result.verifiedState,
+
+            assessment:
+              result.assessment,
+
+            decision:
+              result.decision,
+
+            actionSequence:
+              result.actionSequence,
+
+            updatedState:
+              result.updatedState,
+
+            status:
+              result.status
+          },
+          null,
+          2
+        );
+
+
+      // CONSTANTS
+
+      document.getElementById("constants").innerText =
+        JSON.stringify(
+          {
+            PHI,
+            GOLDEN_RULE_STAGES
+          },
+          null,
+          2
+        );
+
+    }
+
+    catch (error) {
+
+      document.getElementById("systemStatus").innerText =
+        "SYSTEM ERROR";
+
+      document.getElementById("audit").innerText =
+        JSON.stringify(
+          {
+            status: "ERROR",
+            message: error.message
+          },
+          null,
+          2
+        );
+
+    }
+
   };
 
-  // ======================
-  // ENGINE EXECUTION
-  // ======================
-  const result = captainAILena(normalizedState);
 
-  // ======================
-  // RENDER UI
-  // ======================
-  document.getElementById("state").innerText =
-    JSON.stringify(state, null, 2);
+  // ============================================================
+  // SELF-TEST ENGINE
+  // ============================================================
 
-  document.getElementById("normalized").innerText =
-    JSON.stringify(normalizedState, null, 2);
+  window.runSelfTest = function () {
 
-  document.getElementById("decision").innerText =
-    JSON.stringify(result, null, 2);
+    const tests = [
 
-  document.getElementById("constants").innerText =
-    JSON.stringify({ GOLDEN_RATIO }, null, 2);
+      {
+        name: "NORMAL STABILITY TEST",
 
-  document.getElementById("trace").innerText =
-    "OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE";
-</script>
+        state: {
+          fx: 0,
+          energy: 80,
+          cyb: 10,
+          inf: 5,
+          dc: 5,
+          event: "NORMAL"
+        },
 
-</body>
+        expected:
+          "SYSTEM STABLE"
+      },
+
+
+      {
+        name: "HIGH RISK TEST",
+
+        state: {
+          fx: 80,
+          energy: 20,
+          cyb: 80,
+          inf: 70,
+          dc: 70,
+          event: "SYSTEM_STRESS"
+        },
+
+        expected:
+          "ACTIVATE STABILIZATION MODE"
+      },
+
+
+      {
+        name: "CRITICAL RISK TEST",
+
+        state: {
+          fx: 100,
+          energy: 0,
+          cyb: 100,
+          inf: 100,
+          dc: 100,
+          event: "CRITICAL_EVENT"
+        },
+
+        expected:
+          "ACTIVATE EMERGENCY STABILIZATION"
+      }
+
+    ];
+
+
+    const results = [];
+
+
+    tests.forEach(
+      test => {
+
+        try {
+
+          const result =
+            runGoldenRule(
+              test.state
+            );
+
+
+          const passed =
+            result.decision.decision ===
+            test.expected;
+
+
+          results.push({
+
+            test:
+              test.name,
+
+            expected:
+              test.expected,
+
+            actual:
+              result.decision.decision,
+
+            risk:
+              result.assessment.risk,
+
+            status:
+              passed
+                ? "PASS"
+                : "FAIL"
+
+          });
+
+        }
+
+        catch (error) {
+
+          results.push({
+
+            test:
+              test.name,
+
+            status:
+              "FAIL",
+
+            error:
+              error.message
+
+          });
+
+        }
+
+      }
+    );
+
+
+    const passedCount =
+      results.filter(
+        item =>
+          item.status === "PASS"
+      ).length;
+
+
+    const total =
+      results.length;
+
+
+    document.getElementById("selfTest").innerText =
+      JSON.stringify(
+        {
+
+          engine:
+            "SPD v13 SELF-TEST",
+
+          executionTime:
+            new Date().toISOString(),
+
+          summary:
+            `${passedCount}/${total} TESTS PASSED`,
+
+          overallStatus:
+            passedCount === total
+              ? "PASS"
+              : "FAIL",
+
+          results
+
+        },
+        null,
+        2
+      );
+
+  };
+
+
+  // ============================================================
+  // INITIAL EXECUTION
+  // ============================================================
+
+  runLiveSystem();
+
+</script></body>
 </html>
