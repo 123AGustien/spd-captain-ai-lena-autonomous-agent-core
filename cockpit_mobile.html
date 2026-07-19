@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPD Mobile Cockpit</title>
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-  <style>
+«»
+
+  <title>SPD v13 — Captain AI Lena Mobile Cockpit</title>  <style>
+
     body {
       background: #000;
       color: #00ff88;
       font-family: monospace;
       padding: 12px;
+      margin: 0;
     }
 
     h2 {
@@ -21,6 +23,13 @@
       padding: 10px;
       margin-top: 12px;
       border-radius: 6px;
+      background: #080d11;
+    }
+
+    .title {
+      color: #ffffff;
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
     label {
@@ -29,6 +38,7 @@
 
     input {
       width: 100%;
+      box-sizing: border-box;
       padding: 8px;
       margin-top: 4px;
       margin-bottom: 10px;
@@ -39,73 +49,544 @@
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
+      margin-top: 8px;
       background: #00ff88;
       color: #000;
       font-weight: bold;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
     }
 
     pre {
       white-space: pre-wrap;
       word-break: break-word;
+      overflow-x: auto;
     }
-  </style>
-</head>
 
-<body>
+    .status {
+      color: #ffffff;
+      font-weight: bold;
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 5px;
+      margin-top: 12px;
+    }
 
-<h2>🧠 CAPTAIN AI LENA (MOBILE COCKPIT)</h2>
+    .flow {
+      color: #aaaaaa;
+      font-size: 12px;
+    }
 
-<div class="panel">
-  <label>FX</label>
-  <input id="fx" type="number" value="0">
+  </style></head><body><h2>🧠 CAPTAIN AI LENA</h2><div class="flow">
+  SPD v13 — SEXTANT RESILIENCE MOBILE COCKPIT
+</div><!-- SYSTEM STATUS --><div class="status" id="systemStatus">SYSTEM INITIALIZING...
 
-  <label>ENERGY</label>
-  <input id="energy" type="number" value="50">
+</div><!-- INPUT --><div class="panel">  <div class="title">
+    📥 SYSTEM INPUT
+  </div><label>FX</label>
 
-  <label>CYB</label>
-  <input id="cyb" type="number" value="50">
+<input
+id="fx"
+type="number"
+value="0"
 
-  <button onclick="run()">RUN SYSTEM</button>
-</div>
+«»
 
-<div class="panel">
-  <h3>📊 SYSTEM OUTPUT</h3>
-  <pre id="output">Waiting for execution...</pre>
-</div>
+<label>ENERGY</label>
 
-<script type="module">
-  import { runEngine } from "./engine.js";
+<input
+id="energy"
+type="number"
+value="50"
 
-  // =========================
-  // SYSTEM EXECUTION ENTRY
-  // =========================
-  window.run = function () {
+«»
 
-    // STEP 1: COLLECT INPUT ONLY
+<label>CYB</label>
+
+<input
+id="cyb"
+type="number"
+value="50"
+
+«»
+
+<label>INF</label>
+
+<input
+id="inf"
+type="number"
+value="0"
+
+«»
+
+<label>DC</label>
+
+<input
+id="dc"
+type="number"
+value="0"
+
+«»
+
+  <button onclick="runSystem()">RUN SYSTEM
+
+  </button>  <button onclick="runSelfTest()">RUN SELF-TEST
+
+  </button></div><!-- GOLDEN RULE --><div class="panel">  <div class="title">🧭 GOLDEN RULE PIPELINE
+
+  </div>  <div class="flow">OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+  </div>  <pre id="pipeline">
+
+Waiting...
+
+  </pre></div><!-- ASSESSMENT --><div class="panel">  <div class="title">⚠️ SYSTEM ASSESSMENT
+
+  </div>  <pre id="assessment">
+
+Waiting...
+
+  </pre></div><!-- DECISION --><div class="panel">  <div class="title">⚙️ CAPTAIN AI LENA DECISION
+
+  </div>  <pre id="decision">
+
+Waiting...
+
+  </pre></div><!-- ACTION --><div class="panel">  <div class="title">🚨 ACTION SEQUENCE
+
+  </div>  <pre id="actions">
+
+Waiting...
+
+  </pre></div><!-- AUDIT --><div class="panel">  <div class="title">🧾 AUDIT RECORD
+
+  </div>  <pre id="audit">
+
+No audit record yet.
+
+  </pre></div><!-- SELF TEST --><div class="panel">  <div class="title">🧪 SELF-TEST
+
+  </div>  <pre id="selfTest">
+
+Self-test not executed.
+
+  </pre></div><script type="module">
+
+
+  import {
+
+    runGoldenRule,
+
+    PHI,
+
+    GOLDEN_RULE_STAGES
+
+  } from "./goldenRuleEngine.js";
+
+
+  // ============================================================
+  // RUN SYSTEM
+  // ============================================================
+
+  window.runSystem = function () {
+
+
     const state = {
-      fx: Number(document.getElementById("fx").value),
-      energy: Number(document.getElementById("energy").value),
-      cyb: Number(document.getElementById("cyb").value)
+
+      fx:
+        Number(
+          document.getElementById("fx").value
+        ),
+
+      energy:
+        Number(
+          document.getElementById("energy").value
+        ),
+
+      cyb:
+        Number(
+          document.getElementById("cyb").value
+        ),
+
+      inf:
+        Number(
+          document.getElementById("inf").value
+        ),
+
+      dc:
+        Number(
+          document.getElementById("dc").value
+        ),
+
+      event:
+        "MOBILE_SIMULATION",
+
+      mode:
+        "AUTONOMOUS"
+
     };
 
-    // STEP 2: SEND TO ENGINE (NO LOGIC HERE)
-    const result = runEngine(state);
 
-    // STEP 3: RENDER OUTPUT ONLY
-    document.getElementById("output").innerText =
-`INPUT:
-${JSON.stringify(result.input, null, 2)}
+    try {
 
-OUTPUT:
-${JSON.stringify(result.output, null, 2)}
 
-STATUS: ${result.status}
-TIME: ${result.timestamp}`;
+      const result =
+        runGoldenRule(state);
+
+
+      // STATUS
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM STATUS: " +
+        result.status;
+
+
+      // PIPELINE
+
+      document.getElementById(
+        "pipeline"
+      ).innerText =
+        result.pipeline.join(
+          " → "
+        );
+
+
+      // ASSESSMENT
+
+      document.getElementById(
+        "assessment"
+      ).innerText =
+        JSON.stringify(
+          result.assessment,
+          null,
+          2
+        );
+
+
+      // DECISION
+
+      document.getElementById(
+        "decision"
+      ).innerText =
+        JSON.stringify(
+          result.decision,
+          null,
+          2
+        );
+
+
+      // ACTION
+
+      document.getElementById(
+        "actions"
+      ).innerText =
+        JSON.stringify(
+          result.actionSequence,
+          null,
+          2
+        );
+
+
+      // AUDIT
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+        JSON.stringify(
+
+          {
+
+            timestamp:
+              new Date().toISOString(),
+
+            engine:
+              result.engine,
+
+            observedState:
+              result.observedState,
+
+            verifiedState:
+              result.verifiedState,
+
+            assessment:
+              result.assessment,
+
+            decision:
+              result.decision,
+
+            actionSequence:
+              result.actionSequence,
+
+            updatedState:
+              result.updatedState,
+
+            constants:
+              {
+                PHI
+              },
+
+            pipeline:
+              GOLDEN_RULE_STAGES,
+
+            status:
+              result.status
+
+          },
+
+          null,
+
+          2
+
+        );
+
+
+    }
+
+    catch (error) {
+
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM ERROR";
+
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+        JSON.stringify(
+
+          {
+
+            status:
+              "ERROR",
+
+            message:
+              error.message
+
+          },
+
+          null,
+
+          2
+
+        );
+
+    }
+
   };
-</script>
 
-</body>
-</html>
+
+  // ============================================================
+  // SELF-TEST
+  // ============================================================
+
+  window.runSelfTest = function () {
+
+
+    const tests = [
+
+
+      {
+
+        name:
+          "NORMAL STABILITY",
+
+        state:
+          {
+            fx: 0,
+            energy: 80,
+            cyb: 10,
+            inf: 5,
+            dc: 5,
+            event: "NORMAL"
+          },
+
+        expected:
+          "SYSTEM STABLE"
+
+      },
+
+
+      {
+
+        name:
+          "HIGH RISK",
+
+        state:
+          {
+            fx: 80,
+            energy: 20,
+            cyb: 80,
+            inf: 70,
+            dc: 70,
+            event: "SYSTEM_STRESS"
+          },
+
+        expected:
+          "ACTIVATE STABILIZATION MODE"
+
+      },
+
+
+      {
+
+        name:
+          "CRITICAL RISK",
+
+        state:
+          {
+            fx: 100,
+            energy: 0,
+            cyb: 100,
+            inf: 100,
+            dc: 100,
+            event: "CRITICAL_EVENT"
+          },
+
+        expected:
+          "ACTIVATE EMERGENCY STABILIZATION"
+
+      }
+
+
+    ];
+
+
+    const results = [];
+
+
+    tests.forEach(
+
+      test => {
+
+
+        try {
+
+
+          const result =
+            runGoldenRule(
+              test.state
+            );
+
+
+          const passed =
+            result.decision.decision ===
+            test.expected;
+
+
+          results.push(
+
+            {
+
+              test:
+                test.name,
+
+              expected:
+                test.expected,
+
+              actual:
+                result.decision.decision,
+
+              risk:
+                result.assessment.risk,
+
+              status:
+                passed
+                  ? "PASS"
+                  : "FAIL"
+
+            }
+
+          );
+
+
+        }
+
+        catch (error) {
+
+
+          results.push(
+
+            {
+
+              test:
+                test.name,
+
+              status:
+                "FAIL",
+
+              error:
+                error.message
+
+            }
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+    const passed =
+      results.filter(
+
+        item =>
+          item.status === "PASS"
+
+      ).length;
+
+
+    const total =
+      results.length;
+
+
+    document.getElementById(
+      "selfTest"
+    ).innerText =
+
+      JSON.stringify(
+
+        {
+
+          engine:
+            "SPD v13 MOBILE SELF-TEST",
+
+          executionTime:
+            new Date().toISOString(),
+
+          summary:
+            `${passed}/${total} TESTS PASSED`,
+
+          overallStatus:
+            passed === total
+              ? "PASS"
+              : "FAIL",
+
+          results
+
+        },
+
+        null,
+
+        2
+
+      );
+
+  };
+
+
+  // ============================================================
+  // INITIAL EXECUTION
+  // ============================================================
+
+  runSystem();
+
+
+</script></body></html>
