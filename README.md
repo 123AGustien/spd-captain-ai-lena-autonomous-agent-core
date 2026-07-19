@@ -1,4 +1,37 @@
+# 🧠 SPD v13 — Captain AI Lena Resilience Cockpit
 
+**SYSTEM STATUS: COMPLETE**
+
+### 🚀 LIVE SYSTEM ACCESS
+
+- 🖥️ **[Open GitHub Repository](https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core/tree/feature/spd-v13-sextant-resilience)**
+- 🎛️ **[Open Desktop Cockpit](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html)**
+- 📱 **[Open Mobile Cockpit](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html)**
+- 🧪 **[Open Live Simulation](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html)**
+
+**Architecture:** `DATA → ALGORITHMS → COMPUTE`
+
+**Golden Rule:** `OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE`
+
+---
+
+## 🎛️ System Controls
+
+**RUN SYSTEM**  
+**RUN SELF-TEST**
+
+## 📊 Raw System State
+
+```json
+{
+  "fx": 12,
+  "energy": 25,
+  "cyb": 40,
+  "inf": 10,
+  "dc": 20,
+  "event": "FX_SHOCK",
+  "mode": "AUTONOMOUS"
+}
 
 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
