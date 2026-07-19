@@ -1,29 +1,65 @@
+🧠 SPD v13 — Captain AI Lena Resilience Cockpit
 
-# 🧠 SPD v13 — Captain AI Lena Resilience Cockpit
+SYSTEM STATUS: COMPLETE
 
-**SYSTEM STATUS: COMPLETE**
+🚀 LIVE SYSTEM ACCESS
 
-### 🚀 LIVE SYSTEM ACCESS
+- 🖥️ "Open GitHub Repository" (https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core/tree/feature/spd-v13-sextant-resilience)
+- 🎛️ "Open Desktop Cockpit" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html)
+- 📱 "Open Mobile Cockpit" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html)
+- 🧪 "Open Live Simulation" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html)
 
-- 🖥️ **[Open GitHub Repository](https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core/tree/feature/spd-v13-sextant-resilience)**
-- 🎛️ **[Open Desktop Cockpit](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html)**
-- 📱 **[Open Mobile Cockpit](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html)**
-- 🧪 **[Open Live Simulation](https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html)**
+Architecture: "DATA → ALGORITHMS → COMPUTE"
 
-**Architecture:** `DATA → ALGORITHMS → COMPUTE`
-
-**Golden Rule:** `OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE`
+Golden Rule: "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
 
 ---
 
-## 🎛️ System Controls
+🧠 SPD CAPTAIN AI LENA
 
-**RUN SYSTEM**  
-**RUN SELF-TEST**
+SPD v13 — SEXTANT RESILIENCE
 
-## 📊 Raw System State
+Deterministic Autonomous Agent Core
 
-```json
+SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous deterministic decision loops.
+
+It integrates:
+
+- Algorithmic rule logic
+- Scenario simulation
+- Modular compute execution
+- System resilience assessment
+- Golden Rule governance
+- Audit trace generation
+- Autonomous decision execution
+
+The system is designed around the core architecture:
+
+"DATA → ALGORITHMS → COMPUTE"
+
+and the operational resilience loop:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+---
+
+🎛️ SYSTEM CONTROLS
+
+The cockpit provides:
+
+- RUN SYSTEM
+- RUN SELF-TEST
+
+The cockpit is a visual execution interface. The backend remains the authoritative source of truth for all workflow, decision logic, and execution.
+
+---
+
+📊 SYSTEM STATE
+
+The system receives a structured System State Object.
+
+Example:
+
 {
   "fx": 12,
   "energy": 25,
@@ -34,51 +70,135 @@
   "mode": "AUTONOMOUS"
 }
 
-🧠 SPD CAPTAIN AI LENA
+Minimum Input
 
-SPD v13 — SEXTANT RESILIENCE
+{
+  "fx": 0,
+  "energy": 50,
+  "cyb": 50
+}
 
-Deterministic Autonomous Agent Core
+Extended Input
 
-DATA → ALGORITHMS → COMPUTE
+{
+  "fx": 0,
+  "energy": 100,
+  "cyb": 100,
+  "inf": 0,
+  "dc": 0,
+  "event": "NORMAL",
+  "time": "2026-01-01T00:00:00Z",
+  "mode": "AUTONOMOUS"
+}
 
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+Purpose:
 
-🚀 LIVE SYSTEM
-
-GitHub Repository:
-https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-
-Desktop Cockpit:
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
-Mobile Cockpit:
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
-
-Live Simulation:
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html
-
----
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-Last deployed by @123AGustien 123AGustien 7 minutes ago/
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-
-# 🧠 SPD COMPUTE ARCHITECTURE MODEL
-
-This system is built on a deterministic execution framework:
-
-DATA → ALGORITHMS → COMPUTE
+- Represents real-world or simulated conditions
+- Acts as raw system input
+- Provides structured state to the decision engine
+- Contains no decision logic at the input layer
 
 ---
 
-## 📊 1. DATA LAYER (STATE INPUT)
+🧭 GOLDEN RULE GOVERNANCE
 
-The system receives structured state:
-🔒 Backend Source of Truth
+The SPD v13 Golden Rule pipeline is:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+1. OBSERVE
+
+Capture the current system state.
+
+No decision logic is applied at this stage.
+
+2. VERIFY
+
+Validate and normalize incoming system data.
+
+The system verifies:
+
+- FX
+- Energy
+- Cyber integrity
+- Infrastructure pressure
+- Data-centre load
+- Event
+- Time
+- Operating mode
+
+3. ASSESS
+
+Calculate:
+
+- Systemic stress
+- Golden Ratio weighted score
+- Resilience score
+- Risk classification
+
+Risk states:
+
+- LOW
+- MEDIUM
+- HIGH
+- CRITICAL
+
+4. DECIDE
+
+Captain AI Lena applies deterministic decision rules based on the verified system state and resilience assessment.
+
+5. ACT
+
+The system generates a deterministic action sequence.
+
+6. UPDATE
+
+The system records the latest decision and action and prepares the state for continued monitoring.
+
+---
+
+🧾 SPD v13 AUDIT RECORD
+
+Each Golden Rule execution produces an auditable execution record containing:
+
+- Timestamp
+- Engine identity
+- Golden Rule pipeline
+- Observed state
+- Verified state
+- System assessment
+- Risk classification
+- Captain AI Lena decision
+- Selected action
+- Action sequence
+- Updated state
+- Execution status
+
+The audit structure is designed to provide traceability across the complete decision path.
+
+---
+
+🧪 SPD v13 SELF-TEST
+
+The cockpit includes a RUN SELF-TEST control for validating the execution pipeline.
+
+The self-test is intended to verify:
+
+- System initialization
+- State input handling
+- Data verification
+- Golden Rule execution
+- Risk assessment
+- Decision generation
+- Action sequence generation
+- Audit record creation
+- Final execution status
+
+The self-test must validate the backend execution path and must not redefine or bypass backend decision logic.
+
+---
+
+🔒 BACKEND SOURCE OF TRUTH
 
 Workflow Authority
 
@@ -100,7 +220,7 @@ Development Rule
 
 All development must follow this workflow:
 
-Client Input → Backend Processing → Decision Engine → System Output → Frontend Display
+"Client Input → Backend Processing → Decision Engine → System Output → Frontend Display"
 
 The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
 
@@ -115,6 +235,22 @@ When integrating external libraries, frameworks, examples, tutorials, or referen
 
 This ensures that the backend remains the authoritative execution layer for the SPD Captain AI Lena Autonomous Agent Core.
 
+---
+
+🧠 SPD COMPUTE ARCHITECTURE MODEL
+
+This system is built on a deterministic execution framework:
+
+"DATA → ALGORITHMS → COMPUTE"
+
+---
+
+📊 1. DATA LAYER — STATE INPUT
+
+The Data Layer receives structured system state.
+
+Example:
+
 {
   fx: number,
   energy: number,
@@ -123,224 +259,297 @@ This ensures that the backend remains the authoritative execution layer for the 
   dc?: number
 }
 
-Purpose:
+The Data Layer:
+
+- Receives system inputs
 - Represents real-world or simulated conditions
-- Acts as raw system input
-- No logic applied here
+- Provides structured state
+- Does not apply decision logic
 
 ---
 
-## 🧮 2. ALGORITHM LAYER (DECISION LOGIC)
+🧮 2. ALGORITHM LAYER — DECISION LOGIC
 
-Transforms raw data into evaluative states.
+The Algorithm Layer transforms raw data into evaluative states.
 
-Modules:
+FX MODULE
 
-### FX MODULE
 - Evaluates economic/system stability
 - Detects FX instability thresholds
 
-### ENERGY MODULE
+ENERGY MODULE
+
 - Checks system power availability
 - Detects overload or depletion
 
-### RISK MODULE
-- Combines FX + ENERGY + CYB
-- Outputs risk state:
-  - LOW RISK
-  - MEDIUM RISK
-  - HIGH RISK
+RISK MODULE
 
-### SCENARIO ENGINE
+Combines system risk factors and produces a risk state.
+
+Possible states include:
+
+- LOW RISK
+- MEDIUM RISK
+- HIGH RISK
+- CRITICAL
+
+SCENARIO ENGINE
+
 - Injects external events
 - Simulates stress conditions
-- Example: FX_SHOCK, ENERGY_SPIKE
+- Tests system resilience
+
+Example scenarios:
+
+- "FX_SHOCK"
+- "ENERGY_SPIKE"
+- "CYBER_EVENT"
+- "INFRASTRUCTURE_STRESS"
 
 ---
 
-## ⚙️ 3. COMPUTE LAYER (CAPTAIN AI LENA ENGINE)
+⚙️ 3. COMPUTE LAYER — CAPTAIN AI LENA ENGINE
 
-This is the execution brain:
+This is the execution brain.
 
-INPUT → RULES → DECISION → OUTPUT
+The core execution model is:
+
+"INPUT → RULES → DECISION → OUTPUT"
 
 Process:
 
 1. Observe system state
-2. Run all modules
-3. Evaluate risk
-4. Apply decision logic
-5. Output system response
+2. Verify system state
+3. Run system modules
+4. Assess risk
+5. Apply decision logic
+6. Generate action
+7. Update system state
+8. Record execution
 
 ---
 
-## 🤖 CAPTAIN AI LENA DECISION CORE
+🤖 CAPTAIN AI LENA DECISION CORE
 
-Decision rules:
-
-- If HIGH RISK → ACTIVATE STABILIZATION MODE
-- If ENERGY LOW → REDUCE SYSTEM LOAD
-- If FX unstable → FX CORRECTION ACTIVE
-- Else → SYSTEM STABLE
-
----
-
-## 🔄 FULL LOOP
-
-OBSERVE → ANALYZE → DECIDE → EXECUTE → UPDATE
-
-This loop runs continuously in simulation mode.
-
----
-
-## 🧠 DESIGN PRINCIPLE
-
-- Deterministic logic only
-- No machine learning
-- No randomness dependency
-- GitHub Repository: https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-Live Demo: https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-# SPD Captain AI Lena Autonomous Agent Core
-
-SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops.
-
-It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework inside the SPD architecture.
-
----
-
-# 🔗 PROJECT LINKS
-
-## 📁 GitHub Repository (Open in Chrome)
-https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-
-## 🧠 Live Cockpit Dashboard
-https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
----
-
-# 📥 CLIENT INSTRUCTIONS & INFORMATION FEED
-
-## System Input Requirement
-
-The system requires a structured System State Object.
-
-Minimum Input:
-{
-  "fx": 0,
-  "energy": 50,
-  "cyb": 50
-}
-
-Extended Input (Optional):
-{
-  "fx": 0,
-  "energy": 100,
-  "cyb": 100,
-  "inf": 0,
-  "dc": 0,
-  "event": "NORMAL",
-  "time": "2026-01-01T00:00:00Z",
-  "mode": "AUTONOMOUS"
-}
-
----
-
-# 🧠 SYSTEM ARCHITECTURE
-
-DATA → ALGORITHMS → CODE → COMPUTE
-
-- DATA → system inputs and state
-- ALGORITHMS → decision logic and rules
-- CODE → implementation modules
-- COMPUTE → runtime execution
-
----
-
-# 🤖 CAPTAIN AI LENA
-
-Captain AI Lena is the autonomous decision layer that:
+Captain AI Lena is the deterministic autonomous decision layer that:
 
 - Observes system state
+- Verifies incoming data
 - Evaluates rules
+- Assesses resilience
 - Makes decisions
-- Executes actions
-- Maintains stability
+- Generates actions
+- Maintains system stability
+- Records the decision path
+
+Core decision principles include:
+
+- If CRITICAL risk → ACTIVATE EMERGENCY STABILIZATION
+- If HIGH risk → ACTIVATE STABILIZATION MODE
+- If ENERGY is low → REDUCE SYSTEM LOAD
+- If FX is unstable → FX CORRECTION ACTIVE
+- If MEDIUM risk → PREVENTIVE RESILIENCE MODE
+- Otherwise → SYSTEM STABLE
+
+The exact backend implementation remains authoritative.
 
 ---
 
-# ⚙️ AGENT LOOP
+🔄 FULL AGENT LOOP
 
-OBSERVE → DECIDE → ACT → UPDATE → REPEAT
+The SPD v13 Golden Rule loop is:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+The broader system execution architecture is:
+
+"DATA → ALGORITHMS → COMPUTE"
+
+The system continuously transforms structured state into deterministic decisions and actions.
 
 ---
 
-# 🧠 COCKPIT SYSTEM
+🧠 COCKPIT SYSTEM
 
-The cockpit is a visual representation of the system.
+The cockpit is the visual representation of the SPD backend execution.
 
-Panels:
+System State
 
-### System State
-- FX → stability index
-- Energy → power level
+Displays:
+
+- FX → economic/system pressure
+- Energy → power availability
 - CYB → system integrity
-- INF → external pressure
-- DC → system load
+- INF → infrastructure pressure
+- DC → data-centre/system load
 
-### Rule Engine
+Rule Engine
+
+Represents:
+
 - Risk evaluation logic
 - Energy thresholds
 - FX correction rules
 - Scenario injection
+- Golden Rule assessment
 
-### Agent Loop Monitor
-- OBSERVE → DECIDE → ACT → UPDATE
-- Decision output
-- Current system state
+Golden Rule Pipeline
+
+Displays:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+Decision Output
+
+Displays:
+
+- Risk
+- Decision
+- Action
+- Resilience score
+
+Action Sequence
+
+Displays the deterministic sequence selected by Captain AI Lena.
+
+Audit Record
+
+Displays the execution trace for system accountability.
+
+Self-Test
+
+Provides validation of the execution pipeline.
+
+Agent Loop Monitor
+
+Displays:
+
+"DATA → ALGORITHMS → COMPUTE"
+
+and:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
 
 ---
 
-# 📱 DEVELOPMENT STATUS
+📱 DEVELOPMENT STATUS
 
-- Built from Android environment
-- Rule-based deterministic AI system (no machine learning)
+- Built from Android development environment
+- Rule-based deterministic AI system
+- No machine learning dependency
+- No randomness dependency
 - Modular JavaScript architecture
-- Cockpit dashboard interface
+- Golden Rule resilience engine
+- Scenario simulation capability
+- Desktop cockpit interface
+- Mobile cockpit interface
+- Live simulation interface
+- Audit record generation
+- Self-test framework
 
 ---
 
-# 🖥️ DESKTOP ROADMAP (ELECTRON)
+🖥️ DESKTOP ROADMAP — ELECTRON
 
-Future desktop version will include:
+Future desktop version may include:
 
 - Native desktop application
-- Executable build (.exe / .dmg)
+- Executable build (".exe" / ".dmg")
 - Desktop icon
 - Standalone cockpit application
 
-Files already included:
-- main.js
-- package.json
+Planned or existing desktop-related files may include:
+
+- "main.js"
+- "package.json"
 
 ---
 
-# ⚠️ DESIGN PRINCIPLES
+📐 SYSTEM CONSTANTS LAYER
+
+The SPD Constants Layer provides deterministic mathematical scaling.
+
+Current primary constant:
+
+- PHI / Golden Ratio
+
+Future extensions:
+
+- PI
+- E
+
+Purpose:
+
+- Provides deterministic mathematical scaling
+- Supports resilience calculations
+- Supports Golden Rule assessment
+- Maintains consistent system computation
+
+---
+
+⚠️ DESIGN PRINCIPLES
 
 - Deterministic rule-based execution only
-- No probabilistic AI
+- No probabilistic decision dependency
+- No randomness dependency
+- No machine learning dependency in the core decision engine
+- Backend remains the source of truth
+- Frontend displays backend state
 - External systems are reference only
 - Local SPD rules are authoritative
+- Every decision path should be traceable
+- Stability is prioritized before optimization
 
 ---
 
-# 🚀 SUMMARY
+🧭 SPD GOLDEN RULE PRINCIPLE
+
+Protect system stability before optimization.
+
+The system prioritizes:
+
+1. Prevent uncontrolled risk propagation
+2. Maintain critical system availability
+3. Require human oversight where appropriate
+4. Prioritize containment before recovery
+5. Record every decision path
+
+---
+
+🚀 PROJECT LINKS
+
+📁 GitHub Repository
+
+"SPD Captain AI Lena Autonomous Agent Core" (https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core)
+
+🖥️ Desktop Cockpit
+
+"Open Desktop Cockpit" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html)
+
+📱 Mobile Cockpit
+
+"Open Mobile Cockpit" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html)
+
+🧪 Live Simulation
+
+"Open Live Simulation" (https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html)
+
+---
+
+🚀 SUMMARY
 
 SPD Captain AI Lena is a deterministic autonomous agent system built for structured decision execution through layered architecture and continuous computation loops.
 
-## 📐 1.5 SYSTEM CONSTANTS LAYER
-- PHI (Golden Ratio)
-- PI (future extension)
-- E (future extension)
+The complete architecture is:
 
-Purpose:
-- Provides deterministic mathematical scaling for all modules
+"DATA → ALGORITHMS → COMPUTE"
+
+The governing resilience pipeline is:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+The system is designed to transform structured system state into deterministic assessment, decision, action, update, and auditable execution.
+
+SPD v13 — SEXTANT RESILIENCE
+
+Captain AI Lena Autonomous Agent Core
