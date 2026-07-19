@@ -1,25 +1,85 @@
+/**
+ * SPD v13 — CAPTAIN AI LENA
+ * -------------------------
+ * Autonomous orchestration layer.
+ *
+ * Architecture:
+ * DATA → ALGORITHMS → COMPUTE
+ *
+ * Captain AI Lena coordinates:
+ * FX
+ * ENERGY
+ * RISK
+ * SCENARIO
+ *
+ * The SEXTANT GOLDEN RULE ENGINE remains
+ * the authoritative deterministic decision layer.
+ */
+
 import { fxModule } from "./fx.js";
 import { energyModule } from "./energy.js";
 import { riskModule } from "./risk.js";
 import { scenarioEngine } from "./scenario.js";
+import { runGoldenRule } from "./goldenRuleEngine.js";
 
-export function captainAILena(state) {
+// ============================================================
+// CAPTAIN AI LENA
+// ============================================================
+
+export function captainAILena(state = {}) {
+
+  // ==========================================================
+  // 1. RUN DOMAIN MODULES
+  // ==========================================================
+
   const fx = fxModule(state.fx);
+
   const energy = energyModule(state.energy);
-  const risk = riskModule(state.cyb, state.energy, state.fx);
+
+  const risk = riskModule(
+    state.cyb,
+    state.energy,
+    state.fx
+  );
+
+  const scenario = scenarioEngine(
+    state.event
+  );
+
+  // ==========================================================
+  // 2. RUN AUTHORITATIVE GOLDEN RULE ENGINE
+  // OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  // ==========================================================
+
+  const goldenRule = runGoldenRule(state);
+
+  // ==========================================================
+  // 3. RETURN UNIFIED CAPTAIN AI LENA OUTPUT
+  // ==========================================================
 
   return {
-    fx,
-    energy,
-    risk,
-    scenario: scenarioEngine(state.event),
-    decision: decide(risk, energy, fx)
-  };
-}
 
-function decide(risk, energy, fx) {
-  if (risk === "HIGH RISK") return "ACTIVATE STABILIZATION MODE";
-  if (energy === "LOW ENERGY MODE") return "REDUCE SYSTEM LOAD";
-  if (fx.includes("STABILIZATION")) return "FX CORRECTION ACTIVE";
-  return "SYSTEM STABLE";
+    agent: "CAPTAIN AI LENA",
+
+    fx,
+
+    energy,
+
+    risk,
+
+    scenario,
+
+    decision: goldenRule.decision,
+
+    actionSequence: goldenRule.actionSequence,
+
+    assessment: goldenRule.assessment,
+
+    updatedState: goldenRule.updatedState,
+
+    pipeline: goldenRule.pipeline,
+
+    status: goldenRule.status
+
+  };
 }
