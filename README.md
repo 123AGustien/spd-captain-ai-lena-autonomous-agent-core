@@ -1,4 +1,28 @@
+🧠 SPD CAPTAIN AI LENA
 
+SPD v13 — SEXTANT RESILIENCE
+
+Deterministic Autonomous Agent Core
+
+DATA → ALGORITHMS → COMPUTE
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+🚀 LIVE SYSTEM
+
+GitHub Repository:
+https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
+
+Desktop Cockpit:
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
+
+Mobile Cockpit:
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
+
+Live Simulation:
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html
+
+---
 
 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
