@@ -1,110 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPD Simulation Screen</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>SPD Captain AI Lena</title>
 
   <style>
     body {
+      margin: 0;
+      padding: 20px;
       background: #05070a;
       color: #00ff99;
       font-family: monospace;
-      padding: 15px;
+      text-align: center;
     }
 
-    h2 {
+    h1 {
       color: white;
     }
 
     .panel {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
       border: 1px solid #00ff99;
+      border-radius: 8px;
+    }
+
+    a {
+      display: block;
+      margin: 12px 0;
       padding: 12px;
-      margin-top: 12px;
-      border-radius: 6px;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      background: #111;
-      color: #00ff99;
-      border: 1px solid #00ff99;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
       background: #00ff99;
       color: #000;
+      text-decoration: none;
       font-weight: bold;
-      border: none;
+      border-radius: 5px;
     }
 
-    pre {
-      white-space: pre-wrap;
+    a:hover {
+      opacity: 0.8;
     }
 
-    .flow {
-      color: #888;
-      font-size: 13px;
+    .status {
+      color: white;
+      margin-top: 20px;
     }
   </style>
 </head>
 
 <body>
 
-<h2>🧠 SPD LIVE SIMULATION SCREEN</h2>
+  <h1>🧠 SPD CAPTAIN AI LENA</h1>
 
-<div class="panel">
-  <label>FX</label>
-  <input id="fx" type="number" value="10">
+  <div class="panel">
 
-  <label>ENERGY</label>
-  <input id="energy" type="number" value="50">
+    <h2>SPD v13 — SEXTANT RESILIENCE</h2>
 
-  <label>CYB</label>
-  <input id="cyb" type="number" value="50">
+    <p class="status">
+      Deterministic Autonomous Agent Core
+    </p>
 
-  <button onclick="run()">RUN SIMULATION</button>
-</div>
+    <p>
+      DATA → ALGORITHMS → COMPUTE
+    </p>
 
-<div class="panel">
-  <h3>📥 INPUT</h3>
-  <pre id="input">Waiting...</pre>
-</div>
+    <p>
+      OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+    </p>
 
-<div class="panel">
-  <h3>⚙️ OUTPUT</h3>
-  <pre id="output">Idle</pre>
-</div>
+    <a href="./cockpit_dashboard.html">
+      OPEN DESKTOP COCKPIT
+    </a>
 
-<div class="panel">
-  <h3>🔁 FLOW</h3>
-  <div class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
-</div>
+    <a href="./cockpit_mobile.html">
+      OPEN MOBILE COCKPIT
+    </a>
 
-<script type="module">
-  import { runEngine } from "./engine.js";
+    <a href="./simulation.html">
+      OPEN LIVE SIMULATION
+    </a>
 
-  window.run = function () {
-
-    const state = {
-      fx: Number(document.getElementById("fx").value),
-      energy: Number(document.getElementById("energy").value),
-      cyb: Number(document.getElementById("cyb").value)
-    };
-
-    const result = runEngine(state);
-
-    document.getElementById("input").innerText =
-      JSON.stringify(result.input, null, 2);
-
-    document.getElementById("output").innerText =
-      JSON.stringify(result.output, null, 2);
-  };
-</script>
+  </div>
 
 </body>
 </html>
