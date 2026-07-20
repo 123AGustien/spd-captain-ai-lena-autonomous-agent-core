@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPD Standard Simulation Screen</title>
+  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-  <style>
+«»
+
+  <title>SPD v13 — Captain AI Lena Standard Simulation</title>  <style>
     body {
       background: #05070a;
       color: #00ff99;
       font-family: monospace;
       padding: 15px;
+      margin: 0;
     }
 
     h2 {
@@ -21,84 +24,500 @@
       padding: 10px;
       margin-top: 10px;
       border-radius: 6px;
+      background: #080d11;
     }
 
-    input, button {
+    input,
+    button {
       width: 100%;
+      box-sizing: border-box;
       padding: 8px;
       margin-top: 5px;
       margin-bottom: 10px;
       background: #111;
       color: #00ff99;
       border: 1px solid #00ff99;
+      border-radius: 4px;
+    }
+
+    button {
+      font-weight: bold;
+      cursor: pointer;
     }
 
     pre {
       white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
     }
 
     .flow {
       color: #aaa;
     }
-  </style>
-</head>
 
-<body>
+    .status {
+      color: white;
+      font-weight: bold;
+      padding: 10px;
+      border: 1px solid #00ff99;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+  </style></head><body><h2>🧠 SPD STANDARD SIMULATION SCREEN</h2><div class="status" id="systemStatus">
+  SYSTEM INITIALIZING...
+</div><!-- ============================================================
+     SYSTEM INPUT
+============================================================ --><div class="panel">  <h3>📥 SYSTEM INPUT</h3><label>FX</label>
+<input
+id="fx"
+type="number"
+value="10"
+min="0"
+max="100"
 
-<h2>🧠 SPD STANDARD SIMULATION SCREEN</h2>
+«»
 
-<div class="panel">
-  <label>FX</label>
-  <input id="fx" type="number" value="10">
+<label>ENERGY</label>
+<input
+id="energy"
+type="number"
+value="50"
+min="0"
+max="100"
 
-  <label>ENERGY</label>
-  <input id="energy" type="number" value="50">
+«»
 
-  <label>CYB</label>
-  <input id="cyb" type="number" value="50">
+<label>CYB</label>
+<input
+id="cyb"
+type="number"
+value="50"
+min="0"
+max="100"
 
-  <button onclick="runSim()">RUN SIMULATION</button>
-</div>
+«»
 
-<div class="panel">
-  <h3>📊 INPUT STATE</h3>
-  <pre id="input"></pre>
-</div>
+<label>INF</label>
+<input
+id="inf"
+type="number"
+value="0"
+min="0"
+max="100"
 
-<div class="panel">
-  <h3>⚙️ ENGINE OUTPUT</h3>
-  <pre id="output"></pre>
-</div>
+«»
 
-<div class="panel">
-  <h3>🔁 SYSTEM FLOW</h3>
-  <div class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
-</div>
+<label>DC</label>
+<input
+id="dc"
+type="number"
+value="0"
+min="0"
+max="100"
 
-<script type="module">
-  import { runEngine } from "./engine.js";
+«»
+
+  <button onclick="runSim()">
+    RUN SIMULATION
+  </button></div><!-- ============================================================
+     INPUT STATE
+============================================================ --><div class="panel">  <h3>📊 INPUT STATE</h3>  <pre id="input">
+Waiting for simulation...
+  </pre></div><!-- ============================================================
+     GOLDEN RULE PIPELINE
+============================================================ --><div class="panel">  <h3>🧭 GOLDEN RULE PIPELINE</h3>  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>  <pre id="pipeline">
+Waiting...
+  </pre></div><!-- ============================================================
+     ENGINE OUTPUT
+============================================================ --><div class="panel">  <h3>⚙️ AUTHORITATIVE GOLDEN RULE ENGINE OUTPUT</h3>  <pre id="output">
+Waiting for simulation...
+  </pre></div><!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ --><div class="panel">  <h3>⚠️ SYSTEM ASSESSMENT</h3>  <pre id="assessment">
+Waiting...
+  </pre></div><!-- ============================================================
+     CAPTAIN AI LENA DECISION
+============================================================ --><div class="panel">  <h3>⚙️ CAPTAIN AI LENA DECISION</h3>  <pre id="decision">
+Waiting...
+  </pre></div><!-- ============================================================
+     ACTION SEQUENCE
+============================================================ --><div class="panel">  <h3>🚨 ACTION SEQUENCE</h3>  <pre id="actions">
+Waiting...
+  </pre></div><!-- ============================================================
+     UPDATED STATE
+============================================================ --><div class="panel">  <h3>🔄 UPDATED STATE</h3>  <pre id="updatedState">
+Waiting...
+  </pre></div><!-- ============================================================
+     AUDIT RECORD
+============================================================ --><div class="panel">  <h3>🧾 AUDIT RECORD</h3>  <pre id="audit">
+No audit record yet.
+  </pre></div><!-- ============================================================
+     SYSTEM FLOW
+============================================================ --><div class="panel">  <h3>🔁 SYSTEM FLOW</h3>  <div class="flow">
+    DATA → ALGORITHMS → COMPUTE
+  </div>  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div></div><script type="module">
+
+  /*
+   * ============================================================
+   * SPD v13 — STANDARD SIMULATION
+   * ============================================================
+   *
+   * SOURCE OF TRUTH:
+   *
+   * goldenRuleEngine.js
+   *
+   * This simulation does NOT implement separate decision logic.
+   *
+   * All assessment, risk classification, decision, action,
+   * and update logic comes from the authoritative
+   * SPD v13 SEXTANT GOLDEN RULE ENGINE.
+   *
+   * Architecture:
+   *
+   * DATA
+   *   ↓
+   * GOLDEN RULE ENGINE
+   *   ↓
+   * OBSERVE
+   *   ↓
+   * VERIFY
+   *   ↓
+   * ASSESS
+   *   ↓
+   * DECIDE
+   *   ↓
+   * ACT
+   *   ↓
+   * UPDATE
+   *   ↓
+   * AUDIT
+   *
+   * The frontend only displays the backend result.
+   * ============================================================
+   */
+
+  import {
+    runGoldenRule,
+    PHI,
+    GOLDEN_RULE_STAGES
+  } from "./goldenRuleEngine.js";
+
+
+  // ============================================================
+  // RUN STANDARD SIMULATION
+  // ============================================================
 
   window.runSim = function () {
 
-    // 1. INPUT
+    // ----------------------------------------------------------
+    // 1. DATA LAYER — CLIENT INPUT
+    // ----------------------------------------------------------
+
     const state = {
-      fx: Number(document.getElementById("fx").value),
-      energy: Number(document.getElementById("energy").value),
-      cyb: Number(document.getElementById("cyb").value)
+
+      fx:
+        Number(
+          document.getElementById("fx").value
+        ),
+
+      energy:
+        Number(
+          document.getElementById("energy").value
+        ),
+
+      cyb:
+        Number(
+          document.getElementById("cyb").value
+        ),
+
+      inf:
+        Number(
+          document.getElementById("inf").value
+        ),
+
+      dc:
+        Number(
+          document.getElementById("dc").value
+        ),
+
+      event:
+        "NORMAL",
+
+      mode:
+        "AUTONOMOUS"
+
     };
 
-    // 2. ENGINE
-    const result = runEngine(state);
 
-    // 3. DISPLAY INPUT
-    document.getElementById("input").innerText =
-      JSON.stringify(state, null, 2);
+    try {
 
-    // 4. DISPLAY OUTPUT
-    document.getElementById("output").innerText =
-      JSON.stringify(result, null, 2);
+      // --------------------------------------------------------
+      // 2. AUTHORITATIVE GOLDEN RULE ENGINE
+      // --------------------------------------------------------
+
+      const result =
+        runGoldenRule(state);
+
+
+      // --------------------------------------------------------
+      // 3. SYSTEM STATUS
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM STATUS: " +
+        result.status;
+
+
+      // --------------------------------------------------------
+      // 4. DISPLAY RAW INPUT
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "input"
+      ).innerText =
+        JSON.stringify(
+          state,
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 5. DISPLAY GOLDEN RULE PIPELINE
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "pipeline"
+      ).innerText =
+        result.pipeline.join(
+          " → "
+        );
+
+
+      // --------------------------------------------------------
+      // 6. DISPLAY COMPLETE ENGINE OUTPUT
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "output"
+      ).innerText =
+        JSON.stringify(
+          {
+
+            engine:
+              result.engine,
+
+            pipeline:
+              result.pipeline,
+
+            observedState:
+              result.observedState,
+
+            verifiedState:
+              result.verifiedState,
+
+            assessment:
+              result.assessment,
+
+            decision:
+              result.decision,
+
+            actionSequence:
+              result.actionSequence,
+
+            updatedState:
+              result.updatedState,
+
+            status:
+              result.status
+
+          },
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 7. DISPLAY ASSESSMENT
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "assessment"
+      ).innerText =
+        JSON.stringify(
+          result.assessment,
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 8. DISPLAY CAPTAIN AI LENA DECISION
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "decision"
+      ).innerText =
+        JSON.stringify(
+          result.decision,
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 9. DISPLAY ACTION SEQUENCE
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "actions"
+      ).innerText =
+        JSON.stringify(
+          result.actionSequence,
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 10. DISPLAY UPDATED STATE
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "updatedState"
+      ).innerText =
+        JSON.stringify(
+          result.updatedState,
+          null,
+          2
+        );
+
+
+      // --------------------------------------------------------
+      // 11. CREATE AUDIT RECORD
+      // --------------------------------------------------------
+
+      const auditRecord = {
+
+        timestamp:
+          new Date().toISOString(),
+
+        engine:
+          result.engine,
+
+        observedState:
+          result.observedState,
+
+        verifiedState:
+          result.verifiedState,
+
+        assessment:
+          result.assessment,
+
+        decision:
+          result.decision,
+
+        actionSequence:
+          result.actionSequence,
+
+        updatedState:
+          result.updatedState,
+
+        constants:
+          {
+            PHI
+          },
+
+        pipeline:
+          GOLDEN_RULE_STAGES,
+
+        status:
+          result.status
+
+      };
+
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+        JSON.stringify(
+          auditRecord,
+          null,
+          2
+        );
+
+
+    }
+
+    catch (error) {
+
+      // --------------------------------------------------------
+      // ERROR HANDLING
+      // --------------------------------------------------------
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM STATUS: ERROR";
+
+
+      document.getElementById(
+        "output"
+      ).innerText =
+        JSON.stringify(
+          {
+
+            status:
+              "ERROR",
+
+            message:
+              error.message
+
+          },
+          null,
+          2
+        );
+
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+        JSON.stringify(
+          {
+
+            status:
+              "ERROR",
+
+            engine:
+              "SPD v13 STANDARD SIMULATION",
+
+            message:
+              error.message,
+
+            timestamp:
+              new Date().toISOString()
+
+          },
+          null,
+          2
+        );
+
+    }
+
   };
-</script>
 
-</body>
+
+  // ============================================================
+  // INITIAL EXECUTION
+  // ============================================================
+
+  runSim();
+
+</script></body>
 </html>
