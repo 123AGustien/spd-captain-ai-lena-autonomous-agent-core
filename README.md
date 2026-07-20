@@ -6,11 +6,13 @@ Deterministic Autonomous Agent Core
 
 SYSTEM STATUS: COMPLETE
 
-Core Architecture
+---
+
+🧭 CORE ARCHITECTURE
 
 DATA → ALGORITHMS → COMPUTE
 
-Golden Rule Governance
+🧭 GOLDEN RULE GOVERNANCE
 
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
@@ -18,21 +20,17 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 🚀 LIVE SYSTEM ACCESS
 
-📁 Open GitHub Repository — SPD v13 Development Branch
+📁 SPD v13 Repository
 
-"Open GitHub Repository" (https://reference-url-citation.invalid/0)
+SPD Captain AI Lena Autonomous Agent Core
 
-🖥️ Open Desktop Cockpit Pro
+https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
 
-"Open Desktop Cockpit Pro" (https://reference-url-citation.invalid/1)
+🛰️ Sextant Rule Library — GitHub Pages
 
-📱 Open Mobile Cockpit
+https://123AGustien.github.io/sextant-rule-library/
 
-"Open Mobile Cockpit" (https://reference-url-citation.invalid/2)
-
-🧪 Open Live Simulation
-
-"Open Live Simulation" (https://reference-url-citation.invalid/3)
+«Note: Desktop Cockpit Pro, Mobile Cockpit, and Live Simulation links should be added only when their actual deployed URLs are confirmed. Invalid placeholder URLs are intentionally not used.»
 
 ---
 
@@ -71,7 +69,15 @@ The cockpit provides:
 
 The cockpit is a visual execution, control, and monitoring interface.
 
-The backend remains the authoritative source of truth for all workflow, assessment, decision logic, action generation, and execution.
+The backend remains the authoritative source of truth for:
+
+- Workflow
+- Assessment
+- Decision logic
+- Action generation
+- Execution
+
+The frontend must display backend results and must not redefine or override backend decision logic.
 
 ---
 
@@ -131,11 +137,15 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 The Golden Rule Engine provides the deterministic execution path used by Captain AI Lena to assess system resilience and generate the appropriate response.
 
+---
+
 1. OBSERVE
 
 Capture the current system state.
 
 No decision logic is applied at this stage.
+
+---
 
 2. VERIFY
 
@@ -152,6 +162,8 @@ The system verifies:
 - Time
 - Operating mode
 
+---
+
 3. ASSESS
 
 Calculate:
@@ -161,20 +173,34 @@ Calculate:
 - Resilience score
 - Risk classification
 
-Risk states:
+Risk states supported by the architecture include:
 
 - LOW
 - MEDIUM
 - HIGH
 - CRITICAL
 
+The exact risk classification and thresholds are determined by the authoritative backend implementation.
+
+---
+
 4. DECIDE
 
-Captain AI Lena applies deterministic decision rules based on the verified system state and resilience assessment.
+Captain AI Lena applies deterministic decision rules based on:
+
+- Verified system state
+- Systemic stress
+- Golden Rule assessment
+- Risk classification
+- Active system conditions
+
+---
 
 5. ACT
 
 The system generates a deterministic action sequence.
+
+---
 
 6. UPDATE
 
@@ -216,10 +242,56 @@ The self-test is intended to verify:
 - Risk assessment
 - Decision generation
 - Action sequence generation
+- Golden Rule pipeline integrity
+- Engine execution status
 - Audit record creation
 - Final execution status
 
-The self-test must validate the backend execution path and must not redefine or bypass backend decision logic.
+The self-test validates the backend execution path and must not redefine or bypass backend decision logic.
+
+Current Basic Reset Self-Test
+
+The current mobile cockpit self-test validates four deterministic operating states:
+
+Test 1 — LOW RISK / NORMAL STABILITY
+
+Expected:
+
+Risk: LOW
+Decision: SYSTEM STABLE
+
+Test 2 — MEDIUM RISK / PREVENTIVE RESILIENCE
+
+Expected:
+
+Risk: MEDIUM
+Decision: PREVENTIVE RESILIENCE MODE
+
+Test 3 — HIGH RISK / STABILIZATION
+
+Expected:
+
+Risk: HIGH
+Decision: ACTIVATE STABILIZATION MODE
+
+Test 4 — MAXIMUM CURRENT RISK / ENGINE LIMIT
+
+Expected according to the current authoritative engine implementation:
+
+Risk: HIGH
+Decision: ACTIVATE STABILIZATION MODE
+
+The fourth test is intentionally described as MAXIMUM CURRENT RISK — ENGINE LIMIT because the current Golden Rule calculation reaches its maximum current risk classification at HIGH.
+
+The self-test does not redefine the Golden Rule Engine. It tests the actual current backend behavior.
+
+A successful execution is reported as:
+
+4/4 TESTS PASSED
+
+with:
+
+overallStatus: PASS
 
 ---
 
@@ -241,13 +313,25 @@ If any mismatch exists between:
 
 the backend implementation shall be treated as the source of truth.
 
+---
+
 Development Rule
 
 All development must follow this workflow:
 
-Client Input → Backend Processing → Decision Engine → System Output → Frontend Display
+Client Input
+      ↓
+Backend Processing
+      ↓
+Decision Engine
+      ↓
+System Output
+      ↓
+Frontend Display
 
 The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
+
+---
 
 Source Validation Rule
 
@@ -326,10 +410,10 @@ SCENARIO ENGINE
 
 Example scenarios:
 
-- "FX_SHOCK"
-- "ENERGY_SPIKE"
-- "CYBER_EVENT"
-- "INFRASTRUCTURE_STRESS"
+FX_SHOCK
+ENERGY_SPIKE
+CYBER_EVENT
+INFRASTRUCTURE_STRESS
 
 ---
 
@@ -341,7 +425,7 @@ The core execution model is:
 
 INPUT → RULES → DECISION → OUTPUT
 
-Process
+Process:
 
 1. Observe system state
 2. Verify system state
@@ -369,14 +453,27 @@ Captain AI Lena is the deterministic autonomous decision layer that:
 
 Core decision principles include:
 
-- If CRITICAL risk → ACTIVATE EMERGENCY STABILIZATION
-- If HIGH risk → ACTIVATE STABILIZATION MODE
-- If ENERGY is low → REDUCE SYSTEM LOAD
-- If FX is unstable → FX CORRECTION ACTIVE
-- If MEDIUM risk → PREVENTIVE RESILIENCE MODE
-- Otherwise → SYSTEM STABLE
+If CRITICAL risk
+→ ACTIVATE EMERGENCY STABILIZATION
 
-The exact backend implementation remains authoritative.
+If HIGH risk
+→ ACTIVATE STABILIZATION MODE
+
+If ENERGY is low
+→ REDUCE SYSTEM LOAD
+
+If FX is unstable
+→ FX CORRECTION ACTIVE
+
+If MEDIUM risk
+→ PREVENTIVE RESILIENCE MODE
+
+Otherwise
+→ SYSTEM STABLE
+
+Important: The exact backend implementation remains authoritative.
+
+The README documents the architecture and principles but does not override the backend rules.
 
 ---
 
@@ -390,13 +487,21 @@ The broader system execution architecture is:
 
 DATA → ALGORITHMS → COMPUTE
 
-The system continuously transforms structured state into deterministic decisions and actions.
+The system transforms structured state into deterministic:
+
+- Assessment
+- Decision
+- Action
+- Update
+- Audit record
 
 ---
 
 🧠 COCKPIT SYSTEM
 
 The cockpit is the visual representation of the SPD backend execution.
+
+---
 
 System State
 
@@ -408,6 +513,8 @@ Displays:
 - INF → infrastructure pressure
 - DC → data-centre/system load
 
+---
+
 Rule Engine
 
 Represents:
@@ -418,11 +525,15 @@ Represents:
 - Scenario injection
 - Golden Rule assessment
 
+---
+
 Golden Rule Pipeline
 
 Displays:
 
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+---
 
 Decision Output
 
@@ -433,17 +544,25 @@ Displays:
 - Action
 - Resilience score
 
+---
+
 Action Sequence
 
 Displays the deterministic sequence selected by Captain AI Lena.
+
+---
 
 Audit Record
 
 Displays the execution trace for system accountability.
 
+---
+
 Self-Test
 
 Provides validation of the execution pipeline.
+
+---
 
 Agent Loop Monitor
 
@@ -465,11 +584,21 @@ Current cockpit integration provides the Memory Core interface.
 
 Full Memory Core wiring will connect:
 
-Audit Record → Event Memory → Scenario Memory → Learning Engine → Memory Configuration
+Audit Record
+      ↓
+Event Memory
+      ↓
+Scenario Memory
+      ↓
+Learning Engine
+      ↓
+Memory Configuration
 
 Memory integration will be implemented without creating a second decision engine.
 
 The Golden Rule Engine remains authoritative.
+
+The Memory Core is intended to provide historical context, event retention, scenario history, and learning support without overriding deterministic Golden Rule governance.
 
 ---
 
@@ -502,8 +631,8 @@ Future desktop version may include:
 
 Planned or existing desktop-related files may include:
 
-- "main.js"
-- "package.json"
+main.js
+package.json
 
 ---
 
@@ -513,21 +642,21 @@ The SPD Constants Layer provides deterministic mathematical scaling.
 
 Current Primary Constant
 
-- PHI / Golden Ratio
+PHI / GOLDEN RATIO
 
 Future Extensions
 
-- PI
-- E
+PI
+E
 
-Purpose
-
-The Constants Layer:
+Purpose of the Constants Layer:
 
 - Provides deterministic mathematical scaling
 - Supports resilience calculations
 - Supports Golden Rule assessment
 - Maintains consistent system computation
+
+The Constants Layer does not replace the Golden Rule Engine and does not independently make decisions.
 
 ---
 
@@ -548,7 +677,7 @@ The Constants Layer:
 
 🧭 SPD GOLDEN RULE PRINCIPLE
 
-Protect system stability before optimization.
+«Protect system stability before optimization.»
 
 The system prioritizes:
 
@@ -562,21 +691,27 @@ The system prioritizes:
 
 🚀 PROJECT LINKS
 
-📁 GitHub Repository
+📁 SPD Captain AI Lena Autonomous Agent Core
 
-"SPD Captain AI Lena Autonomous Agent Core" (https://reference-url-citation.invalid/4)
+https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
+
+🛰️ Sextant Rule Library — GitHub Pages
+
+https://123AGustien.github.io/sextant-rule-library/
 
 🖥️ Desktop Cockpit Pro
 
-"Open Desktop Cockpit Pro" (https://reference-url-citation.invalid/5)
+Deployment URL to be added after verification.
 
 📱 Mobile Cockpit
 
-"Open Mobile Cockpit" (https://reference-url-citation.invalid/6)
+Deployment URL to be added after verification.
 
 🧪 Live Simulation
 
-"Open Live Simulation" (https://reference-url-citation.invalid/7)
+Deployment URL to be added after verification.
+
+«Link Integrity Rule: Only verified deployment URLs should be published here. Placeholder or unverified URLs must not be used.»
 
 ---
 
@@ -592,8 +727,48 @@ The governing resilience pipeline is:
 
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
-The system is designed to transform structured system state into deterministic assessment, decision, action, update, and auditable execution.
+The system is designed to transform structured system state into:
 
-SPD v13 — SEXTANT RESILIENCE
+Deterministic Assessment
+        ↓
+Decision
+        ↓
+Action
+        ↓
+State Update
+        ↓
+Audit Record
+
+The SPD v13 architecture maintains a strict separation between:
+
+DATA
+↓
+ALGORITHMS
+↓
+COMPUTE
+↓
+GOLDEN RULE GOVERNANCE
+↓
+AUDIT
+↓
+FRONTEND DISPLAY
+
+The Golden Rule Engine remains the authoritative deterministic decision layer.
+
+Captain AI Lena coordinates system modules and execution while preserving the authority of the Golden Rule Engine.
+
+The system's governing principle remains:
+
+«Protect system stability before optimization.»
+
+---
+
+🧠 SPD v13 — SEXTANT RESILIENCE
 
 Captain AI Lena Autonomous Agent Core
+
+DATA → ALGORITHMS → COMPUTE
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+Deterministic. Auditable. Rule-Governed. Resilience-Oriented.
