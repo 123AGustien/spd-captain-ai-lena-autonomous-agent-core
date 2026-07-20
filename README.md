@@ -4,15 +4,7 @@ SPD v13 — SEXTANT RESILIENCE
 
 Deterministic Autonomous Agent Core
 
-SYSTEM STATUS: COMPLETE
-
----
-
-🧭 CORE ARCHITECTURE
-
 DATA → ALGORITHMS → COMPUTE
-
-🧭 GOLDEN RULE GOVERNANCE
 
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
@@ -20,17 +12,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 🚀 LIVE SYSTEM ACCESS
 
-📁 SPD v13 Repository
-
-SPD Captain AI Lena Autonomous Agent Core
+📁 Open SPD v13 GitHub Repository
 
 https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
 
-🛰️ Sextant Rule Library — GitHub Pages
+🖥️ Open Desktop Cockpit
 
-https://123AGustien.github.io/sextant-rule-library/
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
-«Note: Desktop Cockpit Pro, Mobile Cockpit, and Live Simulation links should be added only when their actual deployed URLs are confirmed. Invalid placeholder URLs are intentionally not used.»
+📱 Open Mobile Cockpit
+
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
+
+🧪 Open Live Simulation
+
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html
 
 ---
 
@@ -69,15 +65,9 @@ The cockpit provides:
 
 The cockpit is a visual execution, control, and monitoring interface.
 
-The backend remains the authoritative source of truth for:
+The backend remains the authoritative source of truth for all workflow, assessment, decision logic, action generation, and execution.
 
-- Workflow
-- Assessment
-- Decision logic
-- Action generation
-- Execution
-
-The frontend must display backend results and must not redefine or override backend decision logic.
+The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
 
 ---
 
@@ -137,15 +127,11 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 The Golden Rule Engine provides the deterministic execution path used by Captain AI Lena to assess system resilience and generate the appropriate response.
 
----
-
 1. OBSERVE
 
 Capture the current system state.
 
 No decision logic is applied at this stage.
-
----
 
 2. VERIFY
 
@@ -161,8 +147,6 @@ The system verifies:
 - Event
 - Time
 - Operating mode
-
----
 
 3. ASSESS
 
@@ -182,25 +166,13 @@ Risk states supported by the architecture include:
 
 The exact risk classification and thresholds are determined by the authoritative backend implementation.
 
----
-
 4. DECIDE
 
-Captain AI Lena applies deterministic decision rules based on:
-
-- Verified system state
-- Systemic stress
-- Golden Rule assessment
-- Risk classification
-- Active system conditions
-
----
+Captain AI Lena applies deterministic decision rules based on the verified system state and resilience assessment.
 
 5. ACT
 
 The system generates a deterministic action sequence.
-
----
 
 6. UPDATE
 
@@ -253,35 +225,27 @@ Current Basic Reset Self-Test
 
 The current mobile cockpit self-test validates four deterministic operating states:
 
-Test 1 — LOW RISK / NORMAL STABILITY
+TEST 1 — LOW RISK / NORMAL STABILITY
 
-Expected:
+Expected Risk: LOW
+Expected Decision: SYSTEM STABLE
 
-Risk: LOW
-Decision: SYSTEM STABLE
+TEST 2 — MEDIUM RISK / PREVENTIVE RESILIENCE
 
-Test 2 — MEDIUM RISK / PREVENTIVE RESILIENCE
+Expected Risk: MEDIUM
+Expected Decision: PREVENTIVE RESILIENCE MODE
 
-Expected:
+TEST 3 — HIGH RISK / STABILIZATION
 
-Risk: MEDIUM
-Decision: PREVENTIVE RESILIENCE MODE
+Expected Risk: HIGH
+Expected Decision: ACTIVATE STABILIZATION MODE
 
-Test 3 — HIGH RISK / STABILIZATION
+TEST 4 — MAXIMUM CURRENT RISK / ENGINE LIMIT
 
-Expected:
+Expected Risk: HIGH
+Expected Decision: ACTIVATE STABILIZATION MODE
 
-Risk: HIGH
-Decision: ACTIVATE STABILIZATION MODE
-
-Test 4 — MAXIMUM CURRENT RISK / ENGINE LIMIT
-
-Expected according to the current authoritative engine implementation:
-
-Risk: HIGH
-Decision: ACTIVATE STABILIZATION MODE
-
-The fourth test is intentionally described as MAXIMUM CURRENT RISK — ENGINE LIMIT because the current Golden Rule calculation reaches its maximum current risk classification at HIGH.
+The fourth test is intentionally described as MAXIMUM CURRENT RISK — ENGINE LIMIT because the current authoritative Golden Rule calculation reaches its maximum current risk classification at HIGH.
 
 The self-test does not redefine the Golden Rule Engine. It tests the actual current backend behavior.
 
@@ -313,25 +277,21 @@ If any mismatch exists between:
 
 the backend implementation shall be treated as the source of truth.
 
----
-
 Development Rule
 
 All development must follow this workflow:
 
 Client Input
-      ↓
+    ↓
 Backend Processing
-      ↓
+    ↓
 Decision Engine
-      ↓
+    ↓
 System Output
-      ↓
+    ↓
 Frontend Display
 
 The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
-
----
 
 Source Validation Rule
 
@@ -352,9 +312,7 @@ The system is built on a deterministic execution framework:
 
 DATA → ALGORITHMS → COMPUTE
 
----
-
-📊 1. DATA LAYER — STATE INPUT
+1. DATA LAYER — STATE INPUT
 
 The Data Layer receives structured system state.
 
@@ -375,9 +333,7 @@ The Data Layer:
 - Provides structured state
 - Does not apply decision logic
 
----
-
-🧮 2. ALGORITHM LAYER — DECISION LOGIC
+2. ALGORITHM LAYER — DECISION LOGIC
 
 The Algorithm Layer transforms raw data into evaluative states.
 
@@ -471,7 +427,7 @@ If MEDIUM risk
 Otherwise
 → SYSTEM STABLE
 
-Important: The exact backend implementation remains authoritative.
+The exact backend implementation remains authoritative.
 
 The README documents the architecture and principles but does not override the backend rules.
 
@@ -501,8 +457,6 @@ The system transforms structured state into deterministic:
 
 The cockpit is the visual representation of the SPD backend execution.
 
----
-
 System State
 
 Displays:
@@ -512,8 +466,6 @@ Displays:
 - CYB → system integrity
 - INF → infrastructure pressure
 - DC → data-centre/system load
-
----
 
 Rule Engine
 
@@ -525,15 +477,11 @@ Represents:
 - Scenario injection
 - Golden Rule assessment
 
----
-
 Golden Rule Pipeline
 
 Displays:
 
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-
----
 
 Decision Output
 
@@ -544,25 +492,17 @@ Displays:
 - Action
 - Resilience score
 
----
-
 Action Sequence
 
 Displays the deterministic sequence selected by Captain AI Lena.
-
----
 
 Audit Record
 
 Displays the execution trace for system accountability.
 
----
-
 Self-Test
 
 Provides validation of the execution pipeline.
-
----
 
 Agent Loop Monitor
 
@@ -585,13 +525,13 @@ Current cockpit integration provides the Memory Core interface.
 Full Memory Core wiring will connect:
 
 Audit Record
-      ↓
+    ↓
 Event Memory
-      ↓
+    ↓
 Scenario Memory
-      ↓
+    ↓
 Learning Engine
-      ↓
+    ↓
 Memory Configuration
 
 Memory integration will be implemented without creating a second decision engine.
@@ -649,7 +589,7 @@ Future Extensions
 PI
 E
 
-Purpose of the Constants Layer:
+Purpose:
 
 - Provides deterministic mathematical scaling
 - Supports resilience calculations
@@ -695,23 +635,17 @@ The system prioritizes:
 
 https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
 
-🛰️ Sextant Rule Library — GitHub Pages
+🖥️ Desktop Cockpit
 
-https://123AGustien.github.io/sextant-rule-library/
-
-🖥️ Desktop Cockpit Pro
-
-Deployment URL to be added after verification.
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
 
 📱 Mobile Cockpit
 
-Deployment URL to be added after verification.
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
 
 🧪 Live Simulation
 
-Deployment URL to be added after verification.
-
-«Link Integrity Rule: Only verified deployment URLs should be published here. Placeholder or unverified URLs must not be used.»
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/simulation.html
 
 ---
 
