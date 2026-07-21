@@ -1,3 +1,198 @@
+
+🛰️ SPD v13 — Captain AI Lena Cockpit Architecture
+
+The SPD v13 Sextant Resilience system provides two complementary cockpit interfaces connected to the same authoritative "goldenRuleEngine.js".
+
+The architecture separates operational decision-making from deterministic system validation.
+
+---
+
+🖥️ Desktop Cockpit — Operational Resilience Interface
+
+The SPD v13.1 SEXTANT RESILIENCE COCKPIT PRO is the primary operational interface for Captain AI Lena.
+
+It is designed to simulate system stress, assess cascading risks, generate deterministic decisions, and define the corrective action required to maintain resilience.
+
+Core Operational Flow
+
+DATA → ALGORITHMS → COMPUTE
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+Desktop Cockpit Functions
+
+The Desktop Cockpit provides:
+
+- Live system execution
+- Scenario control
+- Scenario intensity control
+- FX stress simulation
+- Data-centre load simulation
+- Cyber-event simulation
+- Infrastructure stress simulation
+- Biodiesel shortage simulation
+- Multi-domain system monitoring
+- Energy monitoring
+- System assessment
+- Risk classification
+- Captain AI Lena decision output
+- Solution options
+- Action sequence generation
+- Memory Core monitoring
+- Audit record generation
+- Pipeline logging
+- Self-test execution
+- Fault identification
+- Corrective action determination
+- Re-test validation
+
+The Desktop Cockpit is therefore the operational action interface.
+
+Its purpose is to answer:
+
+«What is happening, what is the risk, what decision should be made, and what action should be taken?»
+
+The operational sequence is:
+
+OBSERVE
+↓
+VERIFY
+↓
+ASSESS
+↓
+DECIDE
+↓
+ACT
+↓
+UPDATE
+
+The Desktop Cockpit is intended for expanded scenario simulation and resilience operations.
+
+---
+
+📱 Mobile Cockpit — Deterministic Validation Interface
+
+The SPD v13 Captain AI Lena Mobile Cockpit is the lightweight validation and simulation interface.
+
+It connects directly to the same authoritative:
+
+"goldenRuleEngine.js"
+
+The Mobile Cockpit is designed to provide a simple environment for testing the deterministic behavior of the Golden Rule Engine.
+
+Mobile Cockpit Functions
+
+The Mobile Cockpit provides:
+
+- Manual system input
+- FX input
+- Energy input
+- Cyber risk input
+- Infrastructure risk input
+- Data-centre load input
+- Golden Rule pipeline execution
+- System assessment
+- Captain AI Lena decision output
+- Action sequence output
+- Audit record generation
+- Authoritative self-test
+
+The Mobile Cockpit is therefore the validation and test interface.
+
+Its purpose is to answer:
+
+«Is the authoritative Golden Rule Engine operating correctly and deterministically?»
+
+---
+
+🧪 Mobile 4/4 Self-Test
+
+The Mobile Cockpit contains the primary 4/4 validation target.
+
+The self-test executes four predefined scenarios against the actual authoritative Golden Rule Engine.
+
+Tests Validated
+
+1. LOW RISK — NORMAL STABILITY
+2. MEDIUM RISK — PREVENTIVE RESILIENCE
+3. HIGH RISK — STABILIZATION
+4. MAXIMUM CURRENT RISK — ENGINE LIMIT
+
+Each test validates:
+
+- Risk classification
+- Deterministic decision logic
+- Golden Rule pipeline integrity
+- Engine execution status
+
+The target result is:
+
+"4/4 TESTS PASSED"
+
+"overallStatus: PASS"
+
+The Mobile Cockpit does not redefine the Golden Rule thresholds.
+
+It tests the actual behavior of the current authoritative "goldenRuleEngine.js" implementation.
+
+---
+
+🔗 Shared Authoritative Engine
+
+Both cockpits operate against the same Golden Rule Engine:
+
+"goldenRuleEngine.js"
+
+This creates a clear separation between:
+
+🖥️ Desktop Cockpit
+
+Operational Resilience
+
+ASSESS → DECIDE → ACTION
+
+Used for scenario simulation, risk evaluation, decision-making, corrective action, and operational response.
+
+📱 Mobile Cockpit
+
+Deterministic Validation
+
+TEST → VALIDATE → 4/4 PASS
+
+Used to verify that the authoritative engine produces the expected deterministic results.
+
+---
+
+🛰️ Combined SPD v13 Architecture
+
+The two interfaces work together as complementary layers:
+
+MOBILE COCKPIT
+↓
+AUTHORITATIVE ENGINE VALIDATION
+↓
+4/4 SELF-TEST PASS
+↓
+DESKTOP COCKPIT
+↓
+SCENARIO SIMULATION
+↓
+RISK ASSESSMENT
+↓
+CAPTAIN AI LENA DECISION
+↓
+CORRECTIVE ACTION
+↓
+RE-TEST
+
+This architecture ensures that the validation interface and operational interface remain distinct while sharing one authoritative deterministic decision engine.
+
+The Mobile Cockpit provides the 4/4 validation target.
+
+The Desktop Cockpit provides the operational resilience and action environment.
+
+Together, they form the SPD v13 Captain AI Lena cockpit architecture.
+
 🧠 SPD CAPTAIN AI LENA
 
 SPD v13 — SEXTANT RESILIENCE
