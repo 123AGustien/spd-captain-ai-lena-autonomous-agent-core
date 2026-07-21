@@ -1,40 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+«»
 
-  <title>SPD v13.1 — Self-Test & Validation</title>
+  <title>SPD v13.1 — SELF-TEST & VALIDATION</title>  <style>
 
-  <style>
     body {
       margin: 0;
       padding: 20px;
       background: #05070a;
       color: #00ff99;
       font-family: monospace;
+      text-align: center;
     }
 
     h1 {
       color: white;
-      text-align: center;
+      margin-bottom: 5px;
     }
 
     h2 {
       color: #00ff99;
     }
 
-    .header {
-      max-width: 900px;
-      margin: auto;
-      text-align: center;
-      padding: 20px;
-      border: 1px solid #00ff99;
-      border-radius: 8px;
+    .subtitle {
+      color: white;
+      margin-bottom: 25px;
     }
 
     .panel {
@@ -43,12 +36,14 @@
       padding: 20px;
       border: 1px solid #00ff99;
       border-radius: 8px;
-      background: #080c11;
+      text-align: left;
     }
 
     button {
-      padding: 14px 20px;
-      margin: 8px;
+      display: block;
+      width: 100%;
+      margin: 12px 0;
+      padding: 14px;
       background: #00ff99;
       color: #000;
       border: none;
@@ -62,149 +57,197 @@
       opacity: 0.8;
     }
 
-    .result {
-      margin-top: 10px;
-      padding: 12px;
-      border: 1px solid #333;
-      border-radius: 5px;
+    pre {
       white-space: pre-wrap;
-    }
-
-    .pass {
+      word-wrap: break-word;
+      background: #020304;
       color: #00ff99;
-    }
-
-    .review {
-      color: #ffaa00;
-    }
-
-    .fail {
-      color: #ff4444;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #164d38;
+      overflow-x: auto;
     }
 
     .status {
       color: white;
+      margin-top: 15px;
     }
 
-    .footer {
-      text-align: center;
-      color: #777;
-      margin-top: 30px;
+    .ready {
+      color: #00ff99;
     }
-  </style>
-</head>
 
-<body>
+  </style></head><body>  <h1>🧪 SPD v13.1 — SELF-TEST & VALIDATION</h1>  <div class="subtitle">
+    SEXTANT RESILIENCE COCKPIT PRO
+  </div>  <div class="subtitle">
+    Independent Validation Layer
+  </div>  <p>
+    DATA → ALGORITHMS → COMPUTE
+  </p>  <p>
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </p>  <!-- CORE ENGINE VALIDATION -->  <div class="panel"><h2>🧪 CORE ENGINE VALIDATION</h2>
 
-  <div class="header">
+<button onclick="runCoreTests()">
+  RUN CORE ENGINE TESTS
+</button>
 
-    <h1>🧪 SPD v13.1 — SELF-TEST & VALIDATION</h1>
+<div id="coreStatus" class="status">
+  Core tests not executed.
+</div>
 
-    <p>
-      SEXTANT RESILIENCE COCKPIT PRO
-    </p>
+<pre id="coreOutput"></pre>
 
-    <p class="status">
-      Independent Validation Layer
-    </p>
+  </div>  <!-- SCENARIO INTEGRATION VALIDATION -->  <div class="panel"><h2>🧪 SCENARIO INTEGRATION VALIDATION</h2>
 
-    <p>
-      DATA → ALGORITHMS → COMPUTE
-    </p>
+<button onclick="runScenarioTests()">
+  RUN SCENARIO INTEGRATION TESTS
+</button>
 
-    <p>
-      OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-    </p>
+<div id="scenarioStatus" class="status">
+  Scenario integration tests not executed.
+</div>
 
-  </div>
+<pre id="scenarioOutput"></pre>
 
+  </div>  <!-- FULL VALIDATION -->  <div class="panel"><h2>🛠️ FULL VALIDATION CYCLE</h2>
 
-  <div class="panel">
+<button onclick="runFullValidation()">
+  RUN FULL SELF-TEST + VALIDATION
+</button>
 
-    <h2>🧪 CORE ENGINE VALIDATION</h2>
+<div id="fullStatus" class="status">
+  Full validation not executed.
+</div>
 
-    <button onclick="runCoreTests()">
-      RUN CORE ENGINE TESTS
-    </button>
+<pre id="fullOutput"></pre>
 
-    <div id="coreResults" class="result">
-      Core tests not executed.
-    </div>
+  </div>  <!-- FAULT IDENTIFICATION -->  <div class="panel"><h2>⚠️ FAULT IDENTIFICATION</h2>
 
-  </div>
+<pre id="faultOutput">
 
+Fault identification not executed.
+</pre>
 
-  <div class="panel">
+  </div>  <!-- CORRECTIVE ACTION -->  <div class="panel"><h2>🛠️ CAPTAIN AI LENA CORRECTIVE ACTION</h2>
 
-    <h2>🧪 SCENARIO INTEGRATION VALIDATION</h2>
+<pre id="correctiveOutput">
 
-    <button onclick="runScenarioTests()">
-      RUN SCENARIO INTEGRATION TESTS
-    </button>
+Corrective action not executed.
+</pre>
 
-    <div id="scenarioResults" class="result">
-      Scenario integration tests not executed.
-    </div>
+  </div>  <!-- RETEST -->  <div class="panel"><h2>🔁 RE-TEST VALIDATION</h2>
 
-  </div>
+<pre id="retestOutput">
 
+Re-test not executed.
+</pre>
 
-  <div class="panel">
+  </div>  <div class="panel"><h2>SPD v13.1 — SEXTANT RESILIENCE PROTOCOL</h2>
 
-    <h2>🛠️ FULL VALIDATION CYCLE</h2>
+<p class="ready">
+  SELF-TEST ENGINE READY
+</p>
 
-    <button onclick="runFullValidation()">
-      RUN FULL SELF-TEST + VALIDATION
-    </button>
+  </div>  <!-- CONNECT SELF-TEST ENGINE -->  <script src="./self-test.js"></script>  <!-- UI CONNECTION LAYER -->  <script>
 
-    <div id="fullResults" class="result">
-      Full validation not executed.
-    </div>
+    function runCoreTests() {
 
-  </div>
+      const result =
+        SPD_SELF_TEST.runCoreEngineTests();
 
+      document.getElementById(
+        "coreStatus"
+      ).textContent =
+        "Core Engine Status: " +
+        result.overallStatus;
 
-  <div class="panel">
+      document.getElementById(
+        "coreOutput"
+      ).textContent =
+        JSON.stringify(
+          result,
+          null,
+          2
+        );
 
-    <h2>⚠️ FAULT IDENTIFICATION</h2>
-
-    <div id="faultResults" class="result">
-      Fault identification not executed.
-    </div>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h2>🛠️ CAPTAIN AI LENA CORRECTIVE ACTION</h2>
-
-    <div id="correctiveResults" class="result">
-      Corrective action not executed.
-    </div>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h2>🔁 RE-TEST VALIDATION</h2>
-
-    <div id="retestResults" class="result">
-      Re-test not executed.
-    </div>
-
-  </div>
+    }
 
 
-  <div class="footer">
+    function runScenarioTests() {
 
-    SPD v13.1 — SEXTANT RESILIENCE PROTOCOL
+      const result =
+        SPD_SELF_TEST.runScenarioIntegrationTests();
 
-  </div>
+      document.getElementById(
+        "scenarioStatus"
+      ).textContent =
+        "Scenario Integration Status: " +
+        result.overallStatus;
+
+      document.getElementById(
+        "scenarioOutput"
+      ).textContent =
+        JSON.stringify(
+          result,
+          null,
+          2
+        );
+
+    }
 
 
-  <script src="./self-test.js"></script>
+    function runFullValidation() {
 
-</body>
-</html>
+      const result =
+        SPD_SELF_TEST.runFullValidation();
+
+
+      document.getElementById(
+        "fullStatus"
+      ).textContent =
+        "Full Validation Status: " +
+        result.status;
+
+
+      document.getElementById(
+        "fullOutput"
+      ).textContent =
+        JSON.stringify(
+          result,
+          null,
+          2
+        );
+
+
+      document.getElementById(
+        "faultOutput"
+      ).textContent =
+        JSON.stringify(
+          result.faultIdentification,
+          null,
+          2
+        );
+
+
+      document.getElementById(
+        "correctiveOutput"
+      ).textContent =
+        JSON.stringify(
+          result.correctiveAction,
+          null,
+          2
+        );
+
+
+      document.getElementById(
+        "retestOutput"
+      ).textContent =
+        JSON.stringify(
+          result.reTestValidation,
+          null,
+          2
+        );
+
+    }
+
+  </script></body></html>
