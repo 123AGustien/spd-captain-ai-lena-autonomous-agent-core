@@ -4,7 +4,9 @@ SPD v13.1 — SEXTANT RESILIENCE PROTOCOL
 🛰️ Captain AI Lena — Autonomous Agent Core
 
 Live System:
-"Launch SPD Captain AI Lena Autonomous Agent Core" (https://reference-url-citation.invalid/0)
+"Launch SPD Captain AI Lena Autonomous Agent Core" 
+
+https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
 
 The live deployment provides access to the SPD Captain AI Lena Autonomous Agent Core and its operational resilience architecture.
 
