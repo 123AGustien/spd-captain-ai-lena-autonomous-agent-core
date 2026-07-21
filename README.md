@@ -1,4 +1,5 @@
-
+The screens are ready to receive scenarios. The authoritative engine determines how those scenarios are interpreted.
+That means when the client returns with their actual audit information and scenario files, we can map their inputs into the existing SPD v13.1 structure, validate them through the self-test, identify any required scenario-specific rules, and then produce the corresponding audit trail.
 SPD v13.1 — SEXTANT RESILIENCE PROTOCOL
 
 🛰️ Captain AI Lena — Autonomous Agent Core
