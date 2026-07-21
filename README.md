@@ -1,3 +1,85 @@
+SPD v13.1 — Core Validation Principle
+
+SPD v13.1 is designed as a scenario-agnostic, deterministic resilience assessment and validation framework.
+
+The system is not defined by the visual cockpit alone. The cockpit provides the operational interface through which scenarios, system states, assessments, decisions, actions, validation results, and audit records are observed and controlled.
+
+The authoritative standard is the underlying rule engine and its deterministic reasoning pipeline.
+
+One Authoritative Rule Set. Multiple Scenario Inputs. One Deterministic Reasoning Pipeline. Repeatable Validation. Auditable Outcomes.
+
+SPD v13.1 is designed to accept multiple scenario inputs—including, but not limited to:
+
+- Foreign Exchange (FX) Stress
+- Data Centre Load
+- Cyber Event
+- Infrastructure Stress
+- Energy / Biodiesel Shortage
+- Multi-domain and compound scenarios
+- Client-provided scenario and audit data
+
+Each scenario is processed through the same disciplined Golden Rule pipeline:
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+The objective is to ensure that different scenarios are assessed using a consistent, deterministic, and repeatable decision framework rather than requiring a separate logic model for each event.
+
+Validation Cycle
+
+For each scenario, SPD v13.1 is designed to support the following validation sequence:
+
+SCENARIO INPUT
+↓
+GOLDEN RULE EXECUTION
+↓
+DETERMINISTIC OUTPUT
+↓
+AUDIT RECORD
+↓
+SELF-TEST
+↓
+FAULT IDENTIFICATION
+↓
+CORRECTIVE ACTION
+↓
+RE-TEST
+↓
+FINAL VALIDATION
+
+A successful validation cycle demonstrates that the system can:
+
+1. Accept and process a defined scenario.
+2. Apply the same authoritative reasoning pipeline.
+3. Produce a deterministic assessment and decision.
+4. Record the execution and resulting state.
+5. Identify validation mismatches or faults.
+6. Isolate the affected validation path.
+7. Apply controlled corrective action without compromising the authoritative engine.
+8. Re-run the validation sequence.
+9. Produce a final auditable validation result.
+
+Separation of Roles
+
+The Cockpit is the Interface.
+It provides visibility, operational control, scenario selection, system monitoring, and presentation of results.
+
+The Rule Engine is the Authority.
+It defines the deterministic logic, reasoning sequence, assessment methodology, decision logic, and action sequence.
+
+The Self-Test Proves the Engine.
+It evaluates whether the authoritative logic produces the expected deterministic outputs.
+
+The Audit Record Proves What Happened.
+It preserves the scenario, system state, pipeline execution, assessment, decision, action sequence, validation result, and final status.
+
+This separation ensures that SPD v13.1 is not merely a sophisticated-looking dashboard. It is intended to function as a repeatable, deterministic, auditable resilience validation framework capable of processing different scenarios through a common authoritative methodology.
+
+Design Standard
+
+The governing design principle of SPD v13.1 is therefore:
+
+«The value of the system is not the screen alone. The value is the ability to process different scenarios through one authoritative deterministic rule set, identify faults, validate corrective action through re-testing, and produce an auditable outcome.»
+
 The screens are ready to receive scenarios. The authoritative engine determines how those scenarios are interpreted.
 That means when the client returns with their actual audit information and scenario files, we can map their inputs into the existing SPD v13.1 structure, validate them through the self-test, identify any required scenario-specific rules, and then produce the corresponding audit trail.
 SPD v13.1 — SEXTANT RESILIENCE PROTOCOL
