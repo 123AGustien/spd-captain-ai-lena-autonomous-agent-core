@@ -1,4 +1,205 @@
 
+🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+
+Captain AI Lena Autonomous Agent Core
+
+DATA → ALGORITHMS → COMPUTE
+
+SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST
+
+The SPD v13.1 Sextant Resilience Cockpit Pro is the primary operational dashboard for the Captain AI Lena Autonomous Agent Core.
+
+It provides a comprehensive environment for scenario simulation, system assessment, risk evaluation, deterministic decision-making, corrective action, audit generation, and validation.
+
+---
+
+🖥️ Desktop Cockpit — Operational Control & Resilience Environment
+
+The SPD v13.1 Desktop Cockpit PRO provides the full operational interface for observing and managing the Sextant Resilience system.
+
+Core Functions
+
+- RUN SYSTEM
+  
+  - Executes the authoritative Golden Rule Engine.
+  - Processes the current system state.
+  - Generates assessment, risk classification, decision, action sequence, and updated state.
+
+- RUN SELF-TEST
+  
+  - Executes the deterministic validation suite.
+  - Tests risk classification.
+  - Tests deterministic decision logic.
+  - Validates the Golden Rule pipeline.
+  - Confirms engine execution status.
+
+- RUN SELF-TEST + CORRECTIVE ACTION
+  
+  - Executes the self-test.
+  - Identifies validation faults.
+  - Generates a corrective-action response.
+  - Performs the re-test validation cycle.
+
+Scenario Control
+
+The Desktop Cockpit supports controlled resilience scenarios:
+
+- FX Stress
+- Data Centre Load
+- Cyber Event
+- Infrastructure Strain
+- Biodiesel Shortage
+- Reset
+
+Each scenario can be operated with adjustable intensity from 0% to 100%.
+
+System Domain Monitor
+
+The dashboard continuously presents the operational state of:
+
+- FX — Foreign Exchange / Financial Stress
+- DC — Data Centre Load
+- CYB — Cyber Risk
+- INF — Infrastructure Stress
+- EN / ENERGY — Energy Resilience
+
+Golden Rule Engine
+
+The operational decision pipeline follows:
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+The dashboard exposes each stage of the deterministic decision process and records the resulting system state.
+
+Decision & Resilience Panels
+
+The Desktop Cockpit provides:
+
+- System Assessment
+- Risk Panel
+- Captain AI Lena Decision
+- Solution Options
+- Action Sequence Prompt
+- Memory Core
+- Audit Record
+- Pipeline Log
+- System Constants
+- Agent Loop Monitor
+
+Self-Test & Corrective-Action Framework
+
+The Desktop Cockpit extends validation beyond simple pass/fail testing.
+
+The validation sequence is:
+
+SELF-TEST → INTERPRETATION → FAULT IDENTIFICATION → CAPTAIN AI LENA CORRECTIVE ACTION → RE-TEST
+
+This provides a visible deterministic recovery and validation cycle for identifying validation mismatches and confirming system integrity.
+
+---
+
+📱 Mobile Cockpit — Deterministic 4/4 Validation Target
+
+The SPD v13 Mobile Cockpit is the lightweight validation interface for the authoritative SPD v13 Sextant Golden Rule Engine.
+
+It is designed as the 4/4 self-test validation target.
+
+The Mobile Cockpit does not redefine the Golden Rule thresholds or decision logic. Instead, it directly imports and executes the authoritative:
+
+"goldenRuleEngine.js"
+
+This ensures that the mobile interface validates the actual engine behavior rather than creating a separate interpretation of the system.
+
+Mobile System Execution
+
+The Mobile Cockpit accepts direct system inputs for:
+
+- FX
+- Energy
+- CYB
+- INF
+- DC
+
+The system then executes:
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+The resulting output includes:
+
+- System Status
+- Golden Rule Pipeline
+- System Assessment
+- Captain AI Lena Decision
+- Action Sequence
+- Audit Record
+
+Mobile 4/4 Self-Test
+
+The Mobile Cockpit validates four deterministic operating conditions:
+
+1. LOW RISK — NORMAL STABILITY
+2. MEDIUM RISK — PREVENTIVE RESILIENCE
+3. HIGH RISK — STABILIZATION
+4. MAXIMUM CURRENT RISK — ENGINE LIMIT
+
+Each test validates:
+
+- Risk Classification
+- Deterministic Decision Logic
+- Golden Rule Pipeline
+- Engine Execution Status
+
+The final result is reported as:
+
+4/4 TESTS PASSED
+
+when all four validation cases match the authoritative engine behavior.
+
+Maximum Current Engine Risk
+
+The fourth test validates the maximum risk condition currently reachable by the authoritative Golden Rule calculation.
+
+The test intentionally validates the current engine behavior without modifying or redefining the authoritative Golden Rule formula.
+
+Therefore, the current maximum reachable classification is validated as:
+
+HIGH → ACTIVATE STABILIZATION MODE
+
+rather than introducing an unsupported CRITICAL classification.
+
+---
+
+🔗 Desktop vs Mobile Architecture
+
+Interface| Primary Purpose| Validation Role
+🖥️ Desktop Cockpit PRO| Full operational control, scenario simulation, risk assessment, corrective action and audit| Operational resilience environment
+📱 Mobile Cockpit| Lightweight deterministic engine execution and validation| 4/4 self-test target
+🧠 Golden Rule Engine| Authoritative deterministic decision logic| Common engine authority
+
+Both interfaces operate against the same authoritative Golden Rule Engine.
+
+The Desktop Cockpit provides the broader operational environment, including scenario injection and corrective-action workflows.
+
+The Mobile Cockpit provides a focused and reproducible validation target for demonstrating that the authoritative engine executes correctly across the defined low, medium, high, and maximum-current-risk conditions.
+
+---
+
+🛰️ SPD v13.1 Operational Logic
+
+The complete architecture is represented by:
+
+DATA → ALGORITHMS → COMPUTE
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+For validation and recovery:
+
+SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST
+
+The Desktop Cockpit demonstrates the complete operational resilience workflow.
+
+The Mobile Cockpit provides the 4/4 deterministic validation target confirming that the authoritative SPD v13 Sextant Golden Rule Engine is correctly connected, executable, and producing the expected deterministic outcomes.
+
 🧠 SPD CAPTAIN AI LENA
 
 SPD v13 — SEXTANT RESILIENCE
