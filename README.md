@@ -1,3 +1,26 @@
+
+README.md
+│
+├── SPD v13.1 Introduction
+│
+├── SPD v13.1 — Core Validation Principle   ← ADD HERE
+│
+├── Architecture
+│
+├── Golden Rule Engine
+│
+├── Scenario Control
+│
+├── Self-Test & Validation
+│
+├── Fault Identification
+│
+├── Corrective Action & Re-Test
+│
+├── Audit Record
+│
+└── Deployment / Usage
+
 SPD v13.1 — Core Validation Principle
 
 SPD v13.1 is designed as a scenario-agnostic, deterministic resilience assessment and validation framework.
