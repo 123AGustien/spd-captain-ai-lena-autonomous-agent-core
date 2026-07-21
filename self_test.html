@@ -251,3 +251,70 @@ Re-test not executed.
     }
 
   </script></body></html>
+<script src="./self-test.js"></script>
+
+<script>
+
+function runCoreTests() {
+
+  const result =
+    SPD_SELF_TEST.runCoreEngineTests();
+
+  document.getElementById("coreStatus").textContent =
+    "Core Engine Status: " + result.overallStatus;
+
+  document.getElementById("coreOutput").textContent =
+    JSON.stringify(result, null, 2);
+
+}
+
+
+function runScenarioTests() {
+
+  const result =
+    SPD_SELF_TEST.runScenarioIntegrationTests();
+
+  document.getElementById("scenarioStatus").textContent =
+    "Scenario Integration Status: " + result.overallStatus;
+
+  document.getElementById("scenarioOutput").textContent =
+    JSON.stringify(result, null, 2);
+
+}
+
+
+function runFullValidation() {
+
+  const result =
+    SPD_SELF_TEST.runFullValidation();
+
+  document.getElementById("fullStatus").textContent =
+    "Full Validation Status: " + result.status;
+
+  document.getElementById("fullOutput").textContent =
+    JSON.stringify(result, null, 2);
+
+  document.getElementById("faultOutput").textContent =
+    JSON.stringify(
+      result.faultIdentification,
+      null,
+      2
+    );
+
+  document.getElementById("correctiveOutput").textContent =
+    JSON.stringify(
+      result.correctiveAction,
+      null,
+      2
+    );
+
+  document.getElementById("retestOutput").textContent =
+    JSON.stringify(
+      result.reTestValidation,
+      null,
+      2
+    );
+
+}
+
+</script>
