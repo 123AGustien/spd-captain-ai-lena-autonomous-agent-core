@@ -5,127 +5,327 @@
  * RULE LOADER v1.0
  *
  * Purpose:
- * - Load the controlled Rule Registry
- * - Identify the correct Golden Rule reference
+ * - Load the controlled Golden Rule Registry
+ * - Identify the applicable Golden Rule reference
  * - Provide rule metadata to the Rule Engine
  *
- * IMPORTANT:
- * This loader does NOT create, modify, or override Golden Rules.
- * The Sextant Rule Library remains the Source of Truth.
+ * GOVERNANCE:
+ * The Sextant Golden Rule Engine remains the
+ * SINGLE AUTHORITATIVE deterministic decision layer.
+ *
+ * The Golden Rules remain the Source of Truth.
+ *
+ * This loader does not create, modify, or override rules.
  */
 
 const RuleLoader = (() => {
 
   let registry = null;
 
-  /**
-   * Load the Rule Registry.
-   */
-  function loadRegistry(ruleRegistry) {
 
-    if (!ruleRegistry || typeof ruleRegistry !== "object") {
-      throw new Error("Invalid Rule Registry.");
+  // ==========================================================
+  // LOAD GOLDEN RULE REGISTRY
+  // ==========================================================
+
+  function loadRegistry(
+    ruleRegistry
+  ) {
+
+    if (
+      !ruleRegistry ||
+      typeof ruleRegistry !== "object"
+    ) {
+
+      throw new Error(
+        "Invalid Golden Rule Registry."
+      );
+
     }
 
-    registry = ruleRegistry;
+
+    if (
+      !ruleRegistry.rules ||
+      typeof ruleRegistry.rules !== "object"
+    ) {
+
+      throw new Error(
+        "Golden Rule Registry does not contain a valid rules collection."
+      );
+
+    }
+
+
+    registry =
+      ruleRegistry;
+
 
     return {
-      status: "LOADED",
-      registryVersion: registry.version || "UNKNOWN",
-      authority: registry.authority || "SEXTANT_RULE_LIBRARY"
+
+      status:
+        "LOADED",
+
+      registryVersion:
+        registry.version ??
+        "UNKNOWN",
+
+      authority:
+        registry.authority ??
+        "SEXTANT_RULE_LIBRARY",
+
+      sourceOfTruth:
+        registry.sourceOfTruth === true
+
     };
+
   }
 
-  /**
-   * Get the complete Rule Registry.
-   */
+
+  // ==========================================================
+  // GET COMPLETE REGISTRY
+  // ==========================================================
+
   function getRegistry() {
 
     if (!registry) {
-      throw new Error("Rule Registry has not been loaded.");
+
+      throw new Error(
+        "Golden Rule Registry has not been loaded."
+      );
+
     }
 
     return registry;
+
   }
 
-  /**
-   * Find the Golden Rule reference
-   * associated with an operational event.
-   */
-  function findRule(eventType) {
+
+  // ==========================================================
+  // FIND GOLDEN RULE REFERENCE
+  // ==========================================================
+  //
+  // Returns the authoritative rule reference associated
+  // with an operational event.
+  //
+  // This does not execute the Golden Rule.
+  //
+  // ==========================================================
+
+  function findRule(
+    eventType
+  ) {
 
     if (!registry) {
-      throw new Error("Rule Registry has not been loaded.");
+
+      throw new Error(
+        "Golden Rule Registry has not been loaded."
+      );
+
     }
+
 
     if (!eventType) {
-      return null;
+
+      return {
+
+        found:
+          false,
+
+        event:
+          null,
+
+        message:
+          "No event type supplied."
+
+      };
+
     }
 
-    const rule = registry.rules?.[eventType];
+
+    const rule =
+      registry.rules?.[
+        eventType
+      ];
+
+
+    // --------------------------------------------------------
+    // NO RULE FOUND
+    // --------------------------------------------------------
 
     if (!rule) {
+
       return {
-        found: false,
-        event: eventType,
-        message: "No registered Golden Rule reference found."
+
+        found:
+          false,
+
+        event:
+          eventType,
+
+        authority:
+          registry.authority ??
+          "SEXTANT_RULE_LIBRARY",
+
+        sourceOfTruth:
+          registry.sourceOfTruth === true,
+
+        message:
+          "No registered Golden Rule reference found. " +
+          "Agent Core must not invent or assume a rule."
+
       };
+
     }
+
+
+    // --------------------------------------------------------
+    // RULE FOUND
+    // --------------------------------------------------------
 
     return {
-      found: true,
-      event: eventType,
-      domain: rule.domain,
-      ruleIds: rule.ruleIds,
-      description: rule.description,
-      authority: registry.authority,
-      sourceOfTruth: registry.sourceOfTruth === true,
-      registryVersion: registry.version
+
+      found:
+        true,
+
+      event:
+        eventType,
+
+      domain:
+        rule.domain ??
+        null,
+
+      ruleIds:
+        Array.isArray(
+          rule.ruleIds
+        )
+          ? rule.ruleIds
+          : [],
+
+      description:
+        rule.description ??
+        null,
+
+      authority:
+        registry.authority ??
+        "SEXTANT_RULE_LIBRARY",
+
+      sourceOfTruth:
+        registry.sourceOfTruth === true,
+
+      registryVersion:
+        registry.version ??
+        "UNKNOWN"
+
     };
+
   }
 
-  /**
-   * Check whether an event has a registered rule.
-   */
-  function hasRule(eventType) {
+
+  // ==========================================================
+  // CHECK RULE EXISTENCE
+  // ==========================================================
+
+  function hasRule(
+    eventType
+  ) {
 
     if (!registry) {
+
       return false;
+
     }
 
-    return Boolean(registry.rules?.[eventType]);
+
+    return Boolean(
+      registry.rules?.[
+        eventType
+      ]
+    );
+
   }
 
-  /**
-   * Return all registered events.
-   */
+
+  // ==========================================================
+  // LIST REGISTERED EVENTS
+  // ==========================================================
+
   function listEvents() {
 
     if (!registry) {
+
       return [];
+
     }
 
-    return Object.keys(registry.rules || {});
+
+    return Object.keys(
+      registry.rules ??
+      {}
+    );
+
   }
 
+
+  // ==========================================================
+  // GET REGISTERED RULE DOMAINS
+  // ==========================================================
+
+  function listDomains() {
+
+    if (!registry) {
+
+      return [];
+
+    }
+
+
+    const domains =
+      Object.values(
+        registry.rules ??
+        {}
+      )
+      .map(
+        rule =>
+          rule.domain
+      )
+      .filter(
+        Boolean
+      );
+
+
+    return [
+      ...new Set(
+        domains
+      )
+    ];
+
+  }
+
+
+  // ==========================================================
+  // PUBLIC API
+  // ==========================================================
+
   return {
+
     loadRegistry,
+
     getRegistry,
+
     findRule,
+
     hasRule,
-    listEvents
+
+    listEvents,
+
+    listDomains
+
   };
 
 })();
 
 
-// Browser environment
-if (typeof window !== "undefined") {
-  window.RuleLoader = RuleLoader;
-}
+// ============================================================
+// ES MODULE EXPORT
+// ============================================================
 
-
-// Node / server environment
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = RuleLoader;
-}
+export default RuleLoader;
