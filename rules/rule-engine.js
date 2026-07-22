@@ -2,6 +2,9 @@
  * SPD CAPTAIN AI LENA
  * AUTONOMOUS AGENT CORE
  *
+ * FILE:
+ * rules/rule-engine.js
+ *
  * RULE ENGINE GATEWAY v1.0
  *
  * Purpose:
@@ -29,6 +32,11 @@
  * Golden Rule Engine performs the deterministic assessment.
  */
 
+
+/* ============================================================
+   RULE ENGINE STATE
+   ============================================================ */
+
 const RuleEngine = (() => {
 
   let ruleLoader = null;
@@ -36,9 +44,9 @@ const RuleEngine = (() => {
   let initialized = false;
 
 
-  // ==========================================================
-  // INITIALIZE RULE ENGINE GATEWAY
-  // ==========================================================
+  /* ==========================================================
+     INITIALIZE RULE ENGINE GATEWAY
+     ========================================================== */
 
   function initialize(
     loader
@@ -92,23 +100,11 @@ const RuleEngine = (() => {
   }
 
 
-  // ==========================================================
-  // EVALUATE EVENT
-  // ==========================================================
-  //
-  // This function identifies the applicable Golden Rule.
-  //
-  // It does NOT execute the authoritative Golden Rule.
-  //
-  // The actual deterministic decision remains with:
-  //
-  //     goldenRuleEngine.js
-  //
-  // ==========================================================
+  /* ==========================================================
+     VERIFY INITIALIZATION
+     ========================================================== */
 
-  function evaluate(
-    event
-  ) {
+  function ensureInitialized() {
 
     if (!initialized) {
 
@@ -118,6 +114,34 @@ const RuleEngine = (() => {
 
     }
 
+  }
+
+
+  /* ==========================================================
+     EVALUATE EVENT
+     ========================================================== */
+  //
+  // This function identifies the applicable Golden Rule.
+  //
+  // It does NOT execute the authoritative Golden Rule.
+  //
+  // The actual deterministic assessment and decision remain
+  // exclusively with:
+  //
+  //     goldenRuleEngine.js
+  //
+  // ==========================================================
+
+  function evaluate(
+    event
+  ) {
+
+    ensureInitialized();
+
+
+    /* ========================================================
+       EXTRACT EVENT TYPE
+       ======================================================== */
 
     const eventType =
       typeof event === "string"
@@ -125,9 +149,9 @@ const RuleEngine = (() => {
         : event?.type;
 
 
-    // --------------------------------------------------------
-    // INVALID EVENT
-    // --------------------------------------------------------
+    /* ========================================================
+       INVALID EVENT
+       ======================================================== */
 
     if (!eventType) {
 
@@ -142,6 +166,9 @@ const RuleEngine = (() => {
         ruleApplied:
           false,
 
+        ruleReference:
+          null,
+
         message:
           "No operational event type supplied."
 
@@ -150,9 +177,9 @@ const RuleEngine = (() => {
     }
 
 
-    // --------------------------------------------------------
-    // FIND AUTHORITATIVE RULE REFERENCE
-    // --------------------------------------------------------
+    /* ========================================================
+       FIND AUTHORITATIVE RULE REFERENCE
+       ======================================================== */
 
     const ruleReference =
       ruleLoader.findRule(
@@ -160,5 +187,252 @@ const RuleEngine = (() => {
       );
 
 
-    // --------------------------------------------------------
-    // NO AUTHORITATIVE RULE FOUND
+    /* ========================================================
+       NO AUTHORITATIVE RULE FOUND
+       ======================================================== */
+
+    if (
+      !ruleReference ||
+      ruleReference.found !== true
+    ) {
+
+      return {
+
+        status:
+          "NO_RULE",
+
+        event:
+          eventType,
+
+        ruleApplied:
+          false,
+
+        ruleReference:
+          ruleReference ||
+          {
+
+            found:
+              false,
+
+            event:
+              eventType,
+
+            authority:
+              "SEXTANT_RULE_LIBRARY",
+
+            sourceOfTruth:
+              false,
+
+            message:
+              "No registered Golden Rule reference found."
+
+          },
+
+        authoritativeAssessment:
+          false,
+
+        authoritativeDecision:
+          false,
+
+        message:
+          "No registered Golden Rule reference found. " +
+          "Agent Core must not invent, assume, or substitute a rule."
+
+      };
+
+    }
+
+
+    /* ========================================================
+       VALIDATE RULE AUTHORITY
+       ======================================================== */
+
+    if (
+      ruleReference.sourceOfTruth !==
+      true
+    ) {
+
+      return {
+
+        status:
+          "AUTHORITY_ERROR",
+
+        event:
+          eventType,
+
+        ruleApplied:
+          false,
+
+        ruleReference,
+
+        authoritativeAssessment:
+          false,
+
+        authoritativeDecision:
+          false,
+
+        message:
+          "Referenced rule is not verified as Source of Truth."
+
+      };
+
+    }
+
+
+    /* ========================================================
+       VALIDATE RULE IDS
+       ======================================================== */
+
+    if (
+      !Array.isArray(
+        ruleReference.ruleIds
+      )
+    ) {
+
+      return {
+
+        status:
+          "INVALID_RULE_REFERENCE",
+
+        event:
+          eventType,
+
+        ruleApplied:
+          false,
+
+        ruleReference,
+
+        authoritativeAssessment:
+          false,
+
+        authoritativeDecision:
+          false,
+
+        message:
+          "Golden Rule reference does not contain a valid rule ID collection."
+
+      };
+
+    }
+
+
+    /* ========================================================
+       AUTHORITATIVE RULE REFERENCE CONFIRMED
+       ======================================================== */
+
+    return {
+
+      status:
+        "RULE_RESOLVED",
+
+      event:
+        eventType,
+
+      ruleApplied:
+        true,
+
+      ruleReference,
+
+      authoritativeAssessment:
+        "DELEGATED_TO_GOLDEN_RULE_ENGINE",
+
+      authoritativeDecision:
+        "DELEGATED_TO_GOLDEN_RULE_ENGINE",
+
+      authority:
+        ruleReference.authority,
+
+      sourceOfTruth:
+        ruleReference.sourceOfTruth,
+
+      registryVersion:
+        ruleReference.registryVersion,
+
+      message:
+        "Authoritative Golden Rule reference resolved. " +
+        "Assessment and decision delegated to Golden Rule Engine."
+
+    };
+
+  }
+
+
+  /* ==========================================================
+     CHECK INITIALIZATION STATUS
+     ========================================================== */
+
+  function isInitialized() {
+
+    return initialized;
+
+  }
+
+
+  /* ==========================================================
+     GET ENGINE STATUS
+     ========================================================== */
+
+  function getStatus() {
+
+    return {
+
+      initialized,
+
+      status:
+        initialized
+          ? "READY"
+          : "NOT_INITIALIZED",
+
+      authority:
+        "SEXTANT GOLDEN RULE ENGINE",
+
+      sourceOfTruth:
+        "SEXTANT GOLDEN RULE LIBRARY",
+
+      ruleModificationAllowed:
+        false
+
+    };
+
+  }
+
+
+  /* ==========================================================
+     GET RULE LOADER
+     ========================================================== */
+
+  function getRuleLoader() {
+
+    ensureInitialized();
+
+    return ruleLoader;
+
+  }
+
+
+  /* ==========================================================
+     PUBLIC API
+     ========================================================== */
+
+  return {
+
+    initialize,
+
+    evaluate,
+
+    isInitialized,
+
+    getStatus,
+
+    getRuleLoader
+
+  };
+
+})();
+
+
+/* ============================================================
+   ES MODULE EXPORT
+   ============================================================ */
+
+export default RuleEngine;
