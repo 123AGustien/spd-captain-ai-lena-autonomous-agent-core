@@ -2,170 +2,163 @@
  * SPD CAPTAIN AI LENA
  * AUTONOMOUS AGENT CORE
  *
- * RULE ENGINE v1.0
+ * RULE ENGINE GATEWAY v1.0
  *
  * Purpose:
- * - Connect operational events to the Sextant Golden Rules
- * - Use RuleLoader to identify authoritative rule references
- * - Return deterministic rule guidance to the Agent Core
+ * - Connect operational events to the Sextant Golden Rule Registry
+ * - Identify the applicable authoritative Golden Rule
+ * - Provide controlled rule references to Captain AI Lena
  *
- * GOVERNANCE:
- * - Golden Rules remain the Source of Truth.
- * - This engine does not invent or modify rules.
- * - This engine does not override Golden Rules.
- * - If no authoritative rule is found, the event is flagged for review.
+ * IMPORTANT GOVERNANCE:
+ *
+ * The SEXTANT GOLDEN RULE ENGINE remains the SINGLE
+ * AUTHORITATIVE deterministic assessment and decision layer.
+ *
+ * The Golden Rules remain the SOURCE OF TRUTH.
+ *
+ * This Rule Engine Gateway:
+ *
+ * - Does NOT create rules
+ * - Does NOT modify rules
+ * - Does NOT override rules
+ * - Does NOT independently calculate authoritative risk
+ * - Does NOT replace goldenRuleEngine.js
+ *
+ * It only identifies and validates the applicable
+ * Golden Rule reference before the authoritative
+ * Golden Rule Engine performs the deterministic assessment.
  */
 
 const RuleEngine = (() => {
 
   let ruleLoader = null;
 
-  /**
-   * Connect the Rule Loader.
-   */
-  function initialize(loader) {
+  let initialized = false;
+
+
+  // ==========================================================
+  // INITIALIZE RULE ENGINE GATEWAY
+  // ==========================================================
+
+  function initialize(
+    loader
+  ) {
 
     if (!loader) {
-      throw new Error("RuleLoader is required.");
+
+      throw new Error(
+        "RuleLoader is required."
+      );
+
     }
 
-    if (typeof loader.findRule !== "function") {
-      throw new Error("Invalid RuleLoader.");
+
+    if (
+      typeof loader.findRule !==
+      "function"
+    ) {
+
+      throw new Error(
+        "Invalid RuleLoader."
+      );
+
     }
 
-    ruleLoader = loader;
+
+    ruleLoader =
+      loader;
+
+
+    initialized =
+      true;
+
 
     return {
-      status: "READY",
-      authority: "SEXTANT_RULE_LIBRARY",
-      sourceOfTruth: true
+
+      status:
+        "READY",
+
+      authority:
+        "SEXTANT GOLDEN RULE ENGINE",
+
+      sourceOfTruth:
+        "SEXTANT GOLDEN RULE LIBRARY",
+
+      ruleModificationAllowed:
+        false
+
     };
+
   }
 
 
-  /**
-   * Evaluate an operational event
-   * against the registered Golden Rules.
-   */
-  function evaluate(event) {
+  // ==========================================================
+  // EVALUATE EVENT
+  // ==========================================================
+  //
+  // This function identifies the applicable Golden Rule.
+  //
+  // It does NOT execute the authoritative Golden Rule.
+  //
+  // The actual deterministic decision remains with:
+  //
+  //     goldenRuleEngine.js
+  //
+  // ==========================================================
 
-    if (!ruleLoader) {
-      throw new Error("RuleEngine has not been initialized.");
+  function evaluate(
+    event
+  ) {
+
+    if (!initialized) {
+
+      throw new Error(
+        "Rule Engine has not been initialized."
+      );
+
     }
+
 
     const eventType =
       typeof event === "string"
         ? event
         : event?.type;
 
+
+    // --------------------------------------------------------
+    // INVALID EVENT
+    // --------------------------------------------------------
+
     if (!eventType) {
+
       return {
-        status: "INVALID",
-        event: null,
-        message: "No event type supplied."
+
+        status:
+          "INVALID",
+
+        event:
+          null,
+
+        ruleApplied:
+          false,
+
+        message:
+          "No operational event type supplied."
+
       };
+
     }
+
+
+    // --------------------------------------------------------
+    // FIND AUTHORITATIVE RULE REFERENCE
+    // --------------------------------------------------------
 
     const ruleReference =
-      ruleLoader.findRule(eventType);
-
-    /**
-     * No registered Golden Rule found.
-     */
-    if (!ruleReference || !ruleReference.found) {
-
-      return {
-        status: "REVIEW_REQUIRED",
-        event: eventType,
-        ruleApplied: false,
-        authority: "SEXTANT_RULE_LIBRARY",
-        sourceOfTruth: true,
-        message:
-          "No authoritative Golden Rule reference found. " +
-          "Agent Core must not invent or assume a rule."
-      };
-    }
-
-    /**
-     * Authoritative rule reference found.
-     */
-    return {
-      status: "RULE_IDENTIFIED",
-      event: eventType,
-
-      ruleApplied: true,
-
-      domain: ruleReference.domain,
-
-      ruleIds: ruleReference.ruleIds,
-
-      ruleDescription:
-        ruleReference.description,
-
-      authority:
-        ruleReference.authority ||
-        "SEXTANT_RULE_LIBRARY",
-
-      sourceOfTruth:
-        ruleReference.sourceOfTruth === true,
-
-      registryVersion:
-        ruleReference.registryVersion,
-
-      guidanceStatus:
-        "AUTHORITATIVE_RULE_REFERENCE_IDENTIFIED",
-
-      nextStep:
-        "Agent Core may now retrieve and apply the corresponding Golden Rule."
-    };
-  }
+      ruleLoader.findRule(
+        eventType
+      );
 
 
-  /**
-   * Check whether an event has
-   * an authoritative rule reference.
-   */
-  function hasAuthoritativeRule(eventType) {
-
-    if (!ruleLoader) {
-      return false;
-    }
-
-    return ruleLoader.hasRule(eventType);
-  }
-
-
-  /**
-   * Return Rule Engine status.
-   */
-  function getStatus() {
-
-    return {
-      initialized: Boolean(ruleLoader),
-      authority: "SEXTANT_RULE_LIBRARY",
-      sourceOfTruth: true,
-      ruleModificationAllowed: false
-    };
-  }
-
-
-  return {
-    initialize,
-    evaluate,
-    hasAuthoritativeRule,
-    getStatus
-  };
-
-})();
-
-
-// Browser environment
-if (typeof window !== "undefined") {
-  window.RuleEngine = RuleEngine;
-}
-
-
-// Node / server environment
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = RuleEngine;
-}
+    // --------------------------------------------------------
+    // NO AUTHORITATIVE RULE FOUND
