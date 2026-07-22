@@ -1,0 +1,59 @@
+{
+  "name": "Sextant Golden Rules Registry",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "authority": "SEXTANT_RULE_LIBRARY",
+  "sourceOfTruth": true,
+  "description": "Controlled registry mapping operational events to the authoritative Sextant Golden Rules.",
+  "rules": {
+    "DC_LOAD": {
+      "domain": "DC",
+      "ruleIds": [
+        "DC-001"
+      ],
+      "description": "Data Centre Load and Resilience Guidance"
+    },
+    "FX_STRESS": {
+      "domain": "FIN",
+      "ruleIds": [
+        "FIN-001"
+      ],
+      "description": "Foreign Exchange Stress Guidance"
+    },
+    "CYBER_EVENT": {
+      "domain": "CYB",
+      "ruleIds": [
+        "CYB-001"
+      ],
+      "description": "Cyber Disruption and Resilience Guidance"
+    },
+    "INFRASTRUCTURE_STRESS": {
+      "domain": "INF",
+      "ruleIds": [
+        "INF-001"
+      ],
+      "description": "Infrastructure Stress Guidance"
+    },
+    "SCENARIO_EVENT": {
+      "domain": "SC",
+      "ruleIds": [
+        "SC-001"
+      ],
+      "description": "Scenario Control Guidance"
+    },
+    "ENGINEERING_EVENT": {
+      "domain": "ENG",
+      "ruleIds": [
+        "ENG-001"
+      ],
+      "description": "Engineering Resilience Guidance"
+    },
+    "OPERATIONAL_EVENT": {
+      "domain": "OPS",
+      "ruleIds": [
+        "OPS-001"
+      ],
+      "description": "Operational Resilience Guidance"
+    }
+  }
+}
