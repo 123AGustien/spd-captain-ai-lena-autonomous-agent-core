@@ -4,93 +4,1033 @@ content="width=device-width, initial-scale=1.0"
 
 «»
 
-  <title>SPD Captain AI Lena — v13.1</title>  <style>
+  <title>
+    SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+  </title>  <style>
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
-      margin: 0;
+      background: #0b0f14;
+      color: #00ff88;
+      font-family: Arial, sans-serif;
       padding: 20px;
-      background: #05070a;
-      color: #00ff99;
-      font-family: monospace;
-      text-align: center;
+      margin: 0;
     }
 
     h1 {
-      color: white;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      color: #00ff88;
+      margin-top: 0;
+    }
+
+    .subtitle {
+      color: #aaaaaa;
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
 
     .panel {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #00ff99;
+      border: 1px solid #00ff88;
+      padding: 15px;
+      margin-bottom: 15px;
       border-radius: 8px;
+      background: #10161d;
     }
 
-    a {
-      display: block;
-      margin: 12px 0;
-      padding: 12px;
-      background: #00ff99;
-      color: #000;
-      text-decoration: none;
+    .title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ffffff;
       font-weight: bold;
-      border-radius: 5px;
-    }
-
-    a:hover {
-      opacity: 0.8;
     }
 
     .status {
-      color: white;
-      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 12px;
+      border: 1px solid #00ff88;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #080d11;
     }
 
-    .version {
-      color: #00ff99;
-      font-size: 14px;
-      margin-top: 10px;
+    /* ========================================================
+       SYSTEM CONTROL BUTTONS
+       ======================================================== */
+
+    .control-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
     }
 
-  </style></head><body>  <h1>🧠 SPD CAPTAIN AI LENA</h1>  <div class="panel"><h2>SPD v13.1 — SEXTANT RESILIENCE</h2>
+    button {
+      display: inline-block;
+      visibility: visible;
+      opacity: 1;
+      background: #00ff88;
+      color: #000000;
+      border: 2px solid #00ff88;
+      padding: 14px 20px;
+      margin: 0;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 48px;
 
-<p class="version">
-  SEXTANT RESILIENCE COCKPIT PRO
-</p>
+      transition:
+        opacity 0.2s ease,
+        transform 0.1s ease,
+        background 0.2s ease;
+    }
 
-<p class="status">
-  Deterministic Autonomous Agent Core
-</p>
+    button:hover {
+      opacity: 0.85;
+    }
 
-<p>
-  DATA → ALGORITHMS → COMPUTE
-</p>
+    button:active {
+      transform: scale(0.98);
+    }
 
-<p>
-  OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-</p>
+    button:focus {
+      outline: 2px solid #ffffff;
+      outline-offset: 2px;
+    }
+
+    .self-test-button {
+      background: #1b2730;
+      color: #00ff88;
+      border: 2px solid #00ff88;
+    }
+
+    .corrective-button {
+      background: #ffb000;
+      color: #000000;
+      border: 2px solid #ffb000;
+    }
+
+    .danger {
+      background: #ff5555;
+      color: #ffffff;
+      border: 2px solid #ff5555;
+    }
+
+    /* ========================================================
+       SCENARIO BUTTONS
+       ======================================================== */
+
+    .scenario-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .scenario-button {
+      background: #1b2730;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    .scenario-button:hover {
+      background: #00ff88;
+      color: #000000;
+    }
+
+    /* ========================================================
+       DOMAIN MONITOR
+       ======================================================== */
+
+    .monitor {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .domain {
+      border: 1px solid #00ff88;
+      padding: 12px;
+      border-radius: 6px;
+      background: #080d11;
+      text-align: center;
+    }
+
+    .domain-name {
+      color: #aaaaaa;
+      font-size: 13px;
+    }
+
+    .domain-value {
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    /* ========================================================
+       PIPELINE
+       ======================================================== */
+
+    .pipeline {
+      font-size: 16px;
+      color: #ffffff;
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .stage {
+      display: inline-block;
+      padding: 8px;
+      margin: 3px;
+      border: 1px solid #00ff88;
+      border-radius: 4px;
+    }
+
+    .stage.active {
+      background: #00ff88;
+      color: #000000;
+    }
+
+    /* ========================================================
+       INTENSITY
+       ======================================================== */
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #00ff88;
+    }
+
+    .intensity-value {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    /* ========================================================
+       OUTPUT
+       ======================================================== */
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      color: #00ff88;
+      line-height: 1.5;
+    }
+
+    .muted {
+      color: #aaaaaa;
+      font-size: 13px;
+    }
+
+    .solution {
+      border-left: 3px solid #00ff88;
+      padding: 10px;
+      margin-top: 8px;
+      background: #080d11;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    /* ========================================================
+       MOBILE
+       ======================================================== */
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .title {
+        font-size: 16px;
+      }
+
+      .control-buttons,
+      .scenario-controls {
+        flex-direction: column;
+      }
+
+      .control-buttons button,
+      .scenario-controls button {
+        width: 100%;
+        min-height: 52px;
+        font-size: 15px;
+      }
+
+      .pipeline {
+        white-space: normal;
+        line-height: 2;
+      }
+
+    }
+
+  </style></head><body><!-- ============================================================
+     HEADER
+     ============================================================ --><h1>
+  🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</h1><div class="subtitle">Captain AI Lena Autonomous Agent Core
+
+  <br>DATA → ALGORITHMS → COMPUTE
+
+  <br>SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION
+→ CORRECTIVE ACTION → RE-TEST
+
+</div><!-- ============================================================
+     SYSTEM STATUS
+     ============================================================ --><div
+  class="status"
+  id="systemStatus"
+>
+  SYSTEM STATUS: INITIALIZING...
+</div><!-- ============================================================
+     SYSTEM CONTROLS
+     ============================================================ --><div class="panel">  <div class="title">
+    🎛️ SYSTEM CONTROLS
+  </div>  <div class="control-buttons"><button
+  type="button"
+  onclick="runLiveSystem()"
+>
+  ▶ RUN SYSTEM
+</button>
+
+<button
+  type="button"
+  class="self-test-button"
+  onclick="runSelfTest()"
+>
+  🧪 RUN SELF-TEST
+</button>
+
+<button
+  type="button"
+  class="corrective-button"
+  onclick="runSelfTestAndCorrect()"
+>
+  🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+</button>
+
+  </div></div><!-- ============================================================
+     SYSTEM DOMAIN MONITOR
+     ============================================================ --><div class="panel">  <div class="title">
+    📊 SYSTEM DOMAIN MONITOR
+  </div>  <div class="monitor"><div class="domain">
+  <div class="domain-name">FX</div>
+  <div
+    class="domain-value"
+    id="domainFX"
+  >
+    0
+  </div>
+</div>
+
+<div class="domain">
+  <div class="domain-name">DC</div>
+  <div
+    class="domain-value"
+    id="domainDC"
+  >
+    0
+  </div>
+</div>
+
+<div class="domain">
+  <div class="domain-name">CYB</div>
+  <div
+    class="domain-value"
+    id="domainCYB"
+  >
+    0
+  </div>
+</div>
+
+<div class="domain">
+  <div class="domain-name">INF</div>
+  <div
+    class="domain-value"
+    id="domainINF"
+  >
+    0
+  </div>
+</div>
+
+<div class="domain">
+  <div class="domain-name">EN / ENERGY</div>
+  <div
+    class="domain-value"
+    id="domainEN"
+  >
+    0
+  </div>
+</div>
+
+  </div></div><!-- ============================================================
+     SCENARIO CONTROL
+     ============================================================ --><div class="panel">  <div class="title">
+    🎛️ SCENARIO CONTROL
+  </div>  <div class="scenario-controls"><button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('FX_SHOCK')"
+>
+  FX STRESS
+</button>
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('DC_LOAD')"
+>
+  DC LOAD
+</button>
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('CYBER_EVENT')"
+>
+  CYBER EVENT
+</button>
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('INFRASTRUCTURE_STRESS')"
+>
+  INFRA STRAIN
+</button>
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('BIODIESEL_SHORTAGE')"
+>
+  BIODIESEL SHORTAGE
+</button>
+
+<button
+  type="button"
+  class="danger"
+  onclick="resetScenario()"
+>
+  RESET
+</button>
+
+  </div></div><!-- ============================================================
+     SCENARIO INTENSITY
+     ============================================================ --><div class="panel">  <div class="title">
+    🎚️ SCENARIO INTENSITY CONTROL
+  </div><input
+id="scenarioIntensity"
+type="range"
+min="0"
+max="100"
+step="10"
+value="50"
+oninput="updateIntensity()"
+
+«»
+
+  <div>Intensity:
+
+<span
+  class="intensity-value"
+  id="intensityValue"
+>
+  50%
+</span>
+
+  </div></div><!-- ============================================================
+     SCENARIO PANEL
+     ============================================================ --><div class="panel">  <div class="title">
+    🧪 SCENARIO PANEL
+  </div>  <pre id="scenarioPanel">{
+  "scenario": "FX_SHOCK",
+  "intensity": "50%",
+  "status": "READY"
+}</pre></div><!-- ============================================================
+     RAW SYSTEM STATE
+     ============================================================ --><div class="panel">  <div class="title">
+    📊 RAW SYSTEM STATE
+  </div>  <pre id="state">
+Waiting...
+  </pre></div><!-- ============================================================
+     GOLDEN RULE ENGINE
+     ============================================================ --><div class="panel">  <div class="title">
+    🛰️ GOLDEN RULE ENGINE
+  </div>  <div class="pipeline"><span
+  class="stage"
+  id="stageOBSERVE"
+>
+  OBSERVE
+</span>
+
+→
+
+<span
+  class="stage"
+  id="stageVERIFY"
+>
+  VERIFY
+</span>
+
+→
+
+<span
+  class="stage"
+  id="stageASSESS"
+>
+  ASSESS
+</span>
+
+→
+
+<span
+  class="stage"
+  id="stageDECIDE"
+>
+  DECIDE
+</span>
+
+→
+
+<span
+  class="stage"
+  id="stageACT"
+>
+  ACT
+</span>
+
+→
+
+<span
+  class="stage"
+  id="stageUPDATE"
+>
+  UPDATE
+</span>
+
+  </div>  <pre id="pipeline">
+Waiting...
+  </pre></div><!-- ============================================================
+     SYSTEM ASSESSMENT
+     ============================================================ --><div class="panel">  <div class="title">
+    ⚠️ SYSTEM ASSESSMENT
+  </div>  <pre id="assessment">
+Waiting...
+  </pre></div><!-- ============================================================
+     RISK PANEL
+     ============================================================ --><div class="panel">  <div class="title">
+    🚨 RISK PANEL
+  </div>  <pre id="riskPanel">
+Risk: LOW
+  </pre></div><!-- ============================================================
+     CAPTAIN AI LENA DECISION
+     ============================================================ --><div class="panel">  <div class="title">
+    ⚙️ CAPTAIN AI LENA DECISION
+  </div>  <pre id="decision">
+Waiting...
+  </pre></div><!-- ============================================================
+     SOLUTION OPTIONS
+     ============================================================ --><div class="panel">  <div class="title">
+    💡 SOLUTION OPTIONS
+  </div>  <div
+    class="solution"
+    id="solutionOptions"
+  >
+    Waiting for system assessment...
+  </div></div><!-- ============================================================
+     ACTION SEQUENCE
+     ============================================================ --><div class="panel">  <div class="title">
+    🚨 ACTION SEQUENCE PROMPT
+  </div>  <pre id="actions">
+Waiting...
+  </pre></div><!-- ============================================================
+     MEMORY CORE
+     ============================================================ --><div class="panel">  <div class="title">
+    🧠 MEMORY CORE
+  </div>  <pre id="memoryCore">
+Memory Core Waiting...
+  </pre></div><!-- ============================================================
+     AUDIT RECORD
+     ============================================================ --><div class="panel">  <div class="title">
+    🧾 SPD v13.1 AUDIT RECORD
+  </div>  <pre id="audit">
+Waiting...
+  </pre></div><!-- ============================================================
+     PIPELINE LOG
+     ============================================================ --><div class="panel">  <div class="title">
+    📜 PIPELINE LOG
+  </div>  <pre id="pipelineLog">
+PIPELINE LOG ACTIVE
+  </pre></div><!-- ============================================================
+     SELF TEST
+     ============================================================ --><div class="panel">  <div class="title">
+    🧪 SPD v13.1 SELF-TEST
+  </div>  <pre id="selfTest">
+Self-test not executed.
+  </pre></div><!-- ============================================================
+     SELF TEST INTERPRETATION
+     ============================================================ --><div class="panel">  <div class="title">
+    🔎 SELF-TEST INTERPRETATION
+  </div>  <pre id="selfTestInterpretation">
+Waiting for self-test execution...
+  </pre></div><!-- ============================================================
+     FAULT IDENTIFICATION
+     ============================================================ --><div class="panel">  <div class="title">
+    ⚠️ FAULT IDENTIFICATION
+  </div>  <pre id="faultIdentification">
+No fault assessment available.
+  </pre></div><!-- ============================================================
+     CORRECTIVE ACTION
+     ============================================================ --><div class="panel">  <div class="title">
+    🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
+  </div>  <pre id="correctiveAction">
+No corrective action available.
+  </pre></div><!-- ============================================================
+     RE-TEST
+     ============================================================ --><div class="panel">  <div class="title">
+    🔁 RE-TEST VALIDATION
+  </div>  <pre id="retest">
+Re-test not executed.
+  </pre></div><!-- ============================================================
+     SYSTEM CONSTANTS
+     ============================================================ --><div class="panel">  <div class="title">
+    📐 SYSTEM CONSTANTS
+  </div>  <pre id="constants">
+Waiting...
+  </pre></div><!-- ============================================================
+     AGENT LOOP MONITOR
+     ============================================================ --><div class="panel">  <div class="title">
+    🔄 AGENT LOOP MONITOR
+  </div>  <div class="muted">
+    DATA → ALGORITHMS → COMPUTE
+  </div>  <pre id="trace">
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </pre></div><!-- ============================================================
+     AUTHORITATIVE GOLDEN RULE ENGINE
+     ============================================================ --><script type="module">
+
+import {
+  runGoldenRule,
+  PHI,
+  GOLDEN_RULE_STAGES
+} from "./goldenRuleEngine.js";
 
 
-<a href="./cockpit_dashboard.html">
-  OPEN DESKTOP COCKPIT
-</a>
+/* ============================================================
+   BASE SYSTEM STATE
+   ============================================================ */
+
+const baseState = {
+
+  fx: 12,
+
+  energy: 25,
+
+  cyb: 40,
+
+  inf: 10,
+
+  dc: 20,
+
+  event: "NORMAL",
+
+  mode: "AUTONOMOUS"
+
+};
 
 
-<a href="./cockpit_mobile.html">
-  OPEN MOBILE COCKPIT
-</a>
+let currentScenario =
+  "FX_SHOCK";
 
 
-<a href="./simulation.html">
-  OPEN LIVE SIMULATION
-</a>
+let scenarioIntensity =
+  50;
 
 
-<a href="./self_test.html">
-  OPEN SPD v13.1 SELF-TEST &amp; VALIDATION
-</a>
+/* ============================================================
+   DOM HELPER
+   ============================================================ */
 
-  </div>  <p class="status">
-    System Status: READY
-  </p></body></html>
+function setText(
+  id,
+  value
+) {
+
+  const element =
+    document.getElementById(id);
+
+  if (!element) {
+
+    throw new Error(
+      "DOM element not found: #" + id
+    );
+
+  }
+
+  element.innerText =
+    value;
+
+}
+
+
+/* ============================================================
+   SCENARIO INTENSITY
+   ============================================================ */
+
+window.updateIntensity = function () {
+
+  scenarioIntensity =
+    Number(
+      document.getElementById(
+        "scenarioIntensity"
+      ).value
+    );
+
+
+  setText(
+    "intensityValue",
+    scenarioIntensity + "%"
+  );
+
+
+  setText(
+    "scenarioPanel",
+
+    JSON.stringify(
+
+      {
+
+        scenario:
+          currentScenario,
+
+        intensity:
+          scenarioIntensity + "%",
+
+        status:
+          "READY"
+
+      },
+
+      null,
+
+      2
+
+    )
+
+  );
+
+};
+
+
+/* ============================================================
+   ACTIVATE SCENARIO
+   ============================================================ */
+
+window.activateScenario = function (
+  scenario
+) {
+
+  currentScenario =
+    scenario;
+
+
+  setText(
+    "scenarioPanel",
+
+    JSON.stringify(
+
+      {
+
+        scenario:
+          currentScenario,
+
+        intensity:
+          scenarioIntensity + "%",
+
+        status:
+          "ACTIVE"
+
+      },
+
+      null,
+
+      2
+
+    )
+
+  );
+
+
+  window.runLiveSystem();
+
+};
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+window.resetScenario = function () {
+
+  currentScenario =
+    "NORMAL";
+
+
+  scenarioIntensity =
+    0;
+
+
+  document.getElementById(
+    "scenarioIntensity"
+  ).value =
+    0;
+
+
+  setText(
+    "intensityValue",
+    "0%"
+  );
+
+
+  setText(
+    "scenarioPanel",
+
+    JSON.stringify(
+
+      {
+
+        scenario:
+          "NORMAL",
+
+        intensity:
+          "0%",
+
+        status:
+          "RESET"
+
+      },
+
+      null,
+
+      2
+
+    )
+
+  );
+
+
+  window.runLiveSystem();
+
+};
+
+
+/* ============================================================
+   BUILD SYSTEM STATE
+   ============================================================ */
+
+function buildSystemState() {
+
+  const intensityFactor =
+    scenarioIntensity / 100;
+
+
+  const state = {
+
+    ...baseState,
+
+    event:
+      currentScenario,
+
+    time:
+      new Date().toISOString()
+
+  };
+
+
+  if (
+    currentScenario ===
+    "FX_SHOCK"
+  ) {
+
+    state.fx =
+      Math.min(
+
+        100,
+
+        baseState.fx +
+        (
+          80 *
+          intensityFactor
+        )
+
+      );
+
+  }
+
+
+  if (
+    currentScenario ===
+    "DC_LOAD"
+  ) {
+
+    state.dc =
+      Math.min(
+
+        100,
+
+        baseState.dc +
+        (
+          80 *
+          intensityFactor
+        )
+
+      );
+
+  }
+
+
+  if (
+    currentScenario ===
+    "CYBER_EVENT"
+  ) {
+
+    state.cyb =
+      Math.min(
+
+        100,
+
+        baseState.cyb +
+        (
+          80 *
+          intensityFactor
+        )
+
+      );
+
+  }
+
+
+  if (
+    currentScenario ===
+    "INFRASTRUCTURE_STRESS"
+  ) {
+
+    state.inf =
+      Math.min(
+
+        100,
+
+        baseState.inf +
+        (
+          80 *
+          intensityFactor
+        )
+
+      );
+
+  }
+
+
+  if (
+    currentScenario ===
+    "BIODIESEL_SHORTAGE"
+  ) {
+
+    state.energy =
+      Math.max(
+
+        0,
+
+        baseState.energy -
+        (
+          80 *
+          intensityFactor
+        )
+
+      );
+
+  }
+
+
+  return state;
+
+}
+
+
+/* ============================================================
+   DOMAIN MONITOR
+   ============================================================ */
+
+function updateDomainMonitor(
+  state
+) {
+
+  setText(
+    "domainFX",
+    state.fx
+  );
+
+  setText(
+    "domainDC",
+    state.dc
+  );
+
+  setText(
+    "domainCYB",
+    state.cyb
+  );
+
+  setText(
+    "domainINF",
+    state.inf
+  );
+
+  setText(
+    "domainEN",
+    state.energy
+  );
+
+}
+
+
+/* ============================================================
+   STAGE DISPLAY
+   ============================================================ */
+
+function updateStages() {
+
+  GOLDEN_RULE_STAGES.forEach(
+    stage => {
+
+      const element =
+        document.getElementById(
+          "stage" +
+          stage
+        );
+
+
+      if (element) {
+
+        element.classList.add(
