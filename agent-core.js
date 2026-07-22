@@ -6,10 +6,7 @@
  * agent-core.js
  *
  * PURPOSE:
- * Central integration bridge between the existing cockpit
- * and the deterministic Sextant architecture.
- *
- * ARCHITECTURE:
+ * Central orchestration bridge connecting:
  *
  * DATA
  *   ↓
@@ -17,9 +14,9 @@
  *   ↓
  * RULE REGISTRY
  *   ↓
- * RULE ENGINE
+ * RULE ENGINE GATEWAY
  *   ↓
- * GOLDEN RULE ENGINE
+ * AUTHORITATIVE GOLDEN RULE ENGINE
  *   ↓
  * CAPTAIN AI LENA
  *   ↓
@@ -33,20 +30,14 @@
  *
  * GOVERNANCE:
  *
- * 1. The Sextant Golden Rule Engine remains authoritative.
- * 2. Golden Rules remain the Source of Truth.
- * 3. Captain AI Lena does not override Golden Rule decisions.
- * 4. Rule Engine resolves authoritative rule references.
- * 5. Memory Core records operational context.
- * 6. Audit Log records the execution history.
- * 7. This module orchestrates the system but does not
- *    replace the deterministic assessment engine.
- *
- * IMPORTANT:
- *
- * This file is designed to preserve the existing cockpit UI.
- * It provides the backend orchestration layer required to
- * connect the current screen to the authoritative rules.
+ * 1. Golden Rules remain the Source of Truth.
+ * 2. Golden Rule Engine remains authoritative.
+ * 3. Agent Core does not create or modify Golden Rules.
+ * 4. Agent Core does not override authoritative decisions.
+ * 5. Memory Core provides operational context only.
+ * 6. Rule Engine Gateway identifies applicable Golden Rules.
+ * 7. Audit Log records execution history.
+ * 8. Existing cockpit UI remains unchanged.
  */
 
 
@@ -55,9 +46,7 @@
    ============================================================ */
 
 import {
-
   runGoldenRule
-
 } from "./goldenRuleEngine.js";
 
 
@@ -66,9 +55,7 @@ import {
    ============================================================ */
 
 import {
-
   captainAILena
-
 } from "./captainAILena.js";
 
 
@@ -76,22 +63,24 @@ import {
    MEMORY CORE
    ============================================================ */
 
-import {
-
-  MemoryCore
-
-} from "./memory/memory-core.js";
+import MemoryCore
+  from "./memory/memory-core.js";
 
 
 /* ============================================================
-   RULE ENGINE
+   RULE LOADER
    ============================================================ */
 
-import {
+import RuleLoader
+  from "./rules/rule-loader.js";
 
-  RuleEngine
 
-} from "./rules/rule-engine.js";
+/* ============================================================
+   RULE ENGINE GATEWAY
+   ============================================================ */
+
+import RuleEngine
+  from "./rules/rule-engine.js";
 
 
 /* ============================================================
@@ -118,7 +107,7 @@ const AgentCoreState = {
     null,
 
   memoryCore:
-    null,
+    MemoryCore,
 
   lastExecution:
     null,
@@ -133,22 +122,86 @@ const AgentCoreState = {
 
 
 /* ============================================================
-   INITIALIZE AGENT CORE
+   SCENARIO → AUTHORITATIVE RULE EVENT MAPPING
    ============================================================ */
 
-/**
- * Initialize the Agent Core.
+/*
+ * The existing cockpit may use FX_SHOCK.
  *
- * The Rule Registry is supplied by the caller.
+ * The authoritative registry uses FX_STRESS.
  *
- * Example:
- *
- * const registry =
- *   await fetch("./rules/rule-registry.json")
- *     .then(response => response.json());
- *
- * initializeAgentCore(registry);
+ * This mapping preserves the existing cockpit screen
+ * while connecting it to the correct Golden Rule.
  */
+
+const EVENT_MAP = {
+
+  FX_SHOCK:
+    "FX_STRESS",
+
+  FX_STRESS:
+    "FX_STRESS",
+
+  DC_LOAD:
+    "DC_LOAD",
+
+  CYBER_EVENT:
+    "CYBER_EVENT",
+
+  INFRASTRUCTURE_STRESS:
+    "INFRASTRUCTURE_STRESS",
+
+  SCENARIO_EVENT:
+    "SCENARIO_EVENT",
+
+  ENGINEERING_EVENT:
+    "ENGINEERING_EVENT",
+
+  OPERATIONAL_EVENT:
+    "OPERATIONAL_EVENT",
+
+  BIODIESEL_SHORTAGE:
+    "ENGINEERING_EVENT",
+
+  NORMAL:
+    "SCENARIO_EVENT"
+
+};
+
+
+/* ============================================================
+   NORMALIZE EVENT
+   ============================================================ */
+
+function normalizeEvent(
+  event
+) {
+
+  const input =
+    typeof event === "string"
+      ? event
+      : event?.type ||
+        event?.event ||
+        "NORMAL";
+
+
+  return {
+
+    original:
+      input,
+
+    authoritative:
+      EVENT_MAP[input] ||
+      input
+
+  };
+
+}
+
+
+/* ============================================================
+   INITIALIZE AGENT CORE
+   ============================================================ */
 
 export function initializeAgentCore(
   ruleRegistry
@@ -164,7 +217,7 @@ export function initializeAgentCore(
 
 
   /* ==========================================================
-     VERIFY RULE REGISTRY AUTHORITY
+     VERIFY SOURCE OF TRUTH
      ========================================================== */
 
   if (
@@ -177,6 +230,10 @@ export function initializeAgentCore(
 
   }
 
+
+  /* ==========================================================
+     VERIFY ACTIVE STATUS
+     ========================================================== */
 
   if (
     ruleRegistry.status !==
@@ -191,30 +248,36 @@ export function initializeAgentCore(
 
 
   /* ==========================================================
-     INITIALIZE RULE ENGINE
+     LOAD REGISTRY THROUGH RULE LOADER
      ========================================================== */
 
-  AgentCoreState.ruleRegistry =
-    ruleRegistry;
-
-
-  AgentCoreState.ruleEngine =
-    new RuleEngine(
+  const loaderStatus =
+    RuleLoader.loadRegistry(
       ruleRegistry
     );
 
 
   /* ==========================================================
-     INITIALIZE MEMORY CORE
+     INITIALIZE RULE ENGINE GATEWAY
      ========================================================== */
 
-  AgentCoreState.memoryCore =
-    new MemoryCore();
+  const engineStatus =
+    RuleEngine.initialize(
+      RuleLoader
+    );
 
 
   /* ==========================================================
-     INITIALIZE STATE
+     STORE AGENT CORE STATE
      ========================================================== */
+
+  AgentCoreState.ruleRegistry =
+    RuleLoader.getRegistry();
+
+
+  AgentCoreState.ruleEngine =
+    RuleEngine;
+
 
   AgentCoreState.initialized =
     true;
@@ -228,24 +291,41 @@ export function initializeAgentCore(
      AUDIT INITIALIZATION
      ========================================================== */
 
-  AuditLog.record({
+  if (
+    AuditLog &&
+    typeof AuditLog.record ===
+    "function"
+  ) {
 
-    event:
-      "AGENT_CORE_INITIALIZED",
+    AuditLog.record({
 
-    ruleAuthority:
-      ruleRegistry.authority,
+      event:
+        "AGENT_CORE_INITIALIZED",
 
-    ruleSourceOfTruth:
-      true,
+      algorithm:
+        "SPD CAPTAIN AI LENA AUTONOMOUS AGENT CORE",
 
-    algorithm:
-      "SPD CAPTAIN AI LENA AUTONOMOUS AGENT CORE",
+      ruleAuthority:
+        ruleRegistry.authority,
 
-    status:
-      "READY"
+      ruleSourceOfTruth:
+        ruleRegistry.sourceOfTruth,
 
-  });
+      registryVersion:
+        ruleRegistry.version,
+
+      ruleLoaderStatus:
+        loaderStatus.status,
+
+      ruleEngineStatus:
+        engineStatus.status,
+
+      status:
+        "READY"
+
+    });
+
+  }
 
 
   return {
@@ -254,7 +334,7 @@ export function initializeAgentCore(
       "READY",
 
     ruleRegistry:
-      ruleRegistry,
+      AgentCoreState.ruleRegistry,
 
     ruleEngine:
       AgentCoreState.ruleEngine,
@@ -287,15 +367,8 @@ function ensureInitialized() {
 
 
 /* ============================================================
-   RESOLVE AUTHORITATIVE RULE
+   RESOLVE AUTHORITATIVE GOLDEN RULE
    ============================================================ */
-
-/**
- * Resolve the Golden Rule associated with
- * the current operational event.
- *
- * The registry is authoritative.
- */
 
 function resolveRule(
   event
@@ -304,56 +377,48 @@ function resolveRule(
   ensureInitialized();
 
 
-  const ruleEntry =
-    AgentCoreState
-      .ruleRegistry
-      .rules?.[
-        event
-      ];
+  const normalized =
+    normalizeEvent(
+      event
+    );
 
 
-  if (!ruleEntry) {
+  const result =
+    RuleEngine.evaluate({
 
-    return {
+      type:
+        normalized.authoritative
 
-      event,
-
-      domain:
-        null,
-
-      ruleIds:
-        [],
-
-      description:
-        "No registered Golden Rule found for this event.",
-
-      authority:
-        AgentCoreState
-          .ruleRegistry
-          .authority,
-
-      sourceOfTruth:
-        AgentCoreState
-          .ruleRegistry
-          .sourceOfTruth
-
-    };
-
-  }
+    });
 
 
   return {
 
-    event,
+    originalEvent:
+      normalized.original,
+
+    authoritativeEvent:
+      normalized.authoritative,
+
+    ruleApplied:
+      result.ruleApplied ??
+      false,
+
+    found:
+      result.ruleReference?.found ??
+      false,
 
     domain:
-      ruleEntry.domain,
+      result.ruleReference?.domain ??
+      null,
 
     ruleIds:
-      ruleEntry.ruleIds || [],
+      result.ruleReference?.ruleIds ??
+      [],
 
     description:
-      ruleEntry.description,
+      result.ruleReference?.description ??
+      null,
 
     authority:
       AgentCoreState
@@ -363,7 +428,12 @@ function resolveRule(
     sourceOfTruth:
       AgentCoreState
         .ruleRegistry
-        .sourceOfTruth
+        .sourceOfTruth,
+
+    registryVersion:
+      AgentCoreState
+        .ruleRegistry
+        .version
 
   };
 
@@ -374,10 +444,6 @@ function resolveRule(
    MEMORY OBSERVATION
    ============================================================ */
 
-/**
- * Record the observed operational state.
- */
-
 function observeMemory(
   state,
   ruleReference
@@ -386,47 +452,57 @@ function observeMemory(
   ensureInitialized();
 
 
-  const observation = {
-
-    event:
-      state.event || "NORMAL",
-
-    state: {
-      ...state
-    },
-
-    ruleReference,
-
-    timestamp:
-      new Date().toISOString()
-
-  };
+  const event =
+    state.event ||
+    "NORMAL";
 
 
-  /*
-   * The Memory Core is intentionally treated
-   * as operational context.
-   *
-   * It does not alter the Golden Rule Engine.
-   */
-
-  if (
-    typeof AgentCoreState
-      .memoryCore
-      .record ===
-    "function"
-  ) {
-
+  const eventRecord =
     AgentCoreState
       .memoryCore
-      .record(
-        observation
+      .recordEvent({
+
+        type:
+          event,
+
+        payload: {
+
+          state: {
+            ...state
+          },
+
+          ruleReference
+
+        },
+
+        source:
+          "SPD_AGENT_CORE"
+
+      });
+
+
+  const stateRecord =
+    AgentCoreState
+      .memoryCore
+      .recordState(
+        state
       );
 
-  }
 
+  return {
 
-  return observation;
+    event:
+      eventRecord,
+
+    state:
+      stateRecord,
+
+    context:
+      AgentCoreState
+        .memoryCore
+        .getContext()
+
+  };
 
 }
 
@@ -434,20 +510,6 @@ function observeMemory(
 /* ============================================================
    CAPTAIN AI LENA EXECUTION
    ============================================================ */
-
-/**
- * Execute the complete Agent Core.
- *
- * Authoritative flow:
- *
- * DATA
- * → MEMORY
- * → RULE RESOLUTION
- * → GOLDEN RULE ENGINE
- * → CAPTAIN AI LENA
- * → AUDIT
- * → OUTPUT
- */
 
 export function runAgentCore(
   state = {},
@@ -488,7 +550,7 @@ export function runAgentCore(
 
 
   /* ==========================================================
-     3. AUTHORITATIVE GOLDEN RULE EXECUTION
+     3. AUTHORITATIVE GOLDEN RULE ENGINE
      ========================================================== */
 
   const goldenRule =
@@ -501,11 +563,22 @@ export function runAgentCore(
      4. CAPTAIN AI LENA INTERPRETATION
      ========================================================== */
 
-  const captainDecision =
-    captainAILena(
-      state,
-      selfTest
-    );
+  let captainDecision =
+    null;
+
+
+  if (
+    typeof captainAILena ===
+    "function"
+  ) {
+
+    captainDecision =
+      captainAILena(
+        state,
+        selfTest
+      );
+
+  }
 
 
   /* ==========================================================
@@ -520,57 +593,112 @@ export function runAgentCore(
 
 
   /* ==========================================================
-     6. AUDIT RECORD
+     6. RECORD AGENT DECISION IN MEMORY
      ========================================================== */
 
-  const auditRecord =
-    AuditLog.record({
+  const decisionRecord =
+    AgentCoreState
+      .memoryCore
+      .recordDecision({
 
-      event,
+        event,
 
-      systemState:
-        state,
+        ruleReference,
 
-      memoryContext:
-        memoryObservation,
+        riskLevel:
+          authoritativeRisk,
 
-      ruleReference,
+        decision:
+          goldenRule
+            .decision
+            ?.decision ??
+          null,
 
-      ruleAuthority:
-        AgentCoreState
-          .ruleRegistry
-          .authority,
+        recommendedAction:
+          goldenRule
+            .actionSequence ??
+          null,
 
-      ruleSourceOfTruth:
-        true,
+        rationale:
+          goldenRule
+            .assessment ??
+          null
 
-      algorithm:
-        "Sextant Golden Rule Engine",
-
-      riskLevel:
-        authoritativeRisk,
-
-      decision:
-        goldenRule
-          .decision,
-
-      recommendedAction:
-        goldenRule
-          .actionSequence,
-
-      outcome:
-        goldenRule
-          .updatedState,
-
-      status:
-        goldenRule
-          .status
-
-    });
+      });
 
 
   /* ==========================================================
-     7. UPDATE AGENT CORE STATE
+     7. AUDIT RECORD
+     ========================================================== */
+
+  let auditRecord =
+    null;
+
+
+  if (
+    AuditLog &&
+    typeof AuditLog.record ===
+    "function"
+  ) {
+
+    auditRecord =
+      AuditLog.record({
+
+        event,
+
+        originalEvent:
+          ruleReference
+            .originalEvent,
+
+        authoritativeEvent:
+          ruleReference
+            .authoritativeEvent,
+
+        systemState:
+          state,
+
+        memoryContext:
+          memoryObservation,
+
+        ruleReference,
+
+        ruleAuthority:
+          AgentCoreState
+            .ruleRegistry
+            .authority,
+
+        ruleSourceOfTruth:
+          true,
+
+        algorithm:
+          "Sextant Golden Rule Engine",
+
+        riskLevel:
+          authoritativeRisk,
+
+        decision:
+          goldenRule
+            .decision,
+
+        recommendedAction:
+          goldenRule
+            .actionSequence,
+
+        outcome:
+          goldenRule
+            .updatedState,
+
+        status:
+          goldenRule
+            .status
+
+      });
+
+  }
+
+
+  /* ==========================================================
+     8. UPDATE AGENT CORE STATE
      ========================================================== */
 
   AgentCoreState
@@ -580,6 +708,14 @@ export function runAgentCore(
         executionTime,
 
       event,
+
+      authoritativeEvent:
+        ruleReference
+          .authoritativeEvent,
+
+      ruleIds:
+        ruleReference
+          .ruleIds,
 
       risk:
         authoritativeRisk,
@@ -597,7 +733,7 @@ export function runAgentCore(
 
 
   /* ==========================================================
-     8. RETURN UNIFIED OUTPUT
+     9. RETURN UNIFIED OUTPUT
      ========================================================== */
 
   return {
@@ -619,6 +755,8 @@ export function runAgentCore(
     ruleReference,
 
     memoryObservation,
+
+    decisionRecord,
 
     goldenRule,
 
@@ -688,7 +826,13 @@ export function getAgentCoreStatus() {
       AgentCoreState
         .ruleRegistry
         ?.sourceOfTruth ||
-      false
+      false,
+
+    registryVersion:
+      AgentCoreState
+        .ruleRegistry
+        ?.version ||
+      null
 
   };
 
@@ -729,8 +873,19 @@ export function getRuleEngine() {
 
 export function getAuditHistory() {
 
-  return AuditLog
-    .getAll();
+  if (
+    AuditLog &&
+    typeof AuditLog.getAll ===
+    "function"
+  ) {
+
+    return AuditLog
+      .getAll();
+
+  }
+
+
+  return [];
 
 }
 
@@ -739,10 +894,21 @@ export function getRecentAudit(
   limit = 10
 ) {
 
-  return AuditLog
-    .getRecent(
-      limit
-    );
+  if (
+    AuditLog &&
+    typeof AuditLog.getRecent ===
+    "function"
+  ) {
+
+    return AuditLog
+      .getRecent(
+        limit
+      );
+
+  }
+
+
+  return [];
 
 }
 
@@ -767,12 +933,6 @@ export function getRuleReference(
 /* ============================================================
    GLOBAL BROWSER ACCESS
    ============================================================ */
-
-/*
- * These references allow the existing cockpit
- * to inspect the Agent Core without changing
- * the visual interface.
- */
 
 if (
   typeof window !==
