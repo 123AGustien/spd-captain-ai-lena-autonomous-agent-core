@@ -1,3 +1,5 @@
+
+This is the sequence we can now demonstrate to an evaluator: run a scenario → observe the system response → run self-test → identify whether faults exist → apply corrective logic if required → re-test → record final validation. That is the part that makes the simulator an evaluation instrument rather than just a dashboard.
 README.md
 │
 ├── SPD v13.1 Introduction
