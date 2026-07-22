@@ -331,7 +331,7 @@ README.md
 │
 └── Deployment / Usage
 
-5. The Deeper Engineering Foundation
+11. The Deeper Engineering Foundation
 
 The SPD-specific Golden Rule is an engineering synthesis built around established principles of resilience, safety, control, fault detection, and continuous monitoring.
 
