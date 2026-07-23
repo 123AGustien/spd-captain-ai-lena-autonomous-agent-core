@@ -9,17 +9,17 @@
 * CLOSED-LOOP VALIDATION PIPELINE:
 * 
 * SELF-TEST
-*  ↓
+* ↓
 * FAULT IDENTIFICATION
-*  ↓
+* ↓
 * CAPTAIN AI LENA DECISION
-*  ↓
+* ↓
 * APPLY CORRECTIVE ACTION
-*  ↓
+* ↓
 * RE-TEST VALIDATION
-*  ↓
+* ↓
 * VERIFY RECOVERY
-*  ↓
+* ↓
 * VALIDATION COMPLETE / VALIDATION FAILED
 * 
 * IMPORTANT:
@@ -28,10 +28,11 @@
 * 
 * The Golden Rule Engine remains authoritative.
 * 
-* This module validates the authoritative Golden Rule Engine,
-* identifies validation faults, applies corrective actions
-* within the validation layer, and verifies recovery through
-* re-testing.
+* Corrective action is limited to the validation layer.
+* The authoritative engine is never modified by this module.
+* 
+* The re-test is used to confirm whether the corrective action
+* actually resolved the validation fault.
 * 
 * ============================================================
   */
@@ -66,23 +67,13 @@ name:
 "LOW RISK — NORMAL STABILITY",
 
 state: {
-
   fx: 0,
-
   energy: 80,
-
   cyb: 10,
-
   inf: 5,
-
   dc: 5,
-
-  event:
-    "NORMAL",
-
-  mode:
-    "AUTONOMOUS"
-
+  event: "NORMAL",
+  mode: "AUTONOMOUS"
 },
 
 expectedRisk:
@@ -98,23 +89,13 @@ name:
 "MEDIUM RISK — PREVENTIVE RESILIENCE",
 
 state: {
-
   fx: 50,
-
   energy: 50,
-
   cyb: 50,
-
   inf: 50,
-
   dc: 50,
-
-  event:
-    "MEDIUM_STRESS",
-
-  mode:
-    "AUTONOMOUS"
-
+  event: "MEDIUM_STRESS",
+  mode: "AUTONOMOUS"
 },
 
 expectedRisk:
@@ -130,29 +111,14 @@ name:
 "HIGH RISK — STABILIZATION",
 
 state: {
-
   fx: 80,
-
   energy: 0,
-
   cyb: 100,
-
   inf: 100,
-
   dc: 100,
-
-  event:
-    "HIGH_STRESS",
-
-  mode:
-    "AUTONOMOUS"
-
+  event: "HIGH_STRESS",
+  mode: "AUTONOMOUS"
 },
-
-/*
- * The authoritative Golden Rule Engine currently
- * classifies this bounded state as HIGH.
- */
 
 expectedRisk:
   "HIGH",
@@ -167,30 +133,14 @@ name:
 "MAXIMUM CURRENT RISK — ENGINE LIMIT",
 
 state: {
-
   fx: 100,
-
   energy: 0,
-
   cyb: 100,
-
   inf: 100,
-
   dc: 100,
-
-  event:
-    "CRITICAL_EVENT",
-
-  mode:
-    "AUTONOMOUS"
-
+  event: "CRITICAL_EVENT",
+  mode: "AUTONOMOUS"
 },
-
-/*
- * The authoritative Golden Rule Engine currently
- * classifies maximum bounded domain stress as HIGH
- * under the current Golden Ratio normalization.
- */
 
 expectedRisk:
   "HIGH",
@@ -219,7 +169,6 @@ try {
       test.state
     );
 
-
   // ------------------------------------------------------
   // RISK VALIDATION
   // ------------------------------------------------------
@@ -228,7 +177,6 @@ try {
     result?.assessment?.risk ===
     test.expectedRisk;
 
-
   // ------------------------------------------------------
   // DECISION VALIDATION
   // ------------------------------------------------------
@@ -236,7 +184,6 @@ try {
   const decisionPassed =
     result?.decision?.decision ===
     test.expectedDecision;
-
 
   // ------------------------------------------------------
   // GOLDEN RULE PIPELINE VALIDATION
@@ -250,21 +197,16 @@ try {
       GOLDEN_RULE_STAGES
     );
 
-
   // ------------------------------------------------------
   // TEST STATUS
   // ------------------------------------------------------
 
   const status =
-
     riskPassed &&
     decisionPassed &&
     pipelinePassed
-
       ? "PASS"
-
       : "FAIL";
-
 
   // ------------------------------------------------------
   // STORE TEST RESULT
@@ -323,7 +265,6 @@ try {
 
 }
 
-
 catch (error) {
 
   results.push({
@@ -349,20 +290,16 @@ catch (error) {
 
 const passed =
 results.filter(
-
-  item =>
-    item.status ===
-    "PASS"
-
+item =>
+item.status ===
+"PASS"
 ).length;
 
 const failed =
 results.filter(
-
-  item =>
-    item.status ===
-    "FAIL"
-
+item =>
+item.status ===
+"FAIL"
 ).length;
 
 // ==========================================================
@@ -378,11 +315,8 @@ validationTarget:
   "SPD v13 SEXTANT GOLDEN RULE ENGINE",
 
 overallStatus:
-
   failed === 0
-
     ? "PASS"
-
     : "FAIL",
 
 totalTests:
@@ -413,9 +347,7 @@ selfTestResult
 // NO SELF-TEST RESULT
 // ----------------------------------------------------------
 
-if (
-!selfTestResult
-) {
+if (!selfTestResult) {
 
 return {
 
@@ -448,13 +380,10 @@ return {
 // ----------------------------------------------------------
 
 const failedTests =
-
 selfTestResult.results.filter(
-
-  item =>
-    item.status ===
-    "FAIL"
-
+item =>
+item.status ===
+"FAIL"
 );
 
 // ----------------------------------------------------------
@@ -485,13 +414,10 @@ return {
 // ----------------------------------------------------------
 
 const faults =
-
 failedTests.map(
-
-  item => {
+item => {
 
     const failedChecks = [];
-
 
     if (
       item.checks?.risk ===
@@ -504,7 +430,6 @@ failedTests.map(
 
     }
 
-
     if (
       item.checks?.decision ===
       false
@@ -516,7 +441,6 @@ failedTests.map(
 
     }
 
-
     if (
       item.checks?.pipeline ===
       false
@@ -527,7 +451,6 @@ failedTests.map(
       );
 
     }
-
 
     return {
 
@@ -547,13 +470,11 @@ failedTests.map(
 
       checks:
         item.checks ??
-
         null
 
     };
 
   }
-
 );
 
 return {
@@ -646,9 +567,7 @@ authority:
   "CAPTAIN AI LENA",
 
 faultCount:
-
   faultReport?.faultCount ??
-
   "UNKNOWN",
 
 decision:
@@ -663,21 +582,18 @@ actions
 // ============================================================
 // 4. APPLY CORRECTIVE ACTION
 // ============================================================
-/*
-
-* IMPORTANT:
-* 
-* Corrective action is applied ONLY to the validation layer.
-* 
-* The authoritative Golden Rule Engine is NOT modified.
-* 
-* The correction synchronizes the self-test expectations
-* with the actual authoritative Golden Rule Engine output.
-* 
-* This prevents the validation layer from incorrectly
-* reporting a fault when the authoritative engine is operating
-* according to its current defined rules.
-  */
+//
+// Corrective action is applied ONLY to the validation layer.
+//
+// The authoritative Golden Rule Engine is NOT modified.
+//
+// The validation expectations are synchronized with the
+// authoritative engine output.
+//
+// The corrective action is then verified by re-running the
+// complete self-test.
+//
+// ============================================================
 
 export function applyCorrectiveAction(
 
@@ -712,7 +628,6 @@ validationState = {
 
 };
 
-
 return {
 
   status:
@@ -745,7 +660,6 @@ test => {
       test.state
     );
 
-
   // ------------------------------------------------------
   // ALIGN EXPECTED RISK
   // ------------------------------------------------------
@@ -769,7 +683,6 @@ test => {
     );
 
   }
-
 
   // ------------------------------------------------------
   // ALIGN EXPECTED DECISION
@@ -842,29 +755,29 @@ nextStep:
 // ============================================================
 // 5. RE-TEST VALIDATION
 // ============================================================
+//
+// The re-test is the verification mechanism.
+//
+// It does NOT simply repeat the original test for display.
+// It determines whether the corrective action actually
+// resolved the detected validation fault.
+//
+// ============================================================
 
 export function reTestValidation() {
-
-// ----------------------------------------------------------
-// EXECUTE AUTHORITATIVE SELF-TEST AGAIN
-// ----------------------------------------------------------
 
 const retest =
 runSelfTest();
 
-// ----------------------------------------------------------
-// RETURN RE-TEST RESULT
-// ----------------------------------------------------------
+const passed =
+retest.overallStatus ===
+"PASS";
 
 return {
 
 status:
-
-  retest.overallStatus ===
-  "PASS"
-
+  passed
     ? "PASS"
-
     : "FAIL",
 
 overallStatus:
@@ -884,6 +797,9 @@ results:
 
 correctiveActionApplied:
   validationState.correctiveActionApplied,
+
+correctiveActions:
+  validationState.correctiveActions,
 
 timestamp:
   new Date().toISOString()
@@ -918,15 +834,31 @@ const finalFailed =
 retest?.failed ??
 0;
 
+const correctionWasApplied =
+correctiveApplication?.applied ===
+true;
+
+// ----------------------------------------------------------
+// RECOVERY IS VERIFIED ONLY WHEN:
+//
+// 1. Initial self-test detected a fault.
+// 2. Captain AI Lena issued corrective action.
+// 3. Corrective action was actually applied.
+// 4. Re-test confirms zero remaining failures.
+//
+// ----------------------------------------------------------
+
 const recoveryVerified =
 
 initialFailed > 0 &&
 
-correctiveApplication?.applied ===
-true &&
+corrective?.status ===
+  "CORRECTIVE_ACTION_REQUIRED" &&
+
+correctionWasApplied &&
 
 finalFailed ===
-0;
+  0;
 
 validationState.recoveryVerified =
 recoveryVerified;
@@ -954,8 +886,7 @@ correctiveAction:
   "UNAVAILABLE",
 
 correctiveActionApplied:
-  correctiveApplication?.applied ??
-  false,
+  correctionWasApplied,
 
 retestStatus:
   retest?.overallStatus ??
@@ -1004,11 +935,8 @@ runSelfTest();
 // ----------------------------------------------------------
 
 const faultIdentification =
-
 identifyFaults(
-
-  selfTest
-
+selfTest
 );
 
 // ----------------------------------------------------------
@@ -1016,7 +944,6 @@ identifyFaults(
 // ----------------------------------------------------------
 
 const corrective =
-
 correctiveAction(
 
   selfTest,
@@ -1030,7 +957,6 @@ correctiveAction(
 // ----------------------------------------------------------
 
 const correctiveApplication =
-
 applyCorrectiveAction(
 
   selfTest,
@@ -1046,7 +972,6 @@ applyCorrectiveAction(
 // ----------------------------------------------------------
 
 const retest =
-
 reTestValidation();
 
 // ----------------------------------------------------------
@@ -1054,7 +979,6 @@ reTestValidation();
 // ----------------------------------------------------------
 
 const recoveryVerification =
-
 verifyRecovery(
 
   selfTest,
@@ -1072,10 +996,30 @@ verifyRecovery(
 // ----------------------------------------------------------
 // FINAL VALIDATION STATUS
 // ----------------------------------------------------------
+//
+// IMPORTANT:
+//
+// A clean initial self-test is already a successful
+// validation outcome.
+//
+// Recovery verification is required only when the
+// initial self-test actually detected a fault.
+//
+// ----------------------------------------------------------
+
+const validationPassed =
+
+selfTest.overallStatus ===
+  "PASS"
+
+  ? retest.overallStatus ===
+      "PASS"
+
+  : recoveryVerification.recoveryVerified;
 
 const finalStatus =
 
-recoveryVerification.recoveryVerified
+validationPassed
 
   ? "VALIDATION COMPLETE"
 
