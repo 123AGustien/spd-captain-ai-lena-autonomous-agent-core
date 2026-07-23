@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * SPD V13 — FIN DOMAIN RULE ENGINE
+ * SPD V13.1 — FIN DOMAIN RULE ENGINE
  * ============================================================
  *
  * File:
@@ -11,7 +11,7 @@
  *
  * Purpose:
  * Provide deterministic financial-domain assessment for
- * the SPD v13 Captain AI Lena Autonomous Agent Core.
+ * the SPD v13.1 Captain AI Lena Autonomous Agent Core.
  *
  * Architecture:
  *
@@ -21,7 +21,7 @@
  *       ↓
  * FIN RULE ENGINE
  *       ↓
- * FIN RULE REGISTRY
+ * FIN RULE REGISTRY / SCENARIO RULES
  *       ↓
  * FIN ASSESSMENT
  *       ↓
@@ -42,6 +42,7 @@
  * The FIN engine does not replace the Captain AI Lena
  * decision core. It provides domain-specific assessment
  * and recommendations to the authoritative decision layer.
+ *
  * ============================================================
  */
 
@@ -55,38 +56,72 @@
 const FIN_SCENARIOS = {
 
   FIN_STRESS: {
-    id: "FIN_STRESS",
-    category: "FINANCIAL_SYSTEM_STRESS",
+
+    id:
+      "FIN_STRESS",
+
+    category:
+      "FINANCIAL_SYSTEM_STRESS",
+
     description:
       "General financial system stress affecting interconnected financial conditions."
+
   },
+
 
   BANKING_STRESS: {
-    id: "BANKING_STRESS",
-    category: "BANKING_SYSTEM_STABILITY",
+
+    id:
+      "BANKING_STRESS",
+
+    category:
+      "BANKING_SYSTEM_STABILITY",
+
     description:
       "Stress affecting banking-sector stability and potential systemic contagion."
+
   },
+
 
   LIQUIDITY_CRISIS: {
-    id: "LIQUIDITY_CRISIS",
-    category: "LIQUIDITY_RESILIENCE",
+
+    id:
+      "LIQUIDITY_CRISIS",
+
+    category:
+      "LIQUIDITY_RESILIENCE",
+
     description:
       "Reduced liquidity availability and increased funding pressure."
+
   },
+
 
   CREDIT_STRESS: {
-    id: "CREDIT_STRESS",
-    category: "CREDIT_RESILIENCE",
+
+    id:
+      "CREDIT_STRESS",
+
+    category:
+      "CREDIT_RESILIENCE",
+
     description:
       "Deterioration in credit conditions and increased default pressure."
+
   },
 
+
   SOVEREIGN_DEBT: {
-    id: "SOVEREIGN_DEBT",
-    category: "SOVEREIGN_FINANCIAL_RESILIENCE",
+
+    id:
+      "SOVEREIGN_DEBT",
+
+    category:
+      "SOVEREIGN_FINANCIAL_RESILIENCE",
+
     description:
       "Sovereign debt stress and potential financial-system transmission effects."
+
   }
 
 };
@@ -98,13 +133,22 @@ const FIN_SCENARIOS = {
  * ============================================================
  */
 
-export function finRuleEngine(input = {}) {
+export function finRuleEngine(
+  input = {}
+) {
 
-  const state = normalizeFINState(input);
+  const state =
+    normalizeFINState(
+      input
+    );
+
 
   const scenario =
-    FIN_SCENARIOS[state.scenario] ||
+    FIN_SCENARIOS[
+      state.scenario
+    ] ||
     FIN_SCENARIOS.FIN_STRESS;
+
 
   const assessment =
     assessFinancialRisk(
@@ -112,15 +156,18 @@ export function finRuleEngine(input = {}) {
       scenario
     );
 
+
   const decision =
     determineFINDecision(
       assessment
     );
 
+
   const action =
     determineFINAction(
       decision
     );
+
 
   return {
 
@@ -128,7 +175,7 @@ export function finRuleEngine(input = {}) {
       "FIN",
 
     engine:
-      "SPD V13 FINANCIAL RESILIENCE RULE ENGINE",
+      "SPD V13.1 FINANCIAL RESILIENCE RULE ENGINE",
 
     scenario:
       scenario.id,
@@ -166,52 +213,198 @@ export function finRuleEngine(input = {}) {
  * ============================================================
  * INPUT NORMALIZATION
  * ============================================================
+ *
+ * IMPORTANT:
+ *
+ * domainIntegration.js passes the system state through:
+ *
+ * input.state
+ *
+ * Therefore this function supports both:
+ *
+ * 1. Nested state:
+ *
+ * {
+ *   intensity: 40,
+ *   state: {
+ *     fx: 12,
+ *     energy: 25,
+ *     cyb: 40,
+ *     inf: 10,
+ *     dc: 20
+ *   }
+ * }
+ *
+ * 2. Direct state:
+ *
+ * {
+ *   intensity: 40,
+ *   fx: 12,
+ *   energy: 25,
+ *   cyb: 40,
+ *   inf: 10,
+ *   dc: 20
+ * }
+ *
+ * This ensures compatibility with the domain integration layer
+ * and direct FIN engine testing.
+ *
+ * ============================================================
  */
 
-function normalizeFINState(input) {
+function normalizeFINState(
+  input
+) {
 
   const intensity =
     clamp(
-      Number(input?.intensity ?? 50),
+      Number(
+        input?.intensity ??
+        50
+      ),
       0,
       100
     );
 
+
+  /*
+   * Prefer the state object supplied by
+   * domainIntegration.js.
+   *
+   * Fall back to input itself for direct
+   * FIN engine execution.
+   */
+
+  const sourceState =
+    input?.state ??
+    input;
+
+
   return {
 
     scenario:
-      input?.scenario ??
-      "FIN_STRESS",
+      normalizeScenario(
+        input?.scenario ??
+        input?.event ??
+        "FIN_STRESS"
+      ),
+
 
     intensity,
+
 
     intensityFactor:
       intensity / 100,
 
+
     fx:
-      normalizeMetric(input?.fx),
+      normalizeMetric(
+        sourceState?.fx
+      ),
+
 
     energy:
-      normalizeMetric(input?.energy, 50),
+      normalizeMetric(
+        sourceState?.energy,
+        50
+      ),
+
 
     cyb:
-      normalizeMetric(input?.cyb),
+      normalizeMetric(
+        sourceState?.cyb
+      ),
+
 
     inf:
-      normalizeMetric(input?.inf),
+      normalizeMetric(
+        sourceState?.inf
+      ),
+
 
     dc:
-      normalizeMetric(input?.dc),
+      normalizeMetric(
+        sourceState?.dc
+      ),
+
 
     mode:
       input?.mode ??
       "AUTONOMOUS",
+
 
     time:
       input?.time ??
       new Date().toISOString()
 
   };
+
+}
+
+
+/**
+ * ============================================================
+ * SCENARIO NORMALIZATION
+ * ============================================================
+ */
+
+function normalizeScenario(
+  scenario
+) {
+
+  const normalized =
+    String(
+      scenario ||
+      "FIN_STRESS"
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const aliases = {
+
+    FIN_STRESS:
+      "FIN_STRESS",
+
+    FINANCIAL_STRESS:
+      "FIN_STRESS",
+
+    BANKING_STRESS:
+      "BANKING_STRESS",
+
+    BANK_STRESS:
+      "BANKING_STRESS",
+
+    LIQUIDITY_CRISIS:
+      "LIQUIDITY_CRISIS",
+
+    LIQUIDITY_STRESS:
+      "LIQUIDITY_CRISIS",
+
+    CREDIT_STRESS:
+      "CREDIT_STRESS",
+
+    CREDIT_CRISIS:
+      "CREDIT_STRESS",
+
+    SOVEREIGN_DEBT:
+      "SOVEREIGN_DEBT",
+
+    DEBT_STRESS:
+      "SOVEREIGN_DEBT"
+
+  };
+
+
+  return (
+
+    aliases[
+      normalized
+    ] ??
+
+    "FIN_STRESS"
+
+  );
 
 }
 
@@ -226,6 +419,20 @@ function normalizeFINState(input) {
  *
  * The result is returned to Captain AI Lena for final
  * deterministic decision processing.
+ *
+ * Intensity is applied to the domain-specific base stress.
+ *
+ * Therefore:
+ *
+ * intensity = 0
+ * → financialStress = 0
+ *
+ * intensity = 50
+ * → 50% of base financial stress
+ *
+ * intensity = 100
+ * → 100% of base financial stress
+ *
  * ============================================================
  */
 
@@ -234,19 +441,46 @@ function assessFinancialRisk(
   scenario
 ) {
 
-  let baseStress = 0;
+  let baseStress =
+    0;
 
-  switch (scenario.id) {
+
+  switch (
+    scenario.id
+  ) {
+
 
     case "BANKING_STRESS":
 
       baseStress =
         (
-          state.fx * 0.20 +
-          state.inf * 0.15 +
-          state.dc * 0.10 +
-          state.cyb * 0.10 +
-          (100 - state.energy) * 0.10
+
+          state.fx *
+          0.20
+
+          +
+
+          state.inf *
+          0.15
+
+          +
+
+          state.dc *
+          0.10
+
+          +
+
+          state.cyb *
+          0.10
+
+          +
+
+          (
+            100 -
+            state.energy
+          ) *
+          0.10
+
         );
 
       break;
@@ -256,11 +490,33 @@ function assessFinancialRisk(
 
       baseStress =
         (
-          state.fx * 0.20 +
-          state.inf * 0.10 +
-          state.dc * 0.10 +
-          state.cyb * 0.05 +
-          (100 - state.energy) * 0.20
+
+          state.fx *
+          0.20
+
+          +
+
+          state.inf *
+          0.10
+
+          +
+
+          state.dc *
+          0.10
+
+          +
+
+          state.cyb *
+          0.05
+
+          +
+
+          (
+            100 -
+            state.energy
+          ) *
+          0.20
+
         );
 
       break;
@@ -270,11 +526,33 @@ function assessFinancialRisk(
 
       baseStress =
         (
-          state.fx * 0.15 +
-          state.inf * 0.20 +
-          state.dc * 0.10 +
-          state.cyb * 0.10 +
-          (100 - state.energy) * 0.10
+
+          state.fx *
+          0.15
+
+          +
+
+          state.inf *
+          0.20
+
+          +
+
+          state.dc *
+          0.10
+
+          +
+
+          state.cyb *
+          0.10
+
+          +
+
+          (
+            100 -
+            state.energy
+          ) *
+          0.10
+
         );
 
       break;
@@ -284,11 +562,33 @@ function assessFinancialRisk(
 
       baseStress =
         (
-          state.fx * 0.25 +
-          state.inf * 0.20 +
-          state.dc * 0.10 +
-          state.cyb * 0.05 +
-          (100 - state.energy) * 0.10
+
+          state.fx *
+          0.25
+
+          +
+
+          state.inf *
+          0.20
+
+          +
+
+          state.dc *
+          0.10
+
+          +
+
+          state.cyb *
+          0.05
+
+          +
+
+          (
+            100 -
+            state.energy
+          ) *
+          0.10
+
         );
 
       break;
@@ -300,11 +600,33 @@ function assessFinancialRisk(
 
       baseStress =
         (
-          state.fx * 0.20 +
-          state.inf * 0.15 +
-          state.dc * 0.10 +
-          state.cyb * 0.10 +
-          (100 - state.energy) * 0.15
+
+          state.fx *
+          0.20
+
+          +
+
+          state.inf *
+          0.15
+
+          +
+
+          state.dc *
+          0.10
+
+          +
+
+          state.cyb *
+          0.10
+
+          +
+
+          (
+            100 -
+            state.energy
+          ) *
+          0.15
+
         );
 
       break;
@@ -312,10 +634,18 @@ function assessFinancialRisk(
   }
 
 
+  /*
+   * Apply scenario intensity.
+   */
+
   const intensityAdjustedStress =
     baseStress *
     state.intensityFactor;
 
+
+  /*
+   * Prevent stress from exceeding 100.
+   */
 
   const financialStress =
     Math.min(
@@ -324,12 +654,21 @@ function assessFinancialRisk(
     );
 
 
+  /*
+   * Calculate resilience.
+   */
+
   const resilienceScore =
     Math.max(
       0,
-      100 - financialStress
+      100 -
+      financialStress
     );
 
+
+  /*
+   * Classify risk.
+   */
 
   const risk =
     classifyFINRisk(
@@ -339,6 +678,8 @@ function assessFinancialRisk(
 
   return {
 
+    baseStress,
+
     financialStress,
 
     resilienceScore,
@@ -347,6 +688,9 @@ function assessFinancialRisk(
 
     intensity:
       state.intensity,
+
+    intensityFactor:
+      state.intensityFactor,
 
     scenario:
       scenario.id
@@ -367,7 +711,8 @@ function classifyFINRisk(
 ) {
 
   if (
-    financialStress < 30
+    financialStress <
+    30
   ) {
 
     return "LOW";
@@ -376,7 +721,8 @@ function classifyFINRisk(
 
 
   if (
-    financialStress < 50
+    financialStress <
+    50
   ) {
 
     return "MEDIUM";
@@ -398,6 +744,7 @@ function classifyFINRisk(
  *
  * Captain AI Lena remains the authoritative final
  * decision authority.
+ *
  * ============================================================
  */
 
@@ -408,6 +755,7 @@ function determineFINDecision(
   switch (
     assessment.risk
   ) {
+
 
     case "HIGH":
 
@@ -468,6 +816,7 @@ function determineFINAction(
     decision.mode
   ) {
 
+
     case "FINANCIAL STABILIZATION":
 
       return {
@@ -493,7 +842,32 @@ function determineFINAction(
       };
 
 
-    case "FINANCIAL PREVENTION":
+    case "FINANCIAL_PREVENTION":
+
+      return {
+
+        command:
+          "ACTIVATE PREVENTIVE FINANCIAL RESILIENCE",
+
+        actions: [
+
+          "CONFIRM FINANCIAL SYSTEM STATE",
+
+          "MONITOR BANKING AND CREDIT CONDITIONS",
+
+          "STRENGTHEN LIQUIDITY RESERVES",
+
+          "MONITOR SYSTEM RESPONSE"
+
+        ],
+
+        status:
+          "ACTIVE"
+
+      };
+
+
+    case "FINANCIAL_PREVENTION":
 
       return {
 
@@ -538,4 +912,245 @@ function determineFINAction(
         ],
 
         status:
-          "
+          "ACTIVE"
+
+      };
+
+  }
+
+}
+
+
+/**
+ * ============================================================
+ * NUMERIC METRIC NORMALIZATION
+ * ============================================================
+ *
+ * All system metrics are constrained to 0–100.
+ *
+ * ============================================================
+ */
+
+function normalizeMetric(
+  value,
+  defaultValue = 0
+) {
+
+  const numericValue =
+    Number(
+      value
+    );
+
+
+  if (
+    !Number.isFinite(
+      numericValue
+    )
+  ) {
+
+    return defaultValue;
+
+  }
+
+
+  return clamp(
+    numericValue,
+    0,
+    100
+  );
+
+}
+
+
+/**
+ * ============================================================
+ * CLAMP
+ * ============================================================
+ */
+
+function clamp(
+  value,
+  minimum,
+  maximum
+) {
+
+  return Math.max(
+
+    minimum,
+
+    Math.min(
+      maximum,
+      value
+    )
+
+  );
+
+}
+
+
+/**
+ * ============================================================
+ * FIN ENGINE TEST HELPER
+ * ============================================================
+ *
+ * Provides a deterministic diagnostic test for direct
+ * FIN engine execution.
+ *
+ * This does not replace the authoritative SPD v13.1
+ * self-test engine.
+ *
+ * ============================================================
+ */
+
+export function testFINRuleEngine() {
+
+  const testState = {
+
+    scenario:
+      "FIN_STRESS",
+
+    intensity:
+      100,
+
+    state: {
+
+      fx:
+        12,
+
+      energy:
+        25,
+
+      cyb:
+        40,
+
+      inf:
+        10,
+
+      dc:
+        20
+
+    },
+
+    mode:
+      "AUTONOMOUS"
+
+  };
+
+
+  const result =
+    finRuleEngine(
+      testState
+    );
+
+
+  return {
+
+    engine:
+      "SPD V13.1 FINANCIAL RESILIENCE RULE ENGINE",
+
+    test:
+      "FIN_STRESS_100_PERCENT",
+
+    status:
+      result.status,
+
+    scenario:
+      result.scenario,
+
+    intensity:
+      result.intensity,
+
+    intensityFactor:
+      result.intensityFactor,
+
+    assessment:
+      result.assessment,
+
+    decision:
+      result.decision,
+
+    action:
+      result.action
+
+  };
+
+}
+
+
+/**
+ * ============================================================
+ * FIN ENGINE STATUS
+ * ============================================================
+ */
+
+export const FIN_ENGINE_STATUS = {
+
+  domain:
+    "FIN",
+
+  name:
+    "Financial Resilience",
+
+  engine:
+    "SPD V13.1 FINANCIAL RESILIENCE RULE ENGINE",
+
+  deterministic:
+    true,
+
+  machineLearning:
+    false,
+
+  randomness:
+    false,
+
+  supportedScenarios: [
+
+    "FIN_STRESS",
+
+    "BANKING_STRESS",
+
+    "LIQUIDITY_CRISIS",
+
+    "CREDIT_STRESS",
+
+    "SOVEREIGN_DEBT"
+
+  ],
+
+  pipeline: [
+
+    "OBSERVE",
+
+    "VERIFY",
+
+    "ASSESS",
+
+    "DECIDE",
+
+    "ACT",
+
+    "UPDATE"
+
+  ],
+
+  authority:
+    "CAPTAIN AI LENA"
+
+};
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+export default {
+
+  finRuleEngine,
+
+  testFINRuleEngine,
+
+  FIN_ENGINE_STATUS
+
+};
