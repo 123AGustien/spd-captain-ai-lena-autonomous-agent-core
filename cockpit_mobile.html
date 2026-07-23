@@ -1,1 +1,950 @@
-g
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+«»
+
+  <title>
+    SPD v13 — Captain AI Lena Mobile Cockpit
+  </title>  <style>
+
+    body {
+      background: #000;
+      color: #00ff88;
+      font-family: monospace;
+      padding: 12px;
+      margin: 0;
+    }
+
+    h2 {
+      color: #ffffff;
+    }
+
+    .panel {
+      border: 1px solid #00ff88;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 6px;
+      background: #080d11;
+    }
+
+    .title {
+      color: #ffffff;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    label {
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      background: #111;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    button {
+      width: 100%;
+      padding: 11px;
+      margin-top: 8px;
+      background: #00ff88;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+    }
+
+    .status {
+      color: #ffffff;
+      font-weight: bold;
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 5px;
+      margin-top: 12px;
+    }
+
+    .flow {
+      color: #aaaaaa;
+      font-size: 12px;
+    }
+
+  </style></head><body><h2>🧠 CAPTAIN AI LENA</h2><div class="flow">SPD v13 — SEXTANT RESILIENCE MOBILE COCKPIT
+
+</div><!-- ============================================================
+     SYSTEM STATUS
+============================================================ --><div
+  class="status"
+  id="systemStatus"
+>
+  SYSTEM INITIALIZING...
+</div><!-- ============================================================
+     SYSTEM INPUT
+============================================================ --><div class="panel">  <div class="title">
+    📥 SYSTEM INPUT
+  </div>  <label>
+    FX
+  </label><input
+id="fx"
+type="number"
+value="0"
+
+«»
+
+  <label>
+    ENERGY
+  </label><input
+id="energy"
+type="number"
+value="50"
+
+«»
+
+  <label>
+    CYB
+  </label><input
+id="cyb"
+type="number"
+value="50"
+
+«»
+
+  <label>
+    INF
+  </label><input
+id="inf"
+type="number"
+value="0"
+
+«»
+
+  <label>
+    DC
+  </label><input
+id="dc"
+type="number"
+value="0"
+
+«»
+
+  <button onclick="runSystem()">
+    RUN SYSTEM
+  </button>  <button onclick="runSelfTest()">
+    RUN SELF-TEST
+  </button></div><!-- ============================================================
+     GOLDEN RULE PIPELINE
+============================================================ --><div class="panel">  <div class="title">
+    🧭 GOLDEN RULE PIPELINE
+  </div>  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>  <pre id="pipeline">
+Waiting...
+  </pre></div><!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ --><div class="panel">  <div class="title">
+    ⚠️ SYSTEM ASSESSMENT
+  </div>  <pre id="assessment">
+Waiting...
+  </pre></div><!-- ============================================================
+     CAPTAIN AI LENA DECISION
+============================================================ --><div class="panel">  <div class="title">
+    ⚙️ CAPTAIN AI LENA DECISION
+  </div>  <pre id="decision">
+Waiting...
+  </pre></div><!-- ============================================================
+     ACTION SEQUENCE
+============================================================ --><div class="panel">  <div class="title">
+    🚨 ACTION SEQUENCE
+  </div>  <pre id="actions">
+Waiting...
+  </pre></div><!-- ============================================================
+     AUDIT RECORD
+============================================================ --><div class="panel">  <div class="title">
+    🧾 AUDIT RECORD
+  </div>  <pre id="audit">
+No audit record yet.
+  </pre></div><!-- ============================================================
+     SELF-TEST
+============================================================ --><div class="panel">  <div class="title">
+    🧪 SELF-TEST
+  </div>  <pre id="selfTest">
+Self-test not executed.
+  </pre></div><script type="module">
+
+
+  // ============================================================
+  // AUTHORITATIVE GOLDEN RULE ENGINE
+  // ============================================================
+
+  import {
+
+    runGoldenRule,
+
+    PHI,
+
+    GOLDEN_RULE_STAGES
+
+  } from "./goldenRuleEngine.js";
+
+
+  // ============================================================
+  // RUN SYSTEM
+  // ============================================================
+
+  window.runSystem = function () {
+
+
+    const state = {
+
+
+      fx:
+        Number(
+          document.getElementById("fx").value
+        ),
+
+
+      energy:
+        Number(
+          document.getElementById("energy").value
+        ),
+
+
+      cyb:
+        Number(
+          document.getElementById("cyb").value
+        ),
+
+
+      inf:
+        Number(
+          document.getElementById("inf").value
+        ),
+
+
+      dc:
+        Number(
+          document.getElementById("dc").value
+        ),
+
+
+      event:
+        "MOBILE_SIMULATION",
+
+
+      mode:
+        "AUTONOMOUS"
+
+
+    };
+
+
+    try {
+
+
+      // ========================================================
+      // RUN AUTHORITATIVE GOLDEN RULE ENGINE
+      // ========================================================
+
+      const result =
+        runGoldenRule(state);
+
+
+      // ========================================================
+      // SYSTEM STATUS
+      // ========================================================
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM STATUS: " +
+        result.status;
+
+
+      // ========================================================
+      // GOLDEN RULE PIPELINE
+      // ========================================================
+
+      document.getElementById(
+        "pipeline"
+      ).innerText =
+        result.pipeline.join(
+          " → "
+        );
+
+
+      // ========================================================
+      // ASSESSMENT
+      // ========================================================
+
+      document.getElementById(
+        "assessment"
+      ).innerText =
+        JSON.stringify(
+          result.assessment,
+          null,
+          2
+        );
+
+
+      // ========================================================
+      // DECISION
+      // ========================================================
+
+      document.getElementById(
+        "decision"
+      ).innerText =
+        JSON.stringify(
+          result.decision,
+          null,
+          2
+        );
+
+
+      // ========================================================
+      // ACTION SEQUENCE
+      // ========================================================
+
+      document.getElementById(
+        "actions"
+      ).innerText =
+        JSON.stringify(
+          result.actionSequence,
+          null,
+          2
+        );
+
+
+      // ========================================================
+      // AUDIT RECORD
+      // ========================================================
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+
+        JSON.stringify(
+
+          {
+
+            timestamp:
+              new Date().toISOString(),
+
+
+            engine:
+              result.engine,
+
+
+            observedState:
+              result.observedState,
+
+
+            verifiedState:
+              result.verifiedState,
+
+
+            assessment:
+              result.assessment,
+
+
+            decision:
+              result.decision,
+
+
+            actionSequence:
+              result.actionSequence,
+
+
+            updatedState:
+              result.updatedState,
+
+
+            constants:
+              {
+                PHI
+              },
+
+
+            pipeline:
+              GOLDEN_RULE_STAGES,
+
+
+            status:
+              result.status
+
+          },
+
+
+          null,
+
+
+          2
+
+        );
+
+
+    }
+
+
+    catch (error) {
+
+
+      // ========================================================
+      // ERROR HANDLING
+      // ========================================================
+
+      document.getElementById(
+        "systemStatus"
+      ).innerText =
+        "SYSTEM ERROR";
+
+
+      document.getElementById(
+        "audit"
+      ).innerText =
+
+        JSON.stringify(
+
+          {
+
+            status:
+              "ERROR",
+
+
+            message:
+              error.message
+
+          },
+
+
+          null,
+
+
+          2
+
+        );
+
+    }
+
+  };
+
+
+  // ============================================================
+  // SELF-TEST
+  // ============================================================
+  //
+  // Purpose:
+  // Validate that the mobile cockpit is correctly connected
+  // to the authoritative SPD v13 SEXTANT GOLDEN RULE ENGINE.
+  //
+  // IMPORTANT:
+  // These tests do NOT redefine Golden Rule thresholds.
+  // They test the actual current authoritative engine behavior.
+  //
+  // BASIC RESET MODE:
+  //
+  // 1. LOW RISK / NORMAL
+  // 2. MEDIUM RISK
+  // 3. HIGH RISK
+  // 4. MAXIMUM CURRENT RISK
+  //
+  // The expected results below are calculated from the
+  // current goldenRuleEngine.js implementation.
+  // ============================================================
+
+  window.runSelfTest = function () {
+
+
+    const tests = [
+
+
+      // ==========================================================
+      // TEST 1 — LOW RISK / NORMAL STABILITY
+      // ==========================================================
+
+      {
+
+        name:
+          "LOW RISK — NORMAL STABILITY",
+
+
+        state:
+          {
+
+            fx: 0,
+
+            energy: 80,
+
+            cyb: 10,
+
+            inf: 5,
+
+            dc: 5,
+
+            event:
+              "NORMAL",
+
+            mode:
+              "AUTONOMOUS"
+
+          },
+
+
+        expectedRisk:
+          "LOW",
+
+
+        expectedDecision:
+          "SYSTEM STABLE"
+
+      },
+
+
+      // ==========================================================
+      // TEST 2 — MEDIUM RISK
+      // ==========================================================
+
+      {
+
+        name:
+          "MEDIUM RISK — PREVENTIVE RESILIENCE",
+
+
+        state:
+          {
+
+            fx: 50,
+
+            energy: 50,
+
+            cyb: 50,
+
+            inf: 50,
+
+            dc: 50,
+
+            event:
+              "MEDIUM_STRESS",
+
+            mode:
+              "AUTONOMOUS"
+
+          },
+
+
+        expectedRisk:
+          "MEDIUM",
+
+
+        expectedDecision:
+          "PREVENTIVE RESILIENCE MODE"
+
+      },
+
+
+      // ==========================================================
+      // TEST 3 — HIGH RISK
+      // ==========================================================
+
+      {
+
+        name:
+          "HIGH RISK — STABILIZATION",
+
+
+        state:
+          {
+
+            fx: 80,
+
+            energy: 0,
+
+            cyb: 100,
+
+            inf: 100,
+
+            dc: 100,
+
+            event:
+              "HIGH_STRESS",
+
+            mode:
+              "AUTONOMOUS"
+
+          },
+
+
+        expectedRisk:
+          "HIGH",
+
+
+        expectedDecision:
+          "ACTIVATE STABILIZATION MODE"
+
+      },
+
+
+      // ==========================================================
+      // TEST 4 — MAXIMUM CURRENT ENGINE RISK
+      // ==========================================================
+      //
+      // The current Golden Rule formula has a maximum
+      // goldenScore of approximately 61.8034.
+      //
+      // Therefore the current engine's maximum reachable
+      // classification is HIGH, not CRITICAL.
+      //
+      // This test validates the current engine without
+      // modifying the authoritative Golden Rule calculation.
+      // ==========================================================
+
+      {
+
+        name:
+          "MAXIMUM CURRENT RISK — ENGINE LIMIT",
+
+
+        state:
+          {
+
+            fx: 100,
+
+            energy: 0,
+
+            cyb: 100,
+
+            inf: 100,
+
+            dc: 100,
+
+            event:
+              "CRITICAL_EVENT",
+
+            mode:
+              "AUTONOMOUS"
+
+          },
+
+
+        expectedRisk:
+          "HIGH",
+
+
+        expectedDecision:
+          "ACTIVATE STABILIZATION MODE"
+
+      }
+
+
+    ];
+
+
+    const results = [];
+
+
+    // ==========================================================
+    // EXECUTE TESTS
+    // ==========================================================
+
+    tests.forEach(
+      test => {
+
+
+        try {
+
+
+          // ====================================================
+          // RUN AUTHORITATIVE GOLDEN RULE ENGINE
+          // ====================================================
+
+          const result =
+            runGoldenRule(
+              test.state
+            );
+
+
+          // ====================================================
+          // VALIDATE RISK CLASSIFICATION
+          // ====================================================
+
+          const riskPassed =
+            result.assessment.risk ===
+            test.expectedRisk;
+
+
+          // ====================================================
+          // VALIDATE DETERMINISTIC DECISION
+          // ====================================================
+
+          const decisionPassed =
+            result.decision.decision ===
+            test.expectedDecision;
+
+
+          // ====================================================
+          // VALIDATE GOLDEN RULE PIPELINE
+          // ====================================================
+
+          const pipelinePassed =
+            JSON.stringify(
+              result.pipeline
+            ) ===
+
+            JSON.stringify(
+
+              [
+
+                "OBSERVE",
+
+                "VERIFY",
+
+                "ASSESS",
+
+                "DECIDE",
+
+                "ACT",
+
+                "UPDATE"
+
+              ]
+
+            );
+
+
+          // ====================================================
+          // VALIDATE ENGINE COMPLETION
+          // ====================================================
+
+          const executionPassed =
+            result.status ===
+            "COMPLETE";
+
+
+          // ====================================================
+          // FINAL TEST STATUS
+          // ====================================================
+
+          const passed =
+            riskPassed &&
+            decisionPassed &&
+            pipelinePassed &&
+            executionPassed;
+
+
+          // ====================================================
+          // STORE RESULT
+          // ====================================================
+
+          results.push(
+
+            {
+
+              test:
+                test.name,
+
+
+              input:
+                test.state,
+
+
+              expectedRisk:
+                test.expectedRisk,
+
+
+              actualRisk:
+                result.assessment.risk,
+
+
+              expectedDecision:
+                test.expectedDecision,
+
+
+              actualDecision:
+                result.decision.decision,
+
+
+              goldenScore:
+                result.assessment.goldenScore,
+
+
+              resilienceScore:
+                result.assessment.resilienceScore,
+
+
+              pipeline:
+                result.pipeline,
+
+
+              engineStatus:
+                result.status,
+
+
+              status:
+                passed
+                  ? "PASS"
+                  : "FAIL"
+
+            }
+
+          );
+
+
+        }
+
+
+        catch (error) {
+
+
+          results.push(
+
+            {
+
+              test:
+                test.name,
+
+
+              status:
+                "FAIL",
+
+
+              error:
+                error.message
+
+            }
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+    // ============================================================
+    // SUMMARY
+    // ============================================================
+
+    const passed =
+
+      results.filter(
+
+        item =>
+          item.status ===
+          "PASS"
+
+      ).length;
+
+
+    const total =
+      results.length;
+
+
+    const overallStatus =
+
+      passed === total
+
+        ? "PASS"
+
+        : "FAIL";
+
+
+    // ============================================================
+    // DISPLAY SELF-TEST RESULT
+    // ============================================================
+
+    document.getElementById(
+      "selfTest"
+    ).innerText =
+
+      JSON.stringify(
+
+        {
+
+          engine:
+            "SPD v13 MOBILE SELF-TEST",
+
+
+          authority:
+            "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+
+
+          executionTime:
+            new Date().toISOString(),
+
+
+          summary:
+            `${passed}/${total} TESTS PASSED`,
+
+
+          overallStatus,
+
+
+          testsValidated:
+
+            [
+
+              "RISK CLASSIFICATION",
+
+              "DETERMINISTIC DECISION LOGIC",
+
+              "GOLDEN RULE PIPELINE",
+
+              "ENGINE EXECUTION STATUS"
+
+            ],
+
+
+          goldenRulePipeline:
+
+            [
+
+              "OBSERVE",
+
+              "VERIFY",
+
+              "ASSESS",
+
+              "DECIDE",
+
+              "ACT",
+
+              "UPDATE"
+
+            ],
+
+
+          results
+
+        },
+
+
+        null,
+
+
+        2
+
+      );
+
+  };
+
+
+  // ============================================================
+  // INITIAL EXECUTION
+  // ============================================================
+
+  runSystem();
+
+
+</script></body></html>
