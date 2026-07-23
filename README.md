@@ -1,3 +1,130 @@
+# FIN-001 — Foreign Exchange Stress
+
+## Rule Information
+
+- Rule ID: FIN-001
+- Domain: FIN
+- Category: Foreign Exchange Resilience
+- Status: Active
+- Engine: SPD v13.1 — Sextant Resilience Cockpit Pro
+
+## Purpose
+
+Evaluate the impact of foreign exchange stress on the financial system and determine appropriate resilience actions.
+
+## Scenario
+
+A significant foreign exchange shock causes increased currency volatility and financial pressure.
+
+## Trigger Conditions
+
+- FX stress increases
+- Currency volatility exceeds defined thresholds
+- Foreign currency liquidity becomes constrained
+- External funding pressure increases
+
+## System Impact
+
+The rule evaluates potential effects on:
+
+- Financial liquidity
+- Energy costs
+- Import dependency
+- Banking stability
+- System-wide resilience
+
+## Captain AI Lena Decision Logic
+
+### LOW RISK
+
+Decision:
+`MONITORING MODE`
+
+Action:
+`CONTINUE MONITORING AND MAINTAIN NORMAL OPERATIONS`
+
+### MEDIUM RISK
+
+Decision:
+`PREVENTIVE RESILIENCE MODE`
+
+Action:
+`REDUCE EXPOSURE AND STRENGTHEN LIQUIDITY RESERVES`
+
+### HIGH RISK
+
+Decision:
+`ACTIVATE STABILIZATION MODE`
+
+Action:
+`PROTECT CRITICAL LIQUIDITY, REDUCE SYSTEM EXPOSURE, AND ACTIVATE CONTINGENCY MEASURES`
+
+## Golden Rule Pipeline
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+## Autonomous Agent Flow
+
+DATA → ALGORITHMS → COMPUTE
+
+1. Observe current financial state.
+2. Verify the input data.
+3. Assess FX-related financial stress.
+4. Determine risk level.
+5. Select the appropriate decision.
+6. Generate recommended action.
+7. Update the system state.
+8. Record the decision in the audit trail.
+
+## Expected Output
+
+The engine returns:
+
+- Scenario
+- Risk level
+- Resilience score
+- Captain AI Lena decision
+- Recommended action
+- Action sequence
+- Updated state
+- Audit record
+
+## Integration
+
+This rule is intended to be selected through the:
+
+`FIN` → `FIN-001` → `FX STRESS`
+
+The rule operates independently from other FIN scenarios unless the system detects a cross-domain cascade.
+
+## Validation
+
+The rule is validated through the SPD v13.1 Self-Test and Golden Rule Engine.
+
+Status:
+
+`READY FOR AUTONOMOUS SIMULATION`
+
+## Operator Guidance
+
+Select this rule when the primary financial stress event is **foreign exchange stress**.
+
+Do not use this rule as a substitute for other FIN scenarios such as liquidity stress, banking stress, or market contagion. Select the rule that corresponds to the **primary observed event**.
+
+## Audit
+
+Every execution should produce a traceable audit record containing:
+
+- Rule ID
+- Scenario
+- Input state
+- Risk assessment
+- Decision
+- Recommended action
+- Updated state
+- Execution timestamp
+- Validation status
+
 🧭 THE SPD GOLDEN RULE — ORIGIN, PRINCIPLE AND AUTHORITY
 
 1. Historical Meaning
