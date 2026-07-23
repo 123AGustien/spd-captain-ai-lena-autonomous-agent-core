@@ -219,6 +219,18 @@
       line-height: 1.6;
     }
 
+    .success {
+      border-color: #00ff88;
+    }
+
+    .warning {
+      border-color: #ffb000;
+    }
+
+    .error {
+      border-color: #ff5555;
+    }
+
     @media (max-width: 600px) {
 
       body {
@@ -310,14 +322,12 @@
 
     <div class="control-buttons">
 
-
       <button
         type="button"
         onclick="runLiveSystem()"
       >
         ▶ RUN SYSTEM
       </button>
-
 
       <button
         type="button"
@@ -327,7 +337,6 @@
         🧪 RUN SELF-TEST
       </button>
 
-
       <button
         type="button"
         class="corrective-button"
@@ -335,7 +344,6 @@
       >
         🛠️ RUN SELF-TEST + CORRECTIVE ACTION
       </button>
-
 
     </div>
 
@@ -354,86 +362,55 @@
 
     <div class="monitor">
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          FX
-        </div>
-
+        <div class="domain-name">FX</div>
         <div
           class="domain-value"
           id="domainFX"
         >
           0
         </div>
-
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          DC
-        </div>
-
+        <div class="domain-name">DC</div>
         <div
           class="domain-value"
           id="domainDC"
         >
           0
         </div>
-
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          CYB
-        </div>
-
+        <div class="domain-name">CYB</div>
         <div
           class="domain-value"
           id="domainCYB"
         >
           0
         </div>
-
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          INF
-        </div>
-
+        <div class="domain-name">INF</div>
         <div
           class="domain-value"
           id="domainINF"
         >
           0
         </div>
-
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          EN / ENERGY
-        </div>
-
+        <div class="domain-name">EN / ENERGY</div>
         <div
           class="domain-value"
           id="domainEN"
         >
           0
         </div>
-
       </div>
-
 
     </div>
 
@@ -452,7 +429,6 @@
 
     <div class="scenario-controls">
 
-
       <button
         type="button"
         class="scenario-button"
@@ -460,7 +436,6 @@
       >
         FX STRESS
       </button>
-
 
       <button
         type="button"
@@ -470,7 +445,6 @@
         DC LOAD
       </button>
 
-
       <button
         type="button"
         class="scenario-button"
@@ -478,7 +452,6 @@
       >
         CYBER EVENT
       </button>
-
 
       <button
         type="button"
@@ -488,7 +461,6 @@
         INFRA STRAIN
       </button>
 
-
       <button
         type="button"
         class="scenario-button"
@@ -497,7 +469,6 @@
         BIODIESEL SHORTAGE
       </button>
 
-
       <button
         type="button"
         class="danger"
@@ -505,7 +476,6 @@
       >
         RESET
       </button>
-
 
     </div>
 
@@ -522,7 +492,6 @@
       🎚️ SCENARIO INTENSITY CONTROL
     </div>
 
-
     <input
       id="scenarioIntensity"
       type="range"
@@ -532,7 +501,6 @@
       value="50"
       oninput="updateIntensity()"
     >
-
 
     <div>
 
@@ -546,7 +514,6 @@
       </span>
 
     </div>
-
 
   </div>
 
@@ -599,9 +566,7 @@ Waiting...
       🛰️ GOLDEN RULE ENGINE
     </div>
 
-
     <div class="pipeline">
-
 
       <span
         class="stage"
@@ -610,9 +575,7 @@ Waiting...
         OBSERVE
       </span>
 
-
       →
-
 
       <span
         class="stage"
@@ -621,9 +584,7 @@ Waiting...
         VERIFY
       </span>
 
-
       →
-
 
       <span
         class="stage"
@@ -632,9 +593,7 @@ Waiting...
         ASSESS
       </span>
 
-
       →
-
 
       <span
         class="stage"
@@ -643,9 +602,7 @@ Waiting...
         DECIDE
       </span>
 
-
       →
-
 
       <span
         class="stage"
@@ -654,9 +611,7 @@ Waiting...
         ACT
       </span>
 
-
       →
-
 
       <span
         class="stage"
@@ -665,14 +620,11 @@ Waiting...
         UPDATE
       </span>
 
-
     </div>
-
 
     <pre id="pipeline">
 Waiting...
     </pre>
-
 
   </div>
 
@@ -707,7 +659,8 @@ Waiting...
     <pre id="riskPanel">
 {
   "risk": "UNKNOWN",
-  "resilienceScore": "N/A"
+  "resilienceScore": "N/A",
+  "goldenScore": "N/A"
 }
     </pre>
 
@@ -948,24 +901,16 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
   <script type="module">
 
-
     import {
-
       runGoldenRule,
-
       PHI,
-
       GOLDEN_RULE_STAGES
-
     } from "./goldenRuleEngine.js";
 
 
     import {
-
       runSelfTest,
-
       runValidationLoop
-
     } from "./selfTestValidationEngine.js";
 
 
@@ -1000,6 +945,18 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       50;
 
 
+    let lastLiveResult =
+      null;
+
+
+    let lastSelfTestResult =
+      null;
+
+
+    let lastValidationResult =
+      null;
+
+
     /* ============================================================
        DOM HELPER
     ============================================================ */
@@ -1023,8 +980,55 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       }
 
 
-      element.innerText =
-        value;
+      if (
+        typeof value ===
+        "string"
+      ) {
+
+        element.innerText =
+          value;
+
+        return;
+
+      }
+
+
+      try {
+
+        element.innerText =
+          JSON.stringify(
+            value,
+            null,
+            2
+          );
+
+      }
+
+      catch {
+
+        element.innerText =
+          String(value);
+
+      }
+
+    }
+
+
+    /* ============================================================
+       SAFE VALUE HELPER
+    ============================================================ */
+
+    function safeValue(
+      value,
+      fallback = "N/A"
+    ) {
+
+      return (
+        value !== undefined &&
+        value !== null
+      )
+        ? value
+        : fallback;
 
     }
 
@@ -1035,7 +1039,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
     window.updateIntensity =
       function () {
-
 
         scenarioIntensity =
           Number(
@@ -1052,28 +1055,24 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
         setText(
+
           "scenarioPanel",
 
-          JSON.stringify(
+          {
 
-            {
+            scenario:
+              currentScenario,
 
-              scenario:
-                currentScenario,
+            intensity:
+              scenarioIntensity + "%",
 
-              intensity:
-                scenarioIntensity + "%",
+            intensityValue:
+              scenarioIntensity,
 
-              status:
-                "READY"
+            status:
+              "READY"
 
-            },
-
-            null,
-
-            2
-
-          )
+          }
 
         );
 
@@ -1089,7 +1088,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         scenario
       ) {
 
-
         currentScenario =
           scenario;
 
@@ -1098,26 +1096,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
           "scenarioPanel",
 
-          JSON.stringify(
+          {
 
-            {
+            scenario:
+              currentScenario,
 
-              scenario:
-                currentScenario,
+            intensity:
+              scenarioIntensity + "%",
 
-              intensity:
-                scenarioIntensity + "%",
+            intensityValue:
+              scenarioIntensity,
 
-              status:
-                "ACTIVE"
+            status:
+              "ACTIVE"
 
-            },
-
-            null,
-
-            2
-
-          )
+          }
 
         );
 
@@ -1133,7 +1126,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
     window.resetScenario =
       function () {
-
 
         currentScenario =
           "NORMAL";
@@ -1159,26 +1151,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
           "scenarioPanel",
 
-          JSON.stringify(
+          {
 
-            {
+            scenario:
+              "NORMAL",
 
-              scenario:
-                "NORMAL",
+            intensity:
+              "0%",
 
-              intensity:
-                "0%",
+            intensityValue:
+              0,
 
-              status:
-                "RESET"
+            status:
+              "RESET"
 
-            },
-
-            null,
-
-            2
-
-          )
+          }
 
         );
 
@@ -1194,7 +1181,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
     function buildSystemState() {
 
-
       const intensityFactor =
         scenarioIntensity /
         100;
@@ -1202,17 +1188,22 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
       const state = {
 
-
         ...baseState,
-
 
         event:
           currentScenario,
 
+        scenario:
+          currentScenario,
+
+        intensity:
+          scenarioIntensity,
+
+        intensityFactor:
+          intensityFactor,
 
         time:
           new Date().toISOString()
-
 
       };
 
@@ -1221,7 +1212,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         currentScenario ===
         "FX_SHOCK"
       ) {
-
 
         state.fx =
           Math.min(
@@ -1244,7 +1234,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         "DC_LOAD"
       ) {
 
-
         state.dc =
           Math.min(
 
@@ -1265,7 +1254,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         currentScenario ===
         "CYBER_EVENT"
       ) {
-
 
         state.cyb =
           Math.min(
@@ -1288,7 +1276,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         "INFRASTRUCTURE_STRESS"
       ) {
 
-
         state.inf =
           Math.min(
 
@@ -1309,7 +1296,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         currentScenario ===
         "BIODIESEL_SHORTAGE"
       ) {
-
 
         state.energy =
           Math.max(
@@ -1340,34 +1326,48 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       state
     ) {
 
-
       setText(
         "domainFX",
-        state.fx
+        safeValue(
+          state.fx,
+          0
+        )
       );
 
 
       setText(
         "domainDC",
-        state.dc
+        safeValue(
+          state.dc,
+          0
+        )
       );
 
 
       setText(
         "domainCYB",
-        state.cyb
+        safeValue(
+          state.cyb,
+          0
+        )
       );
 
 
       setText(
         "domainINF",
-        state.inf
+        safeValue(
+          state.inf,
+          0
+        )
       );
 
 
       setText(
         "domainEN",
-        state.energy
+        safeValue(
+          state.energy,
+          0
+        )
       );
 
     }
@@ -1381,11 +1381,9 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       activeStage
     ) {
 
-
       GOLDEN_RULE_STAGES.forEach(
 
         stage => {
-
 
           const element =
             document.getElementById(
@@ -1394,8 +1392,9 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             );
 
 
-          if (element) {
-
+          if (
+            element
+          ) {
 
             element.classList.remove(
               "active"
@@ -1412,7 +1411,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         activeStage
       ) {
 
-
         const activeElement =
           document.getElementById(
             "stage" +
@@ -1423,7 +1421,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         if (
           activeElement
         ) {
-
 
           activeElement.classList.add(
             "active"
@@ -1444,20 +1441,11 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       result
     ) {
 
-
       setText(
 
         "pipeline",
 
-        JSON.stringify(
-
-          result,
-
-          null,
-
-          2
-
-        )
+        result
 
       );
 
@@ -1471,8 +1459,20 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
     window.runLiveSystem =
       function () {
 
-
         try {
+
+          setText(
+
+            "systemStatus",
+
+            "SYSTEM STATUS: AUTONOMOUS ENGINE RUNNING..."
+
+          );
+
+
+          updateStages(
+            "OBSERVE"
+          );
 
 
           const state =
@@ -1485,24 +1485,13 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "state",
-
-            JSON.stringify(
-
-              state,
-
-              null,
-
-              2
-
-            )
-
+            state
           );
 
 
           updateStages(
-            "OBSERVE"
+            "VERIFY"
           );
 
 
@@ -1512,276 +1501,225 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             );
 
 
+          lastLiveResult =
+            result;
+
+
           updateStages(
-            "UPDATE"
+            "ASSESS"
           );
 
-
-          displayPipeline(
-            result
-          );
-
-
-          setText(
-
-            "systemStatus",
-
-            "SYSTEM STATUS: AUTONOMOUS ENGINE ACTIVE"
-
-          );
-
-
-          /* ======================================================
-             AUTHORITATIVE ASSESSMENT
-          ====================================================== */
 
           setText(
 
             "assessment",
 
-            JSON.stringify(
+            safeValue(
 
-              result.assessment,
+              result?.assessment,
 
-              null,
+              {
 
-              2
+                status:
+                  "NO ASSESSMENT RETURNED"
+
+              }
 
             )
 
           );
 
 
-          /* ======================================================
-             CORRECT RISK PANEL WIRING
-          ====================================================== */
+          updateStages(
+            "DECIDE"
+          );
+
 
           setText(
 
             "riskPanel",
 
-            JSON.stringify(
+            {
 
-              {
+              risk:
+                safeValue(
+                  result?.assessment?.risk,
+                  "UNKNOWN"
+                ),
 
-                risk:
-                  result.assessment?.risk ??
-                  "UNKNOWN",
-
-                resilienceScore:
-                  result.assessment?.resilienceScore ??
-                  "N/A",
-
-                goldenScore:
-                  result.assessment?.goldenScore ??
+              resilienceScore:
+                safeValue(
+                  result?.assessment?.resilienceScore,
                   "N/A"
+                ),
 
-              },
+              goldenScore:
+                safeValue(
+                  result?.assessment?.goldenScore,
+                  "N/A"
+                )
 
-              null,
-
-              2
-
-            )
+            }
 
           );
 
-
-          /* ======================================================
-             CAPTAIN AI LENA DECISION
-          ====================================================== */
 
           setText(
 
             "decision",
 
-            JSON.stringify(
+            safeValue(
 
-              result.decision ??
-              "Decision generated by Golden Rule Engine",
+              result?.decision,
 
-              null,
-
-              2
+              "Decision generated by Golden Rule Engine."
 
             )
 
           );
 
-
-          /* ======================================================
-             SOLUTION OPTIONS
-          ====================================================== */
 
           setText(
 
             "solutionOptions",
 
-            result.decision?.action ??
+            result?.decision?.action ??
 
-            result.solution ??
+            result?.decision?.solution ??
 
-            result.solutions ??
+            result?.solution ??
 
-            "Solution options generated by engine."
+            result?.solutions ??
+
+            "Solution options generated by authoritative engine."
 
           );
 
 
-          /* ======================================================
-             ACTION SEQUENCE
-          ====================================================== */
+          updateStages(
+            "ACT"
+          );
+
 
           setText(
 
             "actions",
 
-            JSON.stringify(
+            safeValue(
 
-              result.actionSequence ??
+              result?.actionSequence ??
 
-              result.actions ??
+              result?.actions ??
 
-              result.action ??
+              result?.action,
 
-              "Action sequence generated by engine.",
-
-              null,
-
-              2
+              "Action sequence generated by authoritative engine."
 
             )
 
           );
 
 
-          /* ======================================================
-             MEMORY CORE
-          ====================================================== */
+          updateStages(
+            "UPDATE"
+          );
+
 
           setText(
 
             "memoryCore",
 
-            JSON.stringify(
+            {
 
-              {
+              timestamp:
+                new Date().toISOString(),
 
-                timestamp:
-                  new Date().toISOString(),
+              scenario:
+                currentScenario,
 
-                scenario:
-                  currentScenario,
+              intensity:
+                scenarioIntensity,
 
-                intensity:
-                  scenarioIntensity,
+              engineStatus:
+                safeValue(
+                  result?.status,
+                  "EXECUTED"
+                ),
 
-                status:
-                  "MEMORY CORE UPDATED"
+              status:
+                "MEMORY CORE UPDATED"
 
-              },
-
-              null,
-
-              2
-
-            )
+            }
 
           );
 
-
-          /* ======================================================
-             AUDIT RECORD
-          ====================================================== */
 
           setText(
 
             "audit",
 
-            JSON.stringify(
+            {
 
-              {
+              system:
+                "SPD v13.1",
 
-                system:
-                  "SPD v13.1",
+              engine:
+                safeValue(
+                  result?.engine,
+                  "Golden Rule Engine"
+                ),
 
-                engine:
-                  result.engine,
+              scenario:
+                currentScenario,
 
-                scenario:
-                  currentScenario,
+              intensity:
+                scenarioIntensity,
 
-                intensity:
-                  scenarioIntensity,
+              timestamp:
+                new Date().toISOString(),
 
-                timestamp:
-                  new Date().toISOString(),
+              result:
+                result
 
-                result:
-                  result
-
-              },
-
-              null,
-
-              2
-
-            )
+            }
 
           );
 
-
-          /* ======================================================
-             PIPELINE LOG
-          ====================================================== */
 
           setText(
 
             "pipelineLog",
 
-            "PIPELINE EXECUTED\n" +
+            "PIPELINE EXECUTED\n\n" +
 
-            "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n" +
+            "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n\n" +
 
             "STATUS: " +
 
-            result.status
-
-          );
-
-
-          /* ======================================================
-             SYSTEM CONSTANTS
-          ====================================================== */
-
-          setText(
-
-            "constants",
-
-            JSON.stringify(
-
-              {
-
-                PHI:
-                  PHI,
-
-                GOLDEN_RULE_STAGES:
-                  GOLDEN_RULE_STAGES
-
-              },
-
-              null,
-
-              2
-
+            safeValue(
+              result?.status,
+              "COMPLETE"
             )
 
           );
 
 
-          /* ======================================================
-             AGENT TRACE
-          ====================================================== */
+          setText(
+
+            "constants",
+
+            {
+
+              PHI:
+                PHI,
+
+              GOLDEN_RULE_STAGES:
+                GOLDEN_RULE_STAGES
+
+            }
+
+          );
+
 
           setText(
 
@@ -1794,8 +1732,16 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
           );
 
 
-          return result;
+          setText(
 
+            "systemStatus",
+
+            "SYSTEM STATUS: AUTONOMOUS ENGINE ACTIVE"
+
+          );
+
+
+          return result;
 
         }
 
@@ -1804,13 +1750,17 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
           error
         ) {
 
-
           console.error(
 
             "SPD v13.1 SYSTEM ERROR:",
 
             error
 
+          );
+
+
+          updateStages(
+            null
           );
 
 
@@ -1828,11 +1778,35 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             "pipelineLog",
 
             "SYSTEM ERROR:\n" +
-
             error.message
 
           );
 
+
+          setText(
+
+            "audit",
+
+            {
+
+              system:
+                "SPD v13.1",
+
+              status:
+                "ENGINE ERROR",
+
+              error:
+                error.message,
+
+              timestamp:
+                new Date().toISOString()
+
+            }
+
+          );
+
+
+          return null;
 
         }
 
@@ -1841,14 +1815,12 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
     /* ============================================================
        AUTHORITATIVE SELF-TEST
-       ============================================================ */
+    ============================================================ */
 
     window.runAuthoritativeSelfTest =
       function () {
 
-
         try {
-
 
           setText(
 
@@ -1863,25 +1835,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             runSelfTest();
 
 
+          lastSelfTestResult =
+            result;
+
+
           setText(
 
             "selfTest",
 
-            JSON.stringify(
-
-              result,
-
-              null,
-
-              2
-
-            )
+            result
 
           );
 
 
           const passed =
-            result.overallStatus ===
+            result?.overallStatus ===
             "PASS";
 
 
@@ -1891,30 +1859,45 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             passed
 
-              ? "SELF-TEST PASSED.\nThe authoritative Golden Rule Engine passed all configured validation tests."
+              ? "SELF-TEST PASSED.\n\nThe authoritative Golden Rule Engine passed all configured validation tests."
 
-              : "SELF-TEST FAILED.\nOne or more authoritative engine validation tests failed."
+              : "SELF-TEST FAILED.\n\nOne or more authoritative engine validation tests failed."
 
           );
+
+
+          const testResults =
+            Array.isArray(
+              result?.results
+            )
+
+              ? result.results
+
+              : [];
+
+
+          const failedTests =
+            testResults.filter(
+
+              item =>
+                item?.status ===
+                "FAIL"
+
+            );
 
 
           const faultReport = {
 
             faultCount:
-
-              result.results.filter(
-
-                item =>
-                  item.status ===
-                  "FAIL"
-
-              ).length,
+              failedTests.length,
 
             status:
-
               passed
                 ? "NO_FAULTS"
-                : "FAULTS_DETECTED"
+                : "FAULTS_DETECTED",
+
+            failedTests:
+              failedTests
 
           };
 
@@ -1923,15 +1906,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "faultIdentification",
 
-            JSON.stringify(
-
-              faultReport,
-
-              null,
-
-              2
-
-            )
+            faultReport
 
           );
 
@@ -1942,9 +1917,9 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             passed
 
-              ? "NO CORRECTIVE ACTION REQUIRED.\nSYSTEM VALIDATION PASSED."
+              ? "NO CORRECTIVE ACTION REQUIRED.\n\nSYSTEM VALIDATION PASSED."
 
-              : "FAULTS DETECTED.\nRUN SELF-TEST + CORRECTIVE ACTION."
+              : "FAULTS DETECTED.\n\nRUN SELF-TEST + CORRECTIVE ACTION."
 
           );
 
@@ -1954,6 +1929,44 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             "retest",
 
             "RE-TEST VALIDATION PENDING."
+
+          );
+
+
+          setText(
+
+            "pipelineLog",
+
+            "AUTHORITATIVE SELF-TEST EXECUTED\n\n" +
+
+            "CORE ENGINE VALIDATION\n" +
+
+            "↓\n" +
+
+            "RESULT ANALYSIS\n" +
+
+            "↓\n" +
+
+            "FAULT IDENTIFICATION\n\n" +
+
+            "STATUS: " +
+
+            (
+              passed
+                ? "PASS"
+                : "FAIL"
+            )
+
+          );
+
+
+          setText(
+
+            "trace",
+
+            "DATA → ALGORITHMS → COMPUTE\n" +
+
+            "SELF-TEST → RESULT ANALYSIS → FAULT IDENTIFICATION"
 
           );
 
@@ -1973,7 +1986,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
           return result;
 
-
         }
 
 
@@ -1981,13 +1993,20 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
           error
         ) {
 
+          console.error(
+
+            "SPD v13.1 SELF-TEST ERROR:",
+
+            error
+
+          );
+
 
           setText(
 
             "selfTest",
 
             "SELF-TEST ERROR:\n" +
-
             error.message
 
           );
@@ -2006,23 +2025,24 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "faultIdentification",
 
-            JSON.stringify(
+            {
 
-              {
+              status:
+                "FAULT_DETECTED",
 
-                status:
-                  "FAULT_DETECTED",
+              error:
+                error.message
 
-                error:
-                  error.message
+            }
 
-              },
+          );
 
-              null,
 
-              2
+          setText(
 
-            )
+            "correctiveAction",
+
+            "SELF-TEST ENGINE ERROR.\n\nCORRECTIVE ACTION CANNOT BE DETERMINED UNTIL VALIDATION ENGINE IS RESTORED."
 
           );
 
@@ -2050,9 +2070,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
     window.runSelfTestAndCorrect =
       function () {
 
-
         try {
-
 
           setText(
 
@@ -2063,8 +2081,48 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
           );
 
 
+          setText(
+
+            "pipelineLog",
+
+            "AUTONOMOUS VALIDATION LOOP STARTED\n\n" +
+
+            "SELF-TEST\n" +
+
+            "↓\n" +
+
+            "FAULT IDENTIFICATION\n" +
+
+            "↓\n" +
+
+            "CAPTAIN AI LENA CORRECTIVE ACTION\n" +
+
+            "↓\n" +
+
+            "RE-TEST VALIDATION"
+
+          );
+
+
+          setText(
+
+            "trace",
+
+            "DATA → ALGORITHMS → COMPUTE\n" +
+
+            "SELF-TEST → FAULT IDENTIFICATION → " +
+
+            "CORRECTIVE ACTION → RE-TEST"
+
+          );
+
+
           const validation =
             runValidationLoop();
+
+
+          lastValidationResult =
+            validation;
 
 
           /* ======================================================
@@ -2075,15 +2133,14 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "selfTest",
 
-            JSON.stringify(
+            validation?.selfTest ??
 
-              validation.selfTest,
+            {
 
-              null,
+              status:
+                "NO SELF-TEST RESULT RETURNED"
 
-              2
-
-            )
+            }
 
           );
 
@@ -2092,16 +2149,20 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
              SELF-TEST INTERPRETATION
           ====================================================== */
 
+          const selfTestPassed =
+            validation?.selfTest?.overallStatus ===
+            "PASS";
+
+
           setText(
 
             "selfTestInterpretation",
 
-            validation.selfTest.overallStatus ===
-            "PASS"
+            selfTestPassed
 
-              ? "SELF-TEST PASSED.\nAuthoritative Golden Rule Engine validation completed successfully."
+              ? "SELF-TEST PASSED.\n\nAuthoritative Golden Rule Engine validation completed successfully."
 
-              : "SELF-TEST FAILED.\nFault identification and corrective action sequence activated."
+              : "SELF-TEST FAILED.\n\nFault identification and corrective action sequence activated."
 
           );
 
@@ -2114,15 +2175,14 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "faultIdentification",
 
-            JSON.stringify(
+            validation?.faultIdentification ??
 
-              validation.faultIdentification,
+            {
 
-              null,
+              status:
+                "NO FAULT IDENTIFICATION RESULT RETURNED"
 
-              2
-
-            )
+            }
 
           );
 
@@ -2135,15 +2195,14 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "correctiveAction",
 
-            JSON.stringify(
+            validation?.correctiveAction ??
 
-              validation.correctiveAction,
+            {
 
-              null,
+              status:
+                "NO CORRECTIVE ACTION RESULT RETURNED"
 
-              2
-
-            )
+            }
 
           );
 
@@ -2156,15 +2215,14 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "retest",
 
-            JSON.stringify(
+            validation?.retest ??
 
-              validation.retest,
+            {
 
-              null,
+              status:
+                "NO RE-TEST RESULT RETURNED"
 
-              2
-
-            )
+            }
 
           );
 
@@ -2173,11 +2231,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
              FINAL SYSTEM STATUS
           ====================================================== */
 
+          const finalStatus =
+            safeValue(
+
+              validation?.finalStatus,
+
+              "VALIDATION FAILED"
+
+            );
+
+
           setText(
 
             "systemStatus",
 
-            validation.finalStatus ===
+            finalStatus ===
             "VALIDATION COMPLETE"
 
               ? "SYSTEM STATUS: VALIDATION COMPLETE"
@@ -2213,7 +2281,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "FINAL STATUS: " +
 
-            validation.finalStatus
+            finalStatus
 
           );
 
@@ -2235,8 +2303,37 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
           );
 
 
-          return validation;
+          /* ======================================================
+             AUDIT RECORD
+          ====================================================== */
 
+          setText(
+
+            "audit",
+
+            {
+
+              system:
+                "SPD v13.1",
+
+              module:
+                "Autonomous Validation Loop",
+
+              timestamp:
+                new Date().toISOString(),
+
+              finalStatus:
+                finalStatus,
+
+              validation:
+                validation
+
+            }
+
+          );
+
+
+          return validation;
 
         }
 
@@ -2244,7 +2341,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         catch (
           error
         ) {
-
 
           console.error(
 
@@ -2268,9 +2364,15 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "correctiveAction",
 
-            "VALIDATION LOOP ERROR:\n" +
+            {
 
-            error.message
+              status:
+                "VALIDATION_LOOP_ERROR",
+
+              error:
+                error.message
+
+            }
 
           );
 
@@ -2279,7 +2381,26 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             "retest",
 
-            "RE-TEST COULD NOT EXECUTE."
+            {
+
+              status:
+                "RE-TEST COULD NOT EXECUTE",
+
+              error:
+                error.message
+
+            }
+
+          );
+
+
+          setText(
+
+            "pipelineLog",
+
+            "VALIDATION LOOP ERROR:\n\n" +
+
+            error.message
 
           );
 
@@ -2292,37 +2413,49 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
     /* ============================================================
-       INITIALIZE
+       INITIALIZE SYSTEM
     ============================================================ */
 
-    document.addEventListener(
+    function initializeSystem() {
 
-      "DOMContentLoaded",
-
-      () => {
-
+      try {
 
         setText(
 
           "constants",
 
-          JSON.stringify(
+          {
 
-            {
+            PHI:
+              PHI,
 
-              PHI:
-                PHI,
+            GOLDEN_RULE_STAGES:
+              GOLDEN_RULE_STAGES
 
-              GOLDEN_RULE_STAGES:
-                GOLDEN_RULE_STAGES
+          }
 
-            },
+        );
 
-            null,
 
-            2
+        setText(
 
-          )
+          "scenarioPanel",
+
+          {
+
+            scenario:
+              currentScenario,
+
+            intensity:
+              scenarioIntensity + "%",
+
+            intensityValue:
+              scenarioIntensity,
+
+            status:
+              "READY"
+
+          }
 
         );
 
@@ -2338,10 +2471,70 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         window.runLiveSystem();
 
+      }
+
+
+      catch (
+        error
+      ) {
+
+        console.error(
+
+          "SPD v13.1 INITIALIZATION ERROR:",
+
+          error
+
+        );
+
+
+        setText(
+
+          "systemStatus",
+
+          "SYSTEM STATUS: INITIALIZATION ERROR"
+
+        );
+
+
+        setText(
+
+          "pipelineLog",
+
+          "INITIALIZATION ERROR:\n" +
+
+          error.message
+
+        );
 
       }
 
-    );
+    }
+
+
+    /* ============================================================
+       INITIALIZE
+    ============================================================ */
+
+    if (
+      document.readyState ===
+      "loading"
+    ) {
+
+      document.addEventListener(
+
+        "DOMContentLoaded",
+
+        initializeSystem
+
+      );
+
+    }
+
+    else {
+
+      initializeSystem();
+
+    }
 
 
   </script>
