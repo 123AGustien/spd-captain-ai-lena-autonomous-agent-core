@@ -2,45 +2,72 @@ import { captainAILena } from "./captainAILena.js";
 import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
 export function runEngine(state) {
-  
+
+  // =========================
+  // SPD V13 EXECUTION ENGINE
+  // =========================
+  // DATA → ALGORITHMS → COMPUTE
+  //
+  // This layer is responsible for:
+  // 1. Receiving system state
+  // 2. Preserving original input for audit
+  // 3. Applying deterministic normalization
+  // 4. Passing normalized state to Captain AI Lena
+  // 5. Returning a complete execution record
+  //
+  // The engine does not redefine decision rules.
+  // Captain AI Lena remains the decision authority.
+  // =========================
+
+  // =========================
+  // INPUT VALIDATION
+  // =========================
+
+  if (!state || typeof state !== "object") {
+    throw new Error("SPD ENGINE ERROR: Invalid system state");
+  }
+
   // =========================
   // SAFE NORMALIZATION LAYER
-  // (Does NOT modify rules or decision logic)
+  // =========================
+  // Normalization is transparent and deterministic.
+  // Original input remains unchanged.
   // =========================
 
   const normalizedState = {
     ...state,
-    energy: state.energy / GOLDEN_RATIO,
-    fx: state.fx / GOLDEN_RATIO
+    energy: Number(state.energy ?? 0) / GOLDEN_RATIO,
+    fx: Number(state.fx ?? 0) / GOLDEN_RATIO
   };
 
   // =========================
-  // CORE EXECUTION ENGINE
+  // CORE COMPUTE EXECUTION
   // =========================
 
   const result = captainAILena(normalizedState);
 
   // =========================
-  // RESPONSE WRAPPER LAYER
+  // EXECUTION RESPONSE
   // =========================
 
   return {
     timestamp: new Date().toISOString(),
 
-    // original input (unchanged for audit)
+    // Original client/system input
     input: state,
 
-    // transformed input (for transparency/debugging)
+    // Normalized state used by compute layer
     normalizedInput: normalizedState,
 
-    // system output
+    // Captain AI Lena decision output
     output: result,
 
-    // execution metadata
+    // Deterministic execution metadata
     constants: {
       GOLDEN_RATIO
     },
 
+    // Execution status
     status: "EXECUTED"
   };
 }
