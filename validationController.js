@@ -9,7 +9,7 @@
  * Connects the SPD v13.1 Cockpit UI to the
  * SEXTANT Self-Test & Validation Engine.
  *
- * ARCHITECTURE:
+ * AUTHORITATIVE FLOW:
  *
  * COCKPIT UI
  *     ↓
@@ -19,7 +19,11 @@
  *     ↓
  * GOLDEN RULE ENGINE
  *     ↓
- * VALIDATION RESULT
+ * RE-TEST VALIDATION
+ *     ↓
+ * VERIFY RECOVERY
+ *     ↓
+ * FINAL VALIDATION STATUS
  *     ↓
  * COCKPIT UI
  *
@@ -28,14 +32,11 @@
  * This controller does NOT replace or modify the
  * authoritative Golden Rule Engine.
  *
- * The validation engine remains responsible for:
+ * The Golden Rule Engine remains authoritative.
  *
- * SELF-TEST
- * FAULT IDENTIFICATION
- * CAPTAIN AI LENA DECISION
- * APPLY CORRECTIVE ACTION
- * RE-TEST VALIDATION
- * VERIFY RECOVERY
+ * The validation layer only validates the engine,
+ * identifies validation faults, applies corrections
+ * within the validation layer, and verifies recovery.
  *
  * ============================================================
  */
@@ -84,191 +85,26 @@ let controllerState = {
 };
 
 // ============================================================
-// 1. RUN SELF-TEST
+// INTERNAL STATE UPDATE
 // ============================================================
 
-export function executeSelfTest() {
+function updateControllerState(
 
-  const selfTest =
-    runSelfTest();
+  selfTest,
 
-  const faultIdentification =
-    identifyFaults(
-      selfTest
-    );
+  faultIdentification,
 
-  controllerState = {
+  corrective,
 
-    ...controllerState,
+  correctiveApplication,
 
-    status:
-      selfTest.overallStatus === "PASS"
-        ? "SELF_TEST_PASSED"
-        : "SELF_TEST_FAILED",
+  retest,
 
-    lastSelfTest:
-      selfTest,
+  recoveryVerification,
 
-    faultIdentification,
+  finalStatus
 
-    finalStatus:
-      selfTest.overallStatus === "PASS"
-        ? "SELF_TEST_PASSED"
-        : "SELF_TEST_FAILED"
-
-  };
-
-  return {
-
-    controller:
-      "SPD v13.1 VALIDATION CONTROLLER",
-
-    status:
-      controllerState.status,
-
-    selfTest,
-
-    faultIdentification,
-
-    validationState:
-      getValidationState(),
-
-    timestamp:
-      new Date().toISOString()
-
-  };
-
-}
-
-// ============================================================
-// 2. RUN SELF-TEST + CORRECTIVE ACTION
-// ============================================================
-
-export function executeSelfTestAndCorrect() {
-
-  // ----------------------------------------------------------
-  // STEP 1 — INITIAL SELF-TEST
-  // ----------------------------------------------------------
-
-  const selfTest =
-    runSelfTest();
-
-  // ----------------------------------------------------------
-  // STEP 2 — IDENTIFY FAULTS
-  // ----------------------------------------------------------
-
-  const faultIdentification =
-    identifyFaults(
-      selfTest
-    );
-
-  // ----------------------------------------------------------
-  // STEP 3 — CAPTAIN AI LENA DECISION
-  // ----------------------------------------------------------
-
-  const corrective =
-    correctiveAction(
-
-      selfTest,
-
-      faultIdentification
-
-    );
-
-  // ----------------------------------------------------------
-  // STEP 4 — APPLY CORRECTIVE ACTION
-  // ----------------------------------------------------------
-
-  const correctiveApplication =
-    applyCorrectiveAction(
-
-      selfTest,
-
-      faultIdentification,
-
-      corrective
-
-    );
-
-  // ----------------------------------------------------------
-  // STEP 5 — RE-TEST
-  // ----------------------------------------------------------
-
-  const retest =
-    reTestValidation();
-
-  // ----------------------------------------------------------
-  // STEP 6 — VERIFY RECOVERY
-  // ----------------------------------------------------------
-
-  const recoveryVerification =
-    verifyRecovery(
-
-      selfTest,
-
-      faultIdentification,
-
-      corrective,
-
-      correctiveApplication,
-
-      retest
-
-    );
-
-  // ----------------------------------------------------------
-  // FINAL STATUS
-  // ----------------------------------------------------------
-
-  let finalStatus;
-
-  /*
-   * A clean initial self-test followed by
-   * a successful re-test confirms validation.
-   */
-
-  if (
-
-    selfTest.overallStatus ===
-      "PASS" &&
-
-    retest.overallStatus ===
-      "PASS"
-
-  ) {
-
-    finalStatus =
-      "VALIDATION COMPLETE";
-
-  }
-
-  /*
-   * A failed initial test that is corrected
-   * and successfully re-tested confirms recovery.
-   */
-
-  else if (
-
-    recoveryVerification.recoveryVerified ===
-      true
-
-  ) {
-
-    finalStatus =
-      "VALIDATION COMPLETE";
-
-  }
-
-  else {
-
-    finalStatus =
-      "VALIDATION FAILED";
-
-  }
-
-  // ----------------------------------------------------------
-  // UPDATE CONTROLLER STATE
-  // ----------------------------------------------------------
+) {
 
   controllerState = {
 
@@ -293,14 +129,205 @@ export function executeSelfTestAndCorrect() {
 
   };
 
+}
+
+// ============================================================
+// 1. RUN SELF-TEST ONLY
+// ============================================================
+
+export function executeSelfTest() {
+
+  const selfTest =
+    runSelfTest();
+
+  const faultIdentification =
+    identifyFaults(
+      selfTest
+    );
+
+  const finalStatus =
+
+    selfTest.overallStatus ===
+      "PASS"
+
+      ? "SELF_TEST_PASSED"
+
+      : "SELF_TEST_FAILED";
+
+  controllerState = {
+
+    ...controllerState,
+
+    status:
+      finalStatus,
+
+    lastSelfTest:
+      selfTest,
+
+    faultIdentification,
+
+    finalStatus
+
+  };
+
+  return {
+
+    controller:
+      "SPD v13.1 VALIDATION CONTROLLER",
+
+    status:
+      finalStatus,
+
+    selfTest,
+
+    faultIdentification,
+
+    /*
+     * Re-test is intentionally not executed
+     * by the self-test-only command.
+     */
+
+    retest:
+      null,
+
+    recoveryVerification:
+      null,
+
+    finalStatus,
+
+    validationState:
+      getValidationState(),
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+// ============================================================
+// 2. RUN SELF-TEST + CORRECTIVE ACTION
+// ============================================================
+
+export function executeSelfTestAndCorrect() {
+
+  /*
+   * The complete validation loop is authoritative
+   * for the combined Self-Test + Corrective Action
+   * cockpit control.
+   *
+   * This guarantees that the UI does not stop at:
+   *
+   * SELF-TEST PASSED
+   *
+   * and instead continues through:
+   *
+   * SELF-TEST
+   * ↓
+   * FAULT IDENTIFICATION
+   * ↓
+   * CAPTAIN AI LENA DECISION
+   * ↓
+   * CORRECTIVE ACTION
+   * ↓
+   * RE-TEST
+   * ↓
+   * VERIFY RECOVERY
+   * ↓
+   * FINAL STATUS
+   */
+
+  return executeFullValidationLoop();
+
+}
+
+// ============================================================
+// 3. RUN COMPLETE AUTHORITATIVE VALIDATION LOOP
+// ============================================================
+
+export function executeFullValidationLoop() {
+
+  /*
+   * Execute the closed-loop validation engine.
+   *
+   * The Golden Rule Engine itself remains untouched.
+   */
+
+  const validationResult =
+    runValidationLoop();
+
+  /*
+   * Normalize the complete result
+   * for Cockpit UI consumption.
+   */
+
+  const selfTest =
+    validationResult.selfTest ??
+    null;
+
+  const faultIdentification =
+    validationResult.faultIdentification ??
+    null;
+
+  const corrective =
+    validationResult.correctiveAction ??
+    null;
+
+  const correctiveApplication =
+    validationResult.correctiveApplication ??
+    null;
+
+  const retest =
+    validationResult.retest ??
+    null;
+
+  const recoveryVerification =
+    validationResult.recoveryVerification ??
+    null;
+
+  /*
+   * The validation engine's final status
+   * is authoritative for the validation layer.
+   */
+
+  const finalStatus =
+
+    validationResult.finalStatus ??
+    "VALIDATION FAILED";
+
   // ----------------------------------------------------------
-  // RETURN COMPLETE RESULT
+  // UPDATE CONTROLLER STATE
+  // ----------------------------------------------------------
+
+  updateControllerState(
+
+    selfTest,
+
+    faultIdentification,
+
+    corrective,
+
+    correctiveApplication,
+
+    retest,
+
+    recoveryVerification,
+
+    finalStatus
+
+  );
+
+  // ----------------------------------------------------------
+  // RETURN COMPLETE COCKPIT VALIDATION RECORD
   // ----------------------------------------------------------
 
   return {
 
     controller:
       "SPD v13.1 VALIDATION CONTROLLER",
+
+    status:
+      finalStatus,
 
     pipeline: [
 
@@ -333,71 +360,80 @@ export function executeSelfTestAndCorrect() {
 
     finalStatus,
 
+    /*
+     * Explicit UI-friendly status fields.
+     */
+
+    uiStatus: {
+
+      selfTest:
+
+        selfTest?.overallStatus ===
+          "PASS"
+
+          ? "SELF-TEST PASSED"
+
+          : "SELF-TEST FAILED",
+
+      faultIdentification:
+
+        faultIdentification?.faultCount ===
+          0
+
+          ? "NO_FAULTS"
+
+          : "FAULTS_DETECTED",
+
+      correctiveAction:
+
+        correctiveApplication?.applied ===
+          true
+
+          ? "CORRECTIVE ACTION APPLIED"
+
+          : "NO CORRECTIVE ACTION REQUIRED",
+
+      reTest:
+
+        retest?.overallStatus ===
+          "PASS"
+
+          ? "RE-TEST PASSED"
+
+          : "RE-TEST FAILED",
+
+      recovery:
+
+        recoveryVerification?.recoveryVerified ===
+          true
+
+          ? "RECOVERY VERIFIED"
+
+          : (
+
+              selfTest?.overallStatus ===
+                "PASS" &&
+
+              retest?.overallStatus ===
+                "PASS"
+
+            )
+
+              ? "VALIDATION VERIFIED"
+
+              : "RECOVERY NOT VERIFIED",
+
+      final:
+
+        finalStatus
+
+    },
+
     validationState:
       getValidationState(),
 
     timestamp:
       new Date().toISOString()
-
-  };
-
-}
-
-// ============================================================
-// 3. RUN COMPLETE AUTHORITATIVE VALIDATION LOOP
-// ============================================================
-
-export function executeFullValidationLoop() {
-
-  /*
-   * Use the validation engine's authoritative
-   * closed-loop execution.
-   */
-
-  const validationResult =
-    runValidationLoop();
-
-  /*
-   * Normalize the result for the Cockpit UI.
-   */
-
-  controllerState = {
-
-    status:
-      validationResult.finalStatus,
-
-    lastSelfTest:
-      validationResult.selfTest,
-
-    faultIdentification:
-      validationResult.faultIdentification,
-
-    correctiveDecision:
-      validationResult.correctiveAction,
-
-    correctiveApplication:
-      validationResult.correctiveApplication,
-
-    retest:
-      validationResult.retest,
-
-    recoveryVerification:
-      validationResult.recoveryVerification,
-
-    finalStatus:
-      validationResult.finalStatus
-
-  };
-
-  return {
-
-    controller:
-      "SPD v13.1 VALIDATION CONTROLLER",
-
-    ...validationResult,
-
-    validationState:
-      getValidationState()
 
   };
 
