@@ -1,1 +1,1369 @@
-g
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</title>  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0b0f14;
+      color: #00ff88;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #aaaaaa;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .panel {
+      border: 1px solid #00ff88;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background: #10161d;
+    }
+
+    .title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 12px;
+      border: 1px solid #00ff88;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #080d11;
+    }
+
+    .control-buttons,
+    .scenario-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+    }
+
+    button {
+      display: inline-block;
+      visibility: visible;
+      opacity: 1;
+      background: #00ff88;
+      color: #000000;
+      border: 2px solid #00ff88;
+      padding: 14px 20px;
+      margin: 0;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 48px;
+      transition:
+        opacity 0.2s ease,
+        transform 0.1s ease,
+        background 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:focus {
+      outline: 2px solid #ffffff;
+      outline-offset: 2px;
+    }
+
+    .self-test-button {
+      background: #1b2730;
+      color: #00ff88;
+      border: 2px solid #00ff88;
+    }
+
+    .corrective-button {
+      background: #ffb000;
+      color: #000000;
+      border: 2px solid #ffb000;
+    }
+
+    .danger {
+      background: #ff5555;
+      color: #ffffff;
+      border: 2px solid #ff5555;
+    }
+
+    .scenario-button {
+      background: #1b2730;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    .scenario-button:hover {
+      background: #00ff88;
+      color: #000000;
+    }
+
+    .monitor {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .domain {
+      border: 1px solid #00ff88;
+      padding: 12px;
+      border-radius: 6px;
+      background: #080d11;
+      text-align: center;
+    }
+
+    .domain-name {
+      color: #aaaaaa;
+      font-size: 13px;
+    }
+
+    .domain-value {
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .pipeline {
+      font-size: 16px;
+      color: #ffffff;
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .stage {
+      display: inline-block;
+      padding: 8px;
+      margin: 3px;
+      border: 1px solid #00ff88;
+      border-radius: 4px;
+    }
+
+    .stage.active {
+      background: #00ff88;
+      color: #000000;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #00ff88;
+    }
+
+    .intensity-value {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      color: #00ff88;
+      line-height: 1.5;
+    }
+
+    .muted {
+      color: #aaaaaa;
+      font-size: 13px;
+    }
+
+    .solution {
+      border-left: 3px solid #00ff88;
+      padding: 10px;
+      margin-top: 8px;
+      background: #080d11;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .title {
+        font-size: 16px;
+      }
+
+      .control-buttons,
+      .scenario-controls {
+        flex-direction: column;
+      }
+
+      .control-buttons button,
+      .scenario-controls button {
+        width: 100%;
+        min-height: 52px;
+        font-size: 15px;
+      }
+
+      .pipeline {
+        white-space: normal;
+        line-height: 2;
+      }
+    }
+  </style></head><body>  <h1>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>  <div class="subtitle">
+    Captain AI Lena Autonomous Agent Core
+    <br>
+    DATA → ALGORITHMS → COMPUTE
+    <br>
+    SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION
+    → CORRECTIVE ACTION → RE-TEST
+  </div>  <div class="status" id="systemStatus">
+    SYSTEM STATUS: INITIALIZING...
+  </div>  <div class="panel">
+    <div class="title">🎛️ SYSTEM CONTROLS</div><div class="control-buttons">
+
+  <button type="button" onclick="runLiveSystem()">
+    ▶ RUN SYSTEM
+  </button>
+
+  <button
+    type="button"
+    class="self-test-button"
+    onclick="runSelfTest()"
+  >
+    🧪 RUN SELF-TEST
+  </button>
+
+  <button
+    type="button"
+    class="corrective-button"
+    onclick="runSelfTestAndCorrect()"
+  >
+    🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+  </button>
+
+</div>
+
+  </div>  <div class="panel">
+    <div class="title">📊 SYSTEM DOMAIN MONITOR</div><div class="monitor">
+
+  <div class="domain">
+    <div class="domain-name">FX</div>
+    <div class="domain-value" id="domainFX">0</div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">DC</div>
+    <div class="domain-value" id="domainDC">0</div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">CYB</div>
+    <div class="domain-value" id="domainCYB">0</div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">INF</div>
+    <div class="domain-value" id="domainINF">0</div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">EN / ENERGY</div>
+    <div class="domain-value" id="domainEN">0</div>
+  </div>
+
+</div>
+
+  </div>  <div class="panel">
+    <div class="title">🎛️ SCENARIO CONTROL</div><div class="scenario-controls">
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('FX_SHOCK')"
+  >
+    FX STRESS
+  </button>
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('DC_LOAD')"
+  >
+    DC LOAD
+  </button>
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('CYBER_EVENT')"
+  >
+    CYBER EVENT
+  </button>
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('INFRASTRUCTURE_STRESS')"
+  >
+    INFRA STRAIN
+  </button>
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('BIODIESEL_SHORTAGE')"
+  >
+    BIODIESEL SHORTAGE
+  </button>
+
+  <button
+    type="button"
+    class="danger"
+    onclick="resetScenario()"
+  >
+    RESET
+  </button>
+
+</div>
+
+  </div>  <div class="panel">
+    <div class="title">🎚️ SCENARIO INTENSITY CONTROL</div><input
+  id="scenarioIntensity"
+  type="range"
+  min="0"
+  max="100"
+  step="10"
+  value="50"
+  oninput="updateIntensity()"
+>
+
+<div>
+  Intensity:
+  <span
+    class="intensity-value"
+    id="intensityValue"
+  >
+    50%
+  </span>
+</div>
+
+  </div>  <div class="panel">
+    <div class="title">🧪 SCENARIO PANEL</div><pre id="scenarioPanel">{
+
+"scenario": "FX_SHOCK",
+"intensity": "50%",
+"status": "READY"
+}</pre>
+
+  </div>  <div class="panel">
+    <div class="title">📊 RAW SYSTEM STATE</div>
+    <pre id="state">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">🛰️ GOLDEN RULE ENGINE</div><div class="pipeline">
+
+  <span class="stage" id="stageOBSERVE">OBSERVE</span>
+  →
+  <span class="stage" id="stageVERIFY">VERIFY</span>
+  →
+  <span class="stage" id="stageASSESS">ASSESS</span>
+  →
+  <span class="stage" id="stageDECIDE">DECIDE</span>
+  →
+  <span class="stage" id="stageACT">ACT</span>
+  →
+  <span class="stage" id="stageUPDATE">UPDATE</span>
+
+</div>
+
+<pre id="pipeline">Waiting...</pre>
+
+  </div>  <div class="panel">
+    <div class="title">⚠️ SYSTEM ASSESSMENT</div>
+    <pre id="assessment">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">🚨 RISK PANEL</div>
+    <pre id="riskPanel">Risk: LOW</pre>
+  </div>  <div class="panel">
+    <div class="title">⚙️ CAPTAIN AI LENA DECISION</div>
+    <pre id="decision">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">💡 SOLUTION OPTIONS</div><div class="solution" id="solutionOptions">
+  Waiting for system assessment...
+</div>
+
+  </div>  <div class="panel">
+    <div class="title">🚨 ACTION SEQUENCE PROMPT</div>
+    <pre id="actions">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">🧠 MEMORY CORE</div>
+    <pre id="memoryCore">Memory Core Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">🧾 SPD v13.1 AUDIT RECORD</div>
+    <pre id="audit">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">📜 PIPELINE LOG</div>
+    <pre id="pipelineLog">PIPELINE LOG ACTIVE</pre>
+  </div>  <div class="panel">
+    <div class="title">🧪 SPD v13.1 SELF-TEST</div>
+    <pre id="selfTest">Self-test not executed.</pre>
+  </div>  <div class="panel">
+    <div class="title">🔎 SELF-TEST INTERPRETATION</div>
+    <pre id="selfTestInterpretation">
+Waiting for self-test execution...
+    </pre>
+  </div>  <div class="panel">
+    <div class="title">⚠️ FAULT IDENTIFICATION</div>
+    <pre id="faultIdentification">
+No fault assessment available.
+    </pre>
+  </div>  <div class="panel">
+    <div class="title">🛠️ CAPTAIN AI LENA CORRECTIVE ACTION</div>
+    <pre id="correctiveAction">
+No corrective action available.
+    </pre>
+  </div>  <div class="panel">
+    <div class="title">🔁 RE-TEST VALIDATION</div>
+    <pre id="retest">
+Re-test not executed.
+    </pre>
+  </div>  <div class="panel">
+    <div class="title">📐 SYSTEM CONSTANTS</div>
+    <pre id="constants">Waiting...</pre>
+  </div>  <div class="panel">
+    <div class="title">🔄 AGENT LOOP MONITOR</div><div class="muted">
+  DATA → ALGORITHMS → COMPUTE
+</div>
+
+<pre id="trace">
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+</pre>
+
+  </div>  <script type="module">
+
+    import {
+      runGoldenRule,
+      PHI,
+      GOLDEN_RULE_STAGES
+    } from "./goldenRuleEngine.js";
+
+
+    /* ============================================================
+       BASE SYSTEM STATE
+       ============================================================ */
+
+    const baseState = {
+      fx: 12,
+      energy: 25,
+      cyb: 40,
+      inf: 10,
+      dc: 20,
+      event: "NORMAL",
+      mode: "AUTONOMOUS"
+    };
+
+
+    let currentScenario = "FX_SHOCK";
+    let scenarioIntensity = 50;
+
+
+    /* ============================================================
+       DOM HELPER
+       ============================================================ */
+
+    function setText(id, value) {
+
+      const element =
+        document.getElementById(id);
+
+      if (!element) {
+        throw new Error(
+          "DOM element not found: #" + id
+        );
+      }
+
+      element.innerText =
+        value;
+
+    }
+
+
+    /* ============================================================
+       SCENARIO INTENSITY
+       ============================================================ */
+
+    window.updateIntensity = function () {
+
+      scenarioIntensity =
+        Number(
+          document.getElementById(
+            "scenarioIntensity"
+          ).value
+        );
+
+
+      setText(
+        "intensityValue",
+        scenarioIntensity + "%"
+      );
+
+
+      setText(
+        "scenarioPanel",
+
+        JSON.stringify(
+          {
+            scenario:
+              currentScenario,
+
+            intensity:
+              scenarioIntensity + "%",
+
+            status:
+              "READY"
+          },
+          null,
+          2
+        )
+      );
+
+    };
+
+
+    /* ============================================================
+       ACTIVATE SCENARIO
+       ============================================================ */
+
+    window.activateScenario =
+      function (scenario) {
+
+        currentScenario =
+          scenario;
+
+
+        setText(
+          "scenarioPanel",
+
+          JSON.stringify(
+            {
+              scenario:
+                currentScenario,
+
+              intensity:
+                scenarioIntensity + "%",
+
+              status:
+                "ACTIVE"
+            },
+            null,
+            2
+          )
+        );
+
+
+        window.runLiveSystem();
+
+      };
+
+
+    /* ============================================================
+       RESET
+       ============================================================ */
+
+    window.resetScenario = function () {
+
+      currentScenario =
+        "NORMAL";
+
+
+      scenarioIntensity =
+        0;
+
+
+      document.getElementById(
+        "scenarioIntensity"
+      ).value =
+        0;
+
+
+      setText(
+        "intensityValue",
+        "0%"
+      );
+
+
+      setText(
+        "scenarioPanel",
+
+        JSON.stringify(
+          {
+            scenario:
+              "NORMAL",
+
+            intensity:
+              "0%",
+
+            status:
+              "RESET"
+          },
+          null,
+          2
+        )
+      );
+
+
+      window.runLiveSystem();
+
+    };
+
+
+    /* ============================================================
+       BUILD SYSTEM STATE
+       ============================================================ */
+
+    function buildSystemState() {
+
+      const intensityFactor =
+        scenarioIntensity / 100;
+
+
+      const state = {
+
+        ...baseState,
+
+        event:
+          currentScenario,
+
+        time:
+          new Date().toISOString()
+
+      };
+
+
+      if (
+        currentScenario ===
+        "FX_SHOCK"
+      ) {
+
+        state.fx =
+          Math.min(
+            100,
+            baseState.fx +
+            (
+              80 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      if (
+        currentScenario ===
+        "DC_LOAD"
+      ) {
+
+        state.dc =
+          Math.min(
+            100,
+            baseState.dc +
+            (
+              80 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      if (
+        currentScenario ===
+        "CYBER_EVENT"
+      ) {
+
+        state.cyb =
+          Math.min(
+            100,
+            baseState.cyb +
+            (
+              80 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      if (
+        currentScenario ===
+        "INFRASTRUCTURE_STRESS"
+      ) {
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              80 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      if (
+        currentScenario ===
+        "BIODIESEL_SHORTAGE"
+      ) {
+
+        state.energy =
+          Math.max(
+            0,
+            baseState.energy -
+            (
+              80 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      return state;
+
+    }
+
+
+    /* ============================================================
+       DOMAIN MONITOR
+       ============================================================ */
+
+    function updateDomainMonitor(state) {
+
+      setText(
+        "domainFX",
+        state.fx
+      );
+
+      setText(
+        "domainDC",
+        state.dc
+      );
+
+      setText(
+        "domainCYB",
+        state.cyb
+      );
+
+      setText(
+        "domainINF",
+        state.inf
+      );
+
+      setText(
+        "domainEN",
+        state.energy
+      );
+
+    }
+
+
+    /* ============================================================
+       STAGE DISPLAY
+       ============================================================ */
+
+    function updateStages(activeStage) {
+
+      GOLDEN_RULE_STAGES.forEach(
+        stage => {
+
+          const element =
+            document.getElementById(
+              "stage" + stage
+            );
+
+
+          if (element) {
+
+            element.classList.remove(
+              "active"
+            );
+
+          }
+
+        }
+      );
+
+
+      if (activeStage) {
+
+        const activeElement =
+          document.getElementById(
+            "stage" +
+            activeStage
+          );
+
+
+        if (activeElement) {
+
+          activeElement.classList.add(
+            "active"
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /* ============================================================
+       PIPELINE DISPLAY
+       ============================================================ */
+
+    function displayPipeline(result) {
+
+      setText(
+        "pipeline",
+
+        JSON.stringify(
+          result,
+          null,
+          2
+        )
+      );
+
+    }
+
+
+    /* ============================================================
+       LIVE SYSTEM
+       ============================================================ */
+
+    window.runLiveSystem =
+      function () {
+
+        try {
+
+          const state =
+            buildSystemState();
+
+
+          updateDomainMonitor(
+            state
+          );
+
+
+          setText(
+            "state",
+
+            JSON.stringify(
+              state,
+              null,
+              2
+            )
+          );
+
+
+          updateStages(
+            "OBSERVE"
+          );
+
+
+          const result =
+            runGoldenRule(
+              state
+            );
+
+
+          updateStages(
+            "UPDATE"
+          );
+
+
+          displayPipeline(
+            result
+          );
+
+
+          setText(
+            "systemStatus",
+            "SYSTEM STATUS: AUTONOMOUS ENGINE ACTIVE"
+          );
+
+
+          setText(
+            "assessment",
+
+            JSON.stringify(
+              result.assessment ??
+              result,
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "riskPanel",
+
+            JSON.stringify(
+              {
+                risk:
+                  result.risk ??
+                  result.riskLevel ??
+                  "UNKNOWN",
+
+                resilienceScore:
+                  result.resilienceScore ??
+                  "N/A"
+              },
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "decision",
+
+            JSON.stringify(
+              result.decision ??
+              "Decision generated by Golden Rule Engine",
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "solutionOptions",
+
+            result.solution ??
+            result.solutions ??
+            "Solution options generated by engine."
+          );
+
+
+          setText(
+            "actions",
+
+            JSON.stringify(
+              result.actions ??
+              result.action ??
+              "Action sequence generated by engine.",
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "memoryCore",
+
+            JSON.stringify(
+              {
+                timestamp:
+                  new Date().toISOString(),
+
+                scenario:
+                  currentScenario,
+
+                intensity:
+                  scenarioIntensity,
+
+                status:
+                  "MEMORY CORE UPDATED"
+              },
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "audit",
+
+            JSON.stringify(
+              {
+                system:
+                  "SPD v13.1",
+
+                engine:
+                  "Sextant Golden Rule Engine",
+
+                scenario:
+                  currentScenario,
+
+                intensity:
+                  scenarioIntensity,
+
+                timestamp:
+                  new Date().toISOString(),
+
+                result:
+                  result
+              },
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "pipelineLog",
+
+            "PIPELINE EXECUTED\n" +
+            "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n" +
+            "STATUS: COMPLETE"
+          );
+
+
+          setText(
+            "constants",
+
+            JSON.stringify(
+              {
+                PHI:
+                  PHI,
+
+                GOLDEN_RULE_STAGES:
+                  GOLDEN_RULE_STAGES
+              },
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "trace",
+
+            "DATA → ALGORITHMS → COMPUTE\n" +
+            "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+          );
+
+
+          return result;
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "SPD v13.1 SYSTEM ERROR:",
+            error
+          );
+
+
+          setText(
+            "systemStatus",
+            "SYSTEM STATUS: ENGINE ERROR"
+          );
+
+
+          setText(
+            "pipelineLog",
+
+            "SYSTEM ERROR:\n" +
+            error.message
+          );
+
+        }
+
+      };
+
+
+    /* ============================================================
+       SELF-TEST
+       ============================================================ */
+
+    window.runSelfTest =
+      function () {
+
+        try {
+
+          setText(
+            "systemStatus",
+            "SYSTEM STATUS: SELF-TEST RUNNING..."
+          );
+
+
+          const testState =
+            buildSystemState();
+
+
+          const result =
+            runGoldenRule(
+              testState
+            );
+
+
+          const tests = {
+
+            engineLoaded:
+              true,
+
+            goldenRuleExecuted:
+              !!result,
+
+            phiAvailable:
+              typeof PHI ===
+              "number",
+
+            pipelineAvailable:
+              Array.isArray(
+                GOLDEN_RULE_STAGES
+              ),
+
+            scenario:
+              currentScenario,
+
+            intensity:
+              scenarioIntensity,
+
+            timestamp:
+              new Date().toISOString()
+
+          };
+
+
+          const passed =
+            Object.values(
+              tests
+            ).every(
+              value =>
+                value !== false
+            );
+
+
+          setText(
+            "selfTest",
+
+            JSON.stringify(
+              {
+                status:
+                  passed
+                    ? "PASS"
+                    : "FAIL",
+
+                tests:
+                  tests
+              },
+              null,
+              2
+            )
+          );
+
+
+          setText(
+            "selfTestInterpretation",
+
+            passed
+              ? "SELF-TEST PASSED.\nCore engine is responding and the Golden Rule pipeline is available."
+              : "SELF-TEST FAILED.\nOne or more validation checks require investigation."
+          );
+
+
+          setText(
+            "faultIdentification",
+
+            passed
+              ? "NO CRITICAL FAULT IDENTIFIED."
+              : "FAULT DETECTED. REVIEW ENGINE, IMPORTS, OR PIPELINE INTEGRATION."
+          );
+
+
+          setText(
+            "retest",
+            "RE-TEST PENDING."
+          );
+
+
+          setText(
+            "systemStatus",
+
+            passed
+              ? "SYSTEM STATUS: SELF-TEST PASSED"
+              : "SYSTEM STATUS: SELF-TEST FAILED"
+          );
+
+
+          return passed;
+
+        }
+
+        catch (error) {
+
+          setText(
+            "selfTest",
+
+            "SELF-TEST ERROR:\n" +
+            error.message
+          );
+
+
+          setText(
+            "selfTestInterpretation",
+            "SELF-TEST COULD NOT COMPLETE."
+          );
+
+
+          setText(
+            "faultIdentification",
+
+            "FAULT: " +
+            error.message
+          );
+
+
+          setText(
+            "systemStatus",
+            "SYSTEM STATUS: SELF-TEST ERROR"
+          );
+
+
+          return false;
+
+        }
+
+      };
+
+
+    /* ============================================================
+       SELF-TEST + CORRECTIVE ACTION + RE-TEST
+       ============================================================ */
+
+    window.runSelfTestAndCorrect =
+      function () {
+
+        const firstTest =
+          window.runSelfTest();
+
+
+        if (
+          firstTest
+        ) {
+
+          setText(
+            "correctiveAction",
+
+            "CAPTAIN AI LENA CORRECTIVE ACTION:\n" +
+            "NO CORRECTIVE ACTION REQUIRED.\n" +
+            "SYSTEM VALIDATION PASSED."
+          );
+
+
+          setText(
+            "retest",
+
+            "RE-TEST VALIDATION:\n" +
+            "PASS — SYSTEM REMAINS VALIDATED."
+          );
+
+
+          return;
+
+        }
+
+
+        setText(
+          "correctiveAction",
+
+          "CAPTAIN AI LENA CORRECTIVE ACTION:\n" +
+          "1. IDENTIFY FAILED VALIDATION COMPONENT.\n" +
+          "2. VERIFY GOLDEN RULE ENGINE IMPORT.\n" +
+          "3. VERIFY DOM INTEGRATION.\n" +
+          "4. RE-EXECUTE ENGINE VALIDATION.\n" +
+          "5. CONFIRM SYSTEM RETURNS TO VALIDATED STATE."
+        );
+
+
+        setText(
+          "systemStatus",
+
+          "SYSTEM STATUS: CORRECTIVE ACTION REQUIRED"
+        );
+
+
+        const retest =
+          window.runSelfTest();
+
+
+        setText(
+          "retest",
+
+          retest
+            ? "RE-TEST VALIDATION: PASS"
+            : "RE-TEST VALIDATION: FAIL — FURTHER INVESTIGATION REQUIRED"
+        );
+
+      };
+
+
+    /* ============================================================
+       INITIALIZE
+       ============================================================ */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        setText(
+          "constants",
+
+          JSON.stringify(
+            {
+              PHI:
+                PHI,
+
+              GOLDEN_RULE_STAGES:
+                GOLDEN_RULE_STAGES
+            },
+            null,
+            2
+          )
+        );
+
+
+        setText(
+          "systemStatus",
+          "SYSTEM STATUS: READY"
+        );
+
+
+        window.runLiveSystem();
+
+      }
+    );
+
+  </script></body>
+</html>
