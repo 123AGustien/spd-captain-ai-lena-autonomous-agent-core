@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+«»
 
   <title>
     SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-  </title>
-
-  <style>
+  </title>  <style>
 
     * {
       box-sizing: border-box;
@@ -65,7 +57,8 @@
     }
 
     .control-buttons,
-    .scenario-controls {
+    .scenario-controls,
+    .fin-controls {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -132,6 +125,28 @@
     .scenario-button:hover {
       background: #00ff88;
       color: #000000;
+    }
+
+    /* FIN SCENARIO BUTTONS */
+
+    .fin-button {
+      background: #17242c;
+      color: #ffffff;
+      border: 1px solid #00bfff;
+    }
+
+    .fin-button:hover {
+      background: #00bfff;
+      color: #000000;
+    }
+
+    .fin-label {
+      width: 100%;
+      color: #00bfff;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 0;
     }
 
     .monitor {
@@ -250,12 +265,14 @@
       }
 
       .control-buttons,
-      .scenario-controls {
+      .scenario-controls,
+      .fin-controls {
         flex-direction: column;
       }
 
       .control-buttons button,
-      .scenario-controls button {
+      .scenario-controls button,
+      .fin-controls button {
         width: 100%;
         min-height: 52px;
         font-size: 15px;
@@ -268,638 +285,476 @@
 
     }
 
-  </style>
-
-</head>
-
-
-<body>
-
-
-  <h1>
+  </style></head><body>  <h1>
     🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-  </h1>
+  </h1>  <div class="subtitle">Captain AI Lena Autonomous Agent Core
 
+<br>
 
-  <div class="subtitle">
+DATA → ALGORITHMS → COMPUTE
 
-    Captain AI Lena Autonomous Agent Core
+<br>
 
-    <br>
+SELF-TEST → FAULT IDENTIFICATION
+→ CAPTAIN AI LENA DECISION
+→ CORRECTIVE ACTION → RE-TEST
 
-    DATA → ALGORITHMS → COMPUTE
-
-    <br>
-
-    SELF-TEST → FAULT IDENTIFICATION
-    → CAPTAIN AI LENA DECISION
-    → CORRECTIVE ACTION → RE-TEST
-
-  </div>
-
-
-  <!-- ============================================================
-       SYSTEM STATUS
-  ============================================================ -->
-
-  <div
+  </div>  <!-- SYSTEM STATUS -->  <div
     class="status"
     id="systemStatus"
   >
     SYSTEM STATUS: INITIALIZING...
-  </div>
-
-
-  <!-- ============================================================
-       SYSTEM CONTROLS
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🎛️ SYSTEM CONTROLS
-    </div>
-
-    <div class="control-buttons">
-
-      <button
-        type="button"
-        onclick="runLiveSystem()"
-      >
-        ▶ RUN SYSTEM
-      </button>
-
-      <button
-        type="button"
-        class="self-test-button"
-        onclick="runAuthoritativeSelfTest()"
-      >
-        🧪 RUN SELF-TEST
-      </button>
-
-      <button
-        type="button"
-        class="corrective-button"
-        onclick="runSelfTestAndCorrect()"
-      >
-        🛠️ RUN SELF-TEST + CORRECTIVE ACTION
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- ============================================================
-       SYSTEM DOMAIN MONITOR
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      📊 SYSTEM DOMAIN MONITOR
-    </div>
-
-    <div class="monitor">
-
-      <div class="domain">
-        <div class="domain-name">FX</div>
-        <div
-          class="domain-value"
-          id="domainFX"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="domain">
-        <div class="domain-name">DC</div>
-        <div
-          class="domain-value"
-          id="domainDC"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="domain">
-        <div class="domain-name">CYB</div>
-        <div
-          class="domain-value"
-          id="domainCYB"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="domain">
-        <div class="domain-name">INF</div>
-        <div
-          class="domain-value"
-          id="domainINF"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="domain">
-        <div class="domain-name">EN / ENERGY</div>
-        <div
-          class="domain-value"
-          id="domainEN"
-        >
-          0
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ============================================================
-       SCENARIO CONTROL
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🎛️ SCENARIO CONTROL
-    </div>
-
-    <div class="scenario-controls">
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('FX_SHOCK')"
-      >
-        FX STRESS
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('DC_LOAD')"
-      >
-        DC LOAD
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('CYBER_EVENT')"
-      >
-        CYBER EVENT
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('INFRASTRUCTURE_STRESS')"
-      >
-        INFRA STRAIN
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('BIODIESEL_SHORTAGE')"
-      >
-        BIODIESEL SHORTAGE
-      </button>
-
-      <button
-        type="button"
-        class="danger"
-        onclick="resetScenario()"
-      >
-        RESET
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- ============================================================
-       SCENARIO INTENSITY
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🎚️ SCENARIO INTENSITY CONTROL
-    </div>
-
-    <input
-      id="scenarioIntensity"
-      type="range"
-      min="0"
-      max="100"
-      step="10"
-      value="50"
-      oninput="updateIntensity()"
-    >
-
-    <div>
-
-      Intensity:
-
-      <span
-        class="intensity-value"
-        id="intensityValue"
-      >
-        50%
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- ============================================================
-       SCENARIO PANEL
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧪 SCENARIO PANEL
-    </div>
-
-    <pre id="scenarioPanel">
-{
-  "scenario": "FX_SHOCK",
-  "intensity": "50%",
-  "status": "READY"
-}
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       RAW SYSTEM STATE
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      📊 RAW SYSTEM STATE
-    </div>
-
-    <pre id="state">
-Waiting...
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       GOLDEN RULE ENGINE
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🛰️ GOLDEN RULE ENGINE
-    </div>
-
-    <div class="pipeline">
-
-      <span
-        class="stage"
-        id="stageOBSERVE"
-      >
-        OBSERVE
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageVERIFY"
-      >
-        VERIFY
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageASSESS"
-      >
-        ASSESS
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageDECIDE"
-      >
-        DECIDE
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageACT"
-      >
-        ACT
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageUPDATE"
-      >
-        UPDATE
-      </span>
-
-    </div>
-
-    <pre id="pipeline">
-Waiting...
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       SYSTEM ASSESSMENT
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚠️ SYSTEM ASSESSMENT
-    </div>
-
-    <pre id="assessment">
-Waiting...
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       RISK PANEL
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🚨 RISK PANEL
-    </div>
-
-    <pre id="riskPanel">
-{
-  "risk": "UNKNOWN",
-  "resilienceScore": "N/A",
-  "goldenScore": "N/A"
-}
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       CAPTAIN AI LENA DECISION
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚙️ CAPTAIN AI LENA DECISION
-    </div>
-
-    <pre id="decision">
-Waiting...
-    </pre>
-
-  </div>
-
-
-  <!-- ============================================================
-       SOLUTION OPTIONS
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      💡 SOLUTION OPTIONS
-    </div>
-
+  </div>  <!-- SYSTEM CONTROLS -->  <div class="panel"><div class="title">
+  🎛️ SYSTEM CONTROLS
+</div>
+
+<div class="control-buttons">
+
+  <button
+    type="button"
+    onclick="runLiveSystem()"
+  >
+    ▶ RUN SYSTEM
+  </button>
+
+  <button
+    type="button"
+    class="self-test-button"
+    onclick="runAuthoritativeSelfTest()"
+  >
+    🧪 RUN SELF-TEST
+  </button>
+
+  <button
+    type="button"
+    class="corrective-button"
+    onclick="runSelfTestAndCorrect()"
+  >
+    🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+  </button>
+
+</div>
+
+  </div>  <!-- SYSTEM DOMAIN MONITOR -->  <div class="panel"><div class="title">
+  📊 SYSTEM DOMAIN MONITOR
+</div>
+
+<div class="monitor">
+
+  <div class="domain">
+    <div class="domain-name">FX</div>
     <div
-      class="solution"
-      id="solutionOptions"
+      class="domain-value"
+      id="domainFX"
     >
-      Waiting for system assessment...
+      0
     </div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">DC</div>
+    <div
+      class="domain-value"
+      id="domainDC"
+    >
+      0
+    </div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">CYB</div>
+    <div
+      class="domain-value"
+      id="domainCYB"
+    >
+      0
+    </div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">INF</div>
+    <div
+      class="domain-value"
+      id="domainINF"
+    >
+      0
+    </div>
+  </div>
+
+  <div class="domain">
+    <div class="domain-name">EN / ENERGY</div>
+    <div
+      class="domain-value"
+      id="domainEN"
+    >
+      0
+    </div>
+  </div>
+
+</div>
+
+  </div>  <!-- SCENARIO CONTROL -->  <div class="panel"><div class="title">
+  🎛️ SCENARIO CONTROL
+</div>
+
+
+<div class="scenario-controls">
+
+
+  <!-- FX -->
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('FX_SHOCK')"
+  >
+    FX STRESS
+  </button>
+
+
+  <!-- FIN SCENARIO BUTTONS -->
+
+  <div class="fin-label">
+    💰 FINANCIAL RESILIENCE SCENARIOS
+  </div>
+
+
+  <div class="fin-controls">
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('FIN_STRESS')"
+    >
+      FIN STRESS
+    </button>
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('BANKING_STRESS')"
+    >
+      BANKING STRESS
+    </button>
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('LIQUIDITY_CRISIS')"
+    >
+      LIQUIDITY CRISIS
+    </button>
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('CREDIT_STRESS')"
+    >
+      CREDIT STRESS
+    </button>
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('SOVEREIGN_DEBT')"
+    >
+      SOVEREIGN DEBT
+    </button>
 
   </div>
 
 
-  <!-- ============================================================
-       ACTION SEQUENCE
-  ============================================================ -->
+  <!-- EXISTING SCENARIOS -->
 
-  <div class="panel">
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('DC_LOAD')"
+  >
+    DC LOAD
+  </button>
 
-    <div class="title">
-      🚨 ACTION SEQUENCE PROMPT
-    </div>
 
-    <pre id="actions">
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('CYBER_EVENT')"
+  >
+    CYBER EVENT
+  </button>
+
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('INFRASTRUCTURE_STRESS')"
+  >
+    INFRA STRAIN
+  </button>
+
+
+  <button
+    type="button"
+    class="scenario-button"
+    onclick="activateScenario('BIODIESEL_SHORTAGE')"
+  >
+    BIODIESEL SHORTAGE
+  </button>
+
+
+  <button
+    type="button"
+    class="danger"
+    onclick="resetScenario()"
+  >
+    RESET
+  </button>
+
+
+</div>
+
+  </div>  <!-- SCENARIO INTENSITY -->  <div class="panel"><div class="title">
+  🎚️ SCENARIO INTENSITY CONTROL
+</div>
+
+<input
+  id="scenarioIntensity"
+  type="range"
+  min="0"
+  max="100"
+  step="10"
+  value="50"
+  oninput="updateIntensity()"
+>
+
+<div>
+
+  Intensity:
+
+  <span
+    class="intensity-value"
+    id="intensityValue"
+  >
+    50%
+  </span>
+
+</div>
+
+  </div>  <!-- SCENARIO PANEL -->  <div class="panel"><div class="title">
+  🧪 SCENARIO PANEL
+</div>
+
+<pre id="scenarioPanel">
+
+{
+"scenario": "FX_SHOCK",
+"intensity": "50%",
+"status": "READY"
+}
+</pre>
+
+  </div>  <!-- RAW SYSTEM STATE -->  <div class="panel"><div class="title">
+  📊 RAW SYSTEM STATE
+</div>
+
+<pre id="state">
+
 Waiting...
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- GOLDEN RULE ENGINE -->  <div class="panel"><div class="title">
+  🛰️ GOLDEN RULE ENGINE
+</div>
 
+<div class="pipeline">
 
-  <!-- ============================================================
-       MEMORY CORE
-  ============================================================ -->
+  <span class="stage" id="stageOBSERVE">
+    OBSERVE
+  </span>
 
-  <div class="panel">
+  →
 
-    <div class="title">
-      🧠 MEMORY CORE
-    </div>
+  <span class="stage" id="stageVERIFY">
+    VERIFY
+  </span>
 
-    <pre id="memoryCore">
+  →
+
+  <span class="stage" id="stageASSESS">
+    ASSESS
+  </span>
+
+  →
+
+  <span class="stage" id="stageDECIDE">
+    DECIDE
+  </span>
+
+  →
+
+  <span class="stage" id="stageACT">
+    ACT
+  </span>
+
+  →
+
+  <span class="stage" id="stageUPDATE">
+    UPDATE
+  </span>
+
+</div>
+
+<pre id="pipeline">
+
+Waiting...
+</pre>
+
+  </div>  <!-- SYSTEM ASSESSMENT -->  <div class="panel"><div class="title">
+  ⚠️ SYSTEM ASSESSMENT
+</div>
+
+<pre id="assessment">
+
+Waiting...
+</pre>
+
+  </div>  <!-- RISK PANEL -->  <div class="panel"><div class="title">
+  🚨 RISK PANEL
+</div>
+
+<pre id="riskPanel">
+
+{
+"risk": "UNKNOWN",
+"resilienceScore": "N/A",
+"goldenScore": "N/A"
+}
+</pre>
+
+  </div>  <!-- CAPTAIN AI LENA DECISION -->  <div class="panel"><div class="title">
+  ⚙️ CAPTAIN AI LENA DECISION
+</div>
+
+<pre id="decision">
+
+Waiting...
+</pre>
+
+  </div>  <!-- SOLUTION OPTIONS -->  <div class="panel"><div class="title">
+  💡 SOLUTION OPTIONS
+</div>
+
+<div
+  class="solution"
+  id="solutionOptions"
+>
+  Waiting for system assessment...
+</div>
+
+  </div>  <!-- ACTION SEQUENCE -->  <div class="panel"><div class="title">
+  🚨 ACTION SEQUENCE PROMPT
+</div>
+
+<pre id="actions">
+
+Waiting...
+</pre>
+
+  </div>  <!-- MEMORY CORE -->  <div class="panel"><div class="title">
+  🧠 MEMORY CORE
+</div>
+
+<pre id="memoryCore">
+
 Memory Core Waiting...
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- AUDIT RECORD -->  <div class="panel"><div class="title">
+  🧾 SPD v13.1 AUDIT RECORD
+</div>
 
+<pre id="audit">
 
-  <!-- ============================================================
-       AUDIT RECORD
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧾 SPD v13.1 AUDIT RECORD
-    </div>
-
-    <pre id="audit">
 Waiting...
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- PIPELINE LOG -->  <div class="panel"><div class="title">
+  📜 PIPELINE LOG
+</div>
 
+<pre id="pipelineLog">
 
-  <!-- ============================================================
-       PIPELINE LOG
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      📜 PIPELINE LOG
-    </div>
-
-    <pre id="pipelineLog">
 PIPELINE LOG ACTIVE
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- SELF TEST -->  <div class="panel"><div class="title">
+  🧪 SPD v13.1 SELF-TEST
+</div>
 
+<pre id="selfTest">
 
-  <!-- ============================================================
-       SELF-TEST
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧪 SPD v13.1 SELF-TEST
-    </div>
-
-    <pre id="selfTest">
 Self-test not executed.
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- SELF TEST INTERPRETATION -->  <div class="panel"><div class="title">
+  🔎 SELF-TEST INTERPRETATION
+</div>
 
+<pre id="selfTestInterpretation">
 
-  <!-- ============================================================
-       SELF-TEST INTERPRETATION
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔎 SELF-TEST INTERPRETATION
-    </div>
-
-    <pre id="selfTestInterpretation">
 Waiting for self-test execution...
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- FAULT IDENTIFICATION -->  <div class="panel"><div class="title">
+  ⚠️ FAULT IDENTIFICATION
+</div>
 
+<pre id="faultIdentification">
 
-  <!-- ============================================================
-       FAULT IDENTIFICATION
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚠️ FAULT IDENTIFICATION
-    </div>
-
-    <pre id="faultIdentification">
 No fault assessment available.
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- CORRECTIVE ACTION -->  <div class="panel"><div class="title">
+  🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
+</div>
 
+<pre id="correctiveAction">
 
-  <!-- ============================================================
-       CORRECTIVE ACTION
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
-    </div>
-
-    <pre id="correctiveAction">
 No corrective action available.
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- RE-TEST -->  <div class="panel"><div class="title">
+  🔁 RE-TEST VALIDATION
+</div>
 
+<pre id="retest">
 
-  <!-- ============================================================
-       RE-TEST
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔁 RE-TEST VALIDATION
-    </div>
-
-    <pre id="retest">
 Re-test not executed.
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- SYSTEM CONSTANTS -->  <div class="panel"><div class="title">
+  📐 SYSTEM CONSTANTS
+</div>
 
+<pre id="constants">
 
-  <!-- ============================================================
-       SYSTEM CONSTANTS
-  ============================================================ -->
-
-  <div class="panel">
-
-    <div class="title">
-      📐 SYSTEM CONSTANTS
-    </div>
-
-    <pre id="constants">
 Waiting...
-    </pre>
+</pre>
 
-  </div>
+  </div>  <!-- AGENT LOOP MONITOR -->  <div class="panel"><div class="title">
+  🔄 AGENT LOOP MONITOR
+</div>
 
+<div class="muted">
+  DATA → ALGORITHMS → COMPUTE
+</div>
 
-  <!-- ============================================================
-       AGENT LOOP MONITOR
-  ============================================================ -->
+<pre id="trace">
 
-  <div class="panel">
-
-    <div class="title">
-      🔄 AGENT LOOP MONITOR
-    </div>
-
-    <div class="muted">
-      DATA → ALGORITHMS → COMPUTE
-    </div>
-
-    <pre id="trace">
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-    </pre>
+</pre>
 
-  </div>
-
-
-  <!-- ============================================================
-       AUTHORITATIVE MODULE INTEGRATION
-  ============================================================ -->
-
-  <script type="module">
+  </div>  <!-- AUTHORITATIVE MODULE INTEGRATION -->  <script type="module">
 
     import {
       runGoldenRule,
@@ -928,11 +783,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
       inf: 10,
 
-      dc: 20,
-
-      event: "NORMAL",
-
-      mode: "AUTONOMOUS"
+      dc: 20
 
     };
 
@@ -1193,6 +1044,9 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         event:
           currentScenario,
 
+        mode:
+          "AUTONOMOUS",
+
         scenario:
           currentScenario,
 
@@ -1208,6 +1062,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       };
 
 
+      /* FX */
+
       if (
         currentScenario ===
         "FX_SHOCK"
@@ -1215,19 +1071,198 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         state.fx =
           Math.min(
-
             100,
-
             baseState.fx +
             (
               80 *
               intensityFactor
             )
-
           );
 
       }
 
+
+      /* FIN STRESS */
+
+      if (
+        currentScenario ===
+        "FIN_STRESS"
+      ) {
+
+        state.fx =
+          Math.min(
+            100,
+            baseState.fx +
+            (
+              60 *
+              intensityFactor
+            )
+          );
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              40 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      /* BANKING STRESS */
+
+      if (
+        currentScenario ===
+        "BANKING_STRESS"
+      ) {
+
+        state.fx =
+          Math.min(
+            100,
+            baseState.fx +
+            (
+              50 *
+              intensityFactor
+            )
+          );
+
+        state.dc =
+          Math.min(
+            100,
+            baseState.dc +
+            (
+              30 *
+              intensityFactor
+            )
+          );
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              50 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      /* LIQUIDITY CRISIS */
+
+      if (
+        currentScenario ===
+        "LIQUIDITY_CRISIS"
+      ) {
+
+        state.fx =
+          Math.min(
+            100,
+            baseState.fx +
+            (
+              40 *
+              intensityFactor
+            )
+          );
+
+        state.energy =
+          Math.max(
+            0,
+            baseState.energy -
+            (
+              50 *
+              intensityFactor
+            )
+          );
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              40 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      /* CREDIT STRESS */
+
+      if (
+        currentScenario ===
+        "CREDIT_STRESS"
+      ) {
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              60 *
+              intensityFactor
+            )
+          );
+
+        state.dc =
+          Math.min(
+            100,
+            baseState.dc +
+            (
+              40 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      /* SOVEREIGN DEBT */
+
+      if (
+        currentScenario ===
+        "SOVEREIGN_DEBT"
+      ) {
+
+        state.fx =
+          Math.min(
+            100,
+            baseState.fx +
+            (
+              70 *
+              intensityFactor
+            )
+          );
+
+        state.inf =
+          Math.min(
+            100,
+            baseState.inf +
+            (
+              60 *
+              intensityFactor
+            )
+          );
+
+        state.energy =
+          Math.max(
+            0,
+            baseState.energy -
+            (
+              30 *
+              intensityFactor
+            )
+          );
+
+      }
+
+
+      /* DC LOAD */
 
       if (
         currentScenario ===
@@ -1236,19 +1271,18 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         state.dc =
           Math.min(
-
             100,
-
             baseState.dc +
             (
               80 *
               intensityFactor
             )
-
           );
 
       }
 
+
+      /* CYBER */
 
       if (
         currentScenario ===
@@ -1257,19 +1291,18 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         state.cyb =
           Math.min(
-
             100,
-
             baseState.cyb +
             (
               80 *
               intensityFactor
             )
-
           );
 
       }
 
+
+      /* INFRASTRUCTURE */
 
       if (
         currentScenario ===
@@ -1278,19 +1311,18 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         state.inf =
           Math.min(
-
             100,
-
             baseState.inf +
             (
               80 *
               intensityFactor
             )
-
           );
 
       }
 
+
+      /* BIODIESEL */
 
       if (
         currentScenario ===
@@ -1299,15 +1331,12 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         state.energy =
           Math.max(
-
             0,
-
             baseState.energy -
             (
               80 *
               intensityFactor
             )
-
           );
 
       }
@@ -1434,25 +1463,6 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
     /* ============================================================
-       PIPELINE DISPLAY
-    ============================================================ */
-
-    function displayPipeline(
-      result
-    ) {
-
-      setText(
-
-        "pipeline",
-
-        result
-
-      );
-
-    }
-
-
-    /* ============================================================
        LIVE SYSTEM
     ============================================================ */
 
@@ -1462,11 +1472,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         try {
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: AUTONOMOUS ENGINE RUNNING..."
-
           );
 
 
@@ -1511,22 +1518,14 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "assessment",
-
             safeValue(
-
               result?.assessment,
-
               {
-
                 status:
                   "NO ASSESSMENT RETURNED"
-
               }
-
             )
-
           );
 
 
@@ -1536,11 +1535,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "riskPanel",
-
             {
-
               risk:
                 safeValue(
                   result?.assessment?.risk,
@@ -1558,41 +1554,26 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
                   result?.assessment?.goldenScore,
                   "N/A"
                 )
-
             }
-
           );
 
 
           setText(
-
             "decision",
-
             safeValue(
-
               result?.decision,
-
               "Decision generated by Golden Rule Engine."
-
             )
-
           );
 
 
           setText(
-
             "solutionOptions",
-
             result?.decision?.action ??
-
             result?.decision?.solution ??
-
             result?.solution ??
-
             result?.solutions ??
-
             "Solution options generated by authoritative engine."
-
           );
 
 
@@ -1602,21 +1583,13 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "actions",
-
             safeValue(
-
               result?.actionSequence ??
-
               result?.actions ??
-
               result?.action,
-
               "Action sequence generated by authoritative engine."
-
             )
-
           );
 
 
@@ -1626,11 +1599,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "memoryCore",
-
             {
-
               timestamp:
                 new Date().toISOString(),
 
@@ -1648,18 +1618,13 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
               status:
                 "MEMORY CORE UPDATED"
-
             }
-
           );
 
 
           setText(
-
             "audit",
-
             {
-
               system:
                 "SPD v13.1",
 
@@ -1680,64 +1645,44 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
               result:
                 result
-
             }
-
           );
 
 
           setText(
-
             "pipelineLog",
-
             "PIPELINE EXECUTED\n\n" +
-
             "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n\n" +
-
             "STATUS: " +
-
             safeValue(
               result?.status,
               "COMPLETE"
             )
-
           );
 
 
           setText(
-
             "constants",
-
             {
-
               PHI:
                 PHI,
 
               GOLDEN_RULE_STAGES:
                 GOLDEN_RULE_STAGES
-
             }
-
           );
 
 
           setText(
-
             "trace",
-
             "DATA → ALGORITHMS → COMPUTE\n" +
-
             "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
-
           );
 
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: AUTONOMOUS ENGINE ACTIVE"
-
           );
 
 
@@ -1745,17 +1690,13 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         }
 
-
         catch (
           error
         ) {
 
           console.error(
-
             "SPD v13.1 SYSTEM ERROR:",
-
             error
-
           );
 
 
@@ -1765,30 +1706,21 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: ENGINE ERROR"
-
           );
 
 
           setText(
-
             "pipelineLog",
-
             "SYSTEM ERROR:\n" +
             error.message
-
           );
 
 
           setText(
-
             "audit",
-
             {
-
               system:
                 "SPD v13.1",
 
@@ -1800,9 +1732,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
               timestamp:
                 new Date().toISOString()
-
             }
-
           );
 
 
@@ -1823,11 +1753,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         try {
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: AUTHORITATIVE SELF-TEST RUNNING..."
-
           );
 
 
@@ -1840,11 +1767,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "selfTest",
-
             result
-
           );
 
 
@@ -1854,15 +1778,10 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "selfTestInterpretation",
-
             passed
-
               ? "SELF-TEST PASSED.\n\nThe authoritative Golden Rule Engine passed all configured validation tests."
-
               : "SELF-TEST FAILED.\n\nOne or more authoritative engine validation tests failed."
-
           );
 
 
@@ -1870,19 +1789,15 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             Array.isArray(
               result?.results
             )
-
               ? result.results
-
               : [];
 
 
           const failedTests =
             testResults.filter(
-
               item =>
                 item?.status ===
                 "FAIL"
-
             );
 
 
@@ -1903,84 +1818,54 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "faultIdentification",
-
             faultReport
-
           );
 
 
           setText(
-
             "correctiveAction",
-
             passed
-
               ? "NO CORRECTIVE ACTION REQUIRED.\n\nSYSTEM VALIDATION PASSED."
-
               : "FAULTS DETECTED.\n\nRUN SELF-TEST + CORRECTIVE ACTION."
-
           );
 
 
           setText(
-
             "retest",
-
             "RE-TEST VALIDATION PENDING."
-
           );
 
 
           setText(
-
             "pipelineLog",
-
             "AUTHORITATIVE SELF-TEST EXECUTED\n\n" +
-
             "CORE ENGINE VALIDATION\n" +
-
             "↓\n" +
-
             "RESULT ANALYSIS\n" +
-
             "↓\n" +
-
             "FAULT IDENTIFICATION\n\n" +
-
             "STATUS: " +
-
             (
               passed
                 ? "PASS"
                 : "FAIL"
             )
-
           );
 
 
           setText(
-
             "trace",
-
             "DATA → ALGORITHMS → COMPUTE\n" +
-
             "SELF-TEST → RESULT ANALYSIS → FAULT IDENTIFICATION"
-
           );
 
 
           setText(
-
             "systemStatus",
-
             passed
-
               ? "SYSTEM STATUS: SELF-TEST PASSED"
-
               : "SYSTEM STATUS: SELF-TEST FAILED"
-
           );
 
 
@@ -1988,71 +1873,50 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         }
 
-
         catch (
           error
         ) {
 
           console.error(
-
             "SPD v13.1 SELF-TEST ERROR:",
-
             error
-
           );
 
 
           setText(
-
             "selfTest",
-
             "SELF-TEST ERROR:\n" +
             error.message
-
           );
 
 
           setText(
-
             "selfTestInterpretation",
-
             "AUTHORITATIVE SELF-TEST COULD NOT COMPLETE."
-
           );
 
 
           setText(
-
             "faultIdentification",
-
             {
-
               status:
                 "FAULT_DETECTED",
 
               error:
                 error.message
-
             }
-
           );
 
 
           setText(
-
             "correctiveAction",
-
             "SELF-TEST ENGINE ERROR.\n\nCORRECTIVE ACTION CANNOT BE DETERMINED UNTIL VALIDATION ENGINE IS RESTORED."
-
           );
 
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: SELF-TEST ERROR"
-
           );
 
 
@@ -2073,47 +1937,29 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
         try {
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: AUTONOMOUS VALIDATION LOOP RUNNING..."
-
           );
 
 
           setText(
-
             "pipelineLog",
-
             "AUTONOMOUS VALIDATION LOOP STARTED\n\n" +
-
             "SELF-TEST\n" +
-
             "↓\n" +
-
             "FAULT IDENTIFICATION\n" +
-
             "↓\n" +
-
             "CAPTAIN AI LENA CORRECTIVE ACTION\n" +
-
             "↓\n" +
-
             "RE-TEST VALIDATION"
-
           );
 
 
           setText(
-
             "trace",
-
             "DATA → ALGORITHMS → COMPUTE\n" +
-
             "SELF-TEST → FAULT IDENTIFICATION → " +
-
             "CORRECTIVE ACTION → RE-TEST"
-
           );
 
 
@@ -2125,29 +1971,15 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
             validation;
 
 
-          /* ======================================================
-             SELF-TEST RESULT
-          ====================================================== */
-
           setText(
-
             "selfTest",
-
             validation?.selfTest ??
-
             {
-
               status:
                 "NO SELF-TEST RESULT RETURNED"
-
             }
-
           );
 
-
-          /* ======================================================
-             SELF-TEST INTERPRETATION
-          ====================================================== */
 
           const selfTestPassed =
             validation?.selfTest?.overallStatus ===
@@ -2155,164 +1987,85 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
           setText(
-
             "selfTestInterpretation",
-
             selfTestPassed
-
               ? "SELF-TEST PASSED.\n\nAuthoritative Golden Rule Engine validation completed successfully."
-
               : "SELF-TEST FAILED.\n\nFault identification and corrective action sequence activated."
-
           );
 
 
-          /* ======================================================
-             FAULT IDENTIFICATION
-          ====================================================== */
-
           setText(
-
             "faultIdentification",
-
             validation?.faultIdentification ??
-
             {
-
               status:
                 "NO FAULT IDENTIFICATION RESULT RETURNED"
-
             }
-
           );
 
 
-          /* ======================================================
-             CAPTAIN AI LENA CORRECTIVE ACTION
-          ====================================================== */
-
           setText(
-
             "correctiveAction",
-
             validation?.correctiveAction ??
-
             {
-
               status:
                 "NO CORRECTIVE ACTION RESULT RETURNED"
-
             }
-
           );
 
-
-          /* ======================================================
-             RE-TEST VALIDATION
-          ====================================================== */
 
           setText(
-
             "retest",
-
             validation?.retest ??
-
             {
-
               status:
                 "NO RE-TEST RESULT RETURNED"
-
             }
-
           );
 
-
-          /* ======================================================
-             FINAL SYSTEM STATUS
-          ====================================================== */
 
           const finalStatus =
             safeValue(
-
               validation?.finalStatus,
-
               "VALIDATION FAILED"
-
             );
 
 
           setText(
-
             "systemStatus",
-
             finalStatus ===
             "VALIDATION COMPLETE"
-
               ? "SYSTEM STATUS: VALIDATION COMPLETE"
-
               : "SYSTEM STATUS: VALIDATION FAILED"
-
           );
 
 
-          /* ======================================================
-             PIPELINE LOG
-          ====================================================== */
-
           setText(
-
             "pipelineLog",
-
             "AUTONOMOUS VALIDATION LOOP EXECUTED\n\n" +
-
             "SELF-TEST\n" +
-
             "↓\n" +
-
             "FAULT IDENTIFICATION\n" +
-
             "↓\n" +
-
             "CAPTAIN AI LENA CORRECTIVE ACTION\n" +
-
             "↓\n" +
-
             "RE-TEST VALIDATION\n\n" +
-
             "FINAL STATUS: " +
-
             finalStatus
-
           );
 
 
-          /* ======================================================
-             AGENT TRACE
-          ====================================================== */
-
           setText(
-
             "trace",
-
             "DATA → ALGORITHMS → COMPUTE\n" +
-
             "SELF-TEST → FAULT IDENTIFICATION → " +
-
             "CORRECTIVE ACTION → RE-TEST"
-
           );
 
 
-          /* ======================================================
-             AUDIT RECORD
-          ====================================================== */
-
           setText(
-
             "audit",
-
             {
-
               system:
                 "SPD v13.1",
 
@@ -2327,9 +2080,7 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
               validation:
                 validation
-
             }
-
           );
 
 
@@ -2337,71 +2088,50 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
         }
 
-
         catch (
           error
         ) {
 
           console.error(
-
             "SPD v13.1 VALIDATION LOOP ERROR:",
-
             error
-
           );
 
 
           setText(
-
             "systemStatus",
-
             "SYSTEM STATUS: VALIDATION LOOP ERROR"
-
           );
 
 
           setText(
-
             "correctiveAction",
-
             {
-
               status:
                 "VALIDATION_LOOP_ERROR",
 
               error:
                 error.message
-
             }
-
           );
 
 
           setText(
-
             "retest",
-
             {
-
               status:
                 "RE-TEST COULD NOT EXECUTE",
 
               error:
                 error.message
-
             }
-
           );
 
 
           setText(
-
             "pipelineLog",
-
             "VALIDATION LOOP ERROR:\n\n" +
-
             error.message
-
           );
 
 
@@ -2421,28 +2151,20 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
       try {
 
         setText(
-
           "constants",
-
           {
-
             PHI:
               PHI,
 
             GOLDEN_RULE_STAGES:
               GOLDEN_RULE_STAGES
-
           }
-
         );
 
 
         setText(
-
           "scenarioPanel",
-
           {
-
             scenario:
               currentScenario,
 
@@ -2454,18 +2176,13 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
             status:
               "READY"
-
           }
-
         );
 
 
         setText(
-
           "systemStatus",
-
           "SYSTEM STATUS: READY"
-
         );
 
 
@@ -2473,37 +2190,26 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
       }
 
-
       catch (
         error
       ) {
 
         console.error(
-
           "SPD v13.1 INITIALIZATION ERROR:",
-
           error
-
         );
 
 
         setText(
-
           "systemStatus",
-
           "SYSTEM STATUS: INITIALIZATION ERROR"
-
         );
 
 
         setText(
-
           "pipelineLog",
-
           "INITIALIZATION ERROR:\n" +
-
           error.message
-
         );
 
       }
@@ -2521,11 +2227,8 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
     ) {
 
       document.addEventListener(
-
         "DOMContentLoaded",
-
         initializeSystem
-
       );
 
     }
@@ -2537,9 +2240,4 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
     }
 
 
-  </script>
-
-
-</body>
-
-</html>
+  </script></body></html>
