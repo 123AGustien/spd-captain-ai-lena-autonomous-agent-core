@@ -1,3 +1,173 @@
+
+🧭 ACTION RULE 1 — FX_SHOCK OPERATIONAL TEST
+
+Action Rule 1 is tested through the SPD v13.1 scenario engine using the FX_SHOCK scenario.
+
+The purpose of this test is to verify that the system can:
+
+1. Accept an FX stress scenario.
+2. Process the scenario through the deterministic Golden Rule Engine.
+3. Calculate system stress and resilience.
+4. Classify the resulting risk.
+5. Generate the appropriate Captain AI Lena decision.
+6. Produce the defined action sequence.
+7. Execute the autonomous validation loop.
+8. Complete re-test validation.
+9. Produce an audit-ready result.
+
+FX_SHOCK Test Procedure
+
+Step 1 — Select Scenario
+
+Select:
+
+"FX STRESS"
+
+The scenario engine should identify the event as:
+
+"FX_SHOCK"
+
+Step 2 — Set Scenario Intensity
+
+Set the scenario intensity to a controlled test level.
+
+Example:
+
+"INTENSITY: 50%"
+
+Step 3 — Run System
+
+Execute:
+
+"RUN SYSTEM"
+
+The Golden Rule Engine must execute:
+
+"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+
+Step 4 — Verify FX_SHOCK Assessment
+
+The system must produce:
+
+- Raw stress
+- Golden score
+- Resilience score
+- Risk classification
+- Captain AI Lena decision
+- Action sequence
+- Updated system state
+- Audit record
+
+Step 5 — Run Self-Test
+
+Execute:
+
+"RUN SELF-TEST"
+
+Expected validation:
+
+"SELF-TEST: PASS"
+
+Step 6 — Identify Faults
+
+The validation layer evaluates the self-test result.
+
+Expected result for a healthy baseline:
+
+"STATUS: NO_FAULTS"
+
+"FAULT COUNT: 0"
+
+Step 7 — Captain AI Lena Corrective Decision
+
+Captain AI Lena evaluates whether corrective action is required.
+
+Expected result when no fault is identified:
+
+"NO_CORRECTIVE_ACTION_REQUIRED"
+
+Step 8 — Re-Test Validation
+
+Execute the autonomous validation loop:
+
+"SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION ASSESSMENT → RE-TEST VALIDATION"
+
+Expected result:
+
+"RE-TEST: PASS"
+
+Step 9 — Final Validation
+
+The complete test is considered successful when:
+
+"INITIAL SELF-TEST: PASS"
+
+"FAULT IDENTIFICATION: NO_FAULTS"
+
+"CORRECTIVE ACTION: NOT REQUIRED"
+
+"RE-TEST: PASS"
+
+"FINAL STATUS: VALIDATION COMPLETE"
+
+Example FX_SHOCK Test Result
+
+Example controlled test:
+
+"SCENARIO: FX_SHOCK"
+
+"INTENSITY: 50%"
+
+"RAW STRESS: 41"
+
+"GOLDEN SCORE: 25.339393538745693"
+
+"RESILIENCE SCORE: 74.6606064612543"
+
+"RISK: LOW"
+
+"CAPTAIN AI LENA DECISION: ENERGY PROTECTION MODE"
+
+"ACTION: REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES"
+
+"SELF-TEST: 4/4 PASS"
+
+"FAULTS: 0"
+
+"CORRECTIVE ACTIONS: 0"
+
+"RE-TEST: 4/4 PASS"
+
+"FINAL STATUS: VALIDATION COMPLETE"
+
+Important Validation Note
+
+The FX_SHOCK scenario test and the Self-Test & Validation test suite are separate validation layers.
+
+The FX_SHOCK scenario verifies scenario behaviour and operational decision logic.
+
+The Self-Test & Validation Engine verifies the authoritative Golden Rule Engine's deterministic behaviour.
+
+Therefore, a complete FX_SHOCK validation should confirm both:
+
+"SCENARIO EXECUTION"
+↓
+"GOLDEN RULE DECISION"
+↓
+"ACTION RULE 1 RESPONSE"
+↓
+"SELF-TEST"
+↓
+"FAULT IDENTIFICATION"
+↓
+"CAPTAIN AI LENA DECISION"
+↓
+"RE-TEST"
+↓
+"VALIDATION COMPLETE"
+
+The backend implementation remains the authoritative source of truth for the actual Action Rule 1 definition and expected response.
+
 # FIN-001 — Foreign Exchange Stress
 
 ## Rule Information
