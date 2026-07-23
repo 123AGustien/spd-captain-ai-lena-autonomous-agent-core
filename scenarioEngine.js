@@ -1,152 +1,205 @@
-import { scenarios, energyIndex } from "./engine.js";
-
 /**
- * SPD v12 SCENARIO ENGINE v3 (ENGINE-ALIGNED FINAL)
- * Deterministic decision + cascade interpreter
+ * ============================================================
+ * SPD V13 — SCENARIO ENGINE
+ * ============================================================
+ *
+ * Deterministic scenario interpretation layer.
+ *
+ * DATA → SCENARIO → RESPONSE
+ *
+ * The scenario engine does not directly override the core
+ * safety hierarchy. It identifies the active scenario so that
+ * Captain AI Lena can evaluate the appropriate response.
+ *
+ * Supported scenarios:
+ * FX_SHOCK
+ * ENERGY_CRISIS
+ * CYBER_ATTACK
+ * INFRA_FAILURE
+ * NORMAL
+ * ============================================================
  */
 
-/* =============================
-   MAIN ENTRY
-============================= */
-export function buildDecisionPacket(state, activeType, risk) {
 
-  const scenario = scenarios?.[activeType];
-  const safe = safeSnapshot(state);
+/**
+ * ============================================================
+ * SCENARIO DEFINITIONS
+ * ============================================================
+ */
 
-  // =============================
-  // FALLBACK STATE
-  // =============================
-  if (!scenario) {
-    return basePacket("NO SCENARIO", "System idle or unknown event", risk, safe);
+export const scenarios = {
+
+  NORMAL: {
+    type: "NORMAL",
+    name: "NORMAL OPERATIONS",
+    description: "No active system stress scenario.",
+    impact: "System operating within normal parameters."
+  },
+
+  FX_SHOCK: {
+    type: "FX_SHOCK",
+    name: "FOREIGN EXCHANGE SHOCK",
+    description: "Rapid deterioration in foreign exchange stability.",
+    impact: "Economic pressure may propagate into connected systems."
+  },
+
+  ENERGY_CRISIS: {
+    type: "ENERGY_CRISIS",
+    name: "ENERGY CRISIS",
+    description: "Available energy reserves are under significant pressure.",
+    impact: "System load reduction and energy preservation may be required."
+  },
+
+  CYBER_ATTACK: {
+    type: "CYBER_ATTACK",
+    name: "CYBER ATTACK",
+    description: "Cybersecurity conditions indicate an active or simulated attack.",
+    impact: "System integrity and defensive controls require protection."
+  },
+
+  INFRA_FAILURE: {
+    type: "INFRA_FAILURE",
+    name: "INFRASTRUCTURE FAILURE",
+    description: "Critical infrastructure is experiencing operational stress.",
+    impact: "Recovery and stabilization measures may be required."
   }
 
-  // =============================
-  // CASCADE ENGINE
-  // =============================
-  const cascadePressure = computeCascadePressure(safe);
+};
 
-  const energyPressure =
-    typeof energyIndex === "function"
-      ? energyIndex(safe)
-      : 0;
 
-  const cascadeInterpretation =
-    Math.round((cascadePressure + energyPressure) / 10);
+/**
+ * ============================================================
+ * MAIN SCENARIO ENGINE
+ * ============================================================
+ *
+ * Converts an event identifier into a deterministic scenario
+ * object.
+ *
+ * Unknown events safely return NORMAL.
+ * ============================================================
+ */
 
-  // =============================
-  // DECISION ENGINE (CORE RULES)
-  // =============================
-  let decision = resolveBaseDecision(risk);
+export function scenarioEngine(event = "NORMAL") {
 
-  // =============================
-  // SCENARIO OVERRIDES (SAFE GUARDS)
-  // =============================
-  const type = scenario.type ?? "UNKNOWN";
+  const normalizedEvent = String(event)
+    .trim()
+    .toUpperCase();
 
-  if (type === "FX_SHOCK") {
-    decision = "FX STABILIZATION ACTIVE";
-  } else if (type === "ENERGY_CRISIS") {
-    decision = "ENERGY RESERVE MODE ACTIVE";
-  } else if (type === "CYBER_ATTACK") {
-    decision = "CYBER DEFENSE MODE ACTIVE";
-  } else if (type === "INFRA_FAILURE") {
-    decision = "INFRASTRUCTURE RECOVERY MODE";
-  }
-
-  // =============================
-  // OUTPUT PACKET
-  // =============================
-  return {
-    title: scenario.name ?? "UNKNOWN SCENARIO",
-    summary: scenario.description ?? "—",
-    impact: scenario.impact ?? "—",
-
-    decision,
-    riskSignal: risk,
-
-    cascadeInterpretation,
-    energyIndex: energyPressure,
-
-    systemSnapshot: safe
-  };
-}
-
-/* =============================
-   BASE DECISION LOGIC
-============================= */
-function resolveBaseDecision(risk) {
-
-  if (risk === "CRITICAL") return "FULL OVERRIDE";
-  if (risk === "HIGH") return "CRISIS CONTAINMENT";
-  if (risk === "MEDIUM") return "CONTROLLED BALANCE";
-
-  return "NORMAL OPERATIONS";
-}
-
-/* =============================
-   CASCADE ENGINE
-============================= */
-function computeCascadePressure(s) {
   return (
-    (s.fx * 1.2) +
-    (s.dc * 1.1) +
-    (s.cyb * 1.4) +
-    (s.inf * 1.3)
+    scenarios[normalizedEvent] ??
+    scenarios.NORMAL
   );
+
 }
 
-/* =============================
-   SAFE SNAPSHOT
-============================= */
-function safeSnapshot(state = {}) {
+
+/**
+ * ============================================================
+ * SCENARIO DECISION HELPER
+ * ============================================================
+ *
+ * Returns the recommended scenario response.
+ *
+ * Final safety priority remains with Captain AI Lena.
+ * ============================================================
+ */
+
+export function getScenarioResponse(scenario) {
+
+  const type =
+    typeof scenario === "string"
+      ? scenario
+      : scenario?.type;
+
+  switch (type) {
+
+    case "FX_SHOCK":
+      return "FX SHOCK RESPONSE ACTIVE";
+
+    case "ENERGY_CRISIS":
+      return "ENERGY RESERVE MODE ACTIVE";
+
+    case "CYBER_ATTACK":
+      return "CYBER DEFENSE MODE ACTIVE";
+
+    case "INFRA_FAILURE":
+      return "INFRASTRUCTURE RECOVERY MODE";
+
+    default:
+      return "NO SCENARIO RESPONSE REQUIRED";
+
+  }
+
+}
+
+
+/**
+ * ============================================================
+ * SAFE SCENARIO SNAPSHOT
+ * ============================================================
+ */
+
+export function safeScenarioSnapshot(state = {}) {
+
   return {
-    fx: state.fx ?? 0,
-    dc: state.dc ?? 0,
-    cyb: state.cyb ?? 0,
-    inf: state.inf ?? 0
+
+    fx: Number(state.fx ?? 0),
+
+    energy: Number(state.energy ?? 50),
+
+    cyb: Number(state.cyb ?? 50),
+
+    inf: Number(state.inf ?? 0),
+
+    dc: Number(state.dc ?? 0),
+
+    event: state.event ?? "NORMAL"
+
   };
+
 }
 
-/* =============================
-   FALLBACK PACKET
-============================= */
-function basePacket(title, summary, risk, snapshot) {
+
+/**
+ * ============================================================
+ * SCENARIO INFORMATION PACKET
+ * ============================================================
+ *
+ * Used by cockpit and audit layers.
+ * Does not alter core decision logic.
+ * ============================================================
+ */
+
+export function buildScenarioPacket(state = {}) {
+
+  const snapshot =
+    safeScenarioSnapshot(state);
+
+  const scenario =
+    scenarioEngine(snapshot.event);
+
   return {
-    title,
-    summary,
-    impact: "—",
 
-    decision: "STANDBY",
-    riskSignal: risk,
+    scenario: {
 
-    cascadeInterpretation: 0,
-    energyIndex: 0,
+      type: scenario.type,
 
-    systemSnapshot: snapshot
+      name: scenario.name,
+
+      description: scenario.description,
+
+      impact: scenario.impact
+
+    },
+
+    response:
+      getScenarioResponse(scenario),
+
+    systemSnapshot:
+      snapshot,
+
+    status: "SCENARIO EVALUATED"
+
   };
-}
 
-/* =============================
-   UI RENDER
-============================= */
-export function renderDecisionText(packet) {
-  return `
-▶ SPD DECISION PANEL v3
-
-SCENARIO: ${packet.title}
-SUMMARY: ${packet.summary}
-IMPACT: ${packet.impact}
-
-RISK: ${packet.riskSignal}
-DECISION: ${packet.decision}
-
-CASCADE INDEX: ${packet.cascadeInterpretation}
-ENERGY INDEX: ${packet.energyIndex}
-
-SYSTEM SNAPSHOT:
-FX=${packet.systemSnapshot.fx}
-DC=${packet.systemSnapshot.dc}
-CYB=${packet.systemSnapshot.cyb}
-INF=${packet.systemSnapshot.inf}
-  `;
 }
