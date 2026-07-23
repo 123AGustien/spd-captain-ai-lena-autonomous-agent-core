@@ -69,12 +69,12 @@ const FIN_RULES = {
     status: "ACTIVE"
   },
 
-  "FIN-005": {
+   "FIN-005": {
     id: "FIN-005",
-    name: "Financial Contagion",
+    name: "Inflation Shock",
     file: "./FIN-005.md",
-    scenario: "FINANCIAL_CONTAGION",
-    category: "Systemic Financial Resilience",
+    scenario: "INFLATION_SHOCK",
+    category: "Inflation Risk",
     status: "ACTIVE"
   }
 };
