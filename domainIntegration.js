@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * SPD V13 — DOMAIN INTEGRATION LAYER
+ * SPD V13.1 — DOMAIN INTEGRATION LAYER
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
@@ -14,9 +14,12 @@
  *          ↓
  * CAPTAIN AI LENA AGENT CORE
  *
- * Supported / Planned Domains:
+ * Active Domain:
  *
  * FIN  — Financial Resilience
+ *
+ * Planned Domains:
+ *
  * FX   — Foreign Exchange
  * DC   — Data Centre
  * CYB  — Cyber Resilience
@@ -37,57 +40,115 @@
 
 
 /* ============================================================
+   FIN DOMAIN RULE ENGINE
+   ============================================================
+ *
+ * Authoritative FIN domain rule engine.
+ *
+ * File:
+ * ./FIN/fin-rule-engine.js
+ *
+ * ============================================================
+ */
+
+import {
+  finRuleEngine
+} from "./FIN/fin-rule-engine.js";
+
+
+/* ============================================================
    DOMAIN REGISTRY
-   ============================================================ */
+   ============================================================
+ */
 
 const DOMAIN_REGISTRY = {
 
   FIN: {
-    name: "Financial Resilience",
-    status: "ACTIVE",
-    engine: "FIN_RULE_ENGINE"
+    name:
+      "Financial Resilience",
+
+    status:
+      "ACTIVE",
+
+    engine:
+      "FIN_RULE_ENGINE"
   },
 
   FX: {
-    name: "Foreign Exchange",
-    status: "PLANNED",
-    engine: "FX_RULE_ENGINE"
+    name:
+      "Foreign Exchange",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "FX_RULE_ENGINE"
   },
 
   DC: {
-    name: "Data Centre",
-    status: "PLANNED",
-    engine: "DC_RULE_ENGINE"
+    name:
+      "Data Centre",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "DC_RULE_ENGINE"
   },
 
   CYB: {
-    name: "Cyber Resilience",
-    status: "PLANNED",
-    engine: "CYB_RULE_ENGINE"
+    name:
+      "Cyber Resilience",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "CYB_RULE_ENGINE"
   },
 
   INF: {
-    name: "Infrastructure",
-    status: "PLANNED",
-    engine: "INF_RULE_ENGINE"
+    name:
+      "Infrastructure",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "INF_RULE_ENGINE"
   },
 
   ENG: {
-    name: "Energy",
-    status: "PLANNED",
-    engine: "ENG_RULE_ENGINE"
+    name:
+      "Energy",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "ENG_RULE_ENGINE"
   },
 
   OPS: {
-    name: "Operations",
-    status: "PLANNED",
-    engine: "OPS_RULE_ENGINE"
+    name:
+      "Operations",
+
+    status:
+      "PLANNED",
+
+    engine:
+      "OPS_RULE_ENGINE"
   },
 
   SC: {
-    name: "Scenario Control",
-    status: "ACTIVE",
-    engine: "SCENARIO_ENGINE"
+    name:
+      "Scenario Control",
+
+    status:
+      "ACTIVE",
+
+    engine:
+      "SCENARIO_ENGINE"
   }
 
 };
@@ -97,15 +158,21 @@ const DOMAIN_REGISTRY = {
    DOMAIN ENGINE REGISTRY
    ============================================================
  *
- * Engines are registered dynamically.
+ * FIN is registered directly to the authoritative
+ * FIN domain rule engine.
  *
- * This allows FIN to be connected first and other domains
- * to be added later without changing the integration layer.
+ * Future domains can be added here as their rule engines
+ * become available.
  *
  * ============================================================
  */
 
-const DOMAIN_ENGINES = {};
+const DOMAIN_ENGINES = {
+
+  FIN:
+    finRuleEngine
+
+};
 
 
 /* ============================================================
@@ -119,7 +186,9 @@ export function registerDomainEngine(
 ) {
 
   const normalizedDomain =
-    String(domain || "")
+    String(
+      domain || ""
+    )
       .trim()
       .toUpperCase();
 
@@ -148,7 +217,8 @@ export function registerDomainEngine(
 
   DOMAIN_ENGINES[
     normalizedDomain
-  ] = engine;
+  ] =
+    engine;
 
 
   return {
@@ -174,7 +244,9 @@ export function getDomainStatus(
 ) {
 
   const normalizedDomain =
-    String(domain || "")
+    String(
+      domain || ""
+    )
       .trim()
       .toUpperCase();
 
@@ -201,14 +273,20 @@ export function getDomainStatus(
       "UNKNOWN DOMAIN",
 
     configured:
-      Boolean(config),
+      Boolean(
+        config
+      ),
 
     engineRegistered:
-      Boolean(engine),
+      Boolean(
+        engine
+      ),
 
     status:
       engine
+
         ? "ACTIVE"
+
         : (
             config?.status ??
             "UNAVAILABLE"
@@ -232,9 +310,21 @@ export function getDomainStatus(
  *   "FIN",
  *
  *   {
- *     scenario: "BANKING_STRESS",
- *     intensity: 50,
- *     state: {...}
+ *     scenario:
+ *       "FIN_STRESS",
+ *
+ *     intensity:
+ *       50,
+ *
+ *     state:
+ *       {
+ *         fx: 12,
+ *         energy: 25,
+ *         cyb: 40,
+ *         inf: 10,
+ *         dc: 20
+ *       }
+ *
  *   }
  *
  * );
@@ -248,7 +338,9 @@ export function executeDomainRule(
 ) {
 
   const normalizedDomain =
-    String(domain || "")
+    String(
+      domain || ""
+    )
       .trim()
       .toUpperCase();
 
@@ -337,7 +429,8 @@ export function executeDomainRule(
       domainConfig.name,
 
     timestamp:
-      new Date().toISOString()
+      new Date()
+        .toISOString()
 
   };
 
@@ -405,7 +498,8 @@ export function executeDomainRule(
         "EXECUTED",
 
       timestamp:
-        new Date().toISOString()
+        new Date()
+          .toISOString()
 
     };
 
@@ -427,7 +521,10 @@ export function executeDomainRule(
         "DOMAIN_ENGINE_ERROR",
 
       error:
-        error.message,
+        error?.message ??
+        String(
+          error
+        ),
 
       decision:
         "NO DECISION — ENGINE ERROR",
@@ -436,7 +533,8 @@ export function executeDomainRule(
         "HOLD AND MONITOR",
 
       timestamp:
-        new Date().toISOString()
+        new Date()
+          .toISOString()
 
     };
 
@@ -448,34 +546,112 @@ export function executeDomainRule(
 /* ============================================================
    VERIFY DOMAIN INPUT
    ============================================================
+ *
+ * Normalizes scenario intensity and ensures the domain
+ * engine receives a deterministic state object.
+ *
+ * IMPORTANT:
+ *
+ * The intensity value is preserved and passed to the FIN
+ * rule engine.
+ *
+ * This prevents the cockpit intensity control from being
+ * silently replaced with zero.
+ *
+ * ============================================================
  */
 
 function verifyDomainInput(
   input
 ) {
 
+  const rawIntensity =
+    Number(
+      input?.intensity
+    );
+
+
+  const intensity =
+    Number.isFinite(
+      rawIntensity
+    )
+
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            rawIntensity
+          )
+        )
+
+      : 0;
+
+
+  const sourceState =
+    input?.state ??
+    input;
+
+
   return {
 
     ...input,
 
     intensity:
-      Number.isFinite(
+
+      intensity,
+
+    intensityFactor:
+
+      intensity / 100,
+
+    scenario:
+
+      input?.scenario ??
+      input?.event ??
+      "FIN_STRESS",
+
+    event:
+
+      input?.event ??
+      input?.scenario ??
+      "FIN_STRESS",
+
+    state: {
+
+      fx:
         Number(
-          input?.intensity
+          sourceState?.fx ??
+          0
+        ),
+
+      energy:
+        Number(
+          sourceState?.energy ??
+          50
+        ),
+
+      cyb:
+        Number(
+          sourceState?.cyb ??
+          0
+        ),
+
+      inf:
+        Number(
+          sourceState?.inf ??
+          0
+        ),
+
+      dc:
+        Number(
+          sourceState?.dc ??
+          0
         )
-      )
 
-        ? Number(
-            input.intensity
-          )
-
-        : 0,
-
-    state:
-      input?.state ??
-      {},
+    },
 
     mode:
+
       input?.mode ??
       "AUTONOMOUS"
 
@@ -496,6 +672,7 @@ export function getAllDomainStatus() {
   ).map(
 
     domain =>
+
       getDomainStatus(
         domain
       )
@@ -534,10 +711,32 @@ export const DOMAIN_IDS = [
 export const DOMAIN_INTEGRATION_STATUS = {
 
   engine:
-    "SPD V13 DOMAIN INTEGRATION LAYER",
+    "SPD V13.1 DOMAIN INTEGRATION LAYER",
 
   architecture:
-    "DOMAIN RULE ENGINES → CAPTAIN AI LENA",
+    "COCKPIT → DOMAIN INTEGRATION → DOMAIN RULE ENGINE → CAPTAIN AI LENA",
+
+  activeDomains: [
+
+    "FIN"
+
+  ],
+
+  plannedDomains: [
+
+    "FX",
+
+    "DC",
+
+    "CYB",
+
+    "INF",
+
+    "ENG",
+
+    "OPS"
+
+  ],
 
   pipeline: [
 
@@ -584,6 +783,8 @@ export default {
 
   DOMAIN_IDS,
 
-  DOMAIN_REGISTRY
+  DOMAIN_REGISTRY,
+
+  DOMAIN_INTEGRATION_STATUS
 
 };
