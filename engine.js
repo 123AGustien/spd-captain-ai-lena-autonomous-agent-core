@@ -1,46 +1,108 @@
 import { captainAILena } from "./captainAILena.js";
 import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
-export function runEngine(state) {
-  
-  // =========================
-  // SAFE NORMALIZATION LAYER
-  // (Does NOT modify rules or decision logic)
-  // =========================
+/**
+ * ============================================================
+ * SPD V13 — CORE EXECUTION ENGINE
+ * ============================================================
+ *
+ * DATA → ALGORITHMS → COMPUTE
+ *
+ * Execution flow:
+ *
+ * CLIENT / SYSTEM INPUT
+ *        ↓
+ * CAPTAIN AI LENA
+ *        ↓
+ * OBSERVE
+ *        ↓
+ * VERIFY
+ *        ↓
+ * ASSESS
+ *        ↓
+ * DECIDE
+ *        ↓
+ * ACT
+ *        ↓
+ * UPDATE
+ *
+ * IMPORTANT:
+ *
+ * The original system state is authoritative.
+ *
+ * This execution wrapper does NOT modify:
+ * - FX
+ * - ENERGY
+ * - CYBER
+ * - INFRASTRUCTURE
+ * - DATA CENTRE
+ *
+ * The Golden Ratio is retained as an execution constant
+ * and audit reference only.
+ *
+ * ============================================================
+ */
 
-  const normalizedState = {
-    ...state,
-    energy: state.energy / GOLDEN_RATIO,
-    fx: state.fx / GOLDEN_RATIO
+export function runEngine(state = {}) {
+
+  // ==========================================================
+  // 1. PRESERVE ORIGINAL INPUT
+  // ==========================================================
+
+  const input = {
+    ...state
   };
 
-  // =========================
-  // CORE EXECUTION ENGINE
-  // =========================
+  // ==========================================================
+  // 2. CORE AUTONOMOUS AGENT EXECUTION
+  // ==========================================================
+  //
+  // Captain AI Lena receives the authoritative system state.
+  // No hidden transformation is applied before execution.
+  //
 
-  const result = captainAILena(normalizedState);
+  const result =
+    captainAILena(input);
 
-  // =========================
-  // RESPONSE WRAPPER LAYER
-  // =========================
+  // ==========================================================
+  // 3. EXECUTION METADATA
+  // ==========================================================
 
   return {
-    timestamp: new Date().toISOString(),
 
-    // original input (unchanged for audit)
-    input: state,
+    timestamp:
+      new Date().toISOString(),
 
-    // transformed input (for transparency/debugging)
-    normalizedInput: normalizedState,
+    engine:
+      "SPD V13 DETERMINISTIC AUTONOMOUS AGENT CORE",
 
-    // system output
-    output: result,
+    input,
 
-    // execution metadata
+    output:
+      result,
+
     constants: {
+
       GOLDEN_RATIO
+
     },
 
-    status: "EXECUTED"
+    execution: {
+
+      data:
+        "AUTHORITATIVE INPUT PRESERVED",
+
+      algorithms:
+        "CAPTAIN AI LENA DETERMINISTIC RULE ENGINE",
+
+      compute:
+        "CORE EXECUTION COMPLETED"
+
+    },
+
+    status:
+      "EXECUTED"
+
   };
+
 }
