@@ -1,4 +1,245 @@
 
+🛰️ SPD v13.1 — Future Scenario Implementation Procedure
+
+Standard Scenario Integration Workflow
+
+All new scenarios and domain rule systems must follow the standardized SPD v13.1 integration procedure.
+
+The purpose of this procedure is to ensure that every new scenario is not only visible in the cockpit, but is also correctly connected to the authoritative Captain AI Lena decision architecture and validated through the full autonomous validation loop.
+
+Implementation Sequence
+
+1. ADD SCENARIO BUTTON
+        ↓
+2. CONNECT TO DOMAIN INTEGRATION LAYER
+        ↓
+3. CONNECT DOMAIN RULE ENGINE / RULE REGISTRY
+        ↓
+4. PASS SCENARIO STATE + INTENSITY
+        ↓
+5. CAPTAIN AI LENA DECISION PIPELINE
+        ↓
+6. VERIFY GOLDEN RULE EXECUTION
+        ↓
+7. VERIFY DECISION + ACTION
+        ↓
+8. VERIFY MEMORY CORE + AUDIT RECORD
+        ↓
+9. RUN SELF-TEST
+        ↓
+10. RUN SELF-TEST + CORRECTIVE ACTION
+        ↓
+11. CONFIRM FINAL VALIDATION STATUS
+
+Step 1 — Add the Scenario Button
+
+Add the new scenario button to the SPD v13.1 cockpit interface.
+
+The button must:
+
+- Be visible in the correct domain section.
+- Have a unique scenario identifier.
+- Pass the correct scenario ID when activated.
+- Respect the global scenario intensity control.
+- Display the active scenario in the Scenario Panel.
+
+Step 2 — Connect to "domainIntegration.js"
+
+Route the scenario through the generic domain integration layer.
+
+The integration layer acts as the gateway between the cockpit and the appropriate domain rule engine.
+
+COCKPIT SCENARIO BUTTON
+        ↓
+domainIntegration.js
+        ↓
+DOMAIN RULE ENGINE
+
+This architecture allows future domains to be added without rebuilding the Captain AI Lena core.
+
+Step 3 — Connect the Domain Rule Engine
+
+Connect the scenario to its authoritative rule engine and rule registry.
+
+Example domains include:
+
+FIN — Financial Resilience
+FX  — Foreign Exchange
+DC  — Data Centre
+CYB — Cyber Resilience
+INF — Infrastructure
+ENG — Energy
+OPS — Operations
+SC  — Scenario Control
+
+The appropriate domain rules must be loaded and executed deterministically.
+
+Step 4 — Pass Scenario State and Intensity
+
+The scenario must pass its operational state and selected intensity into the domain rule engine.
+
+Required information should include, where applicable:
+
+domain
+scenario
+intensity
+intensityFactor
+system state
+operating mode
+timestamp
+
+Step 5 — Captain AI Lena Decision Pipeline
+
+The domain result must integrate with the authoritative Captain AI Lena decision architecture.
+
+The required Golden Rule pipeline is:
+
+OBSERVE
+   ↓
+VERIFY
+   ↓
+ASSESS
+   ↓
+DECIDE
+   ↓
+ACT
+   ↓
+UPDATE
+
+Step 6 — Verify Golden Rule Execution
+
+Confirm that the scenario executes through the complete pipeline.
+
+The system must correctly produce:
+
+- Observed state
+- Verified state
+- Assessment
+- Risk classification
+- Resilience score
+- Captain AI Lena decision
+- Action sequence
+- Updated state
+
+Step 7 — Verify Decision and Action
+
+Confirm that the scenario produces an appropriate deterministic decision and operational action.
+
+The result must be visible in:
+
+⚙️ CAPTAIN AI LENA DECISION
+🚨 ACTION SEQUENCE PROMPT
+
+Step 8 — Verify Memory Core and Audit Record
+
+Confirm that the scenario execution is recorded in:
+
+🧠 MEMORY CORE
+🧾 SPD v13.1 AUDIT RECORD
+📜 PIPELINE LOG
+
+The audit record should identify the scenario, intensity, domain, engine result, decision, action, timestamp, and final status.
+
+Step 9 — Run Self-Test
+
+Execute:
+
+🧪 RUN SELF-TEST
+
+Verify that:
+
+- All configured validation tests pass.
+- No unexpected faults are detected.
+- Risk classification is correct.
+- Decision logic is correct.
+- Golden Rule pipeline is intact.
+
+Step 10 — Run Self-Test + Corrective Action
+
+Execute:
+
+🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+
+Verify the complete autonomous validation loop:
+
+SELF-TEST
+   ↓
+FAULT IDENTIFICATION
+   ↓
+CAPTAIN AI LENA CORRECTIVE ACTION
+   ↓
+RE-TEST VALIDATION
+   ↓
+RECOVERY VERIFICATION
+
+Step 11 — Confirm Final Validation Status
+
+The implementation is considered validated only after:
+
+BUTTON VISIBILITY          → PASS
+SCENARIO EXECUTION         → PASS
+DOMAIN RULE INTEGRATION    → PASS
+GOLDEN RULE PIPELINE       → PASS
+DECISION OUTPUT            → PASS
+ACTION OUTPUT              → PASS
+MEMORY CORE                → PASS
+AUDIT RECORD               → PASS
+SELF-TEST                  → PASS
+RE-TEST VALIDATION         → PASS
+
+Standard Rule
+
+«A scenario is not considered implemented merely because its button appears in the cockpit.»
+
+The scenario must be tested in two stages:
+
+Stage 1 — Interface Validation
+
+Button Visible
+        ↓
+Scenario Selectable
+        ↓
+Scenario Panel Updates
+
+Stage 2 — Functional Validation
+
+Scenario Activated
+        ↓
+Domain Rule Engine Executes
+        ↓
+Captain AI Lena Assesses
+        ↓
+Decision Generated
+        ↓
+Action Generated
+        ↓
+Memory Updated
+        ↓
+Audit Recorded
+        ↓
+Self-Test Validated
+
+Future Scenario Architecture
+
+All future scenario implementations should follow the same architecture:
+
+SPD v13.1 COCKPIT
+        ↓
+SCENARIO / DOMAIN BUTTON
+        ↓
+domainIntegration.js
+        ↓
+DOMAIN RULE ENGINE
+        ↓
+CAPTAIN AI LENA AUTONOMOUS AGENT CORE
+        ↓
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+        ↓
+DECISION + ACTION + MEMORY + AUDIT
+        ↓
+SELF-TEST + CORRECTIVE ACTION + RE-TEST
+
+This procedure establishes the standard implementation and validation method for all future SPD v13.1 scenario and domain integrations.
 🧭 ACTION RULE 1 — FX_SHOCK OPERATIONAL TEST
 
 Action Rule 1 is tested through the SPD v13.1 scenario engine using the FX_SHOCK scenario.
