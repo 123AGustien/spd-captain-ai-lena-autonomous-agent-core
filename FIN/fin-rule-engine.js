@@ -25,7 +25,13 @@
  *       ↓
  * FIN ASSESSMENT
  *       ↓
- * CAPTAIN AI LENA DECISION CORE
+ * AUTHORITATIVE CORE ENGINE
+ *       ↓
+ * CAPTAIN AI LENA DECISION
+ *       ↓
+ * ACTION
+ *       ↓
+ * UPDATE / RE-TEST
  *
  * Supported scenarios:
  *
@@ -39,9 +45,13 @@
  * No machine learning.
  * No randomness.
  *
- * The FIN engine does not replace the Captain AI Lena
- * decision core. It provides domain-specific assessment
- * and recommendations to the authoritative decision layer.
+ * IMPORTANT:
+ *
+ * The FIN engine provides domain-specific assessment,
+ * decision recommendation, and action guidance.
+ *
+ * It does NOT replace the authoritative Captain AI Lena
+ * decision core located in the SPD v13.1 core engine.
  *
  * ============================================================
  */
@@ -214,17 +224,12 @@ export function finRuleEngine(
  * INPUT NORMALIZATION
  * ============================================================
  *
- * IMPORTANT:
- *
- * domainIntegration.js passes the system state through:
- *
- * input.state
- *
- * Therefore this function supports both:
+ * Supports:
  *
  * 1. Nested state:
  *
  * {
+ *   scenario: "FIN_STRESS",
  *   intensity: 40,
  *   state: {
  *     fx: 12,
@@ -238,6 +243,7 @@ export function finRuleEngine(
  * 2. Direct state:
  *
  * {
+ *   scenario: "FIN_STRESS",
  *   intensity: 40,
  *   fx: 12,
  *   energy: 25,
@@ -246,7 +252,10 @@ export function finRuleEngine(
  *   dc: 20
  * }
  *
- * This ensures compatibility with the domain integration layer
+ * This ensures compatibility with:
+ *
+ * domainIntegration.js
+ *
  * and direct FIN engine testing.
  *
  * ============================================================
@@ -268,11 +277,10 @@ function normalizeFINState(
 
 
   /*
-   * Prefer the state object supplied by
+   * Prefer the nested state object supplied by
    * domainIntegration.js.
    *
-   * Fall back to input itself for direct
-   * FIN engine execution.
+   * Fall back to input itself for direct execution.
    */
 
   const sourceState =
@@ -414,11 +422,8 @@ function normalizeScenario(
  * FINANCIAL RISK ASSESSMENT
  * ============================================================
  *
- * Financial domain stress is calculated independently from
- * the core engine.
- *
- * The result is returned to Captain AI Lena for final
- * deterministic decision processing.
+ * Financial domain stress is calculated independently
+ * from the authoritative core engine.
  *
  * Intensity is applied to the domain-specific base stress.
  *
@@ -449,6 +454,12 @@ function assessFinancialRisk(
     scenario.id
   ) {
 
+
+    /**
+     * ========================================================
+     * BANKING STRESS
+     * ========================================================
+     */
 
     case "BANKING_STRESS":
 
@@ -486,6 +497,12 @@ function assessFinancialRisk(
       break;
 
 
+    /**
+     * ========================================================
+     * LIQUIDITY CRISIS
+     * ========================================================
+     */
+
     case "LIQUIDITY_CRISIS":
 
       baseStress =
@@ -521,6 +538,12 @@ function assessFinancialRisk(
 
       break;
 
+
+    /**
+     * ========================================================
+     * CREDIT STRESS
+     * ========================================================
+     */
 
     case "CREDIT_STRESS":
 
@@ -558,6 +581,12 @@ function assessFinancialRisk(
       break;
 
 
+    /**
+     * ========================================================
+     * SOVEREIGN DEBT
+     * ========================================================
+     */
+
     case "SOVEREIGN_DEBT":
 
       baseStress =
@@ -593,6 +622,12 @@ function assessFinancialRisk(
 
       break;
 
+
+    /**
+     * ========================================================
+     * GENERAL FINANCIAL STRESS
+     * ========================================================
+     */
 
     case "FIN_STRESS":
 
@@ -650,7 +685,10 @@ function assessFinancialRisk(
   const financialStress =
     Math.min(
       100,
-      intensityAdjustedStress
+      Math.max(
+        0,
+        intensityAdjustedStress
+      )
     );
 
 
@@ -667,7 +705,7 @@ function assessFinancialRisk(
 
 
   /*
-   * Classify risk.
+   * Classify financial risk.
    */
 
   const risk =
@@ -740,7 +778,7 @@ function classifyFINRisk(
  * FIN DECISION LAYER
  * ============================================================
  *
- * This provides a domain recommendation.
+ * This provides a domain-level recommendation.
  *
  * Captain AI Lena remains the authoritative final
  * decision authority.
@@ -762,7 +800,7 @@ function determineFINDecision(
       return {
 
         mode:
-          "FINANCIAL STABILIZATION",
+          "FINANCIAL_STABILIZATION",
 
         decision:
           "ACTIVATE FINANCIAL STABILIZATION MODE"
@@ -775,7 +813,7 @@ function determineFINDecision(
       return {
 
         mode:
-          "FINANCIAL PREVENTION",
+          "FINANCIAL_PREVENTION",
 
         decision:
           "ACTIVATE PREVENTIVE FINANCIAL RESILIENCE MODE"
@@ -790,7 +828,7 @@ function determineFINDecision(
       return {
 
         mode:
-          "FINANCIAL MONITORING",
+          "FINANCIAL_MONITORING",
 
         decision:
           "CONTINUE FINANCIAL RESILIENCE MONITORING"
@@ -806,6 +844,11 @@ function determineFINDecision(
  * ============================================================
  * FIN ACTION LAYER
  * ============================================================
+ *
+ * Converts the domain recommendation into an operational
+ * action sequence.
+ *
+ * ============================================================
  */
 
 function determineFINAction(
@@ -817,7 +860,13 @@ function determineFINAction(
   ) {
 
 
-    case "FINANCIAL STABILIZATION":
+    /**
+     * ========================================================
+     * FINANCIAL STABILIZATION
+     * ========================================================
+     */
+
+    case "FINANCIAL_STABILIZATION":
 
       return {
 
@@ -842,30 +891,11 @@ function determineFINAction(
       };
 
 
-    case "FINANCIAL_PREVENTION":
-
-      return {
-
-        command:
-          "ACTIVATE PREVENTIVE FINANCIAL RESILIENCE",
-
-        actions: [
-
-          "CONFIRM FINANCIAL SYSTEM STATE",
-
-          "MONITOR BANKING AND CREDIT CONDITIONS",
-
-          "STRENGTHEN LIQUIDITY RESERVES",
-
-          "MONITOR SYSTEM RESPONSE"
-
-        ],
-
-        status:
-          "ACTIVE"
-
-      };
-
+    /**
+     * ========================================================
+     * FINANCIAL PREVENTION
+     * ========================================================
+     */
 
     case "FINANCIAL_PREVENTION":
 
@@ -892,7 +922,13 @@ function determineFINAction(
       };
 
 
-    case "FINANCIAL MONITORING":
+    /**
+     * ========================================================
+     * FINANCIAL MONITORING
+     * ========================================================
+     */
+
+    case "FINANCIAL_MONITORING":
 
     default:
 
