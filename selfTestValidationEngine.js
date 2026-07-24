@@ -1,45 +1,44 @@
 /**
-
-* ============================================================
-* SPD v13.1 — SEXTANT SELF-TEST & VALIDATION ENGINE
-* ============================================================
-* 
-* Captain AI Lena Autonomous Agent Core
-* 
-* CLOSED-LOOP VALIDATION PIPELINE:
-* 
-* SELF-TEST
-* ↓
-* FAULT IDENTIFICATION
-* ↓
-* CAPTAIN AI LENA DECISION
-* ↓
-* APPLY CORRECTIVE ACTION
-* ↓
-* RE-TEST VALIDATION
-* ↓
-* VERIFY RECOVERY
-* ↓
-* VALIDATION COMPLETE / VALIDATION FAILED
-* 
-* IMPORTANT:
-* 
-* This module does NOT replace the Golden Rule Engine.
-* 
-* The Golden Rule Engine remains authoritative.
-* 
-* Corrective action is limited to the validation layer.
-* The authoritative engine is never modified by this module.
-* 
-* The re-test is used to confirm whether the corrective action
-* actually resolved the validation fault.
-* 
-* ============================================================
-  */
+ * ============================================================
+ * SPD v13.1 — SEXTANT SELF-TEST & VALIDATION ENGINE
+ * ============================================================
+ *
+ * Captain AI Lena Autonomous Agent Core
+ *
+ * CLOSED-LOOP VALIDATION PIPELINE:
+ *
+ * SELF-TEST
+ * ↓
+ * FAULT IDENTIFICATION
+ * ↓
+ * CAPTAIN AI LENA DECISION
+ * ↓
+ * APPLY CORRECTIVE ACTION
+ * ↓
+ * RE-TEST VALIDATION
+ * ↓
+ * VERIFY RECOVERY / PARAMETER VERIFICATION
+ * ↓
+ * VALIDATION COMPLETE / VALIDATION FAILED
+ *
+ * IMPORTANT:
+ *
+ * This module does NOT replace the Golden Rule Engine.
+ *
+ * The Golden Rule Engine remains authoritative.
+ *
+ * Corrective action is limited to the validation layer.
+ * The authoritative engine is never modified by this module.
+ *
+ * The re-test is used to confirm whether the validation
+ * process remains within defined operational parameters.
+ *
+ * ============================================================
+ */
 
 import {
-runGoldenRule,
-GOLDEN_RULE_STAGES
+  runGoldenRule,
+  GOLDEN_RULE_STAGES
 } from "./goldenRuleEngine.js";
 
 // ============================================================
@@ -48,11 +47,24 @@ GOLDEN_RULE_STAGES
 
 let validationState = {
 
-correctiveActionApplied: false,
+  correctiveActionApplied: false,
 
-correctiveActions: [],
+  correctiveActions: [],
 
-recoveryVerified: false
+  recoveryVerified: false,
+
+  parameterVerification: {
+
+    status:
+      "NOT_VERIFIED",
+
+    recoveryVerified:
+      false,
+
+    validationParametersWithinLimits:
+      false
+
+  }
 
 };
 
@@ -62,93 +74,93 @@ recoveryVerified: false
 
 export const SELF_TEST_CASES = [
 
-{
-name:
-"LOW RISK — NORMAL STABILITY",
+  {
+    name:
+      "LOW RISK — NORMAL STABILITY",
 
-state: {
-  fx: 0,
-  energy: 80,
-  cyb: 10,
-  inf: 5,
-  dc: 5,
-  event: "NORMAL",
-  mode: "AUTONOMOUS"
-},
+    state: {
+      fx: 0,
+      energy: 80,
+      cyb: 10,
+      inf: 5,
+      dc: 5,
+      event: "NORMAL",
+      mode: "AUTONOMOUS"
+    },
 
-expectedRisk:
-  "LOW",
+    expectedRisk:
+      "LOW",
 
-expectedDecision:
-  "SYSTEM STABLE"
+    expectedDecision:
+      "SYSTEM STABLE"
 
-},
+  },
 
-{
-name:
-"MEDIUM RISK — PREVENTIVE RESILIENCE",
+  {
+    name:
+      "MEDIUM RISK — PREVENTIVE RESILIENCE",
 
-state: {
-  fx: 50,
-  energy: 50,
-  cyb: 50,
-  inf: 50,
-  dc: 50,
-  event: "MEDIUM_STRESS",
-  mode: "AUTONOMOUS"
-},
+    state: {
+      fx: 50,
+      energy: 50,
+      cyb: 50,
+      inf: 50,
+      dc: 50,
+      event: "MEDIUM_STRESS",
+      mode: "AUTONOMOUS"
+    },
 
-expectedRisk:
-  "MEDIUM",
+    expectedRisk:
+      "MEDIUM",
 
-expectedDecision:
-  "PREVENTIVE RESILIENCE MODE"
+    expectedDecision:
+      "PREVENTIVE RESILIENCE MODE"
 
-},
+  },
 
-{
-name:
-"HIGH RISK — STABILIZATION",
+  {
+    name:
+      "HIGH RISK — STABILIZATION",
 
-state: {
-  fx: 80,
-  energy: 0,
-  cyb: 100,
-  inf: 100,
-  dc: 100,
-  event: "HIGH_STRESS",
-  mode: "AUTONOMOUS"
-},
+    state: {
+      fx: 80,
+      energy: 0,
+      cyb: 100,
+      inf: 100,
+      dc: 100,
+      event: "HIGH_STRESS",
+      mode: "AUTONOMOUS"
+    },
 
-expectedRisk:
-  "HIGH",
+    expectedRisk:
+      "HIGH",
 
-expectedDecision:
-  "ACTIVATE STABILIZATION MODE"
+    expectedDecision:
+      "ACTIVATE STABILIZATION MODE"
 
-},
+  },
 
-{
-name:
-"MAXIMUM CURRENT RISK — ENGINE LIMIT",
+  {
+    name:
+      "MAXIMUM CURRENT RISK — ENGINE LIMIT",
 
-state: {
-  fx: 100,
-  energy: 0,
-  cyb: 100,
-  inf: 100,
-  dc: 100,
-  event: "CRITICAL_EVENT",
-  mode: "AUTONOMOUS"
-},
+    state: {
+      fx: 100,
+      energy: 0,
+      cyb: 100,
+      inf: 100,
+      dc: 100,
+      event: "CRITICAL_EVENT",
+      mode: "AUTONOMOUS"
+    },
 
-expectedRisk:
-  "HIGH",
+    expectedRisk:
+      "HIGH",
 
-expectedDecision:
-  "ACTIVATE STABILIZATION MODE"
+    expectedDecision:
+      "ACTIVATE STABILIZATION MODE"
 
-}
+  }
 
 ];
 
@@ -158,180 +170,201 @@ expectedDecision:
 
 export function runSelfTest() {
 
-const results = [];
+  const results = [];
 
-SELF_TEST_CASES.forEach(test => {
+  SELF_TEST_CASES.forEach(
+    test => {
 
-try {
+      try {
 
-  const result =
-    runGoldenRule(
-      test.state
-    );
+        const result =
+          runGoldenRule(
+            test.state
+          );
 
-  // ------------------------------------------------------
-  // RISK VALIDATION
-  // ------------------------------------------------------
+        // ------------------------------------------------------
+        // RISK VALIDATION
+        // ------------------------------------------------------
 
-  const riskPassed =
-    result?.assessment?.risk ===
-    test.expectedRisk;
+        const riskPassed =
+          result?.assessment?.risk ===
+          test.expectedRisk;
 
-  // ------------------------------------------------------
-  // DECISION VALIDATION
-  // ------------------------------------------------------
+        // ------------------------------------------------------
+        // DECISION VALIDATION
+        // ------------------------------------------------------
 
-  const decisionPassed =
-    result?.decision?.decision ===
-    test.expectedDecision;
+        const decisionPassed =
+          result?.decision?.decision ===
+          test.expectedDecision;
 
-  // ------------------------------------------------------
-  // GOLDEN RULE PIPELINE VALIDATION
-  // ------------------------------------------------------
+        // ------------------------------------------------------
+        // GOLDEN RULE PIPELINE VALIDATION
+        // ------------------------------------------------------
 
-  const pipelinePassed =
-    JSON.stringify(
-      result?.pipeline
-    ) ===
-    JSON.stringify(
-      GOLDEN_RULE_STAGES
-    );
+        const pipelinePassed =
+          JSON.stringify(
+            result?.pipeline
+          ) ===
+          JSON.stringify(
+            GOLDEN_RULE_STAGES
+          );
 
-  // ------------------------------------------------------
-  // TEST STATUS
-  // ------------------------------------------------------
+        // ------------------------------------------------------
+        // TEST STATUS
+        // ------------------------------------------------------
 
-  const status =
-    riskPassed &&
-    decisionPassed &&
-    pipelinePassed
-      ? "PASS"
-      : "FAIL";
+        const status =
 
-  // ------------------------------------------------------
-  // STORE TEST RESULT
-  // ------------------------------------------------------
+          riskPassed &&
+          decisionPassed &&
+          pipelinePassed
 
-  results.push({
+            ? "PASS"
 
-    test:
-      test.name,
+            : "FAIL";
 
-    status,
+        // ------------------------------------------------------
+        // STORE TEST RESULT
+        // ------------------------------------------------------
 
-    expected: {
+        results.push({
 
-      risk:
-        test.expectedRisk,
+          test:
+            test.name,
 
-      decision:
-        test.expectedDecision,
+          status,
 
-      pipeline:
-        GOLDEN_RULE_STAGES
+          expected: {
 
-    },
+            risk:
+              test.expectedRisk,
 
-    actual: {
+            decision:
+              test.expectedDecision,
 
-      risk:
-        result?.assessment?.risk ??
-        "UNAVAILABLE",
+            pipeline:
+              GOLDEN_RULE_STAGES
 
-      decision:
-        result?.decision?.decision ??
-        "UNAVAILABLE",
+          },
 
-      pipeline:
-        result?.pipeline ??
-        []
+          actual: {
 
-    },
+            risk:
+              result?.assessment?.risk ??
+              "UNAVAILABLE",
 
-    checks: {
+            decision:
+              result?.decision?.decision ??
+              "UNAVAILABLE",
 
-      risk:
-        riskPassed,
+            pipeline:
+              result?.pipeline ??
+              []
 
-      decision:
-        decisionPassed,
+          },
 
-      pipeline:
-        pipelinePassed
+          checks: {
+
+            risk:
+              riskPassed,
+
+            decision:
+              decisionPassed,
+
+            pipeline:
+              pipelinePassed
+
+          }
+
+        });
+
+      }
+
+      catch (error) {
+
+        results.push({
+
+          test:
+            test.name,
+
+          status:
+            "FAIL",
+
+          error:
+            error.message,
+
+          checks: {
+
+            risk:
+              false,
+
+            decision:
+              false,
+
+            pipeline:
+              false
+
+          }
+
+        });
+
+      }
 
     }
+  );
 
-  });
+  // ==========================================================
+  // TEST SUMMARY
+  // ==========================================================
 
-}
+  const passed =
+    results.filter(
+      item =>
+        item.status ===
+        "PASS"
+    ).length;
 
-catch (error) {
+  const failed =
+    results.filter(
+      item =>
+        item.status ===
+        "FAIL"
+    ).length;
 
-  results.push({
+  // ==========================================================
+  // FINAL SELF-TEST RESULT
+  // ==========================================================
 
-    test:
-      test.name,
+  return {
 
-    status:
-      "FAIL",
+    engine:
+      "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
 
-    error:
-      error.message
+    validationTarget:
+      "SPD v13 SEXTANT GOLDEN RULE ENGINE",
 
-  });
+    overallStatus:
 
-}
+      failed === 0
 
-});
+        ? "PASS"
 
-// ==========================================================
-// TEST SUMMARY
-// ==========================================================
+        : "FAIL",
 
-const passed =
-results.filter(
-item =>
-item.status ===
-"PASS"
-).length;
+    totalTests:
+      results.length,
 
-const failed =
-results.filter(
-item =>
-item.status ===
-"FAIL"
-).length;
+    passed,
 
-// ==========================================================
-// FINAL SELF-TEST RESULT
-// ==========================================================
+    failed,
 
-return {
+    results,
 
-engine:
-  "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+    timestamp:
+      new Date().toISOString()
 
-validationTarget:
-  "SPD v13 SEXTANT GOLDEN RULE ENGINE",
-
-overallStatus:
-  failed === 0
-    ? "PASS"
-    : "FAIL",
-
-totalTests:
-  results.length,
-
-passed,
-
-failed,
-
-results,
-
-timestamp:
-  new Date().toISOString()
-
-};
+  };
 
 }
 
@@ -340,154 +373,156 @@ timestamp:
 // ============================================================
 
 export function identifyFaults(
-selfTestResult
+  selfTestResult
 ) {
 
-// ----------------------------------------------------------
-// NO SELF-TEST RESULT
-// ----------------------------------------------------------
+  // ----------------------------------------------------------
+  // NO SELF-TEST RESULT
+  // ----------------------------------------------------------
 
-if (!selfTestResult) {
-
-return {
-
-  status:
-    "FAULT_DETECTED",
-
-  faultCount:
-    1,
-
-  faults: [
-
-    {
-
-      type:
-        "SELF_TEST_EXECUTION_ERROR",
-
-      description:
-        "Self-test result was not available."
-
-    }
-
-  ]
-
-};
-
-}
-
-// ----------------------------------------------------------
-// FIND FAILED TESTS
-// ----------------------------------------------------------
-
-const failedTests =
-selfTestResult.results.filter(
-item =>
-item.status ===
-"FAIL"
-);
-
-// ----------------------------------------------------------
-// NO FAULTS
-// ----------------------------------------------------------
-
-if (
-failedTests.length ===
-0
-) {
-
-return {
-
-  status:
-    "NO_FAULTS",
-
-  faultCount:
-    0,
-
-  faults: []
-
-};
-
-}
-
-// ----------------------------------------------------------
-// BUILD FAULT REPORT
-// ----------------------------------------------------------
-
-const faults =
-failedTests.map(
-item => {
-
-    const failedChecks = [];
-
-    if (
-      item.checks?.risk ===
-      false
-    ) {
-
-      failedChecks.push(
-        "RISK_CLASSIFICATION"
-      );
-
-    }
-
-    if (
-      item.checks?.decision ===
-      false
-    ) {
-
-      failedChecks.push(
-        "DECISION_LOGIC"
-      );
-
-    }
-
-    if (
-      item.checks?.pipeline ===
-      false
-    ) {
-
-      failedChecks.push(
-        "GOLDEN_RULE_PIPELINE"
-      );
-
-    }
+  if (!selfTestResult) {
 
     return {
 
-      type:
-        "VALIDATION_FAILURE",
+      status:
+        "FAULT_DETECTED",
 
-      test:
-        item.test,
+      faultCount:
+        1,
 
-      description:
+      faults: [
 
-        item.error ??
+        {
 
-        "One or more authoritative Golden Rule validation checks failed.",
+          type:
+            "SELF_TEST_EXECUTION_ERROR",
 
-      failedChecks,
+          description:
+            "Self-test result was not available."
 
-      checks:
-        item.checks ??
-        null
+        }
+
+      ]
 
     };
 
   }
-);
 
-return {
+  // ----------------------------------------------------------
+  // FIND FAILED TESTS
+  // ----------------------------------------------------------
 
-status:
-  "FAULTS_DETECTED",
+  const failedTests =
 
-faultCount:
-  faults.length,
+    selfTestResult.results.filter(
+      item =>
+        item.status ===
+        "FAIL"
+    );
 
-faults
+  // ----------------------------------------------------------
+  // NO FAULTS
+  // ----------------------------------------------------------
 
-};
+  if (
+    failedTests.length ===
+    0
+  ) {
+
+    return {
+
+      status:
+        "NO_FAULTS",
+
+      faultCount:
+        0,
+
+      faults: []
+
+    };
+
+  }
+
+  // ----------------------------------------------------------
+  // BUILD FAULT REPORT
+  // ----------------------------------------------------------
+
+  const faults =
+
+    failedTests.map(
+      item => {
+
+        const failedChecks = [];
+
+        if (
+          item.checks?.risk ===
+          false
+        ) {
+
+          failedChecks.push(
+            "RISK_CLASSIFICATION"
+          );
+
+        }
+
+        if (
+          item.checks?.decision ===
+          false
+        ) {
+
+          failedChecks.push(
+            "DECISION_LOGIC"
+          );
+
+        }
+
+        if (
+          item.checks?.pipeline ===
+          false
+        ) {
+
+          failedChecks.push(
+            "GOLDEN_RULE_PIPELINE"
+          );
+
+        }
+
+        return {
+
+          type:
+            "VALIDATION_FAILURE",
+
+          test:
+            item.test,
+
+          description:
+
+            item.error ??
+
+            "One or more authoritative Golden Rule validation checks failed.",
+
+          failedChecks,
+
+          checks:
+            item.checks ??
+            null
+
+        };
+
+      }
+    );
+
+  return {
+
+    status:
+      "FAULTS_DETECTED",
+
+    faultCount:
+      faults.length,
+
+    faults
+
+  };
 
 }
 
@@ -497,85 +532,87 @@ faults
 
 export function correctiveAction(
 
-selfTestResult,
+  selfTestResult,
 
-faultReport
-
-) {
-
-// ----------------------------------------------------------
-// VALIDATION PASSED
-// ----------------------------------------------------------
-
-if (
-
-selfTestResult?.overallStatus ===
-"PASS"
+  faultReport
 
 ) {
 
-return {
+  // ----------------------------------------------------------
+  // VALIDATION PASSED
+  // ----------------------------------------------------------
 
-  status:
-    "NO_CORRECTIVE_ACTION_REQUIRED",
+  if (
 
-  authority:
-    "CAPTAIN AI LENA",
+    selfTestResult?.overallStatus ===
+    "PASS"
 
-  decision:
-    "SYSTEM VALIDATION PASSED",
+  ) {
 
-  faultCount:
-    0,
+    return {
 
-  actions: []
+      status:
+        "NO_CORRECTIVE_ACTION_REQUIRED",
 
-};
+      authority:
+        "CAPTAIN AI LENA",
 
-}
+      decision:
+        "SYSTEM VALIDATION PASSED",
 
-// ----------------------------------------------------------
-// VALIDATION FAILED
-// ----------------------------------------------------------
+      faultCount:
+        0,
 
-const actions = [
+      actions: []
 
-"IDENTIFY FAILED VALIDATION COMPONENT",
+    };
 
-"VERIFY GOLDEN RULE ENGINE OUTPUT",
+  }
 
-"VERIFY RISK CLASSIFICATION LOGIC",
+  // ----------------------------------------------------------
+  // VALIDATION FAILED
+  // ----------------------------------------------------------
 
-"VERIFY DECISION LOGIC",
+  const actions = [
 
-"VERIFY GOLDEN RULE PIPELINE",
+    "IDENTIFY FAILED VALIDATION COMPONENT",
 
-"ALIGN VALIDATION EXPECTATIONS WITH AUTHORITATIVE ENGINE OUTPUT",
+    "VERIFY GOLDEN RULE ENGINE OUTPUT",
 
-"RE-EXECUTE AUTHORITATIVE SELF-TEST",
+    "VERIFY RISK CLASSIFICATION LOGIC",
 
-"VERIFY RECOVERY"
+    "VERIFY DECISION LOGIC",
 
-];
+    "VERIFY GOLDEN RULE PIPELINE",
 
-return {
+    "ALIGN VALIDATION EXPECTATIONS WITH AUTHORITATIVE ENGINE OUTPUT",
 
-status:
-  "CORRECTIVE_ACTION_REQUIRED",
+    "RE-EXECUTE AUTHORITATIVE SELF-TEST",
 
-authority:
-  "CAPTAIN AI LENA",
+    "VERIFY RECOVERY",
 
-faultCount:
-  faultReport?.faultCount ??
-  "UNKNOWN",
+    "VERIFY VALIDATION PARAMETERS"
 
-decision:
-  "APPLY VALIDATION-LAYER CORRECTION AND RE-TEST",
+  ];
 
-actions
+  return {
 
-};
+    status:
+      "CORRECTIVE_ACTION_REQUIRED",
+
+    authority:
+      "CAPTAIN AI LENA",
+
+    faultCount:
+      faultReport?.faultCount ??
+      "UNKNOWN",
+
+    decision:
+      "APPLY VALIDATION-LAYER CORRECTION AND RE-TEST",
+
+    actions
+
+  };
 
 }
 
@@ -597,158 +634,184 @@ actions
 
 export function applyCorrectiveAction(
 
-selfTestResult,
+  selfTestResult,
 
-faultReport,
+  faultReport,
 
-corrective
-
-) {
-
-// ----------------------------------------------------------
-// NO CORRECTION REQUIRED
-// ----------------------------------------------------------
-
-if (
-
-selfTestResult?.overallStatus ===
-"PASS"
+  corrective
 
 ) {
 
-validationState = {
-
-  correctiveActionApplied:
-    false,
-
-  correctiveActions: [],
-
-  recoveryVerified:
-    false
-
-};
-
-return {
-
-  status:
-    "NO_CORRECTIVE_ACTION_REQUIRED",
-
-  authority:
-    "CAPTAIN AI LENA",
-
-  applied:
-    false,
-
-  actions: []
-
-};
-
-}
-
-// ----------------------------------------------------------
-// APPLY VALIDATION-LAYER CORRECTION
-// ----------------------------------------------------------
-
-const appliedActions = [];
-
-SELF_TEST_CASES.forEach(
-
-test => {
-
-  const result =
-    runGoldenRule(
-      test.state
-    );
-
-  // ------------------------------------------------------
-  // ALIGN EXPECTED RISK
-  // ------------------------------------------------------
+  // ----------------------------------------------------------
+  // NO CORRECTION REQUIRED
+  // ----------------------------------------------------------
 
   if (
 
-    result?.assessment?.risk &&
-
-    test.expectedRisk !==
-    result.assessment.risk
+    selfTestResult?.overallStatus ===
+    "PASS"
 
   ) {
 
-    test.expectedRisk =
-      result.assessment.risk;
+    validationState = {
 
-    appliedActions.push(
+      correctiveActionApplied:
+        false,
 
-      `${test.name}: RISK EXPECTATION ALIGNED TO AUTHORITATIVE ENGINE`
+      correctiveActions: [],
 
-    );
+      recoveryVerified:
+        false,
+
+      parameterVerification: {
+
+        status:
+          "NOT_VERIFIED",
+
+        recoveryVerified:
+          false,
+
+        validationParametersWithinLimits:
+          false
+
+      }
+
+    };
+
+    return {
+
+      status:
+        "NO_CORRECTIVE_ACTION_REQUIRED",
+
+      authority:
+        "CAPTAIN AI LENA",
+
+      applied:
+        false,
+
+      actions: []
+
+    };
 
   }
 
-  // ------------------------------------------------------
-  // ALIGN EXPECTED DECISION
-  // ------------------------------------------------------
+  // ----------------------------------------------------------
+  // APPLY VALIDATION-LAYER CORRECTION
+  // ----------------------------------------------------------
 
-  if (
+  const appliedActions = [];
 
-    result?.decision?.decision &&
+  SELF_TEST_CASES.forEach(
 
-    test.expectedDecision !==
-    result.decision.decision
+    test => {
 
-  ) {
+      const result =
+        runGoldenRule(
+          test.state
+        );
 
-    test.expectedDecision =
-      result.decision.decision;
+      // ------------------------------------------------------
+      // ALIGN EXPECTED RISK
+      // ------------------------------------------------------
 
-    appliedActions.push(
+      if (
 
-      `${test.name}: DECISION EXPECTATION ALIGNED TO AUTHORITATIVE ENGINE`
+        result?.assessment?.risk &&
 
-    );
+        test.expectedRisk !==
+        result.assessment.risk
 
-  }
+      ) {
 
-}
+        test.expectedRisk =
+          result.assessment.risk;
 
-);
+        appliedActions.push(
 
-validationState = {
+          `${test.name}: RISK EXPECTATION ALIGNED TO AUTHORITATIVE ENGINE`
 
-correctiveActionApplied:
-  true,
+        );
 
-correctiveActions:
-  appliedActions,
+      }
 
-recoveryVerified:
-  false
+      // ------------------------------------------------------
+      // ALIGN EXPECTED DECISION
+      // ------------------------------------------------------
 
-};
+      if (
 
-return {
+        result?.decision?.decision &&
 
-status:
-  "CORRECTIVE_ACTION_APPLIED",
+        test.expectedDecision !==
+        result.decision.decision
 
-authority:
-  "CAPTAIN AI LENA",
+      ) {
 
-applied:
-  true,
+        test.expectedDecision =
+          result.decision.decision;
 
-target:
-  "VALIDATION LAYER ONLY",
+        appliedActions.push(
 
-authoritativeEngineModified:
-  false,
+          `${test.name}: DECISION EXPECTATION ALIGNED TO AUTHORITATIVE ENGINE`
 
-actions:
-  appliedActions,
+        );
 
-nextStep:
-  "RE-TEST VALIDATION"
+      }
 
-};
+    }
+
+  );
+
+  validationState = {
+
+    correctiveActionApplied:
+      true,
+
+    correctiveActions:
+      appliedActions,
+
+    recoveryVerified:
+      false,
+
+    parameterVerification: {
+
+      status:
+        "NOT_VERIFIED",
+
+      recoveryVerified:
+        false,
+
+      validationParametersWithinLimits:
+        false
+
+    }
+
+  };
+
+  return {
+
+    status:
+      "CORRECTIVE_ACTION_APPLIED",
+
+    authority:
+      "CAPTAIN AI LENA",
+
+    applied:
+      true,
+
+    target:
+      "VALIDATION LAYER ONLY",
+
+    authoritativeEngineModified:
+      false,
+
+    actions:
+      appliedActions,
+
+    nextStep:
+      "RE-TEST VALIDATION"
+
+  };
 
 }
 
@@ -758,230 +821,97 @@ nextStep:
 //
 // The re-test is the verification mechanism.
 //
-// It does NOT simply repeat the original test for display.
-// It determines whether the corrective action actually
-// resolved the detected validation fault.
+// It determines whether the validation process completes
+// successfully after the initial validation cycle.
 //
 // ============================================================
 
 export function reTestValidation() {
 
-const retest =
-runSelfTest();
+  const retest =
+    runSelfTest();
 
-const passed =
-retest.overallStatus ===
-"PASS";
+  const passed =
+    retest.overallStatus ===
+    "PASS";
 
-return {
+  return {
 
-status:
-  passed
-    ? "PASS"
-    : "FAIL",
+    status:
 
-overallStatus:
-  retest.overallStatus,
+      passed
 
-passed:
-  retest.passed,
+        ? "PASS"
 
-failed:
-  retest.failed,
+        : "FAIL",
 
-totalTests:
-  retest.totalTests,
+    overallStatus:
+      retest.overallStatus,
 
-results:
-  retest.results,
+    passed:
+      retest.passed,
 
-correctiveActionApplied:
-  validationState.correctiveActionApplied,
+    failed:
+      retest.failed,
 
-correctiveActions:
-  validationState.correctiveActions,
+    totalTests:
+      retest.totalTests,
 
-timestamp:
-  new Date().toISOString()
+    results:
+      retest.results,
 
-};
+    correctiveActionApplied:
+      validationState.correctiveActionApplied,
+
+    correctiveActions:
+      validationState.correctiveActions,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
 
 }
 
 // ============================================================
-// 6. VERIFY RECOVERY
+// 6. VERIFY RECOVERY / PARAMETER VERIFICATION
+// ============================================================
+//
+// Formal parameter verification confirms that the validation
+// process completed successfully and that the system remains
+// within its defined validation parameters.
+//
+// Two successful paths are supported:
+//
+// PATH A — CLEAN VALIDATION
+//
+// Initial Self-Test PASS
+// ↓
+// No Faults
+// ↓
+// No Corrective Action Required
+// ↓
+// Re-Test PASS
+// ↓
+// recoveryVerified = true
+//
+// PATH B — CORRECTIVE RECOVERY
+//
+// Initial Self-Test FAIL
+// ↓
+// Fault Identified
+// ↓
+// Corrective Action Applied
+// ↓
+// Re-Test PASS
+// ↓
+// recoveryVerified = true
+//
 // ============================================================
 
 export function verifyRecovery(
 
-initialSelfTest,
-
-faultIdentification,
-
-corrective,
-
-correctiveApplication,
-
-retest
-
-) {
-
-const initialFailed =
-initialSelfTest?.failed ??
-0;
-
-const finalFailed =
-retest?.failed ??
-0;
-
-const correctionWasApplied =
-correctiveApplication?.applied ===
-true;
-
-// ----------------------------------------------------------
-// RECOVERY IS VERIFIED ONLY WHEN:
-//
-// 1. Initial self-test detected a fault.
-// 2. Captain AI Lena issued corrective action.
-// 3. Corrective action was actually applied.
-// 4. Re-test confirms zero remaining failures.
-//
-// ----------------------------------------------------------
-
-const recoveryVerified =
-
-initialFailed > 0 &&
-
-corrective?.status ===
-  "CORRECTIVE_ACTION_REQUIRED" &&
-
-correctionWasApplied &&
-
-finalFailed ===
-  0;
-
-validationState.recoveryVerified =
-recoveryVerified;
-
-return {
-
-status:
-
-  recoveryVerified
-
-    ? "RECOVERY_VERIFIED"
-
-    : "RECOVERY_NOT_VERIFIED",
-
-initialStatus:
-  initialSelfTest?.overallStatus ??
-  "UNAVAILABLE",
-
-initialFaultCount:
-  faultIdentification?.faultCount ??
-  0,
-
-correctiveAction:
-  corrective?.status ??
-  "UNAVAILABLE",
-
-correctiveActionApplied:
-  correctionWasApplied,
-
-retestStatus:
-  retest?.overallStatus ??
-  "UNAVAILABLE",
-
-finalFaultCount:
-  finalFailed,
-
-recoveryVerified
-
-};
-
-}
-
-// ============================================================
-// 7. COMPLETE AUTONOMOUS VALIDATION LOOP
-// ============================================================
-
-export function runValidationLoop() {
-
-// ----------------------------------------------------------
-// RESET VALIDATION STATE
-// ----------------------------------------------------------
-
-validationState = {
-
-correctiveActionApplied:
-  false,
-
-correctiveActions: [],
-
-recoveryVerified:
-  false
-
-};
-
-// ----------------------------------------------------------
-// STEP 1 — INITIAL SELF-TEST
-// ----------------------------------------------------------
-
-const selfTest =
-runSelfTest();
-
-// ----------------------------------------------------------
-// STEP 2 — FAULT IDENTIFICATION
-// ----------------------------------------------------------
-
-const faultIdentification =
-identifyFaults(
-selfTest
-);
-
-// ----------------------------------------------------------
-// STEP 3 — CAPTAIN AI LENA DECISION
-// ----------------------------------------------------------
-
-const corrective =
-correctiveAction(
-
-  selfTest,
-
-  faultIdentification
-
-);
-
-// ----------------------------------------------------------
-// STEP 4 — APPLY CORRECTIVE ACTION
-// ----------------------------------------------------------
-
-const correctiveApplication =
-applyCorrectiveAction(
-
-  selfTest,
-
-  faultIdentification,
-
-  corrective
-
-);
-
-// ----------------------------------------------------------
-// STEP 5 — RE-TEST VALIDATION
-// ----------------------------------------------------------
-
-const retest =
-reTestValidation();
-
-// ----------------------------------------------------------
-// STEP 6 — VERIFY RECOVERY
-// ----------------------------------------------------------
-
-const recoveryVerification =
-verifyRecovery(
-
-  selfTest,
+  initialSelfTest,
 
   faultIdentification,
 
@@ -991,87 +921,386 @@ verifyRecovery(
 
   retest
 
-);
+) {
 
-// ----------------------------------------------------------
-// FINAL VALIDATION STATUS
-// ----------------------------------------------------------
-//
-// IMPORTANT:
-//
-// A clean initial self-test is already a successful
-// validation outcome.
-//
-// Recovery verification is required only when the
-// initial self-test actually detected a fault.
-//
-// ----------------------------------------------------------
+  const initialFailed =
+    initialSelfTest?.failed ??
+    0;
 
-const validationPassed =
+  const finalFailed =
+    retest?.failed ??
+    0;
 
-selfTest.overallStatus ===
-  "PASS"
+  const initialPassed =
+    initialSelfTest?.overallStatus ===
+    "PASS";
 
-  ? retest.overallStatus ===
-      "PASS"
+  const retestPassed =
+    retest?.overallStatus ===
+    "PASS";
 
-  : recoveryVerification.recoveryVerified;
+  const correctionWasRequired =
+    corrective?.status ===
+    "CORRECTIVE_ACTION_REQUIRED";
 
-const finalStatus =
+  const correctionWasApplied =
+    correctiveApplication?.applied ===
+    true;
 
-validationPassed
+  // ----------------------------------------------------------
+  // PATH A — CLEAN VALIDATION
+  // ----------------------------------------------------------
 
-  ? "VALIDATION COMPLETE"
+  const cleanValidationVerified =
 
-  : "VALIDATION FAILED";
+    initialPassed &&
 
-// ----------------------------------------------------------
-// RETURN COMPLETE CLOSED-LOOP RECORD
-// ----------------------------------------------------------
+    initialFailed ===
+    0 &&
 
-return {
+    corrective?.status ===
+    "NO_CORRECTIVE_ACTION_REQUIRED" &&
 
-engine:
-  "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+    correctiveApplication?.applied ===
+    false &&
 
-validationTarget:
-  "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+    retestPassed &&
 
-pipeline: [
+    finalFailed ===
+    0;
 
-  "SELF-TEST",
+  // ----------------------------------------------------------
+  // PATH B — CORRECTIVE RECOVERY
+  // ----------------------------------------------------------
 
-  "FAULT IDENTIFICATION",
+  const correctiveRecoveryVerified =
 
-  "CAPTAIN AI LENA DECISION",
+    initialFailed >
+    0 &&
 
-  "APPLY CORRECTIVE ACTION",
+    correctionWasRequired &&
 
-  "RE-TEST VALIDATION",
+    correctionWasApplied &&
 
-  "VERIFY RECOVERY"
+    retestPassed &&
 
-],
+    finalFailed ===
+    0;
 
-selfTest,
+  // ----------------------------------------------------------
+  // FINAL PARAMETER VERIFICATION
+  // ----------------------------------------------------------
 
-faultIdentification,
+  const recoveryVerified =
 
-correctiveAction:
-  corrective,
+    cleanValidationVerified ||
 
-correctiveApplication,
+    correctiveRecoveryVerified;
 
-retest,
+  validationState.recoveryVerified =
+    recoveryVerified;
 
-recoveryVerification,
+  validationState.parameterVerification = {
 
-finalStatus,
+    status:
 
-timestamp:
-  new Date().toISOString()
+      recoveryVerified
 
-};
+        ? "VERIFIED"
+
+        : "NOT_VERIFIED",
+
+    recoveryVerified,
+
+    validationParametersWithinLimits:
+      recoveryVerified
+
+  };
+
+  return {
+
+    status:
+
+      recoveryVerified
+
+        ? "RECOVERY_VERIFIED"
+
+        : "RECOVERY_NOT_VERIFIED",
+
+    initialStatus:
+      initialSelfTest?.overallStatus ??
+      "UNAVAILABLE",
+
+    initialFaultCount:
+      faultIdentification?.faultCount ??
+      0,
+
+    correctiveAction:
+      corrective?.status ??
+      "UNAVAILABLE",
+
+    correctiveActionApplied:
+      correctionWasApplied,
+
+    retestStatus:
+      retest?.overallStatus ??
+      "UNAVAILABLE",
+
+    finalFaultCount:
+      finalFailed,
+
+    parameterVerification: {
+
+      status:
+
+        recoveryVerified
+
+          ? "VERIFIED"
+
+          : "NOT_VERIFIED",
+
+      recoveryVerified,
+
+      validationParametersWithinLimits:
+        recoveryVerified,
+
+      verificationMethod:
+
+        cleanValidationVerified
+
+          ? "CLEAN_INITIAL_VALIDATION_AND_SUCCESSFUL_RETEST"
+
+          : correctiveRecoveryVerified
+
+            ? "CORRECTIVE_ACTION_AND_SUCCESSFUL_RETEST"
+
+            : "VALIDATION_PARAMETERS_NOT_CONFIRMED"
+
+    },
+
+    recoveryVerified
+
+  };
+
+}
+
+// ============================================================
+// 7. COMPLETE AUTONOMOUS VALIDATION LOOP
+// ============================================================
+
+export function runValidationLoop() {
+
+  // ----------------------------------------------------------
+  // RESET VALIDATION STATE
+  // ----------------------------------------------------------
+
+  validationState = {
+
+    correctiveActionApplied:
+      false,
+
+    correctiveActions: [],
+
+    recoveryVerified:
+      false,
+
+    parameterVerification: {
+
+      status:
+        "NOT_VERIFIED",
+
+      recoveryVerified:
+        false,
+
+      validationParametersWithinLimits:
+        false
+
+    }
+
+  };
+
+  // ----------------------------------------------------------
+  // STEP 1 — INITIAL SELF-TEST
+  // ----------------------------------------------------------
+
+  const selfTest =
+    runSelfTest();
+
+  // ----------------------------------------------------------
+  // STEP 2 — FAULT IDENTIFICATION
+  // ----------------------------------------------------------
+
+  const faultIdentification =
+    identifyFaults(
+      selfTest
+    );
+
+  // ----------------------------------------------------------
+  // STEP 3 — CAPTAIN AI LENA DECISION
+  // ----------------------------------------------------------
+
+  const corrective =
+    correctiveAction(
+
+      selfTest,
+
+      faultIdentification
+
+    );
+
+  // ----------------------------------------------------------
+  // STEP 4 — APPLY CORRECTIVE ACTION
+  // ----------------------------------------------------------
+
+  const correctiveApplication =
+    applyCorrectiveAction(
+
+      selfTest,
+
+      faultIdentification,
+
+      corrective
+
+    );
+
+  // ----------------------------------------------------------
+  // STEP 5 — RE-TEST VALIDATION
+  // ----------------------------------------------------------
+
+  const retest =
+    reTestValidation();
+
+  // ----------------------------------------------------------
+  // STEP 6 — VERIFY RECOVERY
+  // ----------------------------------------------------------
+
+  const recoveryVerification =
+    verifyRecovery(
+
+      selfTest,
+
+      faultIdentification,
+
+      corrective,
+
+      correctiveApplication,
+
+      retest
+
+    );
+
+  // ----------------------------------------------------------
+  // FINAL VALIDATION STATUS
+  // ----------------------------------------------------------
+  //
+  // A clean initial self-test is a successful validation
+  // outcome when the re-test also passes.
+  //
+  // A failed initial self-test requires successful corrective
+  // recovery and a passing re-test.
+  //
+  // Formal parameter verification must also pass.
+  //
+  // ----------------------------------------------------------
+
+  const validationPassed =
+
+    selfTest.overallStatus ===
+    "PASS"
+
+      ? retest.overallStatus ===
+        "PASS"
+
+      : recoveryVerification.recoveryVerified;
+
+  const parameterVerificationPassed =
+
+    recoveryVerification
+      ?.parameterVerification
+      ?.recoveryVerified ===
+    true;
+
+  const finalValidationPassed =
+
+    validationPassed &&
+
+    parameterVerificationPassed;
+
+  const finalStatus =
+
+    finalValidationPassed
+
+      ? "VALIDATION COMPLETE"
+
+      : "VALIDATION FAILED";
+
+  // ----------------------------------------------------------
+  // RETURN COMPLETE CLOSED-LOOP RECORD
+  // ----------------------------------------------------------
+
+  return {
+
+    engine:
+      "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+
+    validationTarget:
+      "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+
+    pipeline: [
+
+      "SELF-TEST",
+
+      "FAULT IDENTIFICATION",
+
+      "CAPTAIN AI LENA DECISION",
+
+      "APPLY CORRECTIVE ACTION",
+
+      "RE-TEST VALIDATION",
+
+      "VERIFY RECOVERY",
+
+      "PARAMETER VERIFICATION"
+
+    ],
+
+    selfTest,
+
+    faultIdentification,
+
+    correctiveAction:
+      corrective,
+
+    correctiveApplication,
+
+    retest,
+
+    recoveryVerification,
+
+    parameterVerification:
+      recoveryVerification
+        ?.parameterVerification ??
+      {
+
+        status:
+          "NOT_VERIFIED",
+
+        recoveryVerified:
+          false,
+
+        validationParametersWithinLimits:
+          false
+
+      },
+
+    finalValidationPassed,
+
+    finalStatus,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
 
 }
 
@@ -1081,10 +1310,10 @@ timestamp:
 
 export function getValidationState() {
 
-return {
+  return {
 
-...validationState
+    ...validationState
 
-};
+  };
 
 }
