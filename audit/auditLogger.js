@@ -8,11 +8,28 @@
  *
  * The audit layer records what happened.
  * It does not make decisions.
+ *
+ * FIN Domain Enhancement:
+ * FIN executions may explicitly record:
+ * - FIN Rule ID
+ * - FIN Rule Result
+ *
+ * These fields provide direct audit traceability between
+ * financial-domain scenario execution and the rule that
+ * produced the domain assessment.
  */
 
 export function createAuditRecord({
   engineIdentity = "SPD v13.1 — Sextant Resilience",
+  domain = null,
+
+  // Generic rule identification
   ruleId = null,
+
+  // Explicit FIN domain audit traceability
+  finRuleId = null,
+  finRuleResult = null,
+
   scenario = null,
   observedState = null,
   verifiedState = null,
@@ -31,7 +48,13 @@ export function createAuditRecord({
 
     engineIdentity,
 
+    domain,
+
     ruleId,
+
+    finRuleId,
+
+    finRuleResult,
 
     scenario,
 
