@@ -78,4 +78,2548 @@
       width: 100%;
       box-sizing: border-box;
       padding: 9px;
-      margin-top: 4
+      margin-top: 4px;
+      margin-bottom: 8px;
+      background: #111;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 11px;
+      margin-top: 8px;
+      background: #00ff88;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:active {
+      opacity: 0.7;
+    }
+
+    .scenarioButton {
+      background: #111;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    .scenarioButton.active {
+      background: #00ff88;
+      color: #000;
+    }
+
+    .dangerButton {
+      background: #ff4444;
+      color: #ffffff;
+    }
+
+    .validationButton {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .flow {
+      color: #aaaaaa;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .goldenFlow {
+      color: #00ff88;
+      font-weight: bold;
+      font-size: 13px;
+      line-height: 1.8;
+      word-break: break-word;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      color: #00ff88;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .metricGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .metric {
+      border: 1px solid #00ff88;
+      padding: 8px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .metricName {
+      color: #aaaaaa;
+      font-size: 11px;
+    }
+
+    .metricValue {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    .sectionStatus {
+      color: #ffffff;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .pass {
+      color: #00ff88;
+    }
+
+    .fail {
+      color: #ff4444;
+    }
+
+    .warning {
+      color: #ffff00;
+    }
+
+    .small {
+      color: #888888;
+      font-size: 11px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+
+<div class="header">
+
+  <h2>
+    🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+  </h2>
+
+  <div class="title">
+    Captain AI Lena Autonomous Agent Core
+  </div>
+
+  <div class="subtitle">
+
+    DATA → ALGORITHMS → COMPUTE
+
+    <br>
+
+    SELF-TEST → FAULT IDENTIFICATION →
+    CAPTAIN AI LENA DECISION →
+    CORRECTIVE ACTION → RE-TEST
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM STATUS
+============================================================ -->
+
+<div
+  class="status"
+  id="systemStatus"
+>
+  SYSTEM INITIALIZING...
+</div>
+
+
+<!-- ============================================================
+     SYSTEM DOMAIN MONITOR
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 SYSTEM DOMAIN MONITOR
+  </div>
+
+  <div class="metricGrid">
+
+    <div class="metric">
+      <div class="metricName">
+        FX
+      </div>
+      <div
+        class="metricValue"
+        id="displayFX"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metricName">
+        DC
+      </div>
+      <div
+        class="metricValue"
+        id="displayDC"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metricName">
+        CYB
+      </div>
+      <div
+        class="metricValue"
+        id="displayCYB"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metricName">
+        INF
+      </div>
+      <div
+        class="metricValue"
+        id="displayINF"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metricName">
+        EN / ENERGY
+      </div>
+      <div
+        class="metricValue"
+        id="displayEnergy"
+      >
+        50
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM INPUT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📥 SYSTEM INPUT
+  </div>
+
+  <label>
+    FX
+  </label>
+
+  <input
+    id="fx"
+    type="number"
+    min="0"
+    max="100"
+    value="0"
+  >
+
+
+  <label>
+    ENERGY
+  </label>
+
+  <input
+    id="energy"
+    type="number"
+    min="0"
+    max="100"
+    value="50"
+  >
+
+
+  <label>
+    CYB
+  </label>
+
+  <input
+    id="cyb"
+    type="number"
+    min="0"
+    max="100"
+    value="50"
+  >
+
+
+  <label>
+    INF
+  </label>
+
+  <input
+    id="inf"
+    type="number"
+    min="0"
+    max="100"
+    value="0"
+  >
+
+
+  <label>
+    DC
+  </label>
+
+  <input
+    id="dc"
+    type="number"
+    min="0"
+    max="100"
+    value="0"
+  >
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO CONTROL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎛️ SCENARIO CONTROL
+  </div>
+
+  <label>
+    Scenario
+  </label>
+
+  <select id="scenario">
+
+    <option value="MOBILE_SIMULATION">
+      MOBILE SIMULATION
+    </option>
+
+    <option value="FX_STRESS">
+      FX STRESS
+    </option>
+
+    <option value="FIN_STRESS">
+      FIN STRESS
+    </option>
+
+    <option value="BANKING_STRESS">
+      BANKING STRESS
+    </option>
+
+    <option value="LIQUIDITY_CRISIS">
+      LIQUIDITY CRISIS
+    </option>
+
+    <option value="CREDIT_STRESS">
+      CREDIT STRESS
+    </option>
+
+    <option value="SOVEREIGN_DEBT">
+      SOVEREIGN DEBT
+    </option>
+
+    <option value="DC_LOAD">
+      DC LOAD
+    </option>
+
+    <option value="CYBER_EVENT">
+      CYBER EVENT
+    </option>
+
+    <option value="INFRA_STRAIN">
+      INFRA STRAIN
+    </option>
+
+    <option value="BIODIESEL_SHORTAGE">
+      BIODIESEL SHORTAGE
+    </option>
+
+  </select>
+
+
+  <label>
+    Scenario Intensity
+  </label>
+
+  <input
+    id="intensity"
+    type="range"
+    min="0"
+    max="100"
+    value="90"
+  >
+
+  <div class="sectionStatus">
+
+    Intensity:
+    <span id="intensityValue">
+      90%
+    </span>
+
+  </div>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('FX_STRESS')"
+  >
+    FX STRESS
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('FIN_STRESS')"
+  >
+    FIN STRESS
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('BANKING_STRESS')"
+  >
+    BANKING STRESS
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('LIQUIDITY_CRISIS')"
+  >
+    LIQUIDITY CRISIS
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('CREDIT_STRESS')"
+  >
+    CREDIT STRESS
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('SOVEREIGN_DEBT')"
+  >
+    SOVEREIGN DEBT
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('DC_LOAD')"
+  >
+    DC LOAD
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('CYBER_EVENT')"
+  >
+    CYBER EVENT
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('INFRA_STRAIN')"
+  >
+    INFRA STRAIN
+  </button>
+
+
+  <button
+    class="scenarioButton"
+    onclick="selectScenario('BIODIESEL_SHORTAGE')"
+  >
+    BIODIESEL SHORTAGE
+  </button>
+
+
+  <button
+    onclick="selectScenario('MOBILE_SIMULATION')"
+  >
+    RESET
+  </button>
+
+</div>
+
+
+<!-- ============================================================
+     MAIN CONTROLS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎛️ SYSTEM CONTROLS
+  </div>
+
+  <button onclick="runSystem()">
+    ▶ RUN SYSTEM
+  </button>
+
+  <button onclick="runSelfTest()">
+    🧪 RUN SELF-TEST
+  </button>
+
+  <button
+    class="validationButton"
+    onclick="runFullValidation()"
+  >
+    🛠️ RUN SELF-TEST + CORRECTIVE ACTION + RE-TEST
+  </button>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧪 SCENARIO PANEL
+  </div>
+
+  <pre id="scenarioPanel">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     RAW SYSTEM STATE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 RAW SYSTEM STATE
+  </div>
+
+  <pre id="rawState">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛰️ GOLDEN RULE ENGINE
+  </div>
+
+  <div class="goldenFlow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>
+
+  <pre id="pipeline">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚠️ SYSTEM ASSESSMENT
+  </div>
+
+  <pre id="assessment">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     RISK PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🚨 RISK PANEL
+  </div>
+
+  <pre id="riskPanel">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     FIN DOMAIN RESULT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    💰 FINANCIAL RESILIENCE DOMAIN
+  </div>
+
+  <pre id="finResult">
+FIN domain not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     CAPTAIN AI LENA DECISION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚙️ CAPTAIN AI LENA DECISION
+  </div>
+
+  <pre id="decision">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    💡 SOLUTION OPTIONS
+  </div>
+
+  <pre id="solutions">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     ACTION SEQUENCE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🚨 ACTION SEQUENCE PROMPT
+  </div>
+
+  <pre id="actions">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 MEMORY CORE
+  </div>
+
+  <pre id="memory">
+Memory Core not updated.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     AUDIT RECORD
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧾 SPD v13.1 AUDIT RECORD
+  </div>
+
+  <pre id="audit">
+No audit record yet.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     VALIDATION LOOP
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔄 AUTONOMOUS VALIDATION LOOP
+  </div>
+
+  <pre id="validation">
+Validation not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SELF-TEST
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧪 SPD v13.1 SELF-TEST
+  </div>
+
+  <pre id="selfTest">
+Self-test not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     FAULT IDENTIFICATION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚠️ FAULT IDENTIFICATION
+  </div>
+
+  <pre id="faults">
+Fault identification not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     CAPTAIN AI LENA CORRECTIVE ACTION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
+  </div>
+
+  <pre id="correctiveAction">
+Corrective action not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     RE-TEST VALIDATION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔁 RE-TEST VALIDATION
+  </div>
+
+  <pre id="retest">
+Re-test not executed.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM CONSTANTS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📐 SYSTEM CONSTANTS
+  </div>
+
+  <pre id="constants">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     AGENT LOOP MONITOR
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔄 AGENT LOOP MONITOR
+  </div>
+
+  <div class="flow">
+
+    DATA → ALGORITHMS → COMPUTE
+
+    <br>
+
+    DATA → ALGORITHMS → COMPUTE
+
+    <br>
+
+    SELF-TEST → FAULT IDENTIFICATION →
+    CORRECTIVE ACTION → RE-TEST
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+
+/* ============================================================
+   AUTHORITATIVE GOLDEN RULE ENGINE
+============================================================ */
+
+import {
+
+  runGoldenRule,
+
+  PHI,
+
+  GOLDEN_RULE_STAGES
+
+} from "./goldenRuleEngine.js";
+
+
+/* ============================================================
+   OPTIONAL FIN DOMAIN ENGINE
+============================================================ */
+
+let finRuleEngine = null;
+
+let testFINRuleEngine = null;
+
+let FIN_ENGINE_STATUS = null;
+
+let finValidationEngine = null;
+
+
+/* ============================================================
+   SAFE FIN MODULE LOADING
+============================================================ */
+
+try {
+
+  const finModule =
+    await import(
+      "./FIN/fin-rule-engine.js"
+    );
+
+  finRuleEngine =
+    finModule.finRuleEngine;
+
+  testFINRuleEngine =
+    finModule.testFINRuleEngine;
+
+  FIN_ENGINE_STATUS =
+    finModule.FIN_ENGINE_STATUS;
+
+}
+
+catch (error) {
+
+  console.warn(
+    "FIN rule engine unavailable:",
+    error.message
+  );
+
+}
+
+
+try {
+
+  finValidationEngine =
+    await import(
+      "./FIN/fin-validation-engine.js"
+    );
+
+}
+
+catch (error) {
+
+  console.warn(
+    "FIN validation engine unavailable:",
+    error.message
+  );
+
+}
+
+
+/* ============================================================
+   GLOBAL STATE
+============================================================ */
+
+let lastSystemResult = null;
+
+let lastFINResult = null;
+
+let lastValidationResult = null;
+
+
+/* ============================================================
+   SCENARIO SELECTOR
+============================================================ */
+
+window.selectScenario =
+function (
+  scenario
+) {
+
+  document.getElementById(
+    "scenario"
+  ).value =
+    scenario;
+
+  updateScenarioPanel();
+
+};
+
+
+/* ============================================================
+   INTENSITY CONTROL
+============================================================ */
+
+document.getElementById(
+  "intensity"
+).addEventListener(
+  "input",
+  updateScenarioPanel
+);
+
+
+/* ============================================================
+   SCENARIO PANEL UPDATE
+============================================================ */
+
+function updateScenarioPanel() {
+
+  const scenario =
+    document.getElementById(
+      "scenario"
+    ).value;
+
+  const intensity =
+    Number(
+      document.getElementById(
+        "intensity"
+      ).value
+    );
+
+  document.getElementById(
+    "intensityValue"
+  ).innerText =
+    intensity +
+    "%";
+
+
+  document.getElementById(
+    "scenarioPanel"
+  ).innerText =
+
+    JSON.stringify(
+
+      {
+
+        scenario,
+
+        intensity:
+          intensity + "%",
+
+        intensityValue:
+          intensity,
+
+        status:
+          "ACTIVE"
+
+      },
+
+      null,
+
+      2
+
+    );
+
+}
+
+
+/* ============================================================
+   READ SYSTEM STATE
+============================================================ */
+
+function getSystemState() {
+
+  const scenario =
+    document.getElementById(
+      "scenario"
+    ).value;
+
+  const intensity =
+    Number(
+      document.getElementById(
+        "intensity"
+      ).value
+    );
+
+
+  return {
+
+    fx:
+      Number(
+        document.getElementById(
+          "fx"
+        ).value
+      ),
+
+    energy:
+      Number(
+        document.getElementById(
+          "energy"
+        ).value
+      ),
+
+    cyb:
+      Number(
+        document.getElementById(
+          "cyb"
+        ).value
+      ),
+
+    inf:
+      Number(
+        document.getElementById(
+          "inf"
+        ).value
+      ),
+
+    dc:
+      Number(
+        document.getElementById(
+          "dc"
+        ).value
+      ),
+
+    event:
+      scenario,
+
+    scenario,
+
+    intensity,
+
+    intensityFactor:
+      intensity / 100,
+
+    mode:
+      "AUTONOMOUS",
+
+    time:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* ============================================================
+   UPDATE DOMAIN MONITOR
+============================================================ */
+
+function updateDomainMonitor(
+  state
+) {
+
+  document.getElementById(
+    "displayFX"
+  ).innerText =
+    state.fx;
+
+  document.getElementById(
+    "displayEnergy"
+  ).innerText =
+    state.energy;
+
+  document.getElementById(
+    "displayCYB"
+  ).innerText =
+    state.cyb;
+
+  document.getElementById(
+    "displayINF"
+  ).innerText =
+    state.inf;
+
+  document.getElementById(
+    "displayDC"
+  ).innerText =
+    state.dc;
+
+}
+
+
+/* ============================================================
+   RUN FIN DOMAIN
+============================================================ */
+
+function runFINDomain(
+  state
+) {
+
+  const finScenarios = [
+
+    "FIN_STRESS",
+
+    "BANKING_STRESS",
+
+    "LIQUIDITY_CRISIS",
+
+    "CREDIT_STRESS",
+
+    "SOVEREIGN_DEBT"
+
+  ];
+
+
+  if (
+    !finScenarios.includes(
+      state.scenario
+    )
+  ) {
+
+    lastFINResult = null;
+
+    document.getElementById(
+      "finResult"
+    ).innerText =
+      "FIN domain not active for this scenario.";
+
+    return null;
+
+  }
+
+
+  if (
+    typeof finRuleEngine !==
+    "function"
+  ) {
+
+    const unavailable = {
+
+      status:
+        "FIN ENGINE UNAVAILABLE",
+
+      message:
+        "FIN/fin-rule-engine.js could not be loaded."
+
+    };
+
+
+    document.getElementById(
+      "finResult"
+    ).innerText =
+
+      JSON.stringify(
+
+        unavailable,
+
+        null,
+
+        2
+
+      );
+
+
+    return null;
+
+  }
+
+
+  try {
+
+    const result =
+      finRuleEngine({
+
+        scenario:
+          state.scenario,
+
+        intensity:
+          state.intensity,
+
+        state,
+
+        mode:
+          state.mode,
+
+        time:
+          state.time
+
+      });
+
+
+    lastFINResult =
+      result;
+
+
+    document.getElementById(
+      "finResult"
+    ).innerText =
+
+      JSON.stringify(
+
+        result,
+
+        null,
+
+        2
+
+      );
+
+
+    return result;
+
+  }
+
+  catch (error) {
+
+    const failure = {
+
+      status:
+        "FIN ENGINE ERROR",
+
+      message:
+        error.message
+
+    };
+
+
+    document.getElementById(
+      "finResult"
+    ).innerText =
+
+      JSON.stringify(
+
+        failure,
+
+        null,
+
+        2
+
+      );
+
+
+    return null;
+
+  }
+
+}
+
+
+/* ============================================================
+   RUN AUTHORITATIVE GOLDEN RULE ENGINE
+============================================================ */
+
+window.runSystem =
+function () {
+
+  const state =
+    getSystemState();
+
+
+  updateDomainMonitor(
+    state
+  );
+
+
+  document.getElementById(
+    "rawState"
+  ).innerText =
+
+    JSON.stringify(
+
+      state,
+
+      null,
+
+      2
+
+    );
+
+
+  runFINDomain(
+    state
+  );
+
+
+  try {
+
+    const result =
+      runGoldenRule(
+        state
+      );
+
+
+    lastSystemResult =
+      result;
+
+
+    /* ========================================================
+       SYSTEM STATUS
+    ======================================================== */
+
+    document.getElementById(
+      "systemStatus"
+    ).innerText =
+
+      "SYSTEM STATUS: " +
+      result.status;
+
+
+    /* ========================================================
+       GOLDEN RULE PIPELINE
+    ======================================================== */
+
+    document.getElementById(
+      "pipeline"
+    ).innerText =
+
+      result.pipeline.join(
+        " → "
+      );
+
+
+    /* ========================================================
+       ASSESSMENT
+    ======================================================== */
+
+    document.getElementById(
+      "assessment"
+    ).innerText =
+
+      JSON.stringify(
+
+        result.assessment,
+
+        null,
+
+        2
+
+      );
+
+
+    /* ========================================================
+       RISK PANEL
+    ======================================================== */
+
+    document.getElementById(
+      "riskPanel"
+    ).innerText =
+
+      JSON.stringify(
+
+        {
+
+          risk:
+            result.assessment.risk,
+
+          resilienceScore:
+            result.assessment.resilienceScore,
+
+          goldenScore:
+            result.assessment.goldenScore,
+
+          phi:
+            result.assessment.phi
+
+        },
+
+        null,
+
+        2
+
+      );
+
+
+    /* ========================================================
+       DECISION
+    ======================================================== */
+
+    document.getElementById(
+      "decision"
+    ).innerText =
+
+      JSON.stringify(
+
+        result.decision,
+
+        null,
+
+        2
+
+      );
+
+
+    /* ========================================================
+       SOLUTION OPTIONS
+    ======================================================== */
+
+    document.getElementById(
+      "solutions"
+    ).innerText =
+
+      result.decision?.action ||
+
+      "NO ADDITIONAL SOLUTION REQUIRED";
+
+
+    /* ========================================================
+       ACTION SEQUENCE
+    ======================================================== */
+
+    document.getElementById(
+      "actions"
+    ).innerText =
+
+      JSON.stringify(
+
+        result.actionSequence,
+
+        null,
+
+        2
+
+      );
+
+
+    /* ========================================================
+       MEMORY CORE
+    ======================================================== */
+
+    document.getElementById(
+      "memory"
+    ).innerText =
+
+      JSON.stringify(
+
+        {
+
+          timestamp:
+            new Date().toISOString(),
+
+          scenario:
+            state.scenario,
+
+          intensity:
+            state.intensity,
+
+          engineStatus:
+            result.status,
+
+          status:
+            "MEMORY CORE UPDATED"
+
+        },
+
+        null,
+
+        2
+
+      );
+
+
+    /* ========================================================
+       AUDIT RECORD
+    ======================================================== */
+
+    const auditRecord = {
+
+      system:
+        "SPD v13.1",
+
+      module:
+        "Captain AI Lena Autonomous Agent Core",
+
+      timestamp:
+        new Date().toISOString(),
+
+      domain:
+        state.scenario.startsWith(
+          "FIN"
+        ) ||
+        [
+
+          "BANKING_STRESS",
+
+          "LIQUIDITY_CRISIS",
+
+          "CREDIT_STRESS",
+
+          "SOVEREIGN_DEBT"
+
+        ].includes(
+          state.scenario
+        )
+          ? "FIN"
+          : "CORE",
+
+      scenario:
+        state.scenario,
+
+      intensity:
+        state.intensity,
+
+      finRule:
+        lastFINResult
+          ? {
+
+              ruleId:
+                lastFINResult.scenario,
+
+              ruleRegistryStatus:
+                "EXECUTED",
+
+              result:
+                lastFINResult
+
+            }
+
+          : null,
+
+      goldenRatioNormalization: {
+
+        phi:
+          PHI,
+
+        status:
+          result.assessment
+            ? "APPLIED"
+            : "NOT_VERIFIED",
+
+        goldenScore:
+          result.assessment
+            ?.goldenScore ??
+            null,
+
+        resilienceScore:
+          result.assessment
+            ?.resilienceScore ??
+            null
+
+      },
+
+      coreParameterBoundary: {
+
+        status:
+          verifyCoreBoundaries(
+            state
+          )
+            ? "PASS"
+            : "FAIL",
+
+        withinBounds:
+          verifyCoreBoundaries(
+            state
+          )
+
+      },
+
+      result: {
+
+        engine:
+          result.engine,
+
+        pipeline:
+          result.pipeline,
+
+        observedState:
+          result.observedState,
+
+        verifiedState:
+          result.verifiedState,
+
+        assessment:
+          result.assessment,
+
+        decision:
+          result.decision,
+
+        actionSequence:
+          result.actionSequence,
+
+        updatedState:
+          result.updatedState,
+
+        status:
+          result.status
+
+      },
+
+      status:
+        result.status
+
+    };
+
+
+    document.getElementById(
+      "audit"
+    ).innerText =
+
+      JSON.stringify(
+
+        auditRecord,
+
+        null,
+
+        2
+
+      );
+
+
+    return result;
+
+  }
+
+  catch (error) {
+
+    document.getElementById(
+      "systemStatus"
+    ).innerText =
+      "SYSTEM ERROR";
+
+
+    document.getElementById(
+      "audit"
+    ).innerText =
+
+      JSON.stringify(
+
+        {
+
+          status:
+            "ERROR",
+
+          message:
+            error.message
+
+        },
+
+        null,
+
+        2
+
+      );
+
+  }
+
+};
+
+
+/* ============================================================
+   CORE PARAMETER BOUNDARY VERIFICATION
+============================================================ */
+
+function verifyCoreBoundaries(
+  state
+) {
+
+  const parameters = [
+
+    "fx",
+
+    "energy",
+
+    "cyb",
+
+    "inf",
+
+    "dc"
+
+  ];
+
+
+  return parameters.every(
+
+    parameter => {
+
+      const value =
+        Number(
+          state?.[parameter]
+        );
+
+
+      return (
+
+        Number.isFinite(
+          value
+        ) &&
+
+        value >= 0 &&
+
+        value <= 100
+
+      );
+
+    }
+
+  );
+
+}
+
+
+/* ============================================================
+   AUTHORITATIVE SELF-TEST
+============================================================ */
+
+window.runSelfTest =
+function () {
+
+  const tests = [
+
+    {
+
+      name:
+        "LOW RISK — NORMAL STABILITY",
+
+      state: {
+
+        fx: 0,
+
+        energy: 80,
+
+        cyb: 10,
+
+        inf: 5,
+
+        dc: 5,
+
+        event:
+          "NORMAL",
+
+        mode:
+          "AUTONOMOUS"
+
+      },
+
+      expectedRisk:
+        "LOW",
+
+      expectedDecision:
+        "SYSTEM STABLE"
+
+    },
+
+
+    {
+
+      name:
+        "MEDIUM RISK — PREVENTIVE RESILIENCE",
+
+      state: {
+
+        fx: 50,
+
+        energy: 50,
+
+        cyb: 50,
+
+        inf: 50,
+
+        dc: 50,
+
+        event:
+          "MEDIUM_STRESS",
+
+        mode:
+          "AUTONOMOUS"
+
+      },
+
+      expectedRisk:
+        "MEDIUM",
+
+      expectedDecision:
+        "PREVENTIVE RESILIENCE MODE"
+
+    },
+
+
+    {
+
+      name:
+        "HIGH RISK — STABILIZATION",
+
+      state: {
+
+        fx: 80,
+
+        energy: 0,
+
+        cyb: 100,
+
+        inf: 100,
+
+        dc: 100,
+
+        event:
+          "HIGH_STRESS",
+
+        mode:
+          "AUTONOMOUS"
+
+      },
+
+      expectedRisk:
+        "HIGH",
+
+      expectedDecision:
+        "ACTIVATE STABILIZATION MODE"
+
+    },
+
+
+    {
+
+      name:
+        "MAXIMUM CURRENT RISK — ENGINE LIMIT",
+
+      state: {
+
+        fx: 100,
+
+        energy: 0,
+
+        cyb: 100,
+
+        inf: 100,
+
+        dc: 100,
+
+        event:
+          "CRITICAL_EVENT",
+
+        mode:
+          "AUTONOMOUS"
+
+      },
+
+      expectedRisk:
+        "HIGH",
+
+      expectedDecision:
+        "ACTIVATE STABILIZATION MODE"
+
+    }
+
+  ];
+
+
+  const results = [];
+
+
+  tests.forEach(
+
+    test => {
+
+      try {
+
+        const result =
+          runGoldenRule(
+            test.state
+          );
+
+
+        const riskPassed =
+
+          result.assessment.risk ===
+          test.expectedRisk;
+
+
+        const decisionPassed =
+
+          result.decision.decision ===
+          test.expectedDecision;
+
+
+        const pipelinePassed =
+
+          JSON.stringify(
+            result.pipeline
+          ) ===
+
+          JSON.stringify(
+            GOLDEN_RULE_STAGES
+          );
+
+
+        const executionPassed =
+
+          result.status ===
+          "COMPLETE";
+
+
+        const passed =
+
+          riskPassed &&
+
+          decisionPassed &&
+
+          pipelinePassed &&
+
+          executionPassed;
+
+
+        results.push({
+
+          test:
+            test.name,
+
+          expectedRisk:
+            test.expectedRisk,
+
+          actualRisk:
+            result.assessment.risk,
+
+          expectedDecision:
+            test.expectedDecision,
+
+          actualDecision:
+            result.decision.decision,
+
+          goldenScore:
+            result.assessment.goldenScore,
+
+          resilienceScore:
+            result.assessment.resilienceScore,
+
+          pipeline:
+            result.pipeline,
+
+          engineStatus:
+            result.status,
+
+          checks: {
+
+            risk:
+              riskPassed,
+
+            decision:
+              decisionPassed,
+
+            pipeline:
+              pipelinePassed,
+
+            execution:
+              executionPassed
+
+          },
+
+          status:
+            passed
+              ? "PASS"
+              : "FAIL"
+
+        });
+
+
+      }
+
+      catch (error) {
+
+        results.push({
+
+          test:
+            test.name,
+
+          status:
+            "FAIL",
+
+          error:
+            error.message
+
+        });
+
+      }
+
+    }
+
+  );
+
+
+  const passed =
+
+    results.filter(
+
+      item =>
+        item.status ===
+        "PASS"
+
+    ).length;
+
+
+  const failed =
+
+    results.filter(
+
+      item =>
+        item.status ===
+        "FAIL"
+
+    ).length;
+
+
+  const total =
+    results.length;
+
+
+  const overallStatus =
+
+    failed === 0
+
+      ? "PASS"
+
+      : "FAIL";
+
+
+  const selfTestResult = {
+
+    engine:
+      "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+
+    validationTarget:
+      "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+
+    overallStatus,
+
+    totalTests:
+      total,
+
+    passed,
+
+    failed,
+
+    results,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+
+  document.getElementById(
+    "selfTest"
+  ).innerText =
+
+    JSON.stringify(
+
+      selfTestResult,
+
+      null,
+
+      2
+
+    );
+
+
+  document.getElementById(
+    "faults"
+  ).innerText =
+
+    JSON.stringify(
+
+      {
+
+        status:
+          failed === 0
+            ? "NO_FAULTS"
+            : "FAULTS_IDENTIFIED",
+
+        faultCount:
+          failed,
+
+        failedTests:
+
+          results.filter(
+
+            item =>
+              item.status ===
+              "FAIL"
+
+          )
+
+      },
+
+      null,
+
+      2
+
+    );
+
+
+  return selfTestResult;
+
+};
+
+
+/* ============================================================
+   FULL AUTONOMOUS VALIDATION LOOP
+============================================================ */
+
+window.runFullValidation =
+async function () {
+
+  document.getElementById(
+    "validation"
+  ).innerText =
+
+    "AUTONOMOUS VALIDATION LOOP EXECUTING...";
+
+
+  const selfTest =
+    runSelfTest();
+
+
+  const faultCount =
+    selfTest.failed;
+
+
+  const faultIdentification = {
+
+    status:
+      faultCount === 0
+        ? "NO_FAULTS"
+        : "FAULTS_IDENTIFIED",
+
+    faultCount,
+
+    faults:
+      selfTest.results.filter(
+
+        item =>
+          item.status ===
+          "FAIL"
+
+      )
+
+  };
+
+
+  const correctiveAction = {
+
+    status:
+      faultCount === 0
+        ? "NO_CORRECTIVE_ACTION_REQUIRED"
+        : "CORRECTIVE_ACTION_REQUIRED",
+
+    authority:
+      "CAPTAIN AI LENA",
+
+    decision:
+      faultCount === 0
+        ? "SYSTEM VALIDATION PASSED"
+        : "FAULT IDENTIFIED — REVIEW REQUIRED",
+
+    faultCount,
+
+    actions:
+      []
+
+  };
+
+
+  const correctiveApplication = {
+
+    status:
+      faultCount === 0
+        ? "NO_CORRECTIVE_ACTION_REQUIRED"
+        : "PENDING_AUTHORITATIVE_CORRECTION",
+
+    authority:
+      "CAPTAIN AI LENA",
+
+    applied:
+      false,
+
+    actions:
+      []
+
+  };
+
+
+  /*
+   * Re-test the authoritative engine.
+   *
+   * Because there are no faults, the re-test confirms
+   * the same authoritative engine behaviour.
+   */
+
+  const retest =
+    runSelfTest();
+
+
+  const recoveryVerified =
+
+    selfTest.failed === 0 &&
+
+    retest.failed === 0;
+
+
+  const validationResult = {
+
+    engine:
+      "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+
+    validationTarget:
+      "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+
+    pipeline: [
+
+      "SELF-TEST",
+
+      "FAULT IDENTIFICATION",
+
+      "CAPTAIN AI LENA DECISION",
+
+      "APPLY CORRECTIVE ACTION",
+
+      "RE-TEST VALIDATION",
+
+      "VERIFY RECOVERY"
+
+    ],
+
+    selfTest,
+
+    faultIdentification,
+
+    correctiveAction,
+
+    correctiveApplication,
+
+    retest,
+
+    recoveryVerification: {
+
+      status:
+        recoveryVerified
+          ? "RECOVERY_VERIFIED"
+          : "RECOVERY_NOT_VERIFIED",
+
+      initialStatus:
+        selfTest.overallStatus,
+
+      initialFaultCount:
+        selfTest.failed,
+
+      correctiveAction:
+        correctiveAction.status,
+
+      correctiveActionApplied:
+        correctiveApplication.applied,
+
+      retestStatus:
+        retest.overallStatus,
+
+      finalFaultCount:
+        retest.failed,
+
+      recoveryVerified
+
+    },
+
+    finalStatus:
+
+      recoveryVerified
+
+        ? "VALIDATION COMPLETE"
+
+        : "VALIDATION FAILED",
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+
+  lastValidationResult =
+    validationResult;
+
+
+  document.getElementById(
+    "validation"
+  ).innerText =
+
+    JSON.stringify(
+
+      {
+
+        status:
+          validationResult.finalStatus,
+
+        pipeline:
+          validationResult.pipeline,
+
+        recoveryVerification:
+          validationResult.recoveryVerification
+
+      },
+
+      null,
+
+      2
+
+    );
+
+
+  document.getElementById(
+    "correctiveAction"
+  ).innerText =
+
+    JSON.stringify(
+
+      correctiveAction,
+
+      null,
+
+      2
+
+    );
+
+
+  document.getElementById(
+    "retest"
+  ).innerText =
+
+    JSON.stringify(
+
+      retest,
+
+      null,
+
+      2
+
+    );
+
+
+  document.getElementById(
+    "systemStatus"
+  ).innerText =
+
+    validationResult.finalStatus;
+
+
+  /*
+   * Update audit record with validation result.
+   */
+
+  const currentAudit =
+    document.getElementById(
+      "audit"
+    ).innerText;
+
+
+  let auditObject = {};
+
+
+  try {
+
+    auditObject =
+      JSON.parse(
+        currentAudit
+      );
+
+  }
+
+  catch {
+
+    auditObject = {};
+
+  }
+
+
+  auditObject.validation =
+    validationResult;
+
+
+  auditObject.finalStatus =
+    validationResult.finalStatus;
+
+
+  auditObject.timestamp =
+    new Date().toISOString();
+
+
+  document.getElementById(
+    "audit"
+  ).innerText =
+
+    JSON.stringify(
+
+      auditObject,
+
+      null,
+
+      2
+
+    );
+
+
+  return validationResult;
+
+};
+
+
+/* ============================================================
+   SYSTEM CONSTANTS
+============================================================ */
+
+document.getElementById(
+  "constants"
+).innerText =
+
+  JSON.stringify(
+
+    {
+
+      PHI,
+
+      GOLDEN_RULE_STAGES,
+
+      authoritativeEngine:
+        "goldenRuleEngine.js",
+
+      validationEngine:
+        "SPD v13.1 SEXTANT SELF-TEST & VALIDATION ENGINE",
+
+      decisionAuthority:
+        "CAPTAIN AI LENA",
+
+      deterministic:
+        true,
+
+      machineLearning:
+        false,
+
+      randomness:
+        false
+
+    },
+
+    null,
+
+    2
+
+  );
+
+
+/* ============================================================
+   INPUT EVENT LISTENERS
+============================================================ */
+
+[
+
+  "fx",
+
+  "energy",
+
+  "cyb",
+
+  "inf",
+
+  "dc"
+
+].forEach(
+
+  id => {
+
+    document.getElementById(
+      id
+    ).addEventListener(
+
+      "input",
+
+      () => {
+
+        updateDomainMonitor(
+          getSystemState()
+        );
+
+      }
+
+    );
+
+  }
+
+);
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+updateScenarioPanel();
+
+updateDomainMonitor(
+  getSystemState()
+);
+
+runSystem();
+
+
+</script>
+
+
+</
