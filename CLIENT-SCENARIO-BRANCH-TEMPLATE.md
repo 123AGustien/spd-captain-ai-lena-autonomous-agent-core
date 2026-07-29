@@ -32,11 +32,11 @@ Merge Policy:
 
 # Client Scenario Scope
 
-Purpose:
+## Purpose
 
 Define the specific SPD v13.1 scenario demonstration for this client.
 
-Included:
+## Included
 
 - Client-specific scenario
 - Required domain integration
@@ -44,8 +44,7 @@ Included:
 - Required validation
 - Required audit output
 
-
-Excluded:
+## Excluded
 
 - Other client scenarios
 - Experimental development
@@ -55,4 +54,4 @@ Excluded:
 
 # Scenario Integration
 
-Flow:
+## Flow
