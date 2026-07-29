@@ -223,3 +223,23 @@ Status:
 Authority:
 
 `SPD v13.1 MASTER CLEAN BUILD`
+
+Client Scenario Input
+↓
+Domain Integration Layer
+↓
+Domain Rule Engine
+↓
+Scenario Assessment
+↓
+Golden Rule Engine
+↓
+Captain AI Lena Decision Core
+↓
+Action Sequence
+↓
+Memory Core
+↓
+Audit Record
+↓
+Validation Confirmation
