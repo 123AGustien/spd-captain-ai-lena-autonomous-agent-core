@@ -23,15 +23,18 @@
 
 
 const BHR_THRESHOLD = {
+
     MEDIUM: 40,
+
     HIGH: 70
+
 };
+
 
 
 /**
  * Clamp indicator values
  *
- * Ensures inputs remain inside SPD boundaries:
  * 0 = stable
  * 100 = severe stress
  */
@@ -39,12 +42,18 @@ const BHR_THRESHOLD = {
 function normalizeIndicator(value) {
 
     if (typeof value !== "number") {
+
         return 0;
+
     }
 
-    return Math.min(Math.max(value, 0), 100);
+    return Math.min(
+        Math.max(value, 0),
+        100
+    );
 
 }
+
 
 
 /**
@@ -61,33 +70,57 @@ function normalizeIndicator(value) {
 
 function calculateBHRStress(state = {}) {
 
+
     const humanRights =
-        normalizeIndicator(state.humanRights);
+        normalizeIndicator(
+            state.humanRights
+        );
+
 
     const workerSafety =
-        normalizeIndicator(state.workerSafety);
+        normalizeIndicator(
+            state.workerSafety
+        );
+
 
     const supplyChain =
-        normalizeIndicator(state.supplyChain);
+        normalizeIndicator(
+            state.supplyChain
+        );
+
 
     const governance =
-        normalizeIndicator(state.governance);
+        normalizeIndicator(
+            state.governance
+        );
+
 
     const communityImpact =
-        normalizeIndicator(state.communityImpact);
+        normalizeIndicator(
+            state.communityImpact
+        );
 
 
     const stress =
+
         (humanRights * 0.25) +
+
         (workerSafety * 0.25) +
+
         (supplyChain * 0.20) +
+
         (governance * 0.20) +
+
         (communityImpact * 0.10);
 
 
-    return Number(stress.toFixed(3));
+
+    return Number(
+        stress.toFixed(3)
+    );
 
 }
+
 
 
 /**
@@ -96,17 +129,29 @@ function calculateBHRStress(state = {}) {
 
 function classifyBHRRisk(stress) {
 
-    if (stress >= BHR_THRESHOLD.HIGH) {
+
+    if (
+        stress >= BHR_THRESHOLD.HIGH
+    ) {
+
         return "HIGH";
+
     }
 
-    if (stress >= BHR_THRESHOLD.MEDIUM) {
+
+    if (
+        stress >= BHR_THRESHOLD.MEDIUM
+    ) {
+
         return "MEDIUM";
+
     }
+
 
     return "LOW";
 
 }
+
 
 
 /**
@@ -114,63 +159,117 @@ function classifyBHRRisk(stress) {
  */
 
 export function evaluateBHRScenario(
+
     scenarioId,
+
     state = {}
+
 ) {
 
+
     const stress =
-        calculateBHRStress(state);
+
+        calculateBHRStress(
+            state
+        );
 
 
     const risk =
-        classifyBHRRisk(stress);
+
+        classifyBHRRisk(
+            stress
+        );
+
 
 
     return {
 
-        domain: "BHR",
 
-        scenario: scenarioId,
+        domain:
+
+            "BHR",
+
+
+        scenario:
+
+            scenarioId,
+
+
 
         assessment: {
 
-            domainStress: stress,
 
-            risk: risk
+            domainStress:
+
+                stress,
+
+
+            risk:
+
+                risk
+
 
         },
+
 
 
         indicators: {
 
+
             humanRights:
-                normalizeIndicator(state.humanRights),
+
+                normalizeIndicator(
+                    state.humanRights
+                ),
+
 
             workerSafety:
-                normalizeIndicator(state.workerSafety),
+
+                normalizeIndicator(
+                    state.workerSafety
+                ),
+
 
             supplyChain:
-                normalizeIndicator(state.supplyChain),
+
+                normalizeIndicator(
+                    state.supplyChain
+                ),
+
 
             governance:
-                normalizeIndicator(state.governance),
+
+                normalizeIndicator(
+                    state.governance
+                ),
+
 
             communityImpact:
-                normalizeIndicator(state.communityImpact)
+
+                normalizeIndicator(
+                    state.communityImpact
+                )
+
 
         },
 
 
+
         ruleStatus:
+
             "BHR ASSESSMENT COMPLETE",
 
 
+
         coreAuthority:
+
             "GOLDEN RULE ENGINE REMAINS AUTHORITATIVE"
+
 
     };
 
 }
+
 
 
 /**
@@ -179,21 +278,35 @@ export function evaluateBHRScenario(
 
 export function validateBHREngine() {
 
+
     return {
 
+
         engine:
+
             "BHR RULE ENGINE",
 
+
         status:
+
             "READY",
 
+
         deterministic:
+
             true,
 
+
         bypassCore:
+
             false
 
+
     };
+
+}
+
+
 
 /**
  * DOMAIN INTEGRATION WRAPPER
@@ -201,17 +314,24 @@ export function validateBHREngine() {
  * Entry point used by domainIntegration.js
  */
 
-export function bhrRuleEngine(input = {}) {
+export function bhrRuleEngine(
+
+    input = {}
+
+) {
+
 
     return evaluateBHRScenario(
 
         input.scenario
+
         ||
+
         "BHR_GENERAL_ASSESSMENT",
+
 
         input
 
     );
 
-}
 }
