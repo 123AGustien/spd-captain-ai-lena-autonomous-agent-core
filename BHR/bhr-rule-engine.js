@@ -195,4 +195,23 @@ export function validateBHREngine() {
 
     };
 
+/**
+ * DOMAIN INTEGRATION WRAPPER
+ *
+ * Entry point used by domainIntegration.js
+ */
+
+export function bhrRuleEngine(input = {}) {
+
+    return evaluateBHRScenario(
+
+        input.scenario
+        ||
+        "BHR_GENERAL_ASSESSMENT",
+
+        input
+
+    );
+
+}
 }
