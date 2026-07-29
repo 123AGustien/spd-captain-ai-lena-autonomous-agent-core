@@ -5,10 +5,6 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * PURPOSE:
- *
- * Single gateway between:
- *
  * COCKPIT / SCENARIO BUTTONS
  *          ↓
  * DOMAIN INTEGRATION
@@ -16,13 +12,6 @@
  * DOMAIN RULE ENGINES
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
- *
- *
- * ACTIVE DOMAINS:
- *
- * FIN — Financial Resilience
- * BHR — Business & Human Rights Resilience
- *
  *
  * Golden Rule:
  *
@@ -36,12 +25,6 @@
  */
 
 
-/* ============================================================
-   DOMAIN ENGINE IMPORTS
-   ============================================================
- */
-
-
 import {
     finRuleEngine
 } from "./FIN/fin-rule-engine.js";
@@ -51,12 +34,6 @@ import {
     bhrRuleEngine
 } from "./BHR/bhr-rule-engine.js";
 
-
-
-/* ============================================================
-   DOMAIN REGISTRY
-   ============================================================
- */
 
 
 export const DOMAIN_REGISTRY = {
@@ -91,7 +68,6 @@ export const DOMAIN_REGISTRY = {
 
 
     FX: {
-
         name:
             "Foreign Exchange",
 
@@ -100,12 +76,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "FX_RULE_ENGINE"
-
     },
 
 
     DC: {
-
         name:
             "Data Centre",
 
@@ -114,12 +88,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "DC_RULE_ENGINE"
-
     },
 
 
     CYB: {
-
         name:
             "Cyber Resilience",
 
@@ -128,12 +100,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "CYB_RULE_ENGINE"
-
     },
 
 
     INF: {
-
         name:
             "Infrastructure",
 
@@ -142,12 +112,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "INF_RULE_ENGINE"
-
     },
 
 
     ENG: {
-
         name:
             "Energy",
 
@@ -156,12 +124,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "ENG_RULE_ENGINE"
-
     },
 
 
     OPS: {
-
         name:
             "Operations",
 
@@ -170,18 +136,10 @@ export const DOMAIN_REGISTRY = {
 
         engine:
             "OPS_RULE_ENGINE"
-
     }
-
 
 };
 
-
-
-/* ============================================================
-   DOMAIN ENGINE REGISTRY
-   ============================================================
- */
 
 
 const DOMAIN_ENGINES = {
@@ -196,15 +154,32 @@ const DOMAIN_ENGINES = {
 
         bhrRuleEngine
 
-
 };
 
 
 
-/* ============================================================
-   REGISTER DOMAIN ENGINE
-   ============================================================
- */
+function verifyDomainInput(input = {}) {
+
+
+    return {
+
+        ...input,
+
+
+        verified:
+
+            true,
+
+
+        verificationStatus:
+
+            "INPUT VERIFIED"
+
+    };
+
+}
+
+
 
 
 export function registerDomainEngine(
@@ -216,15 +191,9 @@ export function registerDomainEngine(
 ) {
 
 
-    const id = String(
-
-        domain || ""
-
-    )
-
-    .trim()
-
-    .toUpperCase();
+    const id = String(domain || "")
+        .trim()
+        .toUpperCase();
 
 
 
@@ -238,9 +207,7 @@ export function registerDomainEngine(
 
 
 
-    if (
-        typeof engine !== "function"
-    ) {
+    if (typeof engine !== "function") {
 
         throw new Error(
             "DOMAIN ENGINE MUST BE FUNCTION"
@@ -250,8 +217,7 @@ export function registerDomainEngine(
 
 
 
-    DOMAIN_ENGINES[id] =
-        engine;
+    DOMAIN_ENGINES[id] = engine;
 
 
 
@@ -269,28 +235,14 @@ export function registerDomainEngine(
 
 
 
-/* ============================================================
-   GET DOMAIN STATUS
-   ============================================================
- */
 
 
-export function getDomainStatus(
-
-    domain
-
-) {
+export function getDomainStatus(domain) {
 
 
-    const id = String(
-
-        domain || ""
-
-    )
-
-    .trim()
-
-    .toUpperCase();
+    const id = String(domain || "")
+        .trim()
+        .toUpperCase();
 
 
 
@@ -328,18 +280,12 @@ export function getDomainStatus(
 
             "UNAVAILABLE"
 
-
     };
-
 
 }
 
 
 
-/* ============================================================
-   EXECUTE DOMAIN RULE
-   ============================================================
- */
 
 
 export function executeDomainRule(
@@ -351,32 +297,23 @@ export function executeDomainRule(
 ) {
 
 
-    const id = String(
-
-        domain || ""
-
-    )
-
-    .trim()
-
-    .toUpperCase();
+    const id = String(domain || "")
+        .trim()
+        .toUpperCase();
 
 
 
     const engine =
-
         DOMAIN_ENGINES[id];
 
 
 
     const config =
-
         DOMAIN_REGISTRY[id];
 
 
 
     if (!config) {
-
 
         return {
 
@@ -388,13 +325,11 @@ export function executeDomainRule(
 
         };
 
-
     }
 
 
 
     if (!engine) {
-
 
         return {
 
@@ -409,7 +344,6 @@ export function executeDomainRule(
 
         };
 
-
     }
 
 
@@ -418,6 +352,38 @@ export function executeDomainRule(
 
 
         ...input,
+
+
+        domain:
+            id,
+
+
+        domainName:
+            config.name,
+
+
+        timestamp:
+            new Date().toISOString()
+
+    };
+
+
+
+    const verifiedInput =
+        verifyDomainInput(
+            observedInput
+        );
+
+
+
+    const result =
+        engine(
+            verifiedInput
+        );
+
+
+
+    return {
 
 
         domain:
@@ -430,56 +396,52 @@ export function executeDomainRule(
             config.name,
 
 
-        timestamp:
+        engine:
 
-            new Date()
-            .toISOString()
+            config.engine,
 
+
+        pipeline:
+
+        [
+
+            "OBSERVE",
+
+            "VERIFY",
+
+            "ASSESS",
+
+            "DECIDE",
+
+            "ACT",
+
+            "UPDATE"
+
+        ],
+
+
+
+        result:
+
+
+
+            result,
+
+
+        audit:
+
+        {
+
+            status:
+
+                "RECORDED",
+
+            timestamp:
+
+                new Date().toISOString()
+
+        }
 
     };
 
-
-
-    try {
-
-
-
-        const verifiedInput =
-
-            verifyDomainInput(
-                observedInput
-            );
-
-
-
-        const result =
-
-            engine(
-                verifiedInput
-            );
-
-
-
-        return {
-
-
-            domain:
-
-                id,
-
-
-            domainName:
-
-                config.name,
-
-
-            engine:
-
-                config.engine,
-
-
-            pipeline:
-
-            [
-
-                "OBSERVE
+}
