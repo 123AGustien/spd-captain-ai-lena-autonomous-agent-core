@@ -371,3 +371,186 @@ export function executeDomainRule(
 
             status:
                 "EXECUTED
+        };
+
+    } catch(error) {
+
+        return {
+
+            domain: id,
+
+            status:
+                "DOMAIN_ENGINE_ERROR",
+
+            error:
+                error.message,
+
+            decision:
+                "NO DECISION — ENGINE ERROR",
+
+            action:
+                "HOLD AND MONITOR",
+
+            timestamp:
+                new Date()
+                    .toISOString()
+
+        };
+
+    }
+
+}
+
+
+/* ============================================================
+   VERIFY DOMAIN INPUT
+   ============================================================
+ */
+
+function verifyDomainInput(
+    input
+) {
+
+    const intensity =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(input.intensity) || 0
+            )
+        );
+
+
+    return {
+
+        ...input,
+
+        intensity,
+
+        intensityFactor:
+            intensity / 100,
+
+        scenario:
+            input.scenario ??
+            input.event ??
+            "DEFAULT",
+
+        event:
+            input.event ??
+            input.scenario ??
+            "DEFAULT",
+
+        state:
+            input.state ?? {},
+
+        mode:
+            input.mode ??
+            "AUTONOMOUS"
+
+    };
+
+}
+
+
+/* ============================================================
+   GET ALL DOMAIN STATUS
+   ============================================================
+ */
+
+export function getAllDomainStatus() {
+
+    return Object.keys(
+        DOMAIN_REGISTRY
+    ).map(
+        domain =>
+            getDomainStatus(domain)
+    );
+
+}
+
+
+/* ============================================================
+   CONSTANTS
+   ============================================================
+ */
+
+export const DOMAIN_IDS = [
+
+    "FIN",
+
+    "BHR",
+
+    "FX",
+
+    "DC",
+
+    "CYB",
+
+    "INF",
+
+    "ENG",
+
+    "OPS",
+
+    "SC"
+
+];
+
+
+export const DOMAIN_INTEGRATION_STATUS = {
+
+    engine:
+        "SPD V13.1 DOMAIN INTEGRATION LAYER",
+
+    activeDomains:
+
+    [
+        "FIN",
+        "BHR"
+    ],
+
+    pipeline:
+
+    [
+        "OBSERVE",
+        "VERIFY",
+        "ASSESS",
+        "DECIDE",
+        "ACT",
+        "UPDATE"
+    ],
+
+    deterministic:
+        true,
+
+    machineLearning:
+        false,
+
+    randomness:
+        false
+
+};
+
+
+/* ============================================================
+   DEFAULT EXPORT
+   ============================================================
+ */
+
+export default {
+
+    registerDomainEngine,
+
+    executeDomainRule,
+
+    getDomainStatus,
+
+    getAllDomainStatus,
+
+    DOMAIN_IDS,
+
+    DOMAIN_REGISTRY,
+
+    DOMAIN_INTEGRATION_STATUS
+
+};
