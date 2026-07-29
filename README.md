@@ -1,1419 +1,159 @@
-🛡️ FINANCIAL DOMAIN RESILIENCE CONTROL LOOP
+# SPD v13.1 — Client Scenario Branch Protocol
 
-SPD v13.1 integrates domain-specific financial resilience rules into the authoritative Golden Rule Engine without allowing domain rules to bypass core system boundaries.
+## Purpose
 
-The financial resilience control architecture is:
+SPD v13.1 uses an isolated client scenario branch model.
 
-FIN RULE → GOLDEN RATIO NORMALIZATION → CORE PARAMETER BOUNDARY → CAPTAIN AI LENA DECISION → ACTION → RE-TEST → PARAMETER VERIFICATION
+The master clean build remains the authoritative source.
 
-1. FIN RULE ENGINE
+Each client demonstration receives its own branch containing only the required scenario configuration and integration.
 
-The FIN Rule Engine evaluates financial-domain scenarios, including:
+This preserves:
 
-- FIN_STRESS
-- BANKING_STRESS
-- LIQUIDITY_CRISIS
-- CREDIT_STRESS
-- SOVEREIGN_DEBT
+- Core engine integrity
+- Golden Rule Engine authority
+- Validation consistency
+- Audit traceability
+- Client confidentiality
 
-Each scenario provides a deterministic, domain-specific financial risk assessment.
 
-2. GOLDEN RATIO NORMALIZATION
+# Master Build
 
-The financial-domain assessment is processed through the SPD Golden Ratio normalization mechanism.
+Branch:
 
-This ensures that domain-specific stress assessments are translated into the common resilience framework used by the authoritative core engine.
+`spd-v13-clean-rebuild`
 
-The Golden Ratio mechanism does not replace the FIN domain rules. It provides the normalization layer through which domain-specific assessments are evaluated consistently within the SPD resilience architecture.
+Status:
 
-3. CORE PARAMETER BOUNDARY
+`MASTER CLEAN BUILD`
 
-The normalized assessment is evaluated against the authoritative core engine parameters and defined system boundaries.
+The master build contains the validated SPD v13.1 architecture.
 
-The FIN Rule Engine therefore cannot independently override or bypass the core engine.
+It must not be modified for individual client demonstrations.
 
-This creates a controlled boundary:
 
-DOMAIN RULES → NORMALIZATION → CORE BOUNDARY
+# Client Branch Model
 
-The domain layer provides intelligence and assessment.
+Each client uses a separate branch.
 
-The core layer remains authoritative.
+Format:
 
-4. CAPTAIN AI LENA DECISION
-
-Following assessment and boundary verification, Captain AI Lena determines the appropriate resilience response.
-
-The decision layer may select an appropriate operational mode, such as:
-
-- FINANCIAL MONITORING
-- FINANCIAL PREVENTION
-- FINANCIAL STABILIZATION
-
-The FIN Rule Engine provides the domain recommendation.
-
-The authoritative Captain AI Lena decision core remains responsible for the final system-level decision.
-
-5. ACTION
-
-The selected resilience response is translated into a deterministic action sequence.
-
-Actions may include:
-
-- Confirm system state
-- Apply selected mitigation
-- Monitor financial conditions
-- Monitor banking and liquidity conditions
-- Strengthen resilience reserves
-- Monitor systemic contagion risk
-- Monitor system response
-
-The action layer operates within the parameters established by the core engine.
-
-6. RE-TEST
-
-Following corrective action or resilience action, the system executes the validation and re-test process.
-
-The purpose is to determine whether the system continues to operate correctly after the intervention.
-
-The validation cycle follows:
-
-SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST VALIDATION
-
-7. PARAMETER VERIFICATION
-
-The final stage verifies that the system remains within its defined operational parameters.
-
-The system therefore does not simply detect and respond to a financial scenario.
-
-It verifies that the response itself remains controlled.
-
-The complete resilience loop is:
-
-FIN RULE
-↓
-GOLDEN RATIO NORMALIZATION
-↓
-CORE PARAMETER BOUNDARY
-↓
-CAPTAIN AI LENA DECISION
-↓
-ACTION
-↓
-RE-TEST
-↓
-PARAMETER VERIFICATION
-
-RESILIENCE PRINCIPLE
-
-The fundamental resilience principle of SPD v13.1 is:
-
-«Domain-specific rules may identify and assess risk, but they do not bypass the authoritative core engine.»
-
-This separation ensures that financial-domain logic remains modular and extensible while the Golden Rule Engine maintains deterministic control over the system's operational boundaries.
-
-The architecture is therefore designed to prevent uncontrolled parameter escalation and to ensure that every domain response remains subject to:
-
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-
-followed by:
-
-SELF-TEST → FAULT IDENTIFICATION → CORRECTIVE ACTION → RE-TEST → PARAMETER VERIFICATION
-
-This creates a closed-loop resilience architecture in which the system not only responds to risk, but also validates its own response and verifies continued operation within defined boundaries.
-🛰️ SPD v13.1 — Future Scenario Implementation Procedure
-
-Standard Scenario Integration Workflow
-
-All new scenarios and domain rule systems must follow the standardized SPD v13.1 integration procedure.
-
-The purpose of this procedure is to ensure that every new scenario is not only visible in the cockpit, but is also correctly connected to the authoritative Captain AI Lena decision architecture and validated through the full autonomous validation loop.
-
-Implementation Sequence
-
-1. ADD SCENARIO BUTTON
-        ↓
-2. CONNECT TO DOMAIN INTEGRATION LAYER
-        ↓
-3. CONNECT DOMAIN RULE ENGINE / RULE REGISTRY
-        ↓
-4. PASS SCENARIO STATE + INTENSITY
-        ↓
-5. CAPTAIN AI LENA DECISION PIPELINE
-        ↓
-6. VERIFY GOLDEN RULE EXECUTION
-        ↓
-7. VERIFY DECISION + ACTION
-        ↓
-8. VERIFY MEMORY CORE + AUDIT RECORD
-        ↓
-9. RUN SELF-TEST
-        ↓
-10. RUN SELF-TEST + CORRECTIVE ACTION
-        ↓
-11. CONFIRM FINAL VALIDATION STATUS
-
-Step 1 — Add the Scenario Button
-
-Add the new scenario button to the SPD v13.1 cockpit interface.
-
-The button must:
-
-- Be visible in the correct domain section.
-- Have a unique scenario identifier.
-- Pass the correct scenario ID when activated.
-- Respect the global scenario intensity control.
-- Display the active scenario in the Scenario Panel.
-
-Step 2 — Connect to "domainIntegration.js"
-
-Route the scenario through the generic domain integration layer.
-
-The integration layer acts as the gateway between the cockpit and the appropriate domain rule engine.
-
-COCKPIT SCENARIO BUTTON
-        ↓
-domainIntegration.js
-        ↓
-DOMAIN RULE ENGINE
-
-This architecture allows future domains to be added without rebuilding the Captain AI Lena core.
-
-Step 3 — Connect the Domain Rule Engine
-
-Connect the scenario to its authoritative rule engine and rule registry.
-
-Example domains include:
-
-FIN — Financial Resilience
-FX  — Foreign Exchange
-DC  — Data Centre
-CYB — Cyber Resilience
-INF — Infrastructure
-ENG — Energy
-OPS — Operations
-SC  — Scenario Control
-
-The appropriate domain rules must be loaded and executed deterministically.
-
-Step 4 — Pass Scenario State and Intensity
-
-The scenario must pass its operational state and selected intensity into the domain rule engine.
-
-Required information should include, where applicable:
-
-domain
-scenario
-intensity
-intensityFactor
-system state
-operating mode
-timestamp
-
-Step 5 — Captain AI Lena Decision Pipeline
-
-The domain result must integrate with the authoritative Captain AI Lena decision architecture.
-
-The required Golden Rule pipeline is:
-
-OBSERVE
-   ↓
-VERIFY
-   ↓
-ASSESS
-   ↓
-DECIDE
-   ↓
-ACT
-   ↓
-UPDATE
-
-Step 6 — Verify Golden Rule Execution
-
-Confirm that the scenario executes through the complete pipeline.
-
-The system must correctly produce:
-
-- Observed state
-- Verified state
-- Assessment
-- Risk classification
-- Resilience score
-- Captain AI Lena decision
-- Action sequence
-- Updated state
-
-Step 7 — Verify Decision and Action
-
-Confirm that the scenario produces an appropriate deterministic decision and operational action.
-
-The result must be visible in:
-
-⚙️ CAPTAIN AI LENA DECISION
-🚨 ACTION SEQUENCE PROMPT
-
-Step 8 — Verify Memory Core and Audit Record
-
-Confirm that the scenario execution is recorded in:
-
-🧠 MEMORY CORE
-🧾 SPD v13.1 AUDIT RECORD
-📜 PIPELINE LOG
-
-The audit record should identify the scenario, intensity, domain, engine result, decision, action, timestamp, and final status.
-
-Step 9 — Run Self-Test
-
-Execute:
-
-🧪 RUN SELF-TEST
-
-Verify that:
-
-- All configured validation tests pass.
-- No unexpected faults are detected.
-- Risk classification is correct.
-- Decision logic is correct.
-- Golden Rule pipeline is intact.
-
-Step 10 — Run Self-Test + Corrective Action
-
-Execute:
-
-🛠️ RUN SELF-TEST + CORRECTIVE ACTION
-
-Verify the complete autonomous validation loop:
-
-SELF-TEST
-   ↓
-FAULT IDENTIFICATION
-   ↓
-CAPTAIN AI LENA CORRECTIVE ACTION
-   ↓
-RE-TEST VALIDATION
-   ↓
-RECOVERY VERIFICATION
-
-Step 11 — Confirm Final Validation Status
-
-The implementation is considered validated only after:
-
-BUTTON VISIBILITY          → PASS
-SCENARIO EXECUTION         → PASS
-DOMAIN RULE INTEGRATION    → PASS
-GOLDEN RULE PIPELINE       → PASS
-DECISION OUTPUT            → PASS
-ACTION OUTPUT              → PASS
-MEMORY CORE                → PASS
-AUDIT RECORD               → PASS
-SELF-TEST                  → PASS
-RE-TEST VALIDATION         → PASS
-
-Standard Rule
-
-«A scenario is not considered implemented merely because its button appears in the cockpit.»
-
-The scenario must be tested in two stages:
-
-Stage 1 — Interface Validation
-
-Button Visible
-        ↓
-Scenario Selectable
-        ↓
-Scenario Panel Updates
-
-Stage 2 — Functional Validation
-
-Scenario Activated
-        ↓
-Domain Rule Engine Executes
-        ↓
-Captain AI Lena Assesses
-        ↓
-Decision Generated
-        ↓
-Action Generated
-        ↓
-Memory Updated
-        ↓
-Audit Recorded
-        ↓
-Self-Test Validated
-
-Future Scenario Architecture
-
-All future scenario implementations should follow the same architecture:
-
-SPD v13.1 COCKPIT
-        ↓
-SCENARIO / DOMAIN BUTTON
-        ↓
-domainIntegration.js
-        ↓
-DOMAIN RULE ENGINE
-        ↓
-CAPTAIN AI LENA AUTONOMOUS AGENT CORE
-        ↓
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-        ↓
-DECISION + ACTION + MEMORY + AUDIT
-        ↓
-SELF-TEST + CORRECTIVE ACTION + RE-TEST
-
-This procedure establishes the standard implementation and validation method for all future SPD v13.1 scenario and domain integrations.
-🧭 ACTION RULE 1 — FX_SHOCK OPERATIONAL TEST
-
-Action Rule 1 is tested through the SPD v13.1 scenario engine using the FX_SHOCK scenario.
-
-The purpose of this test is to verify that the system can:
-
-1. Accept an FX stress scenario.
-2. Process the scenario through the deterministic Golden Rule Engine.
-3. Calculate system stress and resilience.
-4. Classify the resulting risk.
-5. Generate the appropriate Captain AI Lena decision.
-6. Produce the defined action sequence.
-7. Execute the autonomous validation loop.
-8. Complete re-test validation.
-9. Produce an audit-ready result.
-
-FX_SHOCK Test Procedure
-
-Step 1 — Select Scenario
-
-Select:
-
-"FX STRESS"
-
-The scenario engine should identify the event as:
-
-"FX_SHOCK"
-
-Step 2 — Set Scenario Intensity
-
-Set the scenario intensity to a controlled test level.
+`client-[client-name]-[scenario-name]`
 
 Example:
 
-"INTENSITY: 50%"
+`client-energy-liquidity-stress`
 
-Step 3 — Run System
+Created from:
 
-Execute:
+`spd-v13-clean-rebuild`
 
-"RUN SYSTEM"
 
-The Golden Rule Engine must execute:
+# Core Client Scenario Files
 
-"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
+Each client scenario branch uses only the required files:
 
-Step 4 — Verify FX_SHOCK Assessment
+## 1. Scenario Configuration
 
-The system must produce:
+Defines the client-specific scenario inputs and conditions.
 
-- Raw stress
-- Golden score
-- Resilience score
-- Risk classification
-- Captain AI Lena decision
-- Action sequence
-- Updated system state
-- Audit record
+Example:
 
-Step 5 — Run Self-Test
+`scenarioRegistry.js`
 
-Execute:
 
-"RUN SELF-TEST"
+## 2. Domain Integration
 
-Expected validation:
+Connects the scenario to the required domain rule engine.
 
-"SELF-TEST: PASS"
+File:
 
-Step 6 — Identify Faults
+`domainIntegration.js`
 
-The validation layer evaluates the self-test result.
 
-Expected result for a healthy baseline:
+## 3. Rule Engine
 
-"STATUS: NO_FAULTS"
+Provides domain-specific assessment.
 
-"FAULT COUNT: 0"
+Example:
 
-Step 7 — Captain AI Lena Corrective Decision
+`FIN/fin-rule-engine.js`
 
-Captain AI Lena evaluates whether corrective action is required.
+or
 
-Expected result when no fault is identified:
+`BHR/bhr-rule-engine.js`
 
-"NO_CORRECTIVE_ACTION_REQUIRED"
 
-Step 8 — Re-Test Validation
+## 4. Validation and Audit
 
-Execute the autonomous validation loop:
+Confirms system behaviour and records results.
 
-"SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION ASSESSMENT → RE-TEST VALIDATION"
+Files:
 
-Expected result:
+`selfTestValidationEngine.js`
 
-"RE-TEST: PASS"
+`auditLogger.js`
 
-Step 9 — Final Validation
 
-The complete test is considered successful when:
+# Processing Flow
 
-"INITIAL SELF-TEST: PASS"
+Client Scenario
 
-"FAULT IDENTIFICATION: NO_FAULTS"
-
-"CORRECTIVE ACTION: NOT REQUIRED"
-
-"RE-TEST: PASS"
-
-"FINAL STATUS: VALIDATION COMPLETE"
-
-Example FX_SHOCK Test Result
-
-Example controlled test:
-
-"SCENARIO: FX_SHOCK"
-
-"INTENSITY: 50%"
-
-"RAW STRESS: 41"
-
-"GOLDEN SCORE: 25.339393538745693"
-
-"RESILIENCE SCORE: 74.6606064612543"
-
-"RISK: LOW"
-
-"CAPTAIN AI LENA DECISION: ENERGY PROTECTION MODE"
-
-"ACTION: REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES"
-
-"SELF-TEST: 4/4 PASS"
-
-"FAULTS: 0"
-
-"CORRECTIVE ACTIONS: 0"
-
-"RE-TEST: 4/4 PASS"
-
-"FINAL STATUS: VALIDATION COMPLETE"
-
-Important Validation Note
-
-The FX_SHOCK scenario test and the Self-Test & Validation test suite are separate validation layers.
-
-The FX_SHOCK scenario verifies scenario behaviour and operational decision logic.
-
-The Self-Test & Validation Engine verifies the authoritative Golden Rule Engine's deterministic behaviour.
-
-Therefore, a complete FX_SHOCK validation should confirm both:
-
-"SCENARIO EXECUTION"
 ↓
-"GOLDEN RULE DECISION"
+
+Domain Integration Layer
+
 ↓
-"ACTION RULE 1 RESPONSE"
+
+Domain Rule Engine
+
 ↓
-"SELF-TEST"
+
+Golden Rule Engine
+
 ↓
-"FAULT IDENTIFICATION"
+
+Captain AI Lena Decision Core
+
 ↓
-"CAPTAIN AI LENA DECISION"
+
+Validation
+
 ↓
-"RE-TEST"
-↓
-"VALIDATION COMPLETE"
 
-The backend implementation remains the authoritative source of truth for the actual Action Rule 1 definition and expected response.
+Audit Record
 
-🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
 
-Captain AI Lena Autonomous Agent Core
+# Branch Policy
 
-DATA → ALGORITHMS → COMPUTE
+Client branches are isolated.
 
-SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST
+No client-specific changes merge back into:
 
-SYSTEM STATUS: VALIDATION COMPLETE
+`spd-v13-clean-rebuild`
 
----
 
-🧠 SYSTEM OVERVIEW
+# Deployment Status
 
-SPD Captain AI Lena Autonomous Agent Core is a deterministic, rule-based autonomous decision engine designed to transform structured system state data into continuous decision and validation loops.
+Client:
 
-The system integrates:
+`CLIENT_NAME`
 
-- Structured system state inputs
-- Deterministic algorithms
-- Scenario simulation
-- Golden Rule decision logic
-- Autonomous validation
-- Fault identification
-- Captain AI Lena corrective decision logic
-- Re-test validation
-- Audit-ready system output
+Scenario:
 
-The architecture follows:
+`CLIENT_SCENARIO`
 
-DATA
-   ↓
-ALGORITHMS
-   ↓
-COMPUTE
-   ↓
-OBSERVE
-   ↓
-VERIFY
-   ↓
-ASSESS
-   ↓
-DECIDE
-   ↓
-ACT
-   ↓
-UPDATE
+Branch:
 
-The validation architecture operates as:
+`client-CLIENT_NAME-scenario`
 
-SELF-TEST
-   ↓
-FAULT IDENTIFICATION
-   ↓
-CAPTAIN AI LENA DECISION
-   ↓
-CORRECTIVE ACTION
-   ↓
-RE-TEST VALIDATION
-   ↓
-VERIFY RECOVERY
-   ↓
-VALIDATION COMPLETE
+Status:
 
----
+`DEMO READY`
 
-🧭 BACKEND SOURCE OF TRUTH
 
-The backend implementation is the authoritative source for all system workflows, decision logic, rule execution, and validation behaviour.
+# Authority
 
-If any mismatch exists between:
+SPD v13.1 MASTER CLEAN BUILD
 
-- Frontend cockpit displays
-- User interface behaviour
-- Documentation
-- Examples
-- Simulations
-- External references
-- Third-party implementations
-
-the backend implementation shall be treated as the source of truth.
-
-Development Rule
-
-Client Input
-      ↓
-Backend Processing
-      ↓
-Decision Engine
-      ↓
-System Output
-      ↓
-Frontend Display
-
-The frontend must accurately represent backend state and must never redefine or override authoritative backend decision logic.
-
-Source Validation Rule
-
-When integrating external libraries, frameworks, examples, tutorials, or reference implementations:
-
-1. Read the official documentation and source code.
-2. Compare external behaviour with the SPD backend implementation.
-3. Verify the SPD backend logic if a mismatch is detected.
-4. Do not modify authoritative SPD workflow solely to match an external implementation without technical validation.
-
----
-
-🧮 SPD COMPUTE ARCHITECTURE
-
-1. DATA LAYER — SYSTEM STATE
-
-The system receives structured system state data.
-
-Minimum input:
-
-{
-  "fx": 0,
-  "energy": 50,
-  "cyb": 50
-}
-
-Extended input:
-
-{
-  "fx": 0,
-  "energy": 100,
-  "cyb": 100,
-  "inf": 0,
-  "dc": 0,
-  "event": "NORMAL",
-  "time": "2026-01-01T00:00:00Z",
-  "mode": "AUTONOMOUS"
-}
-
-The state represents real-world or simulated operating conditions.
-
-No decision logic is applied at the raw data layer.
-
----
-
-2. ALGORITHM LAYER — DECISION LOGIC
-
-The algorithm layer transforms structured state data into evaluative system states.
-
-FX MODULE
-
-Evaluates:
-
-- Economic stability
-- FX instability
-- FX stress conditions
-
-ENERGY MODULE
-
-Evaluates:
-
-- Available energy
-- Energy depletion
-- Energy protection requirements
-
-CYBER MODULE
-
-Evaluates:
-
-- Cyber stress
-- System integrity
-- Cyber event conditions
-
-INFRASTRUCTURE MODULE
-
-Evaluates:
-
-- Infrastructure pressure
-- Infrastructure strain
-- Cascading system stress
-
-DATA CENTRE MODULE
-
-Evaluates:
-
-- Data centre load
-- System load pressure
-- Data centre stress
-
-RISK MODULE
-
-Combines system stress indicators and produces:
-
-- LOW RISK
-- MEDIUM RISK
-- HIGH RISK
-
-SCENARIO ENGINE
-
-Injects controlled simulated events, including:
-
-- FX STRESS
-- DC LOAD
-- CYBER EVENT
-- INFRA STRAIN
-- BIODIESEL SHORTAGE
-
-Scenario intensity can be adjusted for controlled resilience testing.
-
----
-
-🤖 CAPTAIN AI LENA DECISION CORE
-
-Captain AI Lena is the autonomous decision layer responsible for:
-
-1. Observing system state
-2. Verifying system state
-3. Assessing system risk
-4. Making deterministic decisions
-5. Executing defined actions
-6. Updating system state
-
-Example decision logic:
-
-HIGH RISK
-→ ACTIVATE STABILIZATION MODE
-
-ENERGY LOW
-→ REDUCE SYSTEM LOAD
-
-FX UNSTABLE
-→ FX CORRECTION ACTIVE
-
-NORMAL CONDITIONS
-→ SYSTEM STABLE
-
-All decisions are deterministic and rule-based.
-
----
-
-🛰️ GOLDEN RULE ENGINE
-
-The authoritative Golden Rule Engine executes:
-
-OBSERVE
-→ VERIFY
-→ ASSESS
-→ DECIDE
-→ ACT
-→ UPDATE
-
-The engine evaluates system conditions using deterministic logic and produces:
-
-- Risk assessment
-- Resilience score
-- Golden score
-- Decision
-- Action sequence
-- Updated system state
-- Audit record
-
-The Golden Rule Engine uses the system constant:
-
-PHI = 1.618033988749895
-
----
-
-🧪 SPD v13.1 SELF-TEST & VALIDATION
-
-SPD v13.1 includes an independent Self-Test & Validation Engine designed to validate authoritative Golden Rule Engine behaviour.
-
-The validation architecture is:
-
-CORE ENGINE VALIDATION
-        ↓
-SCENARIO INTEGRATION VALIDATION
-        ↓
-FAULT IDENTIFICATION
-        ↓
-CAPTAIN AI LENA CORRECTIVE ACTION
-        ↓
-RE-TEST VALIDATION
-        ↓
-VERIFY RECOVERY
-
-The validation layer does not replace the authoritative Golden Rule Engine.
-
-It validates the engine and reports whether the system behaves according to its defined deterministic rules.
-
----
-
-✅ VALIDATION STATUS
-
-SPD v13.1 VALIDATION COMPLETE
-
-The current validated baseline completed the full autonomous validation loop successfully.
-
-Initial Self-Test
-
-STATUS: PASS
-TOTAL TESTS: 4
-PASSED: 4
-FAILED: 0
-
-Fault Identification
-
-STATUS: NO_FAULTS
-FAULT COUNT: 0
-
-Captain AI Lena Corrective Decision
-
-STATUS: NO_CORRECTIVE_ACTION_REQUIRED
-AUTHORITY: CAPTAIN AI LENA
-DECISION: SYSTEM VALIDATION PASSED
-FAULT COUNT: 0
-ACTIONS: []
-
-Re-Test Validation
-
-STATUS: PASS
-TOTAL TESTS: 4
-PASSED: 4
-FAILED: 0
-CORRECTIVE ACTION APPLIED: FALSE
-CORRECTIVE ACTIONS: []
-
-Final Result
-
-VALIDATION COMPLETE
-
-The validated pipeline successfully demonstrated:
-
-SELF-TEST
-↓
-FAULT IDENTIFICATION
-↓
-CAPTAIN AI LENA DECISION
-↓
-CORRECTIVE ACTION ASSESSMENT
-↓
-RE-TEST VALIDATION
-↓
-VALIDATION COMPLETE
-
-No faults were identified and no corrective action was required.
-
----
-
-🧪 VALIDATION TEST COVERAGE
-
-The validated Self-Test & Re-Test suite includes:
-
-1. LOW RISK — NORMAL STABILITY
-
-Expected:
-
-RISK: LOW
-DECISION: SYSTEM STABLE
-
-Result:
-
-PASS
-
-2. MEDIUM RISK — PREVENTIVE RESILIENCE
-
-Expected:
-
-RISK: MEDIUM
-DECISION: PREVENTIVE RESILIENCE MODE
-
-Result:
-
-PASS
-
-3. HIGH RISK — STABILIZATION
-
-Expected:
-
-RISK: HIGH
-DECISION: ACTIVATE STABILIZATION MODE
-
-Result:
-
-PASS
-
-4. MAXIMUM CURRENT RISK — ENGINE LIMIT
-
-Expected:
-
-RISK: HIGH
-DECISION: ACTIVATE STABILIZATION MODE
-
-Result:
-
-PASS
-
-Validation Summary
-
-INITIAL SELF-TEST: 4/4 PASS
-RE-TEST VALIDATION: 4/4 PASS
-FAULTS: 0
-CORRECTIVE ACTIONS: 0
-FINAL STATUS: VALIDATION COMPLETE
-
----
-
-🔄 AUTONOMOUS AGENT LOOP
-
-The SPD v13.1 autonomous validation architecture is:
-
-DATA
-↓
-ALGORITHMS
-↓
-COMPUTE
-↓
-SELF-TEST
-↓
-FAULT IDENTIFICATION
-↓
-CAPTAIN AI LENA DECISION
-↓
-CORRECTIVE ACTION
-↓
-RE-TEST
-↓
-VALIDATION COMPLETE
-
-The operational Golden Rule pipeline remains:
-
-OBSERVE
-→ VERIFY
-→ ASSESS
-→ DECIDE
-→ ACT
-→ UPDATE
-
----
-
-🎛️ COCKPIT SYSTEM
-
-The cockpit provides a visual representation of the SPD system state and decision engine.
-
-System State
-
-- FX
-- Energy
-- CYB
-- INF
-- DC
-
-Rule Engine
-
-- Risk evaluation
-- Energy protection logic
-- FX correction logic
-- Scenario injection
-- Golden Rule execution
-
-Agent Loop Monitor
-
-- OBSERVE
-- VERIFY
-- ASSESS
-- DECIDE
-- ACT
-- UPDATE
-
-Validation Monitor
-
-- SELF-TEST
-- FAULT IDENTIFICATION
-- CAPTAIN AI LENA DECISION
-- CORRECTIVE ACTION
-- RE-TEST VALIDATION
-- FINAL STATUS
-
----
-
-🌐 PROJECT LINKS
-
-GitHub Repository
-
-https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-
-Live Cockpit
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-
-Mobile Simulation Screen
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
-
-Desktop / Dashboard Screen
-
-https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
----
-
-🖥️ DEVELOPMENT STATUS
-
-SPD v13.1 is currently operating as a deterministic, rule-based autonomous agent framework.
-
-Current validated capabilities include:
-
-- Deterministic Golden Rule Engine
-- Structured system state processing
-- Scenario simulation
-- Risk classification
-- Autonomous decision logic
-- Action sequence generation
-- Memory Core integration
-- Audit record generation
-- Self-Test & Validation Engine
-- Fault identification
-- Captain AI Lena corrective-action assessment
-- Re-Test Validation
-- Validation completion status
-
-Current Baseline
-
-SYSTEM STATUS: VALIDATION COMPLETE
-SELF-TEST: PASS
-RE-TEST: PASS
-FAULTS: 0
-CORRECTIVE ACTIONS: 0
-
----
-
-🖥️ DESKTOP ROADMAP
-
-Future desktop deployment may include:
-
-- Native desktop application
-- Executable build
-- Windows ".exe"
-- macOS ".dmg"
-- Desktop application icon
-- Standalone cockpit application
-
-Existing desktop-related files include:
-
-- "main.js"
-- "package.json"
-
----
-
-⚠️ DESIGN PRINCIPLES
-
-SPD Captain AI Lena follows these core principles:
-
-- Deterministic rule-based execution
-- No machine-learning dependency
-- No randomness dependency
-- Backend source of truth
-- Modular architecture
-- Explicit decision logic
-- Transparent validation
-- Auditability
-- Scenario-based resilience testing
-- External systems treated as reference only
-- Local SPD rules remain authoritative
-
----
-
-🚀 SUMMARY
-
-SPD Captain AI Lena Autonomous Agent Core is a deterministic autonomous decision and validation framework built around structured data, algorithmic evaluation, compute execution, and continuous resilience validation.
-
-The current SPD v13.1 validated architecture demonstrates:
-
-DATA
-→ ALGORITHMS
-→ COMPUTE
-→ OBSERVE
-→ VERIFY
-→ ASSESS
-→ DECIDE
-→ ACT
-→ UPDATE
-
-with an independent validation cycle:
-
-SELF-TEST
-→ FAULT IDENTIFICATION
-→ CAPTAIN AI LENA DECISION
-→ CORRECTIVE ACTION
-→ RE-TEST
-→ VALIDATION COMPLETE
-
-🛰️ SPD v13.1 CURRENT VALIDATED STATE
-
-╔══════════════════════════════════════════╗
-║     SPD v13.1 VALIDATION COMPLETE        ║
-╠══════════════════════════════════════════╣
-║ Self-Test             4 / 4 PASS         ║
-║ Re-Test                4 / 4 PASS         ║
-║ Faults                 0                  ║
-║ Corrective Actions     0                  ║
-║ Golden Rule Engine     VALIDATED          ║
-║ Final Status           VALIDATION COMPLETE║
-╚══════════════════════════════════════════╝
-
-SPD Captain AI Lena Autonomous Agent Core
-
-Deterministic. Validated. Auditable. Resilience-focused.
-
-So the plan is clean:
-✔ build → test → deploy → pause
-✔ come back → modify → redeploy
-
-You define the screen → I help implement it → we keep it deployable on GitHub Pages.
-
-ROOTOOTCOCKPITCKPIT (Main Screen)
-👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-
- MOBILE SIMULATION SCREEN
-👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_mobile.html
-DESKTOP / DASHBOARD SCREEN (if enabled)
-👉 https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
-
-# 🧠 SPD COMPUTE ARCHITECTURE MODEL
-
-This system is built on a deterministic execution framework:
-
-DATA → ALGORITHMS → COMPUTE
-
----
-
-## 📊 1. DATA LAYER (STATE INPUT)
-
-The system receives structured state:
-🔒 Backend Source of Truth
-
-Workflow Authority
-
-The backend is the authoritative source for all system workflows, decision logic, and execution.
-
-If any mismatch exists between:
-
-- Frontend cockpit displays
-- User interface behavior
-- Documentation
-- Examples
-- Simulations
-- External references
-- Third-party implementations
-
-the backend implementation shall be treated as the source of truth.
-
-Development Rule
-
-All development must follow this workflow:
-
-Client Input → Backend Processing → Decision Engine → System Output → Frontend Display
-
-The frontend must accurately represent the backend state and must never redefine or override backend decision logic.
-
-Source Validation Rule
-
-When integrating external libraries, frameworks, examples, tutorials, or reference implementations:
-
-1. Read the official documentation and source code.
-2. Compare external behavior with the SPD backend implementation.
-3. If any mismatch is detected, verify the backend logic before making changes.
-4. Do not modify the SPD workflow solely to match an external implementation without technical validation.
-
-This ensures that the backend remains the authoritative execution layer for the SPD Captain AI Lena Autonomous Agent Core.
-
-{
-  fx: number,
-  energy: number,
-  cyb: number,
-  inf?: number,
-  dc?: number
-}
-
-Purpose:
-- Represents real-world or simulated conditions
-- Acts as raw system input
-- No logic applied here
-
----
-
-## 🧮 2. ALGORITHM LAYER (DECISION LOGIC)
-
-Transforms raw data into evaluative states.
-
-Modules:
-
-### FX MODULE
-- Evaluates economic/system stability
-- Detects FX instability thresholds
-
-### ENERGY MODULE
-- Checks system power availability
-- Detects overload or depletion
-
-### RISK MODULE
-- Combines FX + ENERGY + CYB
-- Outputs risk state:
-  - LOW RISK
-  - MEDIUM RISK
-  - HIGH RISK
-
-### SCENARIO ENGINE
-- Injects external events
-- Simulates stress conditions
-- Example: FX_SHOCK, ENERGY_SPIKE
-
----
-
-## ⚙️ 3. COMPUTE LAYER (CAPTAIN AI LENA ENGINE)
-
-This is the execution brain:
-
-INPUT → RULES → DECISION → OUTPUT
-
-Process:
-
-1. Observe system state
-2. Run all modules
-3. Evaluate risk
-4. Apply decision logic
-5. Output system response
-
----
-
-## 🤖 CAPTAIN AI LENA DECISION CORE
-
-Decision rules:
-
-- If HIGH RISK → ACTIVATE STABILIZATION MODE
-- If ENERGY LOW → REDUCE SYSTEM LOAD
-- If FX unstable → FX CORRECTION ACTIVE
-- Else → SYSTEM STABLE
-
----
-
-## 🔄 FULL LOOP
-
-OBSERVE → ANALYZE → DECIDE → EXECUTE → UPDATE
-
-This loop runs continuously in simulation mode.
-
----
-
-## 🧠 DESIGN PRINCIPLE
-
-- Deterministic logic only
-- No machine learning
-- No randomness dependency
-- GitHub Repository: https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-Live Demo: https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
-# SPD Captain AI Lena Autonomous Agent Core
-
-SPD Captain AI Lena Autonomous Agent Core is a rule-based autonomous decision engine that transforms structured system state data into continuous Observe–Decide–Act–Update loops.
-
-It integrates algorithmic rule logic, scenario simulation, and modular compute execution to form a deterministic AI agent framework inside the SPD architecture.
-
----
-
-# 🔗 PROJECT LINKS
-
-## 📁 GitHub Repository (Open in Chrome)
-https://github.com/123AGustien/spd-captain-ai-lena-autonomous-agent-core
-
-## 🧠 Live Cockpit Dashboard
-https://123AGustien.github.io/spd-captain-ai-lena-autonomous-agent-core/cockpit_dashboard.html
-
----
-
-# 📥 CLIENT INSTRUCTIONS & INFORMATION FEED
-
-## System Input Requirement
-
-The system requires a structured System State Object.
-
-Minimum Input:
-{
-  "fx": 0,
-  "energy": 50,
-  "cyb": 50
-}
-
-Extended Input (Optional):
-{
-  "fx": 0,
-  "energy": 100,
-  "cyb": 100,
-  "inf": 0,
-  "dc": 0,
-  "event": "NORMAL",
-  "time": "2026-01-01T00:00:00Z",
-  "mode": "AUTONOMOUS"
-}
-
----
-
-# 🧠 SYSTEM ARCHITECTURE
-
-DATA → ALGORITHMS → CODE → COMPUTE
-
-- DATA → system inputs and state
-- ALGORITHMS → decision logic and rules
-- CODE → implementation modules
-- COMPUTE → runtime execution
-
----
-
-# 🤖 CAPTAIN AI LENA
-
-Captain AI Lena is the autonomous decision layer that:
-
-- Observes system state
-- Evaluates rules
-- Makes decisions
-- Executes actions
-- Maintains stability
-
----
-
-# ⚙️ AGENT LOOP
-
-OBSERVE → DECIDE → ACT → UPDATE → REPEAT
-
----
-
-# 🧠 COCKPIT SYSTEM
-
-The cockpit is a visual representation of the system.
-
-Panels:
-
-### System State
-- FX → stability index
-- Energy → power level
-- CYB → system integrity
-- INF → external pressure
-- DC → system load
-
-### Rule Engine
-- Risk evaluation logic
-- Energy thresholds
-- FX correction rules
-- Scenario injection
-
-### Agent Loop Monitor
-- OBSERVE → DECIDE → ACT → UPDATE
-- Decision output
-- Current system state
-
----
-
-# 📱 DEVELOPMENT STATUS
-
-- Built from Android environment
-- Rule-based deterministic AI system (no machine learning)
-- Modular JavaScript architecture
-- Cockpit dashboard interface
-
----
-
-# 🖥️ DESKTOP ROADMAP (ELECTRON)
-
-Future desktop version will include:
-
-- Native desktop application
-- Executable build (.exe / .dmg)
-- Desktop icon
-- Standalone cockpit application
-
-Files already included:
-- main.js
-- package.json
-
----
-
-# ⚠️ DESIGN PRINCIPLES
-
-- Deterministic rule-based execution only
-- No probabilistic AI
-- External systems are reference only
-- Local SPD rules are authoritative
-
----
-
-# 🚀 SUMMARY
-
-SPD Captain AI Lena is a deterministic autonomous agent system built for structured decision execution through layered architecture and continuous computation loops.
+Golden Rule Engine remains authoritative.
