@@ -1,0 +1,210 @@
+/**
+ * SPD v13.1 — Business & Human Rights (BHR)
+ * Validation Engine
+ *
+ * Purpose:
+ * Validates BHR domain scenario execution.
+ *
+ * Architecture:
+ *
+ * BHR SCENARIO
+ *        ↓
+ * BHR RULE ENGINE
+ *        ↓
+ * BHR VALIDATION ENGINE
+ *        ↓
+ * GOLDEN RULE ENGINE
+ *        ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *
+ * Principle:
+ * The BHR validation layer verifies domain behaviour.
+ * It does not replace or override the authoritative
+ * SPD v13.1 Self-Test & Validation Engine.
+ */
+
+
+import {
+    evaluateBHRScenario
+} from "./bhr-rule-engine.js";
+
+
+const VALID_BHR_SCENARIOS = [
+
+    "BHR_COMPLIANCE_STRESS",
+
+    "BHR_WORKER_SAFETY_EVENT",
+
+    "BHR_SUPPLY_CHAIN_RISK",
+
+    "BHR_COMMUNITY_IMPACT",
+
+    "BHR_GOVERNANCE_FAILURE"
+
+];
+
+
+
+/**
+ * Check if scenario exists
+ */
+
+function validateScenarioId(scenarioId) {
+
+    return VALID_BHR_SCENARIOS.includes(
+        scenarioId
+    );
+
+}
+
+
+
+/**
+ * Validate BHR assessment output
+ */
+
+function validateAssessment(result) {
+
+    const checks = {
+
+        domainCheck:
+            result.domain === "BHR",
+
+        scenarioCheck:
+            VALID_BHR_SCENARIOS.includes(
+                result.scenario
+            ),
+
+        assessmentCheck:
+            result.assessment !== undefined,
+
+        riskCheck:
+            [
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+            ].includes(
+                result.assessment.risk
+            ),
+
+        authorityCheck:
+            result.coreAuthority ===
+            "GOLDEN RULE ENGINE REMAINS AUTHORITATIVE"
+
+    };
+
+
+    const passed =
+        Object.values(checks)
+            .every(
+                check => check === true
+            );
+
+
+    return {
+
+        checks,
+
+        passed,
+
+        status:
+            passed
+                ? "PASS"
+                : "FAIL"
+
+    };
+
+}
+
+
+
+/**
+ * Execute BHR validation
+ */
+
+export function runBHRValidation(
+    scenarioId,
+    state = {}
+) {
+
+
+    if (!validateScenarioId(scenarioId)) {
+
+        return {
+
+            validationEngine:
+                "BHR VALIDATION ENGINE",
+
+            status:
+                "FAIL",
+
+            reason:
+                "INVALID_BHR_SCENARIO"
+
+        };
+
+    }
+
+
+    const domainResult =
+        evaluateBHRScenario(
+            scenarioId,
+            state
+        );
+
+
+    const validation =
+        validateAssessment(
+            domainResult
+        );
+
+
+    return {
+
+        validationEngine:
+            "BHR VALIDATION ENGINE",
+
+        scenario:
+            scenarioId,
+
+        domainResult,
+
+        validation,
+
+        finalStatus:
+            validation.status === "PASS"
+                ? "BHR VALIDATION COMPLETE"
+                : "BHR VALIDATION FAILED"
+
+    };
+
+}
+
+
+
+/**
+ * BHR validation engine status
+ */
+
+export function getBHRValidationStatus() {
+
+    return {
+
+        engine:
+            "BHR VALIDATION ENGINE",
+
+        status:
+            "READY",
+
+        scenarios:
+            VALID_BHR_SCENARIOS.length,
+
+        coreProtection:
+            true,
+
+        authority:
+            "SPD v13.1 GOLDEN RULE ENGINE"
+
+    };
+
+}
