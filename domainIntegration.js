@@ -5,9 +5,6 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * PURPOSE:
- * Single integration gateway between:
- *
  * COCKPIT / SCENARIO BUTTONS
  *          ↓
  * DOMAIN RULE ENGINES
@@ -17,12 +14,10 @@
  * CAPTAIN AI LENA DECISION CORE
  *
  * Active Domains:
- *
  * FIN — Financial Resilience
  * BHR — Business & Human Rights
  *
  * Golden Rule:
- *
  * OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
  *
  * Deterministic.
@@ -34,23 +29,14 @@
 
 
 /* ============================================================
-   DOMAIN RULE ENGINE IMPORTS
+   DOMAIN ENGINE IMPORTS
    ============================================================
- */
-
-
-/*
- * FIN Domain
  */
 
 import {
     finRuleEngine
 } from "./FIN/fin-rule-engine.js";
 
-
-/*
- * BHR Domain
- */
 
 import {
     bhrRuleEngine
@@ -65,132 +51,59 @@ import {
 
 const DOMAIN_REGISTRY = {
 
-
     FIN: {
-
-        name:
-            "Financial Resilience",
-
-        status:
-            "ACTIVE",
-
-        engine:
-            "FIN_RULE_ENGINE"
-
+        name: "Financial Resilience",
+        status: "ACTIVE",
+        engine: "FIN_RULE_ENGINE"
     },
-
 
     BHR: {
-
-        name:
-            "Business & Human Rights",
-
-        status:
-            "ACTIVE",
-
-        engine:
-            "BHR_RULE_ENGINE"
-
+        name: "Business & Human Rights",
+        status: "ACTIVE",
+        engine: "BHR_RULE_ENGINE"
     },
-
 
     FX: {
-
-        name:
-            "Foreign Exchange",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "FX_RULE_ENGINE"
-
+        name: "Foreign Exchange",
+        status: "PLANNED",
+        engine: "FX_RULE_ENGINE"
     },
-
 
     DC: {
-
-        name:
-            "Data Centre",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "DC_RULE_ENGINE"
-
+        name: "Data Centre",
+        status: "PLANNED",
+        engine: "DC_RULE_ENGINE"
     },
-
 
     CYB: {
-
-        name:
-            "Cyber Resilience",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "CYB_RULE_ENGINE"
-
+        name: "Cyber Resilience",
+        status: "PLANNED",
+        engine: "CYB_RULE_ENGINE"
     },
-
 
     INF: {
-
-        name:
-            "Infrastructure",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "INF_RULE_ENGINE"
-
+        name: "Infrastructure",
+        status: "PLANNED",
+        engine: "INF_RULE_ENGINE"
     },
-
 
     ENG: {
-
-        name:
-            "Energy",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "ENG_RULE_ENGINE"
-
+        name: "Energy",
+        status: "PLANNED",
+        engine: "ENG_RULE_ENGINE"
     },
-
 
     OPS: {
-
-        name:
-            "Operations",
-
-        status:
-            "PLANNED",
-
-        engine:
-            "OPS_RULE_ENGINE"
-
+        name: "Operations",
+        status: "PLANNED",
+        engine: "OPS_RULE_ENGINE"
     },
 
-
     SC: {
-
-        name:
-            "Scenario Control",
-
-        status:
-            "ACTIVE",
-
-        engine:
-            "SCENARIO_ENGINE"
-
+        name: "Scenario Control",
+        status: "ACTIVE",
+        engine: "SCENARIO_ENGINE"
     }
-
 
 };
 
@@ -203,16 +116,9 @@ const DOMAIN_REGISTRY = {
 
 const DOMAIN_ENGINES = {
 
+    FIN: finRuleEngine,
 
-    FIN:
-
-        finRuleEngine,
-
-
-    BHR:
-
-        bhrRuleEngine
-
+    BHR: bhrRuleEngine
 
 };
 
@@ -228,25 +134,19 @@ export function registerDomainEngine(
     engine
 ) {
 
-
-    const normalizedDomain =
-
+    const id =
         String(domain || "")
-
             .trim()
-
             .toUpperCase();
 
 
-
-    if (!normalizedDomain) {
+    if (!id) {
 
         throw new Error(
             "DOMAIN INTEGRATION ERROR: DOMAIN ID REQUIRED"
         );
 
     }
-
 
 
     if (typeof engine !== "function") {
@@ -258,21 +158,16 @@ export function registerDomainEngine(
     }
 
 
-
-    DOMAIN_ENGINES[normalizedDomain] = engine;
-
+    DOMAIN_ENGINES[id] = engine;
 
 
     return {
 
-        domain:
-            normalizedDomain,
+        domain: id,
 
-        status:
-            "ENGINE_REGISTERED"
+        status: "ENGINE_REGISTERED"
 
     };
-
 
 }
 
@@ -287,57 +182,37 @@ export function getDomainStatus(
     domain
 ) {
 
-
-    const normalizedDomain =
-
+    const id =
         String(domain || "")
-
             .trim()
-
             .toUpperCase();
 
 
-
     const config =
-
-        DOMAIN_REGISTRY[normalizedDomain];
-
+        DOMAIN_REGISTRY[id];
 
 
     const engine =
-
-        DOMAIN_ENGINES[normalizedDomain];
-
+        DOMAIN_ENGINES[id];
 
 
     return {
 
-        domain:
-            normalizedDomain,
-
+        domain: id,
 
         name:
-
             config?.name ??
             "UNKNOWN DOMAIN",
 
-
         configured:
-
             Boolean(config),
 
-
         engineRegistered:
-
             Boolean(engine),
 
-
         status:
-
             engine
-
                 ? "ACTIVE"
-
                 : (
                     config?.status ??
                     "UNAVAILABLE"
@@ -345,190 +220,154 @@ export function getDomainStatus(
 
     };
 
-
-}
-/**
- * ============================================================
- * SPD V13.1 — DOMAIN INTEGRATION LAYER
- * ============================================================
- *
- * Captain AI Lena Autonomous Agent Core
- *
- * PURPOSE:
- * Single integration gateway between:
- *
- * COCKPIT / SCENARIO BUTTONS
- *          ↓
- * DOMAIN RULE ENGINES
- *          ↓
- * GOLDEN RULE ENGINE
- *          ↓
- * CAPTAIN AI LENA DECISION CORE
- *
- * Active Domain:
- *
- * BHR — Business & Human Rights
- *
- * Golden Rule:
- *
- * OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
- *
- * Deterministic.
- * No randomness.
- * No machine learning.
- *
- * ============================================================
- */
-
-
-/* ============================================================
-   BHR DOMAIN RULE ENGINE
-   ============================================================
- *
- * Authoritative BHR domain rule engine.
- *
- * File:
- * ./BHR/bhr-rule-engine.js
- *
- * ============================================================
- */
-
-import {
-  bhrRuleEngine
-} from "./BHR/bhr-rule-engine.js";
-
-
-/* ============================================================
-   BHR SCENARIO REGISTRY
-   ============================================================
- */
-
-import {
-  getBHRScenario,
-  listBHRScenarios
-} from "./BHR/bhr-scenario-registry.js";
-
-
-/* ============================================================
-   DOMAIN REGISTRY
-   ============================================================
- */
-
-const DOMAIN_REGISTRY = {
-
-  BHR: {
-
-    name:
-      "Business & Human Rights",
-
-    status:
-      "ACTIVE",
-
-    engine:
-      "BHR_RULE_ENGINE"
-
-  },
-
-  SC: {
-
-    name:
-      "Scenario Control",
-
-    status:
-      "ACTIVE",
-
-    engine:
-      "SCENARIO_ENGINE"
-
-  }
-
-};
-
-
-/* ============================================================
-   DOMAIN ENGINE REGISTRY
-   ============================================================
- */
-
-const DOMAIN_ENGINES = {
-
-  BHR:
-    bhrRuleEngine
-
-};
-
-
-/* ============================================================
-   REGISTER DOMAIN ENGINE
-   ============================================================
- */
-
-export function registerDomainEngine(
-  domain,
-  engine
-) {
-
-  const normalizedDomain =
-    String(
-      domain || ""
-    )
-      .trim()
-      .toUpperCase();
-
-
-  if (
-    !normalizedDomain
-  ) {
-
-    throw new Error(
-      "DOMAIN INTEGRATION ERROR: DOMAIN ID REQUIRED"
-    );
-
-  }
-
-
-  if (
-    typeof engine !== "function"
-  ) {
-
-    throw new Error(
-      "DOMAIN INTEGRATION ERROR: ENGINE MUST BE A FUNCTION"
-    );
-
-  }
-
-
-  DOMAIN_ENGINES[
-    normalizedDomain
-  ] =
-    engine;
-
-
-  return {
-
-    domain:
-      normalizedDomain,
-
-    status:
-      "ENGINE_REGISTERED"
-
-  };
-
 }
 
 
+
 /* ============================================================
-   GET DOMAIN STATUS
+   EXECUTE DOMAIN RULE
    ============================================================
  */
 
-export function getDomainStatus(
-  domain
+export function executeDomainRule(
+    domain,
+    input = {}
 ) {
 
-  const normalizedDomain =
-    String(
-      domain || ""
-    )
-      .trim()
-      .
+    const id =
+        String(domain || "")
+            .trim()
+            .toUpperCase();
+
+
+    const config =
+        DOMAIN_REGISTRY[id];
+
+
+    const engine =
+        DOMAIN_ENGINES[id];
+
+
+    if (!config) {
+
+        return {
+
+            domain: id,
+
+            status:
+                "UNKNOWN_DOMAIN",
+
+            decision:
+                "NO DOMAIN RULE AVAILABLE",
+
+            action:
+                "MONITOR SYSTEM"
+
+        };
+
+    }
+
+
+    if (!engine) {
+
+        return {
+
+            domain: id,
+
+            status:
+                "ENGINE_NOT_REGISTERED",
+
+            decision:
+                "DOMAIN ENGINE NOT AVAILABLE",
+
+            action:
+                "MONITOR SYSTEM"
+
+        };
+
+    }
+
+
+    const observedInput = {
+
+        ...input,
+
+        domain: id,
+
+        domainName:
+            config.name,
+
+        timestamp:
+            new Date()
+                .toISOString()
+
+    };
+
+
+    try {
+
+        const verifiedInput =
+            verifyDomainInput(
+                observedInput
+            );
+
+
+        const assessment =
+            engine(
+                verifiedInput
+            );
+
+
+        return {
+
+            domain: id,
+
+            domainName:
+                config.name,
+
+            engine:
+                config.engine,
+
+
+            pipeline: [
+
+                "OBSERVE",
+
+                "VERIFY",
+
+                "ASSESS",
+
+                "DECIDE",
+
+                "ACT",
+
+                "UPDATE"
+
+            ],
+
+
+            input:
+                verifiedInput,
+
+
+            result:
+                assessment,
+
+
+            audit: {
+
+                status:
+                    "TERCATAT",
+
+                bahasa:
+                    "INDONESIA",
+
+                timestamp:
+                    new Date()
+                        .toISOString()
+
+            },
+
+
+            status:
+                "EXECUTED
