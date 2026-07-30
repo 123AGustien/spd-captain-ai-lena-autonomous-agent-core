@@ -962,4 +962,270 @@ function verifyDomainInput(
 
         scenario:
 
-            input.scenario
+            input.scenario ??
+
+            input.event ??
+
+            "DEFAULT",
+
+
+
+        event:
+
+            input.event ??
+
+            input.scenario ??
+
+            "DEFAULT",
+
+
+
+        state:
+
+            input.state ?? {},
+
+
+
+        mode:
+
+            input.mode ??
+
+            "AUTONOMOUS"
+
+
+    };
+
+
+}
+
+
+
+
+
+/* ============================================================
+   GET ALL DOMAIN STATUS
+   ============================================================
+ */
+
+export function getAllDomainStatus(){
+
+
+    return Object.keys(
+
+        DOMAIN_REGISTRY
+
+    )
+
+    .map(
+
+        domain =>
+
+            getDomainStatus(domain)
+
+    );
+
+
+}
+
+
+
+
+
+/* ============================================================
+   CONSTANTS
+   ============================================================
+ */
+
+export const DOMAIN_IDS =
+
+[
+
+    "FIN",
+
+    "BHR",
+
+    "FX",
+
+    "DC",
+
+    "CYB",
+
+    "INF",
+
+    "ENG",
+
+    "OPS",
+
+    "SC"
+
+];
+
+
+
+
+
+/* ============================================================
+   DOMAIN INTEGRATION STATUS
+   ============================================================
+ */
+
+export const DOMAIN_INTEGRATION_STATUS = {
+
+
+    engine:
+
+        "SPD V13.1 DOMAIN INTEGRATION LAYER",
+
+
+
+    architecture:
+
+    [
+
+        "COCKPIT",
+
+        "DOMAIN RULE ENGINE",
+
+        "DOMAIN IMPACT BRIDGE",
+
+        "HUMAN IMPACT ASSESSMENT",
+
+        "GOLDEN RULE ENGINE",
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+        "MEMORY CORE",
+
+        "AUDIT REGISTRY",
+
+        "SECURITY HASH",
+
+        "AUDIT CLOSURE"
+
+    ],
+
+
+
+    activeDomains:
+
+    [
+
+        "FIN",
+
+        "BHR"
+
+    ],
+
+
+
+    scenarioRegistry:
+
+    {
+
+        FIN:
+
+            "CONNECTED",
+
+
+        BHR:
+
+            "CONNECTED"
+
+    },
+
+
+
+    auditSystem:
+
+    {
+
+        registry:
+
+            "ACTIVE",
+
+
+        hash:
+
+            "ACTIVE",
+
+
+        closure:
+
+            "ACTIVE"
+
+    },
+
+
+
+    pipeline:
+
+    [
+
+        "OBSERVE",
+
+        "VERIFY",
+
+        "ASSESS",
+
+        "DECIDE",
+
+        "ACT",
+
+        "UPDATE"
+
+    ],
+
+
+
+    deterministic:
+
+        true,
+
+
+    machineLearning:
+
+        false,
+
+
+    randomness:
+
+        false
+
+
+};
+
+
+
+
+
+
+/* ============================================================
+   DEFAULT EXPORT
+   ============================================================
+ */
+
+export default {
+
+
+    registerDomainEngine,
+
+
+    executeDomainRule,
+
+
+    getDomainStatus,
+
+
+    getAllDomainStatus,
+
+
+    DOMAIN_REGISTRY,
+
+
+    DOMAIN_IDS,
+
+
+    DOMAIN_INTEGRATION_STATUS
+
+
+};
