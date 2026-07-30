@@ -1,5 +1,6 @@
 import { captainAILena } from "./captainAILena.js";
 import { GOLDEN_RATIO } from "./constants/math.constants.js";
+import { runAnalytics } from "./analytics/index.js";
 
 export function runEngine(state) {
 
@@ -12,11 +13,13 @@ export function runEngine(state) {
   // 1. Receiving system state
   // 2. Preserving original input for audit
   // 3. Applying deterministic normalization
-  // 4. Passing normalized state to Captain AI Lena
-  // 5. Returning a complete execution record
+  // 4. Running supporting analytics
+  // 5. Passing normalized state to Captain AI Lena
+  // 6. Returning a complete execution record
   //
   // The engine does not redefine decision rules.
   // Captain AI Lena remains the decision authority.
+  // Analytics is advisory only.
   // =========================
 
   // =========================
@@ -41,6 +44,16 @@ export function runEngine(state) {
   };
 
   // =========================
+  // ANALYTICS LAYER
+  // =========================
+  // Supporting intelligence only.
+  // Does NOT modify the normalized state
+  // or Captain AI Lena decisions.
+  // =========================
+
+  const analytics = runAnalytics(normalizedState);
+
+  // =========================
   // CORE COMPUTE EXECUTION
   // =========================
 
@@ -58,6 +71,9 @@ export function runEngine(state) {
 
     // Normalized state used by compute layer
     normalizedInput: normalizedState,
+
+    // Analytics layer output
+    analytics,
 
     // Captain AI Lena decision output
     output: result,
