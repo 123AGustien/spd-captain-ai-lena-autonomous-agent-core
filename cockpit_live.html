@@ -5,13 +5,11 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-SPD v13.1 — CAPTAIN AI LENA MOBILE HARDENED COCKPIT
+SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
 </title>
-
 
 <style>
 
@@ -22,9 +20,10 @@ box-sizing:border-box;
 body{
 
 margin:0;
-padding:10px;
+padding:12px;
 
 background:#05070a;
+
 color:#00ff99;
 
 font-family:monospace;
@@ -32,10 +31,26 @@ font-family:monospace;
 }
 
 
-h2{
+h1{
 
 text-align:center;
+
 color:white;
+
+font-size:22px;
+
+}
+
+
+.subtitle{
+
+text-align:center;
+
+color:#aaaaaa;
+
+line-height:1.5;
+
+margin-bottom:15px;
 
 }
 
@@ -46,7 +61,7 @@ display:grid;
 
 grid-template-columns:1fr;
 
-gap:10px;
+gap:12px;
 
 }
 
@@ -66,11 +81,76 @@ background:#0b0f14;
 
 .title{
 
+font-weight:bold;
+
 color:white;
+
+margin-bottom:10px;
+
+}
+
+
+.status{
+
+border:2px solid #00ff99;
+
+padding:12px;
+
+font-size:18px;
+
+color:white;
+
+text-align:center;
+
+}
+
+
+button{
+
+width:100%;
+
+min-height:48px;
+
+margin:5px 0;
+
+border-radius:6px;
+
+border:none;
+
+background:#00ff99;
+
+color:black;
 
 font-weight:bold;
 
-margin-bottom:8px;
+font-size:15px;
+
+}
+
+
+button:hover{
+
+opacity:0.8;
+
+}
+
+
+.danger{
+
+background:#ff5555;
+
+color:white;
+
+}
+
+
+.scenario{
+
+background:#101820;
+
+color:#00ff99;
+
+border:1px solid #00ff99;
 
 }
 
@@ -86,63 +166,76 @@ color:#00ff99;
 }
 
 
-button{
+.monitor{
 
-width:100%;
+display:grid;
 
-min-height:48px;
+grid-template-columns:
+repeat(auto-fit,minmax(120px,1fr));
 
-margin-top:8px;
-
-background:#00ff99;
-
-color:black;
-
-font-weight:bold;
-
-border-radius:6px;
-
-border:0;
-
-cursor:pointer;
+gap:10px;
 
 }
 
 
-button:hover{
-
-opacity:0.85;
-
-}
-
-
-input{
-
-width:100%;
-
-}
-
-
-.flow{
-
-color:white;
-
-font-size:14px;
-
-padding:10px;
+.domain{
 
 border:1px solid #00ff99;
 
-border-radius:6px;
+padding:10px;
+
+text-align:center;
+
+background:#05070a;
 
 }
 
 
-.status{
+.domain-name{
 
-font-size:18px;
+color:#888;
+
+}
+
+
+.domain-value{
+
+font-size:24px;
 
 color:white;
+
+}
+
+
+.pipeline{
+
+border:1px solid #00ff99;
+
+padding:10px;
+
+color:white;
+
+text-align:center;
+
+}
+
+
+input[type="range"]{
+
+width:100%;
+
+accent-color:#00ff99;
+
+}
+
+
+.solution{
+
+border-left:3px solid #00ff99;
+
+padding:10px;
+
+background:#05070a;
 
 }
 
@@ -155,70 +248,110 @@ color:white;
 <body>
 
 
-<h2>
+<h1>
+🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</h1>
 
-🧠 CAPTAIN AI LENA
+
+<div class="subtitle">
+
+Captain AI Lena Autonomous Agent Core
 
 <br>
 
-SPD v13.1 MOBILE HARDENED COCKPIT
+DATA → ALGORITHMS → COMPUTE
 
-</h2>
+<br>
 
+SELF-TEST → FAULT IDENTIFICATION → DECISION → CORRECTIVE ACTION → RE-TEST
+
+</div>
 
 
 <div class="grid">
 
 
-
 <div class="panel">
 
-<div class="title">
-SYSTEM STATUS
-</div>
+<div class="status" id="systemStatus">
 
-<pre id="systemStatus">
-INITIALIZING...
-</pre>
+SYSTEM STATUS: INITIALIZING
 
 </div>
 
+</div>
 
 
 <div class="panel">
 
 <div class="title">
-SYSTEM INPUT STATE
+🎛️ SYSTEM CONTROLS
 </div>
 
-<pre id="input">
-Waiting...
-</pre>
+
+<button onclick="runLiveSystem()">
+▶ RUN SYSTEM
+</button>
+
+
+<button onclick="runSelfTest()">
+🧪 RUN SELF-TEST
+</button>
+
+
+<button onclick="runSelfTestAndCorrect()">
+🛠️ SELF-TEST + CORRECTIVE ACTION
+</button>
+
 
 </div>
-
 
 
 <div class="panel">
 
 <div class="title">
-DOMAIN MONITOR
-
-</div>
-
-<pre id="domains">
-
-FX:
-DC:
-CYB:
-INF:
-ENERGY:
-
-</pre>
-
+📊 DOMAIN MONITOR
 </div>
 
 
+<div class="monitor">
+
+<div class="domain">
+<div class="domain-name">FX</div>
+<div class="domain-value" id="fx">0</div>
+</div>
+
+
+<div class="domain">
+<div class="domain-name">DC</div>
+<div class="domain-value" id="dc">0</div>
+</div>
+
+
+<div class="domain">
+<div class="domain-name">CYB</div>
+<div class="domain-value" id="cyb">0</div>
+</div>
+
+
+<div class="domain">
+<div class="domain-name">INF</div>
+<div class="domain-value" id="inf">0</div>
+</div>
+
+
+<div class="domain">
+<div class="domain-name">ENERGY</div>
+<div class="domain-value" id="energy">0</div>
+</div>
+
+
+</div>
+
+</div>
+<!-- ============================================================
+     SCENARIO CONTROL
+============================================================ -->
 
 <div class="panel">
 
@@ -227,154 +360,337 @@ ENERGY:
 </div>
 
 
-
-<button onclick="activateScenario('FX_STRESS')">
-
+<button class="scenario"
+onclick="activateScenario('FX_STRESS')">
 FX STRESS
-
 </button>
 
 
-
-<button onclick="activateScenario('DC_LOAD')">
-
-DATA CENTRE LOAD
-
-</button>
+<div class="title">
+💰 FINANCIAL RESILIENCE SCENARIOS
+</div>
 
 
-
-<button onclick="activateScenario('CYBER_EVENT')">
-
-CYBER EVENT
-
-</button>
-
-
-
-<button onclick="activateScenario('INFRASTRUCTURE_STRESS')">
-
-INFRASTRUCTURE STRESS
-
-</button>
-
-
-
-<button onclick="activateScenario('BIODIESEL_SHORTAGE')">
-
-BIODIESEL SHORTAGE
-
-</button>
-
-
-
-<button onclick="activateScenario('FIN_STRESS')">
-
+<button class="scenario"
+onclick="activateScenario('FIN_STRESS')">
 FIN STRESS
-
 </button>
 
 
-
-<button onclick="activateScenario('BANKING_STRESS')">
-
+<button class="scenario"
+onclick="activateScenario('BANKING_STRESS')">
 BANKING STRESS
-
 </button>
 
 
-
-<button onclick="activateScenario('LIQUIDITY_CRISIS')">
-
+<button class="scenario"
+onclick="activateScenario('LIQUIDITY_CRISIS')">
 LIQUIDITY CRISIS
-
 </button>
 
 
-
-<button onclick="activateScenario('CREDIT_STRESS')">
-
+<button class="scenario"
+onclick="activateScenario('CREDIT_STRESS')">
 CREDIT STRESS
-
 </button>
 
 
-
-<button onclick="activateScenario('SOVEREIGN_DEBT')">
-
+<button class="scenario"
+onclick="activateScenario('SOVEREIGN_DEBT')">
 SOVEREIGN DEBT
-
 </button>
 
 
 
-<button onclick="runSelfTest()">
+<div class="title">
+🌍 SYSTEM RESILIENCE SCENARIOS
+</div>
 
-🧪 RUN SELF TEST
 
+<button class="scenario"
+onclick="activateScenario('DC_LOAD')">
+DATA CENTRE LOAD
+</button>
+
+
+<button class="scenario"
+onclick="activateScenario('CYBER_EVENT')">
+CYBER EVENT
+</button>
+
+
+<button class="scenario"
+onclick="activateScenario('INFRASTRUCTURE_STRESS')">
+INFRA STRAIN
+</button>
+
+
+<button class="scenario"
+onclick="activateScenario('BIODIESEL_SHORTAGE')">
+BIODIESEL SHORTAGE
 </button>
 
 
 
-<button onclick="runSelfTestAndCorrect()">
+<div class="title">
+💼 BUSINESS & HUMAN RIGHTS (BHR)
+</div>
 
-🛠️ SELF TEST + CORRECTIVE ACTION
 
+<button class="scenario"
+onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
+HUMAN RIGHTS DUE DILIGENCE
 </button>
 
+
+<button class="scenario"
+onclick="activateScenario('FORCED_LABOUR')">
+FORCED LABOUR
+</button>
+
+
+<button class="scenario"
+onclick="activateScenario('CHILD_LABOUR')">
+CHILD LABOUR
+</button>
+
+
+<button class="scenario"
+onclick="activateScenario('DISCRIMINATION')">
+DISCRIMINATION
+</
+<!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+⚠️ SYSTEM ASSESSMENT
+</div>
+
+<pre id="assessment">
+Waiting...
+</pre>
 
 </div>
 
+
+
+<!-- ============================================================
+     RISK PANEL
+============================================================ -->
 
 
 <div class="panel">
 
 <div class="title">
+🚨 RISK PANEL
+</div>
 
-🎚️ SCENARIO INTENSITY
+<pre id="riskPanel">
+Waiting...
+</pre>
 
 </div>
 
 
-<input
 
-id="intensitySlider"
-
-type="range"
-
-min="0"
-
-max="100"
-
-step="10"
-
-value="50">
+<!-- ============================================================
+     CAPTAIN AI LENA DECISION CORE
+============================================================ -->
 
 
-<div>
+<div class="panel">
 
-INTENSITY:
+<div class="title">
+⚙️ CAPTAIN AI LENA DECISION
+</div>
 
-<span id="int
+<pre id="decision">
+Waiting...
+</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+💡 SOLUTION OPTIONS
+</div>
+
+
+<div class="solution" id="solutionOptions">
+
+Waiting for assessment...
+
+</div>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     ACTION SEQUENCE
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+🚨 ACTION SEQUENCE PROMPT
+</div>
+
+
+<pre id="actions">
+
+Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+🧠 MEMORY CORE
+</div>
+
+
+<pre id="memoryCore">
+
+Memory Core Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     AUDIT RECORD
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+🧾 SPD v13.1 AUDIT RECORD
+</div>
+
+
+<pre id="audit">
+
+Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     PIPELINE LOG
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+📜 PIPELINE LOG
+</div>
+
+
+<pre id="pipelineLog">
+
+PIPELINE LOG ACTIVE
+
+</pre>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     SELF TEST
+============================================================ -->
+
+
+<div class="panel">
+
+<div class="title">
+🧪 SPD v13.1 SELF-TEST
+</div>
+
+
+<pre id="selfTest">
+
+Not executed.
+
+</pre>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     FAULT IDENTIFICATION
+
 <script type="module">
-
 
 /*
 ============================================================
-SPD v13.1 — AUTHORITATIVE ENGINE CORE
-============================================================
+SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+
+AUTHORITATIVE DATA FLOW
 
 COCKPIT
    ↓
 domainIntegration.js
    ↓
-Domain Rule Engine
+DOMAIN RULE ENGINE
    ↓
 goldenRuleEngine.js
    ↓
-Captain AI Lena Decision Core
+CAPTAIN AI LENA DECISION CORE
    ↓
-Memory / Audit
+MEMORY CORE
+   ↓
+AUDIT RECORD
+
+GOLDEN RULE PIPELINE
+
+OBSERVE
+   ↓
+VERIFY
+   ↓
+ASSESS
+   ↓
+DECIDE
+   ↓
+ACT
+   ↓
+UPDATE
 
 ============================================================
 */
@@ -387,70 +703,78 @@ PHI,
 GOLDEN_RULE_STAGES
 
 }
-
 from "./goldenRuleEngine.js";
 
 
 
 import {
 
-executeDomainRule
+executeDomainRule,
+getDomainStatus
 
 }
-
 from "./domainIntegration.js";
 
 
 
 import {
 
-runSelfTest as authoritativeSelfTest,
-
+runSelfTest as runAuthoritativeSelfTest,
 runValidationLoop
 
 }
-
 from "./selfTestEngine.js";
 
 
 
-
-let currentScenario="FX_STRESS";
-
-
-let intensity=50;
-
-
+/*
+============================================================
+BASE SYSTEM STATE
+============================================================
+*/
 
 
-const baseState={
-
+const baseState = {
 
 fx:12,
 
-energy:50,
+dc:20,
 
 cyb:40,
 
 inf:10,
 
-dc:20,
+energy:25,
+
 
 event:"NORMAL",
 
 mode:"AUTONOMOUS"
 
-
 };
 
 
 
+let currentScenario =
+"FX_STRESS";
 
 
-function display(id,value){
+let scenarioIntensity =
+50;
 
 
-const element=document.getElementById(id);
+
+/*
+============================================================
+DOM DISPLAY HELPER
+============================================================
+*/
+
+
+function setText(id,value){
+
+const element =
+document.getElementById(id);
 
 
 if(element){
@@ -459,16 +783,13 @@ element.innerText=value;
 
 }
 
-
 }
-
-
 
 
 
 /*
 ============================================================
-SCENARIO CONTROL
+SCENARIO ACTIVATION
 ============================================================
 */
 
@@ -479,214 +800,21 @@ window.activateScenario=function(scenario){
 currentScenario=scenario;
 
 
-runSystem();
+setText(
 
-
-};
-
-
-
-
-
-/*
-============================================================
-INTENSITY CONTROL
-============================================================
-*/
-
-
-document
-.getElementById("intensitySlider")
-.oninput=function(){
-
-
-intensity=
-Number(this.value);
-
-
-
-document
-.getElementById("intensityDisplay")
-.innerText=
-intensity+"%";
-
-
-
-runSystem();
-
-
-};
-
-
-
-
-
-/*
-============================================================
-STATE BUILDER
-============================================================
-*/
-
-
-function buildState(){
-
-
-const factor=intensity/100;
-
-
-let state={
-
-...baseState,
-
-scenario:currentScenario,
-
-intensity:intensity,
-
-time:new Date().toISOString()
-
-};
-
-
-
-switch(currentScenario){
-
-
-
-case "FX_STRESS":
-
-state.fx=Math.min(
-
-100,
-
-baseState.fx+
-(80*factor)
-
-);
-
-break;
-
-
-
-
-case "DC_LOAD":
-
-state.dc=Math.min(
-
-100,
-
-baseState.dc+
-(80*factor)
-
-);
-
-break;
-
-
-
-
-case "CYBER_EVENT":
-
-state.cyb=Math.min(
-
-100,
-
-baseState.cyb+
-(80*factor)
-
-);
-
-break;
-
-
-
-
-case "INFRASTRUCTURE_STRESS":
-
-state.inf=Math.min(
-
-100,
-
-baseState.inf+
-(80*factor)
-
-);
-
-break;
-
-
-
-
-case "BIODIESEL_SHORTAGE":
-
-state.energy=Math.max(
-
-0,
-
-baseState.energy-
-(80*factor)
-
-);
-
-break;
-
-
-
-
-
-case "LIQUIDITY_CRISIS":
-/*
-============================================================
-SELF TEST
-============================================================
-*/
-
-
-window.runSelfTest=function(){
-
-
-try{
-
-
-const result=
-
-authoritativeSelfTest();
-
-
-
-display(
-
-"selfTest",
-
-JSON.stringify(
-
-result,
-
-null,
-
-2
-
-)
-
-);
-
-
-
-}
-
-catch(error){
-
-
-display(
-
-"selfTest",
+"scenarioPanel",
 
 JSON.stringify(
 
 {
 
-status:"ERROR",
+scenario,
 
-message:error.message
+intensity:
+scenarioIntensity+"%",
+
+status:
+"ACTIVE"
 
 },
 
@@ -695,316 +823,3 @@ null,
 2
 
 )
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-/*
-============================================================
-SELF TEST + CORRECTIVE ACTION
-============================================================
-*/
-
-
-window.runSelfTestAndCorrect=function(){
-
-
-try{
-
-
-const validation=
-
-runValidationLoop();
-
-
-
-display(
-
-"selfTest",
-
-JSON.stringify(
-
-validation.selfTest,
-
-null,
-
-2
-
-)
-
-);
-
-
-
-display(
-
-"corrective",
-
-JSON.stringify(
-
-{
-
-authority:
-
-"Captain AI Lena",
-
-action:
-
-validation.correctiveAction,
-
-retest:
-
-validation.retest,
-
-recovery:
-
-validation.recoveryVerification
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-display(
-
-"audit",
-
-JSON.stringify(
-
-{
-
-system:
-
-"SPD v13.1",
-
-process:
-
-"AUTONOMOUS VALIDATION LOOP",
-
-finalStatus:
-
-validation.finalStatus,
-
-timestamp:
-
-new Date().toISOString()
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-}
-
-catch(error){
-
-
-display(
-
-"corrective",
-
-JSON.stringify(
-
-{
-
-status:"ERROR",
-
-message:error.message
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-
-/*
-============================================================
-AUTONOMOUS MONITOR LOOP
-============================================================
-*/
-
-
-let lastExecution=0;
-
-
-
-function autonomousLoop(time){
-
-
-
-if(
-
-time-lastExecution > 3000
-
-){
-
-
-runSystem();
-
-
-lastExecution=time;
-
-
-}
-
-
-
-requestAnimationFrame(
-
-autonomousLoop
-
-);
-
-
-
-}
-
-
-
-
-requestAnimationFrame(
-
-autonomousLoop
-
-);
-
-
-
-
-
-
-/*
-============================================================
-ENGINE ERROR PROTECTION
-============================================================
-*/
-
-
-window.addEventListener(
-
-"error",
-
-function(event){
-
-
-
-display(
-
-"systemStatus",
-
-"ENGINE PROTECTION MODE"
-
-);
-
-
-
-display(
-
-"audit",
-
-JSON.stringify(
-
-{
-
-system:
-
-"SPD v13.1",
-
-error:
-
-event.message,
-
-module:
-
-"cockpit.html",
-
-timestamp:
-
-new Date().toISOString()
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-}
-
-);
-
-
-
-
-
-
-/*
-============================================================
-INITIAL START
-============================================================
-*/
-
-
-display(
-
-"systemStatus",
-
-"ENGINE READY"
-
-);
-
-
-
-runSystem();
-
-
-
-</script>
-
-
-</body>
-
-</html>
