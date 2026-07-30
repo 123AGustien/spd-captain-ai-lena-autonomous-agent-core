@@ -64,7 +64,7 @@ import {
    ============================================================
  */
 
-const DOMAIN_REGISTRY = {
+export const DOMAIN_REGISTRY = {
 
 
     FIN: {
@@ -224,6 +224,7 @@ const DOMAIN_ENGINES = {
                 );
 
 
+
             return bhrRuleEngine({
 
                 ...input,
@@ -237,7 +238,6 @@ const DOMAIN_ENGINES = {
 
 
 };
-
 
 
 
@@ -267,13 +267,11 @@ export function registerDomainEngine(
 
     if (!id) {
 
-
         throw new Error(
 
             "DOMAIN INTEGRATION ERROR: DOMAIN ID REQUIRED"
 
         );
-
 
     }
 
@@ -285,13 +283,11 @@ export function registerDomainEngine(
 
     ) {
 
-
         throw new Error(
 
             "DOMAIN INTEGRATION ERROR: ENGINE MUST BE FUNCTION"
 
         );
-
 
     }
 
@@ -303,23 +299,18 @@ export function registerDomainEngine(
 
     return {
 
-
         domain:
 
             id,
-
 
         status:
 
             "ENGINE_REGISTERED"
 
-
     };
 
 
 }
-
-
 
 
 
@@ -389,26 +380,25 @@ export function getDomainStatus(
 
             engine
 
-                ?
+            ?
 
-                "ACTIVE"
+            "ACTIVE"
 
-                :
+            :
 
-                (
+            (
 
-                    config?.status ??
+                config?.status ??
 
-                    "UNAVAILABLE"
+                "UNAVAILABLE"
 
-                )
+            )
 
 
     };
 
 
 }
-
 
 
 
@@ -448,42 +438,31 @@ export function executeDomainRule(
 
 
 
-
-
     if (!config) {
 
 
         return {
 
-
             domain:
 
                 id,
-
 
             status:
 
                 "UNKNOWN_DOMAIN",
 
-
-
             decision:
 
                 "NO DOMAIN RULE AVAILABLE",
-
-
 
             action:
 
                 "MONITOR SYSTEM"
 
-
         };
 
 
     }
-
-
 
 
 
@@ -492,35 +471,26 @@ export function executeDomainRule(
 
         return {
 
-
             domain:
 
                 id,
-
 
             status:
 
                 "ENGINE_NOT_REGISTERED",
 
-
-
             decision:
 
                 "DOMAIN ENGINE NOT AVAILABLE",
-
-
 
             action:
 
                 "MONITOR SYSTEM"
 
-
         };
 
 
     }
-
-
 
 
 
@@ -540,7 +510,6 @@ export function executeDomainRule(
             config.name,
 
 
-
         timestamp:
 
             new Date()
@@ -552,10 +521,7 @@ export function executeDomainRule(
 
 
 
-
-
     try {
-
 
 
         const verifiedInput =
@@ -565,8 +531,6 @@ export function executeDomainRule(
                 observedInput
 
             );
-
-
 
 
 
@@ -580,10 +544,7 @@ export function executeDomainRule(
 
 
 
-
-
         return {
-
 
 
             domain:
@@ -591,11 +552,9 @@ export function executeDomainRule(
                 id,
 
 
-
             domainName:
 
                 config.name,
-
 
 
             engine:
@@ -603,10 +562,7 @@ export function executeDomainRule(
                 config.engine,
 
 
-
             pipeline:
-
-
 
             [
 
@@ -626,11 +582,9 @@ export function executeDomainRule(
 
 
 
-
             input:
 
                 verifiedInput,
-
 
 
 
@@ -640,17 +594,37 @@ export function executeDomainRule(
 
 
 
-
-
             scenarioRegistry:
 
                 id === "BHR"
 
                 ?
 
-                getBHRScenario(
+                (
 
-                    verifiedInput.scenario
+                    getBHRScenario(
+
+                        verifiedInput.scenario
+
+                    )
+
+                    ??
+
+                    {
+
+                        domain:
+
+                            "BHR",
+
+                        scenario:
+
+                            "UNKNOWN",
+
+                        rule:
+
+                            null
+
+                    }
 
                 )
 
@@ -660,27 +634,58 @@ export function executeDomainRule(
 
 
 
+            trace:
+
+            {
+
+                domain:
+
+                    id,
+
+
+                engine:
+
+                    config.engine,
+
+
+                goldenRule:
+
+                [
+
+                    "OBSERVE",
+
+                    "VERIFY",
+
+                    "ASSESS",
+
+                    "DECIDE",
+
+                    "ACT",
+
+                    "UPDATE"
+
+                ],
+
+
+                deterministic:
+
+                    true
+
+            },
+
 
 
             audit:
 
             {
 
-
                 status:
 
-                    "TERCATAT",
-
-
-                bahasa:
-
-                    "INDONESIA",
-
+                    "RECORDED",
 
                 domain:
 
                     id,
-
 
                 timestamp:
 
@@ -688,10 +693,7 @@ export function executeDomainRule(
 
                     .toISOString()
 
-
             },
-
-
 
 
 
@@ -700,16 +702,13 @@ export function executeDomainRule(
                 "EXECUTED"
 
 
-
         };
-
-
 
 
     }
 
-    catch(error) {
 
+    catch(error) {
 
 
         return {
@@ -720,11 +719,9 @@ export function executeDomainRule(
                 id,
 
 
-
             status:
 
                 "DOMAIN_ENGINE_ERROR",
-
 
 
             error:
@@ -732,17 +729,14 @@ export function executeDomainRule(
                 error.message,
 
 
-
             decision:
 
                 "NO DECISION — ENGINE ERROR",
 
 
-
             action:
 
                 "HOLD AND MONITOR",
-
 
 
             timestamp:
@@ -762,8 +756,6 @@ export function executeDomainRule(
 
 
 
-
-
 /* ============================================================
    VERIFY DOMAIN INPUT
    ============================================================
@@ -777,7 +769,6 @@ function verifyDomainInput(
 
 
     const intensity =
-
 
         Math.max(
 
@@ -801,9 +792,7 @@ function verifyDomainInput(
         ...input,
 
 
-
         intensity,
-
 
 
         intensityFactor:
@@ -845,13 +834,10 @@ function verifyDomainInput(
             "AUTONOMOUS"
 
 
-
     };
 
 
 }
-
-
 
 
 
@@ -882,14 +868,14 @@ export function getAllDomainStatus() {
 
 
 
-
 /* ============================================================
    CONSTANTS
    ============================================================
  */
 
-export const DOMAIN_IDS = [
+export const DOMAIN_IDS =
 
+[
 
     "FIN",
 
@@ -909,7 +895,6 @@ export const DOMAIN_IDS = [
 
     "SC"
 
-
 ];
 
 
@@ -927,7 +912,6 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
     activeDomains:
 
-
     [
 
         "FIN",
@@ -938,8 +922,24 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
-    pipeline:
+    scenarioRegistry:
 
+    {
+
+        FIN:
+
+            "CONNECTED",
+
+
+        BHR:
+
+            "CONNECTED"
+
+    },
+
+
+
+    pipeline:
 
     [
 
@@ -976,10 +976,7 @@ export const DOMAIN_INTEGRATION_STATUS = {
         false
 
 
-
 };
-
-
 
 
 
@@ -1003,10 +1000,10 @@ export default {
     getAllDomainStatus,
 
 
-    DOMAIN_IDS,
-
-
     DOMAIN_REGISTRY,
+
+
+    DOMAIN_IDS,
 
 
     DOMAIN_INTEGRATION_STATUS
