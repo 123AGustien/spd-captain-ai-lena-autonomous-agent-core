@@ -1,304 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-</title>
-
-
-<style>
-
-*{
-box-sizing:border-box;
-}
-
-
-body{
-
-margin:0;
-padding:12px;
-
-background:#05070a;
-
-color:#00ff99;
-
-font-family:monospace;
-
-}
-
-
-
-h1{
-
-text-align:center;
-
-color:white;
-
-font-size:22px;
-
-}
-
-
-
-.subtitle{
-
-text-align:center;
-
-color:#aaaaaa;
-
-line-height:1.5;
-
-margin-bottom:15px;
-
-}
-
-
-
-.grid{
-
-display:grid;
-
-grid-template-columns:1fr;
-
-gap:12px;
-
-}
-
-
-
-.panel{
-
-border:1px solid #00ff99;
-
-border-radius:8px;
-
-padding:12px;
-
-background:#0b0f14;
-
-}
-
-
-
-.title{
-
-font-weight:bold;
-
-color:white;
-
-margin-bottom:10px;
-
-}
-
-
-
-.status{
-
-border:2px solid #00ff99;
-
-padding:12px;
-
-font-size:18px;
-
-color:white;
-
-text-align:center;
-
-}
-
-
-
-button{
-
-width:100%;
-
-min-height:48px;
-
-margin:5px 0;
-
-border-radius:6px;
-
-border:none;
-
-background:#00ff99;
-
-color:black;
-
-font-weight:bold;
-
-font-size:15px;
-
-}
-
-
-
-button:hover{
-
-opacity:0.8;
-
-}
-
-
-
-.scenario{
-
-background:#101820;
-
-color:#00ff99;
-
-border:1px solid #00ff99;
-
-}
-
-
-
-pre{
-
-white-space:pre-wrap;
-
-word-break:break-word;
-
-color:#00ff99;
-
-}
-
-
-
-.monitor{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(120px,1fr));
-
-gap:10px;
-
-}
-
-
-
-.domain{
-
-border:1px solid #00ff99;
-
-padding:10px;
-
-text-align:center;
-
-background:#05070a;
-
-}
-
-
-
-.domain-name{
-
-color:#888;
-
-}
-
-
-
-.domain-value{
-
-font-size:24px;
-
-color:white;
-
-}
-
-
-
-.pipeline{
-
-border:1px solid #00ff99;
-
-padding:10px;
-
-color:white;
-
-text-align:center;
-
-}
-
-
-
-.solution{
-
-border-left:3px solid #00ff99;
-
-padding:10px;
-
-background:#05070a;
-
-}
-
-
-
-input[type="range"]{
-
-width:100%;
-
-}
-
-
-</style>
-
-</head>
-
-
-
-<body>
-
-
-<h1>
-🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-</h1>
-
-
-
-<div class="subtitle">
-
-Captain AI Lena Autonomous Agent Core
-
-<br>
-
-DATA → ALGORITHMS → COMPUTE
-
-<br>
-
-SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST
-
-</div>
-
-
-
-<div class="grid">
-
-
-
-<div class="panel">
-
-<div class="status" id="systemStatus">
-
-SYSTEM STATUS: INITIALIZING
-
-</div>
-
-</div>
-
-
-
-<div class="panel">
-
-<div
 <!-- =====================================================
 SCENARIO INTENSITY CONTROL
 ===================================================== -->
@@ -329,1284 +28,6 @@ INTENSITY:
 
 
 </div>
-
-
-
-
-<!-- =====================================================
-SCENARIO PANEL
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-🧪 SCENARIO PANEL
-</div>
-
-
-<pre id="scenarioPanel">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-RAW SYSTEM STATE
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-📊 RAW SYSTEM STATE
-</div>
-
-
-<pre id="rawState">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-GOLDEN RULE ENGINE
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-🛰️ GOLDEN RULE ENGINE
-
-</div>
-
-
-<div class="pipeline" id="pipeline">
-
-OBSERVE →
-VERIFY →
-ASSESS →
-DECIDE →
-ACT →
-UPDATE
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-SYSTEM ASSESSMENT
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-⚠️ SYSTEM ASSESSMENT
-
-</div>
-
-
-<pre id="assessment">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-RISK PANEL
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-🚨 RISK PANEL
-
-</div>
-
-
-<pre id="riskPanel">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-CAPTAIN AI LENA DECISION CORE
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-⚙️ CAPTAIN AI LENA DECISION
-
-</div>
-
-
-<pre id="decision">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-SOLUTION OPTIONS
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-💡 SOLUTION OPTIONS
-
-</div>
-
-
-<div class="solution" id="solutionOptions">
-
-Waiting for assessment...
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-ACTION SEQUENCE PROMPT
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-🚨 ACTION SEQUENCE PROMPT
-
-</div>
-
-
-<pre id="actions">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-MEMORY CORE
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-🧠 MEMORY CORE
-
-</div>
-
-
-<pre id="memoryCore">
-
-Memory Core Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-AUDIT RECORD
-===================================================== -->
-
-<div class="panel">
-
-<div class="title">
-
-🧾 SPD v13.1 AUDIT RECORD
-
-</div>
-
-
-<pre id="audit">
-
-Waiting...
-
-</pre>
-
-
-</div>
-
-
-
-
-
-<!-- =====================================================
-PIPELINE LOG
-=====================================================
-<script type="module">
-
-
-/*
-============================================================
-SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-
-AUTHORITATIVE DATA FLOW
-
-COCKPIT
-   ↓
-domainIntegration.js
-   ↓
-DOMAIN RULE ENGINE
-   ↓
-goldenRuleEngine.js
-   ↓
-CAPTAIN AI LENA DECISION CORE
-   ↓
-MEMORY CORE
-   ↓
-AUDIT RECORD
-
-
-GOLDEN RULE PIPELINE
-
-OBSERVE
- ↓
-VERIFY
- ↓
-ASSESS
- ↓
-DECIDE
- ↓
-ACT
- ↓
-UPDATE
-
-============================================================
-*/
-
-
-
-import {
-
-runGoldenRule,
-PHI,
-GOLDEN_RULE_STAGES
-
-}
-
-from "./goldenRuleEngine.js";
-
-
-
-
-import {
-
-runDomainIntegration,
-getDomainStatus
-
-}
-
-from "./domainIntegration.js";
-
-
-
-
-import {
-
-runSelfTest as runAuthoritativeSelfTest,
-runValidationLoop
-
-}
-
-from "./selfTestEngine.js";
-
-
-
-
-
-/*
-============================================================
-BASE SYSTEM STATE
-============================================================
-*/
-
-
-const baseState = {
-
-
-fx:12,
-
-dc:20,
-
-cyb:40,
-
-inf:10,
-
-energy:25,
-
-
-event:"NORMAL",
-
-
-mode:"AUTONOMOUS"
-
-
-};
-
-
-
-
-
-let currentScenario =
-"FX_STRESS";
-
-
-
-let scenarioIntensity =
-50;
-
-
-
-
-
-
-/*
-============================================================
-DISPLAY HELPER
-============================================================
-*/
-
-
-function setText(id,value){
-
-
-const element =
-document.getElementById(id);
-
-
-
-if(element){
-
-element.innerText=value;
-
-}
-
-
-}
-
-
-
-
-
-
-
-/*
-============================================================
-SCENARIO ACTIVATION
-============================================================
-*/
-
-
-window.activateScenario=function(scenario){
-
-
-
-currentScenario =
-scenario;
-
-
-
-setText(
-
-"scenarioPanel",
-
-JSON.stringify(
-
-{
-
-scenario:scenario,
-
-intensity:
-scenarioIntensity+"%",
-
-
-intensityValue:
-scenarioIntensity,
-
-
-status:
-"READY"
-
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-runLiveSystem();
-
-
-
-};
-
-
-
-
-
-
-
-/*
-============================================================
-BUILD SCENARIO STATE
-============================================================
-*/
-
-
-function buildSystemState(){
-
-
-
-const factor =
-scenarioIntensity / 100;
-
-
-
-let state = {
-
-
-...baseState,
-
-
-scenario:
-currentScenario,
-
-
-intensity:
-scenarioIntensity,
-
-
-intensityFactor:
-factor,
-
-
-time:
-new Date().toISOString()
-
-
-};
-
-
-
-
-
-switch(currentScenario){
-
-
-
-case "FX_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(80 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "FIN_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(60 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "BANKING_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(40 * factor)
-
-);
-
-
-state.cyb =
-Math.min(
-
-100,
-
-baseState.cyb +
-(20 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "LIQUIDITY_CRISIS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(50 * factor)
-
-);
-
-
-
-state.energy =
-Math.max(
-
-0,
-
-baseState.energy -
-(40 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "CREDIT_STRESS":
-
-
-state.fx =
-Math
-<script type="module">
-
-
-/*
-============================================================
-SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-
-AUTHORITATIVE DATA FLOW
-
-COCKPIT
-   ↓
-domainIntegration.js
-   ↓
-DOMAIN RULE ENGINE
-   ↓
-goldenRuleEngine.js
-   ↓
-CAPTAIN AI LENA DECISION CORE
-   ↓
-MEMORY CORE
-   ↓
-AUDIT RECORD
-
-
-GOLDEN RULE PIPELINE
-
-OBSERVE
- ↓
-VERIFY
- ↓
-ASSESS
- ↓
-DECIDE
- ↓
-ACT
- ↓
-UPDATE
-
-============================================================
-*/
-
-
-
-import {
-
-runGoldenRule,
-PHI,
-GOLDEN_RULE_STAGES
-
-}
-
-from "./goldenRuleEngine.js";
-
-
-
-
-import {
-
-runDomainIntegration,
-getDomainStatus
-
-}
-
-from "./domainIntegration.js";
-
-
-
-
-import {
-
-runSelfTest as runAuthoritativeSelfTest,
-runValidationLoop
-
-}
-
-from "./selfTestEngine.js";
-
-
-
-
-
-/*
-============================================================
-BASE SYSTEM STATE
-============================================================
-*/
-
-
-const baseState = {
-
-
-fx:12,
-
-dc:20,
-
-cyb:40,
-
-inf:10,
-
-energy:25,
-
-
-event:"NORMAL",
-
-
-mode:"AUTONOMOUS"
-
-
-};
-
-
-
-
-
-let currentScenario =
-"FX_STRESS";
-
-
-
-let scenarioIntensity =
-50;
-
-
-
-
-
-
-/*
-============================================================
-DISPLAY HELPER
-============================================================
-*/
-
-
-function setText(id,value){
-
-
-const element =
-document.getElementById(id);
-
-
-
-if(element){
-
-element.innerText=value;
-
-}
-
-
-}
-
-
-
-
-
-
-
-/*
-============================================================
-SCENARIO ACTIVATION
-============================================================
-*/
-
-
-window.activateScenario=function(scenario){
-
-
-
-currentScenario =
-scenario;
-
-
-
-setText(
-
-"scenarioPanel",
-
-JSON.stringify(
-
-{
-
-scenario:scenario,
-
-intensity:
-scenarioIntensity+"%",
-
-
-intensityValue:
-scenarioIntensity,
-
-
-status:
-"READY"
-
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-runLiveSystem();
-
-
-
-};
-
-
-
-
-
-
-
-/*
-============================================================
-BUILD SCENARIO STATE
-============================================================
-*/
-
-
-function buildSystemState(){
-
-
-
-const factor =
-scenarioIntensity / 100;
-
-
-
-let state = {
-
-
-...baseState,
-
-
-scenario:
-currentScenario,
-
-
-intensity:
-scenarioIntensity,
-
-
-intensityFactor:
-factor,
-
-
-time:
-new Date().toISOString()
-
-
-};
-
-
-
-
-
-switch(currentScenario){
-
-
-
-case "FX_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(80 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "FIN_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(60 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "BANKING_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(40 * factor)
-
-);
-
-
-state.cyb =
-Math.min(
-
-100,
-
-baseState.cyb +
-(20 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "LIQUIDITY_CRISIS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(50 * factor)
-
-);
-
-
-
-state.energy =
-Math.max(
-
-0,
-
-baseState.energy -
-(40 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "CREDIT_STRESS":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(45 * factor)
-
-);
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(25 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "SOVEREIGN_DEBT":
-
-
-state.fx =
-Math.min(
-
-100,
-
-baseState.fx +
-(70 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "DC_LOAD":
-
-
-state.dc =
-Math.min(
-
-100,
-
-baseState.dc +
-(70 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "CYBER_EVENT":
-
-
-state.cyb =
-Math.min(
-
-100,
-
-baseState.cyb +
-(60 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "INFRASTRUCTURE_STRESS":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(70 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-case "BIODIESEL_SHORTAGE":
-
-
-state.energy =
-Math.max(
-
-0,
-
-baseState.energy -
-(60 * factor)
-
-);
-
-
-break;
-
-
-
-
-
-/*
-==========================
-BHR DOMAIN
-==========================
-*/
-
-
-case "HUMAN_RIGHTS_DUE_DILIGENCE":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(20 * factor)
-
-);
-
-
-break;
-
-
-
-case "FORCED_LABOUR":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(40 * factor)
-
-);
-
-
-break;
-
-
-
-
-case "CHILD_LABOUR":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(40 * factor)
-
-);
-
-
-break;
-
-
-
-
-case "DISCRIMINATION":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(30 * factor)
-
-);
-
-
-break;
-
-
-
-
-case "OCCUPATIONAL_HEALTH_AND_SAFETY":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(35 * factor)
-
-);
-
-
-break;
-
-
-
-
-case "MODERN_SLAVERY":
-
-
-state.inf =
-Math.min(
-
-100,
-
-baseState.inf +
-(50 * factor)
-
-);
-
-
-break;
-
-
-
-default:
-
-break;
-
-
-}
-
-
-
-return state;
-
-
-}
- 
- 
 /*
 ============================================================
 MAIN AUTONOMOUS SYSTEM EXECUTION
@@ -1620,6 +41,7 @@ window.runLiveSystem=function(){
 
 const state =
 buildSystemState();
+
 
 
 
@@ -1651,6 +73,116 @@ null,
 
 
 
+
+
+/*
+----------------------------
+DOMAIN IDENTIFICATION
+----------------------------
+*/
+
+
+let domain =
+null;
+
+
+
+const BHR_SCENARIOS = [
+
+
+"HUMAN_RIGHTS_DUE_DILIGENCE",
+
+"FORCED_LABOUR",
+
+"CHILD_LABOUR",
+
+"DISCRIMINATION",
+
+"OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+"MODERN_SLAVERY",
+
+"COMMUNITY_IMPACT",
+
+"INDIGENOUS_RIGHTS",
+
+"SUPPLY_CHAIN_RISK",
+
+"GRIEVANCE_MECHANISM"
+
+
+];
+
+
+
+
+
+const FIN_SCENARIOS = [
+
+
+"FIN_STRESS",
+
+"BANKING_STRESS",
+
+"LIQUIDITY_CRISIS",
+
+"CREDIT_STRESS",
+
+"SOVEREIGN_DEBT",
+
+"FX_STRESS"
+
+
+];
+
+
+
+
+
+
+
+if(
+
+BHR_SCENARIOS.includes(
+
+currentScenario
+
+)
+
+){
+
+domain="BHR";
+
+
+}
+
+
+
+
+
+if(
+
+FIN_SCENARIOS.includes(
+
+currentScenario
+
+)
+
+){
+
+domain="FIN";
+
+
+}
+
+
+
+
+
+
+
+
+
 /*
 ----------------------------
 DOMAIN INTEGRATION
@@ -1660,13 +192,25 @@ DOMAIN INTEGRATION
 
 const domainResult =
 
+
 runDomainIntegration(
+
 
 currentScenario,
 
-state
+
+{
+
+...state,
+
+domain
+
+}
+
 
 );
+
+
 
 
 
@@ -1682,11 +226,13 @@ GOLDEN RULE ENGINE
 
 const result =
 
+
 runGoldenRule(
 
 state
 
 );
+
 
 
 
@@ -1707,10 +253,12 @@ state.fx
 );
 
 
+
 setText(
 "dc",
 state.dc
 );
+
 
 
 setText(
@@ -1719,10 +267,12 @@ state.cyb
 );
 
 
+
 setText(
 "inf",
 state.inf
 );
+
 
 
 setText(
@@ -1766,6 +316,7 @@ null,
 
 
 
+
 /*
 ----------------------------
 RISK PANEL
@@ -1784,11 +335,26 @@ JSON.stringify(
 risk:
 result.risk,
 
+
 goldenScore:
 result.goldenScore,
 
+
 resilienceScore:
-result.resilienceScore
+result.resilienceScore,
+
+
+domain:
+
+
+domainResult?.domain,
+
+
+domainRisk:
+
+
+domainResult?.risk
+
 
 },
 
@@ -1799,6 +365,9 @@ null,
 )
 
 );
+
+
+
 
 
 
@@ -1819,146 +388,8 @@ setText(
 
 JSON.stringify(
 
+{
+
+decision:
+
 result.decision,
-
-null,
-
-2
-
-)
-
-);
-
-
-
-
-
-
-
-/*
-----------------------------
-SOLUTION OPTIONS
-----------------------------
-*/
-
-
-setText(
-
-"solutionOptions",
-
-result.decision.action
-
-);
-
-
-
-
-
-
-
-/*
-----------------------------
-ACTION SEQUENCE
-----------------------------
-*/
-
-
-setText(
-
-"actions",
-
-JSON.stringify(
-
-[
-
-"CONFIRM SYSTEM STATE",
-
-"APPLY SELECTED MITIGATION",
-
-result.decision.action,
-
-"MONITOR SYSTEM RESPONSE"
-
-],
-
-null,
-
-2
-
-)
-
-);
-
-
-
-
-
-
-
-
-/*
-----------------------------
-MEMORY CORE
-----------------------------
-*/
-
-
-setText(
-
-"memoryCore",
-
-JSON.stringify(
-
-{
-
-timestamp:
-new Date().toISOString(),
-
-scenario:
-currentScenario,
-
-intensity:
-scenarioIntensity,
-
-engineStatus:
-"COMPLETE",
-
-domain:
-domainResult.domain,
-
-status:
-"MEMORY CORE UPDATED"
-
-},
-
-null,
-
-2
-
-)
-
-);
-
-
-
-
-
-
-
-/*
-----------------------------
-AUDIT RECORD
-----------------------------
-*/
-
-
-setText(
-
-"audit",
-
-JSON.stringify(
-
-{
-
-system:
-"SPD
