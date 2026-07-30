@@ -1,583 +1,555 @@
 /**
  * ============================================================
- * SPD v13.1 — BHR RULE ENGINE
+ * SPD v13.1 — BUSINESS & HUMAN RIGHTS RULE ENGINE
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * Business & Human Rights Assessment Engine
+ * DOMAIN:
+ * BHR — Business & Human Rights
+ *
+ * PURPOSE:
+ * Converts BHR scenarios into:
+ *
+ * - Risk assessment
+ * - Rule evaluation
+ * - Recommended actions
+ * - Mitigation sequence
+ *
+ *
+ * ARCHITECTURE
+ * ------------
+ *
+ * BHR Scenario Registry
+ *          ↓
+ * BHR Rule Engine
+ *          ↓
+ * Golden Rule Engine
+ *          ↓
+ * Captain AI Lena Decision Core
+ *          ↓
+ * Memory Core
+ *          ↓
+ * Audit Record
+ *
+ *
+ * IMPORTANT:
+ *
+ * Golden Rule Engine remains authoritative.
  *
  * Deterministic.
  * No randomness.
  * No machine learning.
  *
- * Golden Rule Engine remains authoritative.
- *
- * Pipeline:
- *
- * Cockpit Scenario
- *        ↓
- * domainIntegration.js
- *        ↓
- * BHR Scenario Registry
- *        ↓
- * BHR Rule Registry
- *        ↓
- * BHR Rule Engine
- *        ↓
- * Golden Rule Engine
- *        ↓
- * Captain AI Lena Decision Core
- *        ↓
- * Memory Core
- *        ↓
- * Audit Record
- *
  * ============================================================
  */
 
 
-import {
-
-    getBHRScenario
-
-} from "./bhr-scenario-registry.js";
-
-
-import {
-
-    getBHRRule
-
-} from "./rule-registry.js";
-
-
-
-/**
- * ============================================================
- * RUN BHR RULE ENGINE
- * ============================================================
+/* ============================================================
+   BHR RULE DATABASE
+   ============================================================
  */
 
-export function runBHRRuleEngine(
 
-    scenarioId,
+export const BHR_RULES = {
 
-    state = {}
 
-) {
+"BHR-001": {
 
+scenario:
+"HUMAN_RIGHTS_DUE_DILIGENCE",
 
-    const scenario =
+category:
+"GOVERNANCE",
 
-        getBHRScenario(
+riskFactors:
+[
+"HUMAN RIGHTS POLICY FAILURE",
+"INSUFFICIENT DUE DILIGENCE",
+"INADEQUATE RISK MONITORING"
+],
 
-            scenarioId
+actions:
+[
+"VERIFY HUMAN RIGHTS GOVERNANCE FRAMEWORK",
+"CONDUCT IMPACT ASSESSMENT",
+"IDENTIFY HUMAN RIGHTS RISKS",
+"IMPLEMENT PREVENTIVE CONTROLS",
+"MONITOR COMPLIANCE STATUS"
+]
 
-        );
+},
 
 
 
-    const ruleDefinition =
+"BHR-002": {
 
-        scenario?.rule
+scenario:
+"FORCED_LABOUR",
 
-        ?
+category:
+"LABOUR",
 
-        getBHRRule(
+riskFactors:
+[
+"WORKER EXPLOITATION",
+"SUPPLIER LABOUR VIOLATION",
+"ETHICAL COMPLIANCE FAILURE"
+],
 
-            scenario.rule
+actions:
+[
+"VERIFY SUPPLIER LABOUR CONDITIONS",
+"INITIATE HUMAN RIGHTS AUDIT",
+"STOP HIGH RISK SUPPLIER ACTIVITY",
+"IMPLEMENT REMEDIATION PLAN",
+"MONITOR CORRECTIVE ACTION"
+]
 
-        )
+},
 
-        :
 
-        null;
 
+"BHR-003": {
 
+scenario:
+"CHILD_LABOUR",
 
-    if (
+category:
+"LABOUR",
 
-        !scenario ||
+riskFactors:
+[
+"CHILD LABOUR INDICATORS",
+"SUPPLY CHAIN FAILURE",
+"SERIOUS HUMAN RIGHTS IMPACT"
+],
 
-        !scenario.rule ||
+actions:
+[
+"IMMEDIATELY PROTECT AFFECTED CHILDREN",
+"STOP IMPACTED SUPPLY CHAIN ACTIVITY",
+"VERIFY EMPLOYMENT RECORDS",
+"INITIATE REMEDIATION PROCESS",
+"REPORT GOVERNANCE STATUS"
+]
 
-        !ruleDefinition
+},
 
-    ) {
 
 
-        return {
+"BHR-004": {
 
+scenario:
+"DISCRIMINATION",
 
-            domain:
+category:
+"EQUALITY",
 
-                "BHR",
+riskFactors:
+[
+"UNFAIR TREATMENT",
+"WORKPLACE INEQUALITY",
+"LOSS OF EMPLOYEE TRUST"
+],
 
+actions:
+[
+"INVESTIGATE DISCRIMINATION CLAIMS",
+"VERIFY FAIR EMPLOYMENT PRACTICES",
+"IMPLEMENT CORRECTIVE MEASURES",
+"MONITOR WORKPLACE CULTURE"
+]
 
-            status:
+},
 
-                "ERROR",
 
 
-            message:
+"BHR-005": {
 
-                "BHR rule not registered"
+scenario:
+"OCCUPATIONAL_HEALTH_AND_SAFETY",
 
+category:
+"SAFETY",
 
-        };
+riskFactors:
+[
+"WORKPLACE SAFETY FAILURE",
+"EMPLOYEE HARM",
+"OPERATIONAL INTERRUPTION"
+],
 
+actions:
+[
+"ASSESS SAFETY CONDITIONS",
+"APPLY IMMEDIATE SAFETY CONTROLS",
+"VERIFY REGULATORY COMPLIANCE",
+"IMPLEMENT PREVENTIVE ACTIONS",
+"MONITOR SAFETY RECOVERY"
+]
 
-    }
+},
 
 
 
-    state = applyBHRScenarioIntensity(
+"BHR-006": {
 
-        scenarioId,
+scenario:
+"MODERN_SLAVERY",
 
-        state.intensity ?? 0,
+category:
+"LABOUR",
 
-        state
+riskFactors:
+[
+"EXPLOITATION RISK",
+"ILLEGAL LABOUR PRACTICES",
+"SUPPLY CHAIN NON-COMPLIANCE"
+],
 
-    );
+actions:
+[
+"ACTIVATE HUMAN RIGHTS RESPONSE",
+"VERIFY SUPPLY CHAIN EXPOSURE",
+"REMOVE HIGH RISK ACTIVITIES",
+"INITIATE REMEDIATION",
+"REPORT COMPLIANCE STATUS"
+]
 
+},
 
 
-    let riskScore = 0;
 
+"BHR-007": {
 
+scenario:
+"COMMUNITY_IMPACT",
 
-    switch (
+category:
+"SOCIAL",
 
-        ruleDefinition.id
+riskFactors:
+[
+"COMMUNITY DISRUPTION",
+"SOCIAL CONFLICT",
+"STAKEHOLDER DAMAGE"
+],
 
-    ) {
+actions:
+[
+"ASSESS COMMUNITY IMPACT",
+"ENGAGE STAKEHOLDERS",
+"IMPLEMENT MITIGATION PLAN",
+"MONITOR SOCIAL RECOVERY"
+]
 
+},
 
-        case "BHR-001":
 
-            riskScore =
-            (
-                (state.labourRisk || 0) * 0.30 +
-                (state.communityImpact || 0) * 0.25 +
-                (state.supplyChainRisk || 0) * 0.25 +
-                (state.complianceRisk || 0) * 0.20
-            );
 
-            break;
+"BHR-008": {
 
+scenario:
+"INDIGENOUS_RIGHTS",
 
+category:
+"HUMAN_RIGHTS",
 
-        case "BHR-002":
+riskFactors:
+[
+"CULTURAL IMPACT",
+"LAND RIGHTS CONFLICT",
+"STAKEHOLDER DISPUTE"
+],
 
-            riskScore =
-            (
-                (state.workerFreedomRisk || 0) * 0.35 +
-                (state.labourConditionRisk || 0) * 0.25 +
-                (state.supplyChainRisk || 0) * 0.20 +
-                (100 - (state.monitoringLevel ?? 100)) * 0.20
-            );
+actions:
+[
+"VERIFY INDIGENOUS RIGHTS CONSIDERATIONS",
+"ENGAGE AFFECTED COMMUNITIES",
+"ASSESS PROJECT IMPACT",
+"IMPLEMENT PROTECTION MEASURES"
+]
 
-            break;
+},
 
 
 
-        case "BHR-003":
+"BHR-009": {
 
-            riskScore =
-            (
-                (state.childLabourRisk || 0) * 0.40 +
-                (state.supplierRisk || 0) * 0.25 +
-                (state.auditFailure || 0) * 0.20 +
-                (state.traceabilityRisk || 0) * 0.15
-            );
+scenario:
+"SUPPLY_CHAIN_RISK",
 
-            break;
+category:
+"SUPPLY_CHAIN",
 
+riskFactors:
+[
+"SUPPLIER DEPENDENCY",
+"TRACEABILITY FAILURE",
+"ETHICAL SUPPLY RISK"
+],
 
+actions:
+[
+"MAP SUPPLY CHAIN EXPOSURE",
+"VERIFY SUPPLIER CONTROLS",
+"ASSESS ALTERNATIVE SOURCING",
+"STRENGTHEN SUPPLY RESILIENCE",
+"MONITOR SUPPLIER PERFORMANCE"
+]
 
-        case "BHR-004":
+},
 
-            riskScore =
-            (
-                (state.discriminationRisk || 0) * 0.40 +
-                (state.equalOpportunityRisk || 0) * 0.30 +
-                (state.grievanceRisk || 0) * 0.30
-            );
 
-            break;
 
+"BHR-010": {
 
+scenario:
+"GRIEVANCE_MECHANISM",
 
-        case "BHR-005":
+category:
+"GOVERNANCE",
 
-            riskScore =
-            (
-                (state.safetyRisk || 0) * 0.40 +
-                (state.incidentRate || 0) * 0.25 +
-                (100 - (state.workerProtection ?? 100)) * 0.20 +
-                (state.complianceRisk || 0) * 0.15
-            );
+riskFactors:
+[
+"REPORTING FAILURE",
+"LACK OF REMEDY CHANNEL",
+"STAKEHOLDER DISTRUST"
+],
 
-            break;
-
-
-
-        case "BHR-006":
-
-            riskScore =
-            (
-                (state.modernSlaveryRisk || 0) * 0.40 +
-                (state.supplyChainRisk || 0) * 0.25 +
-                (state.workerVulnerability || 0) * 0.20 +
-                (state.monitoringFailure || 0) * 0.15
-            );
-
-            break;
-
-
-
-        case "BHR-007":
-
-            riskScore =
-            (
-                (state.environmentalImpact || 0) * 0.30 +
-                (state.socialImpact || 0) * 0.30 +
-                (100 - (state.communityEngagement ?? 100)) * 0.20 +
-                (state.mitigationFailure || 0) * 0.20
-            );
-
-            break;
-
-
-
-        case "BHR-008":
-
-            riskScore =
-            (
-                (state.landRightsRisk || 0) * 0.30 +
-                (state.consultationFailure || 0) * 0.30 +
-                (state.culturalImpact || 0) * 0.20 +
-                (100 - (state.mitigationCapability ?? 100)) * 0.20
-            );
-
-            break;
-
-
-
-        case "BHR-009":
-
-            riskScore =
-            (
-                (state.supplierRisk || 0) * 0.35 +
-                (state.auditFailure || 0) * 0.25 +
-                (state.labourRisk || 0) * 0.20 +
-                (state.traceabilityRisk || 0) * 0.20
-            );
-
-            break;
-
-
-
-        case "BHR-010":
-
-            riskScore =
-            (
-                (state.grievanceFailure || 0) * 0.40 +
-                (100 - (state.accessibility ?? 100)) * 0.25 +
-                (100 - (state.responseCapability ?? 100)) * 0.20 +
-                (state.remediationRisk || 0) * 0.15
-            );
-
-            break;
-
-
-
-        default:
-
-            riskScore = 0;
-
-    }
-
-
-
-    riskScore = Math.max(
-
-        0,
-
-        Math.min(
-
-            100,
-
-            riskScore
-
-        )
-
-    );
-
-
-
-    let assessment;
-
-
-
-    if (riskScore < 30) {
-
-        assessment = "LOW";
-
-    }
-
-    else if (riskScore < 60) {
-
-        assessment = "MEDIUM";
-
-    }
-
-    else {
-
-        assessment = "HIGH";
-
-    }
-
-
-
-    return {
-
-        domain:
-
-            "BHR",
-
-
-        status:
-
-            "COMPLETE",
-
-
-        scenario:
-
-            scenarioId,
-
-
-        ruleApplied:
-
-            ruleDefinition.id,
-
-
-        riskScore:
-
-            Number(
-
-                riskScore.toFixed(2)
-
-            ),
-
-
-        assessment,
-
-
-        recommendation:
-
-            generateBHRRecommendation(
-
-                assessment
-
-            ),
-
-
-        timestamp:
-
-            new Date()
-
-            .toISOString()
-
-    };
-
+actions:
+[
+"VERIFY GRIEVANCE SYSTEM",
+"ASSESS RESPONSE PROCESS",
+"IMPROVE REPORTING CHANNELS",
+"MONITOR CASE RESOLUTION"
+]
 
 }
-/**
- * ============================================================
- * COMPLETE BHR SCENARIO INTENSITY BRIDGE
- * ============================================================
+
+
+};
+
+
+
+/* ============================================================
+   NORMALIZE SCENARIO
+   ============================================================
  */
 
-    return updated;
+
+function normalizeScenario(
+scenario
+){
+
+return String(
+scenario || ""
+)
+.trim()
+.toUpperCase();
 
 }
 
 
 
-/**
- * ============================================================
- * BHR RECOMMENDATION ENGINE
- * ============================================================
+/* ============================================================
+   GET RULE
+   ============================================================
  */
 
-function generateBHRRecommendation(
 
-    assessment
+export function getBHRRuleDefinition(
+rule
+){
 
-) {
+return BHR_RULES[rule] || null;
 
-
-    switch (
-
-        assessment
-
-    ) {
-
-
-        case "LOW":
-
-            return {
-
-                mode:
-                    "MONITOR",
-
-                action:
-
-                    "Continue human rights due diligence monitoring.",
-
-                priority:
-
-                    "NORMAL"
-
-            };
+}
 
 
 
-        case "MEDIUM":
-
-            return {
-
-                mode:
-                    "PREVENTIVE RESILIENCE MODE",
-
-                action:
-
-                    "Increase verification, supplier review, worker engagement and corrective controls.",
-
-                priority:
-
-                    "ELEVATED"
-
-            };
+/* ============================================================
+   RISK CALCULATION
+   ============================================================
+ */
 
 
-
-        case "HIGH":
-
-            return {
-
-                mode:
-                    "HUMAN RIGHTS PROTECTION MODE",
-
-                action:
-
-                    "Activate immediate investigation, mitigation, remediation and executive escalation.",
-
-                priority:
-
-                    "CRITICAL"
-
-            };
+export function calculateBHRRisk(
+intensity = 0
+){
 
 
+if(intensity >= 80){
 
-        default:
+return "HIGH";
 
-            return {
-
-                mode:
-                    "UNKNOWN",
-
-                action:
-
-                    "No recommendation available.",
-
-                priority:
-
-                    "UNKNOWN"
-
-            };
+}
 
 
-    }
+if(intensity >= 50){
+
+return "MEDIUM";
+
+}
+
+
+return "LOW";
 
 
 }
 
 
 
-/**
- * ============================================================
- * BHR ENGINE VALIDATION EXPORT
- * ============================================================
+/* ============================================================
+   BHR SCENARIO EVALUATION
+   ============================================================
  */
 
-export function validateBHRRuleEngine() {
+
+export function evaluateBHRScenario({
+
+scenario,
+
+rule,
+
+intensity = 0
+
+}){
 
 
-    return {
+const scenarioID =
+normalizeScenario(
+scenario
+);
 
 
-        module:
 
-            "SPD v13.1 BHR Rule Engine",
-
-
-        status:
-
-            "READY",
+const ruleDefinition =
+BHR_RULES[rule];
 
 
-        deterministic:
 
-            true,
-
-
-        machineLearning:
-
-            false,
+if(!ruleDefinition){
 
 
-        authority:
+return {
 
-            "Golden Rule Engine",
+domain:
+"BHR",
 
+status:
+"UNKNOWN_RULE"
 
-        pipeline:
-
-            [
-
-                "Cockpit Scenario",
-
-                "domainIntegration.js",
-
-                "BHR Scenario Registry",
-
-                "BHR Rule Registry",
-
-                "BHR Rule Engine",
-
-                "Golden Rule Engine",
-
-                "Captain AI Lena Decision Core",
-
-                "Memory Core",
-
-                "Audit Record"
-
-            ],
-
-
-        timestamp:
-
-            new Date()
-
-            .toISOString()
-
-
-    };
+};
 
 
 }
+
+
+
+const risk =
+calculateBHRRisk(
+intensity
+);
+
+
+
+return {
+
+
+domain:
+"BHR",
+
+
+scenario:
+scenarioID,
+
+
+rule:
+rule,
+
+
+category:
+ruleDefinition.category,
+
+
+risk:
+risk,
+
+
+riskFactors:
+ruleDefinition.riskFactors,
+
+
+recommendedActions:
+ruleDefinition.actions,
+
+
+status:
+"ASSESSED",
+
+
+goldenRuleAuthority:
+true
+
+
+};
+
+
+}
+
+
+
+/* ============================================================
+   BHR STATUS
+   ============================================================
+ */
+
+
+export const BHR_ENGINE_STATUS = {
+
+
+domain:
+"BHR",
+
+
+engine:
+"BHR_RULE_ENGINE",
+
+
+rules:
+10,
+
+
+status:
+"ACTIVE",
+
+
+deterministic:
+true,
+
+
+goldenRuleAuthority:
+true
+
+
+};
+
+
+
+export default {
+
+
+BHR_RULES,
+
+getBHRRuleDefinition,
+
+calculateBHRRisk,
+
+evaluateBHRScenario,
+
+BHR_ENGINE_STATUS
+
+
+};
