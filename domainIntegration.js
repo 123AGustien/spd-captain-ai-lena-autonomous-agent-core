@@ -11,13 +11,19 @@
  *          ↓
  * DOMAIN IMPACT BRIDGE
  *          ↓
+ * HUMAN IMPACT ASSESSMENT
+ *          ↓
  * GOLDEN RULE ENGINE
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
  *          ↓
  * MEMORY CORE
  *          ↓
- * AUDIT RECORD
+ * AUDIT REGISTRY
+ *          ↓
+ * SECURITY HASH
+ *          ↓
+ * AUDIT CLOSURE
  *
  * Active Domains:
  * FIN — Financial Resilience
@@ -58,6 +64,34 @@ import {
     getBHRScenario
 
 } from "./BHR/bhr-scenario-registry.js";
+
+
+import {
+
+    runHumanImpactAssessment
+
+} from "./BHR/human-impact-assessment.js";
+
+
+import {
+
+    registerBHRAudit
+
+} from "./BHR/bhr-audit-registry.js";
+
+
+import {
+
+    createAuditClosure
+
+} from "./core/validation/auditClosure.js";
+
+
+import {
+
+    generateAuditHash
+
+} from "./core/security/auditHash.js";
 
 
 
@@ -217,23 +251,65 @@ const DOMAIN_ENGINES = {
         function(input){
 
 
-            return runBHRSPDBridge(
+            const bhrResult =
 
-                input.scenario,
+                runBHRSPDBridge(
 
-                input.state
+                    input.scenario,
 
-            );
+                    input.state
+
+                );
+
+
+
+            const humanImpact =
+
+                runHumanImpactAssessment(
+
+                    input
+
+                );
+
+
+
+            registerBHRAudit({
+
+                scenario:
+
+                    input.scenario,
+
+
+                intensity:
+
+                    input.intensity,
+
+
+                assessment:
+
+                    humanImpact
+
+            });
+
+
+
+            return {
+
+
+                ...bhrResult,
+
+
+                humanImpact
+
+
+            };
 
 
         }
 
 
 };
-
-
-
-
+ 
 /* ============================================================
    REGISTER DOMAIN ENGINE
    ============================================================
@@ -297,8 +373,6 @@ export function registerDomainEngine(
 
 
 }
-
-
 
 
 
@@ -388,8 +462,6 @@ export function getDomainStatus(
 
 
 
-
-
 /* ============================================================
    DOMAIN IMPACT BRIDGE
    ============================================================
@@ -454,8 +526,6 @@ function createDomainImpact(
 
 
 
-
-
 /* ============================================================
    EXECUTE DOMAIN RULE
    ============================================================
@@ -494,24 +564,27 @@ export function executeDomainRule(
 
     if(!config){
 
-
         return {
 
 
             domain:id,
 
             status:
+
                 "UNKNOWN_DOMAIN",
 
+
             decision:
+
                 "NO DOMAIN RULE AVAILABLE",
 
+
             action:
+
                 "MONITOR SYSTEM"
 
 
         };
-
 
     }
 
@@ -519,27 +592,29 @@ export function executeDomainRule(
 
     if(!engine){
 
-
         return {
 
 
             domain:id,
 
             status:
+
                 "ENGINE_NOT_REGISTERED",
 
+
             decision:
+
                 "DOMAIN ENGINE NOT AVAILABLE",
 
+
             action:
+
                 "MONITOR SYSTEM"
 
 
         };
 
-
     }
-
 
 
 
@@ -565,8 +640,6 @@ export function executeDomainRule(
 
 
     };
-
-
 
 
 
@@ -604,6 +677,33 @@ export function executeDomainRule(
                 config
 
             );
+
+
+
+        const auditData = {
+
+
+            domain:id,
+
+
+            scenario:
+
+                verifiedInput.scenario,
+
+
+            result:
+
+                assessment,
+
+
+            timestamp:
+
+                new Date()
+
+                .toISOString()
+
+
+        };
 
 
 
@@ -696,7 +796,9 @@ export function executeDomainRule(
                 domain:id,
 
                 engine:
+
                     config.engine,
+
 
                 goldenRule:
 
@@ -728,15 +830,37 @@ export function executeDomainRule(
             {
 
                 status:
+
                     "RECORDED",
+
 
                 domain:id,
 
+
                 timestamp:
 
-                    new Date()
+                    auditData.timestamp,
 
-                    .toISOString()
+
+                hash:
+
+                    generateAuditHash(
+
+                        auditData
+
+                    ),
+
+
+
+                closure:
+
+                    createAuditClosure({
+
+                        domain:id,
+
+                        status:"COMPLETE"
+
+                    })
 
             },
 
@@ -762,6 +886,7 @@ export function executeDomainRule(
 
 
             status:
+
                 "DOMAIN_ENGINE_ERROR",
 
 
@@ -787,8 +912,6 @@ export function executeDomainRule(
 
 
 }
-
-
 
 
 
@@ -839,213 +962,4 @@ function verifyDomainInput(
 
         scenario:
 
-            input.scenario ??
-
-            input.event ??
-
-            "DEFAULT",
-
-
-
-        event:
-
-            input.event ??
-
-            input.scenario ??
-
-            "DEFAULT",
-
-
-
-        state:
-
-            input.state ?? {},
-
-
-
-        mode:
-
-            input.mode ??
-
-            "AUTONOMOUS"
-
-
-    };
-
-
-}
-
-
-
-
-
-/* ============================================================
-   GET ALL DOMAIN STATUS
-   ============================================================
- */
-
-export function getAllDomainStatus(){
-
-
-    return Object.keys(
-
-        DOMAIN_REGISTRY
-
-    )
-
-    .map(
-
-        domain =>
-
-            getDomainStatus(domain)
-
-    );
-
-
-}
-
-
-
-
-
-/* ============================================================
-   CONSTANTS
-   ============================================================
- */
-
-export const DOMAIN_IDS =
-
-[
-
-    "FIN",
-
-    "BHR",
-
-    "FX",
-
-    "DC",
-
-    "CYB",
-
-    "INF",
-
-    "ENG",
-
-    "OPS",
-
-    "SC"
-
-];
-
-
-
-
-export const DOMAIN_INTEGRATION_STATUS = {
-
-
-    engine:
-
-        "SPD V13.1 DOMAIN INTEGRATION LAYER",
-
-
-
-    activeDomains:
-
-    [
-
-        "FIN",
-
-        "BHR"
-
-    ],
-
-
-
-    scenarioRegistry:
-
-    {
-
-        FIN:
-
-            "CONNECTED",
-
-
-        BHR:
-
-            "CONNECTED"
-
-    },
-
-
-
-    pipeline:
-
-    [
-
-        "OBSERVE",
-
-        "VERIFY",
-
-        "ASSESS",
-
-        "DECIDE",
-
-        "ACT",
-
-        "UPDATE"
-
-    ],
-
-
-
-    deterministic:
-
-        true,
-
-
-    machineLearning:
-
-        false,
-
-
-    randomness:
-
-        false
-
-
-};
-
-
-
-
-
-/* ============================================================
-   DEFAULT EXPORT
-   ============================================================
- */
-
-export default {
-
-
-    registerDomainEngine,
-
-
-    executeDomainRule,
-
-
-    getDomainStatus,
-
-
-    getAllDomainStatus,
-
-
-    DOMAIN_REGISTRY,
-
-
-    DOMAIN_IDS,
-
-
-    DOMAIN_INTEGRATION_STATUS
-
-
-};
+            input.scenario
