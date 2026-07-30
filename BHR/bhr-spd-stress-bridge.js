@@ -77,6 +77,7 @@ export function calculateBHRStressContribution(
 
                 "NO_BHR_STRESS"
 
+
         };
 
     }
@@ -201,6 +202,20 @@ export function runBHRSPDBridge(
 
 
     /*
+     * NORMALIZE INPUT
+     */
+
+    const normalizedState =
+
+        normalizeBHRState(
+
+            state
+
+        );
+
+
+
+    /*
      * ASSESS
      */
 
@@ -210,7 +225,15 @@ export function runBHRSPDBridge(
 
             scenario,
 
-            state
+            {
+
+                ...normalizedState,
+
+                intensity:
+
+                    state.intensity ?? 0
+
+            }
 
         );
 
@@ -374,6 +397,11 @@ export function normalizeBHRState(
         workerFreedomRisk:
 
             input.workerFreedomRisk ?? 0,
+
+
+        labourConditionRisk:
+
+            input.labourConditionRisk ?? 0,
 
 
         workerProtection:
