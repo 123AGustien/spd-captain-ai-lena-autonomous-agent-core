@@ -1,168 +1,668 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPD AI LENA MOBILE HARDENED COCKPIT</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+SPD v13.1 — CAPTAIN AI LENA MOBILE HARDENED COCKPIT
+</title>
+
 
 <style>
-body {
-  margin: 0;
-  font-family: monospace;
-  background: #05070a;
-  color: #00ff99;
+
+*{
+box-sizing:border-box;
 }
 
-h2 {
-  text-align: center;
-  color: white;
-  margin: 10px 0;
+body{
+
+margin:0;
+padding:10px;
+
+background:#05070a;
+color:#00ff99;
+
+font-family:monospace;
+
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  padding: 10px;
+
+h2{
+
+text-align:center;
+color:white;
+
 }
 
-.panel {
-  border: 1px solid #00ff99;
-  border-radius: 6px;
-  padding: 10px;
-  background: #0b0f14;
+
+.grid{
+
+display:grid;
+
+grid-template-columns:1fr;
+
+gap:10px;
+
 }
 
-.flow {
-  color: #888;
-  font-size: 13px;
+
+.panel{
+
+border:1px solid #00ff99;
+
+border-radius:8px;
+
+padding:12px;
+
+background:#0b0f14;
+
 }
+
+
+.title{
+
+color:white;
+
+font-weight:bold;
+
+margin-bottom:8px;
+
+}
+
+
+pre{
+
+white-space:pre-wrap;
+
+word-break:break-word;
+
+color:#00ff99;
+
+}
+
+
+button{
+
+width:100%;
+
+min-height:48px;
+
+margin-top:8px;
+
+background:#00ff99;
+
+color:black;
+
+font-weight:bold;
+
+border-radius:6px;
+
+border:0;
+
+}
+
+
+.flow{
+
+color:white;
+
+font-size:14px;
+
+padding:10px;
+
+border:1px solid #00ff99;
+
+}
+
+
 </style>
+
 </head>
+
 
 <body>
 
-<h2>🧠 CAPTAIN AI LENA — MOBILE HARDENED COCKPIT</h2>
+
+<h2>
+🧠 CAPTAIN AI LENA
+<br>
+SPD v13.1 MOBILE HARDENED COCKPIT
+</h2>
+
 
 <div class="grid">
 
-<div class="panel">
-<h3>INPUT</h3>
-<pre id="input"></pre>
-</div>
 
 <div class="panel">
-<h3>RISK</h3>
-<div id="risk"></div>
+
+<div class="title">
+SYSTEM STATUS
 </div>
+
+<pre id="systemStatus">
+INITIALIZING...
+</pre>
+
+</div>
+
+
 
 <div class="panel">
-<h3>OUTPUT</h3>
-<pre id="output"></pre>
+
+<div class="title">
+SYSTEM INPUT
 </div>
+
+<pre id="input">
+Waiting...
+</pre>
+
+</div>
+
+
 
 <div class="panel">
-<h3>DECISION</h3>
-<pre id="decision"></pre>
+
+<div class="title">
+DOMAIN MONITOR
 </div>
+
+<pre id="domains">
+FX
+DC
+CYB
+INF
+ENERGY
+</pre>
+
+</div>
+
+
 
 <div class="panel">
-<h3>FLOW</h3>
-<div id="flow" class="flow"></div>
+
+<div class="title">
+SCENARIO CONTROL
 </div>
 
+
+<button onclick="activateScenario('FX_STRESS')">
+FX STRESS
+</button>
+
+
+<button onclick="activateScenario('LIQUIDITY_CRISIS')">
+LIQUIDITY CRISIS
+</button>
+
+
+<button onclick="activateScenario('CYBER_EVENT')">
+CYBER EVENT
+</button>
+
+
+<button onclick="activateScenario('BIODIESEL_SHORTAGE')">
+BIODIESEL SHORTAGE
+</button>
+
+
+<button onclick="runSelfTest()">
+🧪 RUN SELF TEST
+</button>
+
+
+<button onclick="runSelfTestAndCorrect()">
+🛠️ SELF TEST + CORRECTIVE ACTION
+</button>
+
+
 </div>
 
-<script>
 
-/* =========================
-   STATE (NO DRIFT)
-========================= */
-const state = {
-  fx: 10,
-  energy: 50,
-  cyb: 50
+
+<div class="panel">
+
+<div class="title">
+GOLDEN RULE PIPELINE
+</div>
+
+
+<div id="flow" class="flow">
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+</div>
+
+
+</div>
+
+
+
+<div class="panel">
+
+<div class="title">
+ASSESSMENT
+</div>
+
+<pre id="assessment">
+Waiting...
+</pre>
+
+</div>
+
+
+
+<div class="panel">
+
+<div class="title">
+CAPTAIN AI LENA DECISION
+</div>
+
+<pre id="decision">
+Waiting...
+</pre>
+
+</div>
+
+
+
+<div class="panel">
+
+<div class="title">
+MEMORY CORE
+</div>
+
+<pre id="memory">
+Waiting...
+</pre>
+
+</div>
+
+
+
+<div class="panel">
+
+<div class="title">
+AUDIT RECORD
+</div>
+
+<pre id="audit">
+Waiting...
+</pre>
+
+</div>
+
+
+</div>
+<script type="module">
+
+/*
+============================================================
+SPD v13.1 — CAPTAIN AI LENA MOBILE HARDENED COCKPIT
+AUTHORITATIVE ENGINE CONNECTION
+============================================================
+
+COCKPIT
+   ↓
+domainIntegration.js
+   ↓
+Domain Rule Engine
+   ↓
+goldenRuleEngine.js
+   ↓
+Captain AI Lena Decision Core
+   ↓
+Memory Core / Audit
+
+============================================================
+*/
+
+
+import {
+
+runGoldenRule,
+PHI,
+GOLDEN_RULE_STAGES
+
+} from "./goldenRuleEngine.js";
+
+
+import {
+
+executeDomainRule,
+getDomainStatus
+
+} from "./domainIntegration.js";
+
+
+import {
+
+runSelfTest as runAuthoritativeSelfTest,
+runValidationLoop
+
+} from "./selfTestEngine.js";
+
+
+
+let currentScenario = "FX_STRESS";
+
+
+let intensity = 50;
+
+
+
+const baseState = {
+
+fx:12,
+
+energy:50,
+
+cyb:40,
+
+inf:10,
+
+dc:20,
+
+event:"NORMAL",
+
+mode:"AUTONOMOUS"
+
 };
 
-/* =========================
-   ENGINE CONTROL
-========================= */
-let tick = 0;
-let lastRun = 0;
 
-/* =========================
-   MODULES
-========================= */
 
-function riskModule(fx, energy, cyb){
-  const score = fx + (100 - energy) + cyb;
-  if(score > 140) return "HIGH RISK";
-  if(score > 90) return "MEDIUM RISK";
-  return "LOW RISK";
+function display(id,value){
+
+const el=document.getElementById(id);
+
+if(el){
+
+el.innerText=value;
+
 }
 
-function energyModule(e){
-  return e < 30 ? "LOW ENERGY MODE" : "NORMAL ENERGY";
 }
 
-function fxModule(fx){
-  return fx > 30 ? "FX STABLE" : "FX WEAK";
+
+
+/*
+============================================================
+SCENARIO CONTROL
+============================================================
+*/
+
+
+window.activateScenario=function(scenario){
+
+currentScenario=scenario;
+
+runSystem();
+
+};
+
+
+
+
+/*
+============================================================
+BUILD STATE
+============================================================
+*/
+
+
+function buildState(){
+
+
+let state={
+
+...baseState,
+
+scenario:currentScenario,
+
+intensity:intensity,
+
+time:new Date().toISOString()
+
+};
+
+
+
+const factor=intensity/100;
+
+
+
+switch(currentScenario){
+
+
+case "FX_STRESS":
+
+state.fx=Math.min(
+100,
+baseState.fx+(80*factor)
+);
+
+break;
+
+
+
+case "LIQUIDITY_CRISIS":
+
+state.fx=Math.min(
+100,
+baseState.fx+(50*factor)
+);
+
+
+state.energy=Math.max
+
+/*
+============================================================
+SPD v13.1 — FINAL MOBILE HARDENING LAYER
+============================================================
+*/
+
+
+/*
+------------------------------
+INTENSITY CONTROL
+------------------------------
+*/
+
+
+const intensityControl = document.createElement("div");
+
+intensityControl.className="panel";
+
+
+intensityControl.innerHTML = `
+
+<div class="title">
+🎚️ SCENARIO INTENSITY
+</div>
+
+
+<input
+id="intensitySlider"
+type="range"
+min="0"
+max="100"
+step="10"
+value="50"
+style="width:100%"
+>
+
+
+<div>
+INTENSITY:
+<span id="intensityDisplay">
+50%
+</span>
+</div>
+
+`;
+
+
+document
+.querySelector(".grid")
+.appendChild(intensityControl);
+
+
+
+document
+.getElementById("intensitySlider")
+.oninput=function(){
+
+
+intensity =
+Number(this.value);
+
+
+document
+.getElementById("intensityDisplay")
+.innerText =
+intensity+"%";
+
+
+runSystem();
+
+
+};
+
+
+
+
+/*
+------------------------------
+GOLDEN RULE STAGE MONITOR
+------------------------------
+*/
+
+
+function updateGoldenStages(){
+
+
+const stages =
+GOLDEN_RULE_STAGES.join(
+" → "
+);
+
+
+
+display(
+
+"flow",
+
+stages
+
+);
+
+
 }
 
-function decide(risk, energy, fx){
-  if(risk==="HIGH RISK") return "ACTIVATE STABILIZATION";
-  if(energy==="LOW ENERGY MODE") return "REDUCE LOAD";
-  if(fx==="FX WEAK") return "FX CORRECTION";
-  return "SYSTEM STABLE";
+
+
+updateGoldenStages();
+
+
+
+
+/*
+------------------------------
+AUTONOMOUS MONITOR LOOP
+------------------------------
+*/
+
+
+let lastExecution=0;
+
+
+
+function autonomousLoop(time){
+
+
+if(
+time-lastExecution > 3000
+){
+
+
+runSystem();
+
+
+lastExecution=time;
+
+
 }
 
-/* =========================
-   CORE ENGINE
-========================= */
 
-function runLiveCycle(){
+requestAnimationFrame(
+autonomousLoop
+);
 
-  const fx = fxModule(state.fx);
-  const energy = energyModule(state.energy);
-  const risk = riskModule(state.fx, state.energy, state.cyb);
-  const decision = decide(risk, energy, fx);
 
-  document.getElementById("input").innerText =
-    JSON.stringify(state, null, 2);
-
-  document.getElementById("risk").innerText = risk;
-
-  document.getElementById("output").innerText =
-`FX: ${fx}
-ENERGY: ${energy}
-RISK: ${risk}`;
-
-  document.getElementById("decision").innerText = decision;
-
-  const flow = ["OBSERVE","DECIDE","ACT","UPDATE"];
-  document.getElementById("flow").innerText =
-    "FLOW → " + flow[tick % 4];
-
-  tick++;
 }
 
-/* =========================
-   MOBILE HARDENED LOOP
-========================= */
 
-function loop(timestamp){
 
-  if(timestamp - lastRun > 1000){
-    runLiveCycle();
-    lastRun = timestamp;
-  }
+requestAnimationFrame(
+autonomousLoop
+);
 
-  requestAnimationFrame(loop);
-}
 
-/* START ENGINE */
-requestAnimationFrame(loop);
 
-</script>
 
-</body>
-</html>
+/*
+------------------------------
+ENGINE STATUS PROTECTION
+------------------------------
+*/
+
+
+window.addEventListener(
+"error",
+function(event){
+
+
+display(
+
+"systemStatus",
+
+"ENGINE PROTECTION MODE"
+
+);
+
+
+display(
+
+"audit",
+
+JSON.stringify(
+
+{
+
+error:
+event.message,
+
+module:
+"SPD v13.1 cockpit.html",
+
+timestamp:
+new Date().toISOString()
+
+
+},
+
+null,
+
+2
+
+)
+
+);
+
+
+});
