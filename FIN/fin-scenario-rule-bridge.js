@@ -1,53 +1,41 @@
 /**
  * ============================================================
  * SPD v13.1 — FIN SCENARIO RULE BRIDGE
+ * PART 1/3
  * ============================================================
  *
  * File:
  * FIN/fin-scenario-rule-bridge.js
  *
  * Purpose:
- * Connects the SPD v13.1 cockpit scenario layer with the
- * FIN scenario interpretation and rule layer.
+ *
+ * Connect cockpit scenarios with FIN domain interpretation
+ * and provide verified decision output to Captain AI Lena.
+ *
  *
  * FLOW:
  *
- * COCKPIT SCENARIO
- *       ↓
+ * COCKPIT
+ *    ↓
  * SCENARIO NORMALIZATION
- *       ↓
+ *    ↓
  * FIN RULE BRIDGE
- *       ↓
- * SCENARIO INTERPRETATION
- *       ↓
+ *    ↓
+ * FIN DECISION OUTPUT
+ *    ↓
+ * DOMAIN INTEGRATION
+ *    ↓
+ * CAPTAIN AI LENA
+ *    ↓
  * GOLDEN RULE ENGINE
- *       ↓
- * CAPTAIN AI LENA DECISION
- *       ↓
- * ACTION / AUDIT
+ *    ↓
+ * ACTION / MEMORY / AUDIT
  *
- * This bridge does NOT override the authoritative Golden Rule
- * Engine or Captain AI Lena safety hierarchy.
  *
- * It provides deterministic scenario identification,
- * normalization, FIN rule context, and audit information.
+ * Authority:
  *
- * Supported cockpit scenarios:
- *
- * FX_SHOCK
- * DC_LOAD
- * CYBER_EVENT
- * INFRASTRUCTURE_STRESS
- * BIODIESEL_SHORTAGE
- * NORMAL
- *
- * Normalized scenario types:
- *
- * FX_SHOCK
- * ENERGY_CRISIS
- * CYBER_ATTACK
- * INFRA_FAILURE
- * NORMAL
+ * Golden Rule Engine remains unchanged.
+ * Captain AI Lena remains final decision authority.
  *
  * ============================================================
  */
@@ -55,574 +43,609 @@
 
 /**
  * ============================================================
- * SCENARIO DEFINITIONS
+ * FIN SCENARIO DEFINITIONS
  * ============================================================
  */
 
 export const FIN_SCENARIO_RULES = {
 
-  NORMAL: {
 
-    type: "NORMAL",
+    NORMAL: {
 
-    name: "NORMAL OPERATIONS",
+        type:
+            "NORMAL",
 
-    domain: "SYSTEM",
+        name:
+            "NORMAL OPERATIONS",
 
-    ruleId: "NONE",
+        domain:
+            "SYSTEM",
 
-    description:
-      "No active financial or systemic stress scenario.",
+        ruleId:
+            "NONE",
 
-    impact:
-      "System operating within normal parameters."
+        description:
+            "No active systemic stress.",
 
-  },
+        impact:
+            "Continue normal monitoring."
 
-
-  FX_SHOCK: {
-
-    type: "FX_SHOCK",
-
-    name: "FOREIGN EXCHANGE SHOCK",
-
-    domain: "FIN",
-
-    ruleId: "FIN-001",
-
-    description:
-      "Rapid deterioration in foreign exchange stability.",
-
-    impact:
-      "Foreign exchange pressure may propagate into connected financial and systemic domains."
-
-  },
+    },
 
 
-  ENERGY_CRISIS: {
 
-    type: "ENERGY_CRISIS",
+    FIN_STRESS: {
 
-    name: "ENERGY CRISIS",
+        type:
+            "FIN_STRESS",
 
-    domain: "ENG",
+        name:
+            "GENERAL FINANCIAL STRESS",
 
-    ruleId: "ENG-001",
+        domain:
+            "FIN",
 
-    description:
-      "Available energy reserves are under significant pressure.",
+        ruleId:
+            "FIN-000",
 
-    impact:
-      "System load reduction and energy preservation may be required."
+        description:
+            "Broad financial system pressure.",
 
-  },
+        impact:
+            "Monitor liquidity, exposure and systemic stability."
 
-
-  CYBER_ATTACK: {
-
-    type: "CYBER_ATTACK",
-
-    name: "CYBER ATTACK",
-
-    domain: "CYB",
-
-    ruleId: "CYB-001",
-
-    description:
-      "Cybersecurity conditions indicate an active or simulated attack.",
-
-    impact:
-      "System integrity and defensive controls require protection."
-
-  },
+    },
 
 
-  INFRA_FAILURE: {
 
-    type: "INFRA_FAILURE",
+    BANKING_STRESS: {
 
-    name: "INFRASTRUCTURE FAILURE",
+        type:
+            "BANKING_STRESS",
 
-    domain: "INF",
+        name:
+            "BANKING SYSTEM STRESS",
 
-    ruleId: "INF-001",
+        domain:
+            "FIN",
 
-    description:
-      "Critical infrastructure is experiencing operational stress.",
+        ruleId:
+            "FIN-002",
 
-    impact:
-      "Recovery and stabilization measures may be required."
+        description:
+            "Banking sector stability risk.",
 
-  }
+        impact:
+            "Protect liquidity and monitor financial contagion."
 
-};
+    },
 
 
-/**
+
+    LIQUIDITY_CRISIS: {
+
+        type:
+            "LIQUIDITY_CRISIS",
+
+        name:
+            "LIQUIDITY CRISIS",
+
+        domain:
+            "FIN",
+
+        ruleId:
+            "FIN-003",
+
+        description:
+            "Liquidity availability under pressure.",
+
+        impact:
+            "Preserve liquidity and stabilise financial operations."
+
+    },
+
+
+
+    CREDIT_STRESS: {
+
+        type:
+            "CREDIT_STRESS",
+
+        name:
+            "CREDIT STRESS",
+
+        domain:
+            "FIN",
+
+        ruleId:
+            "FIN-004",
+
+        description:
+            "Credit market deterioration.",
+
+        impact:
+            "Monitor credit exposure and systemic risk."
+
+    },
+
+
+
+    SOVEREIGN_DEBT: {
+
+        type:
+            "SOVEREIGN_DEBT",
+
+        name:
+            "SOVEREIGN DEBT STRESS",
+
+        domain:
+            "FIN",
+
+        ruleId:
+            "FIN-005",
+
+        description:
+            "Government debt stability pressure.",
+
+        impact:
+            "Assess macro-financial resilience."
+
+    },
+
+
+
+    FX_SHOCK: {
+
+        type:
+            "FX_SHOCK",
+
+        name:
+            "FOREIGN EXCHANGE SHOCK",
+
+        domain:
+            "FIN",
+
+        ruleId
+ /**
  * ============================================================
- * COCKPIT SCENARIO NORMALIZATION
- * ============================================================
- *
- * Converts cockpit scenario identifiers into authoritative
- * scenario types understood by the FIN bridge.
- *
- * This prevents naming differences between the UI and the
- * rule interpretation layer from breaking the pipeline.
- * ============================================================
- */
-
-export const SCENARIO_ALIASES = {
-
-  NORMAL:
-    "NORMAL",
-
-  FX_SHOCK:
-    "FX_SHOCK",
-
-  FX_STRESS:
-    "FX_SHOCK",
-
-  DC_LOAD:
-    "ENERGY_CRISIS",
-
-  DATA_CENTRE_LOAD:
-    "ENERGY_CRISIS",
-
-  CYBER_EVENT:
-    "CYBER_ATTACK",
-
-  CYBER_ATTACK:
-    "CYBER_ATTACK",
-
-  INFRASTRUCTURE_STRESS:
-    "INFRA_FAILURE",
-
-  INFRA_STRAIN:
-    "INFRA_FAILURE",
-
-  INFRA_FAILURE:
-    "INFRA_FAILURE",
-
-  BIODIESEL_SHORTAGE:
-    "ENERGY_CRISIS",
-
-  ENERGY_CRISIS:
-    "ENERGY_CRISIS"
-
-};
-
-
-/**
- * ============================================================
- * NORMALIZE SCENARIO
- * ============================================================
- */
-
-export function normalizeScenario(
-  scenario = "NORMAL"
-) {
-
-  const normalizedInput =
-    String(scenario)
-      .trim()
-      .toUpperCase();
-
-
-  return (
-    SCENARIO_ALIASES[
-      normalizedInput
-    ] ??
-    "NORMAL"
-  );
-
-}
-
-
-/**
- * ============================================================
- * GET SCENARIO DEFINITION
+ * GET FIN SCENARIO DEFINITION
  * ============================================================
  */
 
 export function getFINScenarioDefinition(
-  scenario = "NORMAL"
-) {
 
-  const normalizedScenario =
+    scenario = "NORMAL"
+
+){
+
+
+const normalized =
+
     normalizeScenario(
-      scenario
+
+        scenario
+
     );
 
 
-  return (
-    FIN_SCENARIO_RULES[
-      normalizedScenario
-    ] ??
+return (
+
+    FIN_SCENARIO_RULES[normalized]
+
+    ??
+
     FIN_SCENARIO_RULES.NORMAL
-  );
+
+);
+
 
 }
+
+
+
+
+
+/**
+ * ============================================================
+ * FIN DECISION MAP
+ *
+ * Converts FIN scenario interpretation into
+ * Captain AI Lena compatible decision output.
+ *
+ * Domain engines recommend.
+ *
+ * Captain AI Lena decides.
+ *
+ * ============================================================
+ */
+
+
+export const FIN_DECISION_MAP = {
+
+
+    NORMAL:
+
+        "SYSTEM STABLE",
+
+
+
+    FIN_STRESS:
+
+        "FINANCIAL_MONITORING",
+
+
+
+    BANKING_STRESS:
+
+        "FINANCIAL_MONITORING",
+
+
+
+    LIQUIDITY_CRISIS:
+
+        "FINANCIAL_MONITORING",
+
+
+
+    CREDIT_STRESS:
+
+        "FINANCIAL_MONITORING",
+
+
+
+    SOVEREIGN_DEBT:
+
+        "FINANCIAL_MONITORING",
+
+
+
+    FX_SHOCK:
+
+        "FX CORRECTION ACTIVE",
+
+
+
+    ENERGY_CRISIS:
+
+        "ENERGY RESERVE MODE ACTIVE",
+
+
+
+    CYBER_ATTACK:
+
+        "CYBER DEFENSE MODE ACTIVE",
+
+
+
+    INFRA_FAILURE:
+
+        "INFRASTRUCTURE RECOVERY MODE"
+
+
+};
+
+
+
+
 
 
 /**
  * ============================================================
  * FIN RULE RESPONSE
  * ============================================================
- *
- * Returns deterministic guidance for the active scenario.
- *
- * This is guidance only.
- *
- * Final decision authority remains with the Golden Rule Engine
- * and Captain AI Lena decision hierarchy.
- * ============================================================
  */
 
 export function getFINRuleResponse(
-  scenario = "NORMAL"
-) {
 
-  const definition =
+    scenario = "NORMAL"
+
+){
+
+
+const definition =
+
     getFINScenarioDefinition(
-      scenario
+
+        scenario
+
     );
 
 
-  switch (
+
+switch(
+
     definition.type
-  ) {
 
-    case "FX_SHOCK":
+){
 
-      return {
 
-        mode:
-          "FX RESILIENCE MODE",
+case "FX_SHOCK":
 
-        response:
-          "MONITOR FX PRESSURE → VERIFY FINANCIAL EXPOSURE → PROTECT LIQUIDITY → ASSESS CASCADE RISK",
+return {
 
-        priority:
-          "FINANCIAL STABILITY"
 
-      };
+    mode:
 
+        "FX RESILIENCE MODE",
 
-    case "ENERGY_CRISIS":
 
-      return {
+    response:
 
-        mode:
-          "ENERGY RESERVE MODE",
+        "VERIFY FX EXPOSURE → PROTECT LIQUIDITY → MONITOR CASCADE RISK",
 
-        response:
-          "MONITOR ENERGY RESERVES → REDUCE NON-CRITICAL LOAD → PRESERVE CRITICAL CAPACITY → ASSESS CASCADE RISK",
 
-        priority:
-          "ENERGY RESILIENCE"
+    priority:
 
-      };
+        "FINANCIAL STABILITY"
 
 
-    case "CYBER_ATTACK":
+};
 
-      return {
 
-        mode:
-          "CYBER DEFENSE MODE",
 
-        response:
-          "VERIFY EVENT → PROTECT SYSTEM INTEGRITY → ISOLATE COMPROMISED PATHS → MAINTAIN SAFE OPERATIONS",
+case "FIN_STRESS":
 
-        priority:
-          "SYSTEM INTEGRITY"
+case "BANKING_STRESS":
 
-      };
+case "LIQUIDITY_CRISIS":
 
+case "CREDIT_STRESS":
 
-    case "INFRA_FAILURE":
+case "SOVEREIGN_DEBT":
 
-      return {
 
-        mode:
-          "INFRASTRUCTURE RECOVERY MODE",
+return {
 
-        response:
-          "IDENTIFY FAILED INFRASTRUCTURE → PROTECT CRITICAL SERVICES → ISOLATE FAILURE → RESTORE RESILIENCE",
 
-        priority:
-          "INFRASTRUCTURE STABILITY"
+    mode:
 
-      };
+        "FINANCIAL MONITORING MODE",
 
 
-    default:
+    response:
 
-      return {
+        "ASSESS FINANCIAL PRESSURE → VERIFY EXPOSURE → PRESERVE SYSTEM RESILIENCE",
 
-        mode:
-          "NORMAL OPERATIONS",
 
-        response:
-          "CONTINUE MONITORING",
+    priority:
 
-        priority:
-          "SYSTEM STABILITY"
+        "FINANCIAL RESILIENCE"
 
-      };
 
-  }
+};
 
-}
 
 
-/**
- * ============================================================
- * BUILD FIN SCENARIO RULE BRIDGE
- * ============================================================
- */
 
-export function buildFINScenarioRuleBridge(
-  state = {}
-) {
-
-  const sourceScenario =
-    state.event ??
-    state.scenario ??
-    "NORMAL";
-
-
-  const normalizedScenario =
-    normalizeScenario(
-      sourceScenario
-    );
-
-
-  const definition =
-    getFINScenarioDefinition(
-      normalizedScenario
-    );
-
-
-  const ruleResponse =
-    getFINRuleResponse(
-      normalizedScenario
-    );
-
-
-  return {
-
-    bridge:
-
-      "SPD v13.1 FIN SCENARIO RULE BRIDGE",
-
-    status:
-      "SCENARIO BRIDGE ACTIVE",
-
-    sourceScenario:
-      sourceScenario,
-
-    normalizedScenario:
-      normalizedScenario,
-
-    scenario:
-
-      {
-
-        type:
-          definition.type,
-
-        name:
-          definition.name,
-
-        domain:
-          definition.domain,
-
-        ruleId:
-          definition.ruleId,
-
-        description:
-          definition.description,
-
-        impact:
-          definition.impact
-
-      },
-
-    ruleResponse:
-
-      {
-
-        mode:
-          ruleResponse.mode,
-
-        response:
-          ruleResponse.response,
-
-        priority:
-          ruleResponse.priority
-
-      },
-
-    systemSnapshot:
-
-      {
-
-        fx:
-          Number(
-            state.fx ??
-            0
-          ),
-
-        energy:
-          Number(
-            state.energy ??
-            50
-          ),
-
-        cyb:
-          Number(
-            state.cyb ??
-            0
-          ),
-
-        inf:
-          Number(
-            state.inf ??
-            0
-          ),
-
-        dc:
-          Number(
-            state.dc ??
-            0
-          )
-
-      },
-
-    authority:
-      "GOLDEN RULE ENGINE / CAPTAIN AI LENA",
-
-    override:
-      false,
-
-    finalDecisionAuthority:
-      "CAPTAIN AI LENA",
-
-    timestamp:
-      state.time ??
-      new Date().toISOString()
-
-  };
-
-}
-
-
+case "
 /**
  * ============================================================
  * VALIDATE FIN SCENARIO BRIDGE
  * ============================================================
+ *
+ * Confirms:
+ *
+ * 1. Scenario identified
+ * 2. Rule attached
+ * 3. Decision generated
+ * 4. Golden Rule authority preserved
+ *
+ * ============================================================
  */
 
 export function validateFINScenarioBridge(
-  state = {}
-) {
 
-  const bridge =
+    state = {}
+
+){
+
+
+const bridge =
+
     buildFINScenarioRuleBridge(
-      state
+
+        state
+
     );
 
 
-  const valid =
-    Boolean(
-      bridge.scenario.type
-    ) &&
 
-    Boolean(
-      bridge.scenario.name
-    ) &&
+const valid =
+
 
     Boolean(
-      bridge.scenario.domain
-    );
+
+        bridge.scenario.type
+
+    )
+
+    &&
 
 
-  return {
+    Boolean(
+
+        bridge.scenario.domain
+
+    )
+
+    &&
+
+
+    Boolean(
+
+        bridge.decision
+
+    )
+
+    &&
+
+
+    bridge.goldenRuleAuthority === true;
+
+
+
+
+
+return {
+
 
     status:
-      valid
-        ? "PASS"
-        : "FAIL",
+
+        valid
+
+        ?
+
+        "PASS"
+
+        :
+
+        "FAIL",
+
+
+
 
     bridgeValid:
-      valid,
+
+        valid,
+
+
+
 
     scenario:
-      bridge.normalizedScenario,
 
-    ruleId:
-      bridge.scenario.ruleId,
+        bridge.normalizedScenario,
+
+
+
+
+    decision:
+
+        bridge.decision,
+
+
+
+
+    goldenRuleAuthority:
+
+        bridge.goldenRuleAuthority,
+
+
+
 
     authority:
-      bridge.authority,
 
-    override:
-      bridge.override,
+        bridge.authority,
+
+
+
 
     timestamp:
-      new Date().toISOString()
 
-  };
+        new Date().toISOString()
+
+
+};
+
 
 }
 
 
+
+
+
+
+
+
+
 /**
  * ============================================================
- * AUTHORITATIVE BRIDGE ENTRY POINT
+ * AUTHORITATIVE FIN ENTRY POINT
  * ============================================================
  *
- * This function is intended to be called by the cockpit before
- * the Golden Rule Engine executes its authoritative evaluation.
+ * Called by domainIntegration.js
+ *
+ * Flow:
+ *
+ * COCKPIT
+ * ↓
+ * FIN BRIDGE
+ * ↓
+ * CAPTAIN AI LENA
+ * ↓
+ * GOLDEN RULE ENGINE
+ *
  * ============================================================
  */
 
+
 export function evaluateFINScenario(
-  state = {}
-) {
 
-  const bridge =
+    state = {}
+
+){
+
+
+const bridge =
+
     buildFINScenarioRuleBridge(
-      state
+
+        state
+
     );
 
 
-  const validation =
+
+
+
+const validation =
+
     validateFINScenarioBridge(
-      state
+
+        state
+
     );
 
 
-  return {
+
+
+
+return {
+
 
     ...bridge,
 
+
+
     validation:
 
-      {
+    {
+
 
         status:
-          validation.status,
+
+            validation.status,
+
 
         bridgeValid:
-          validation.bridgeValid
 
-      },
+            validation.bridgeValid,
+
+
+        decision:
+
+            validation.decision
+
+
+    },
+
+
+
+
 
     pipeline:
 
-      [
+
+    [
 
         "SCENARIO IDENTIFIED",
 
@@ -630,15 +653,97 @@ export function evaluateFINScenario(
 
         "FIN RULE CONTEXT ATTACHED",
 
-        "GOLDEN RULE ENGINE EVALUATION REQUIRED",
+        "DOMAIN DECISION GENERATED",
 
-        "CAPTAIN AI LENA DECISION AUTHORITY PRESERVED"
+        "GOLDEN RULE ENGINE VERIFICATION",
 
-      ]
+        "CAPTAIN AI LENA FINAL AUTHORITY",
 
-  };
+        "ACTION / MEMORY / AUDIT"
+
+
+    ]
+
+
+
+};
+
 
 }
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * FIN BRIDGE STATUS
+ * ============================================================
+ */
+
+export const FIN_BRIDGE_STATUS = {
+
+
+    module:
+
+        "SPD v13.1 FIN SCENARIO RULE BRIDGE",
+
+
+
+    domain:
+
+        "FIN",
+
+
+
+    deterministic:
+
+        true,
+
+
+
+    machineLearning:
+
+        false,
+
+
+
+    randomness:
+
+        false,
+
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+
+    captainAILenaAuthority:
+
+        true,
+
+
+
+    status:
+
+        "READY"
+
+
+
+};
+
+
+
+
+
+
+
 
 
 /**
@@ -647,22 +752,38 @@ export function evaluateFINScenario(
  * ============================================================
  */
 
+
 export default {
 
-  FIN_SCENARIO_RULES,
 
-  SCENARIO_ALIASES,
+    FIN_SCENARIO_RULES,
 
-  normalizeScenario,
 
-  getFINScenarioDefinition,
+    FIN_DECISION_MAP,
 
-  getFINRuleResponse,
 
-  buildFINScenarioRuleBridge,
+    SCENARIO_ALIASES,
 
-  validateFINScenarioBridge,
 
-  evaluateFINScenario
+    FIN_BRIDGE_STATUS,
+
+
+    normalizeScenario,
+
+
+    getFINScenarioDefinition,
+
+
+    getFINRuleResponse,
+
+
+    buildFINScenarioRuleBridge,
+
+
+    validateFINScenarioBridge,
+
+
+    evaluateFINScenario
+
 
 };
