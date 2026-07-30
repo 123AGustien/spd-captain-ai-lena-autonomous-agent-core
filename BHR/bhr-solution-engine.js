@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * SPD v13.1 — BHR SOLUTION ENGINE
+ * SPD v13.1 — BHR SOLUTION ENGINE FINAL
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
@@ -9,8 +9,9 @@
  * Business & Human Rights (BHR)
  *
  * PURPOSE:
- * Convert BHR assessment results into
- * deterministic corrective actions.
+ * Convert BHR assessment results into deterministic
+ * corrective solutions.
+ *
  *
  * ARCHITECTURE:
  *
@@ -19,6 +20,8 @@
  * BHR Rule Engine
  *        ↓
  * BHR Solution Engine
+ *        ↓
+ * BHR Action Engine
  *        ↓
  * Solution Decision Bridge
  *        ↓
@@ -30,6 +33,7 @@
  *        ↓
  * Audit Record
  *
+ *
  * Golden Rule Engine remains authoritative.
  *
  * Deterministic.
@@ -39,65 +43,494 @@
  * ============================================================
  */
 
-export function getBHRSolution(scenarioId, assessment) {
 
-    switch (scenarioId) {
 
-        case "BHR-001":
-            return assessment === "HIGH"
-                ? "ACTIVATE HUMAN RIGHTS DUE DILIGENCE REMEDIATION PROTOCOL"
-                : "CONTINUE HUMAN RIGHTS DUE DILIGENCE MONITORING";
+/**
+ * ============================================================
+ * BHR SOLUTION DATABASE
+ * ============================================================
+ */
 
-        case "BHR-002":
-            return assessment === "HIGH"
-                ? "ACTIVATE FORCED LABOUR REMEDIATION PROTOCOL"
-                : "ENHANCE FORCED LABOUR MONITORING";
 
-        case "BHR-003":
-            return assessment === "HIGH"
-                ? "ACTIVATE CHILD LABOUR REMEDIATION PROTOCOL"
-                : "CONTINUE CHILD LABOUR COMPLIANCE REVIEW";
+const BHR_SOLUTION_LIBRARY = {
 
-        case "BHR-004":
-            return assessment === "HIGH"
-                ? "INITIATE DISCRIMINATION CORRECTIVE ACTION PLAN"
-                : "CONTINUE EQUALITY AND FAIRNESS MONITORING";
 
-        case "BHR-005":
-            return assessment === "HIGH"
-                ? "ACTIVATE OCCUPATIONAL HEALTH AND SAFETY RESPONSE"
-                : "CONTINUE SAFETY PERFORMANCE MONITORING";
+"BHR-001": {
 
-        case "BHR-006":
-            return assessment === "HIGH"
-                ? "ACTIVATE MODERN SLAVERY RESPONSE PROTOCOL"
-                : "ENHANCE MODERN SLAVERY SURVEILLANCE";
+    HIGH:
+    "ACTIVATE HUMAN RIGHTS DUE DILIGENCE REMEDIATION PROTOCOL",
 
-        case "BHR-007":
-            return assessment === "HIGH"
-                ? "INITIATE COMMUNITY IMPACT MITIGATION PROGRAM"
-                : "CONTINUE COMMUNITY ENGAGEMENT";
+    MEDIUM:
+    "STRENGTHEN HUMAN RIGHTS DUE DILIGENCE CONTROLS",
 
-        case "BHR-008":
-            return assessment === "HIGH"
-                ? "ACTIVATE INDIGENOUS RIGHTS PROTECTION PLAN"
-                : "CONTINUE INDIGENOUS RIGHTS CONSULTATION";
+    LOW:
+    "CONTINUE HUMAN RIGHTS DUE DILIGENCE MONITORING"
 
-        case "BHR-009":
-            return assessment === "HIGH"
-                ? "ACTIVATE SUPPLY CHAIN ETHICAL REMEDIATION"
-                : "CONTINUE SUPPLY CHAIN DUE DILIGENCE";
+},
 
-        case "BHR-010":
-            return assessment === "HIGH"
-                ? "ACTIVATE GRIEVANCE RESOLUTION PROCESS"
-                : "CONTINUE GRIEVANCE MONITORING";
 
-        default:
-            return "CONTINUE MONITORING AND PERIODIC REVIEW";
-    }
+
+"BHR-002": {
+
+    HIGH:
+    "ACTIVATE FORCED LABOUR REMEDIATION PROTOCOL",
+
+    MEDIUM:
+    "ENHANCE FORCED LABOUR PREVENTION CONTROLS",
+
+    LOW:
+    "CONTINUE FORCED LABOUR MONITORING"
+
+},
+
+
+
+"BHR-003": {
+
+    HIGH:
+    "ACTIVATE CHILD LABOUR REMEDIATION PROTOCOL",
+
+    MEDIUM:
+    "ENHANCE CHILD LABOUR PREVENTION CONTROLS",
+
+    LOW:
+    "CONTINUE CHILD LABOUR COMPLIANCE REVIEW"
+
+},
+
+
+
+"BHR-004": {
+
+    HIGH:
+    "INITIATE DISCRIMINATION CORRECTIVE ACTION PLAN",
+
+    MEDIUM:
+    "STRENGTHEN EQUALITY AND FAIRNESS CONTROLS",
+
+    LOW:
+    "CONTINUE EQUALITY AND FAIRNESS MONITORING"
+
+},
+
+
+
+"BHR-005": {
+
+    HIGH:
+    "ACTIVATE OCCUPATIONAL HEALTH AND SAFETY RESPONSE",
+
+    MEDIUM:
+    "IMPLEMENT ADDITIONAL SAFETY CONTROLS",
+
+    LOW:
+    "CONTINUE SAFETY PERFORMANCE MONITORING"
+
+},
+
+
+
+"BHR-006": {
+
+    HIGH:
+    "ACTIVATE MODERN SLAVERY RESPONSE PROTOCOL",
+
+    MEDIUM:
+    "ENHANCE MODERN SLAVERY PREVENTION",
+
+    LOW:
+    "CONTINUE MODERN SLAVERY SURVEILLANCE"
+
+},
+
+
+
+"BHR-007": {
+
+    HIGH:
+    "INITIATE COMMUNITY IMPACT MITIGATION PROGRAM",
+
+    MEDIUM:
+    "STRENGTHEN COMMUNITY ENGAGEMENT CONTROLS",
+
+    LOW:
+    "CONTINUE COMMUNITY ENGAGEMENT"
+
+},
+
+
+
+"BHR-008": {
+
+    HIGH:
+    "ACTIVATE INDIGENOUS RIGHTS PROTECTION PLAN",
+
+    MEDIUM:
+    "STRENGTHEN INDIGENOUS RIGHTS CONSULTATION",
+
+    LOW:
+    "CONTINUE INDIGENOUS RIGHTS CONSULTATION"
+
+},
+
+
+
+"BHR-009": {
+
+    HIGH:
+    "ACTIVATE SUPPLY CHAIN ETHICAL REMEDIATION",
+
+    MEDIUM:
+    "STRENGTHEN SUPPLY CHAIN DUE DILIGENCE",
+
+    LOW:
+    "CONTINUE SUPPLY CHAIN DUE DILIGENCE"
+
+},
+
+
+
+"BHR-010": {
+
+    HIGH:
+    "ACTIVATE GRIEVANCE RESOLUTION PROCESS",
+
+    MEDIUM:
+    "STRENGTHEN GRIEVANCE RESPONSE PROCESS",
+
+    LOW:
+    "CONTINUE GRIEVANCE MONITORING"
+
 }
 
+
+};
+
+
+
+
+
+/**
+ * ============================================================
+ * NORMALIZE ASSESSMENT
+ * ============================================================
+ *
+ * Supports:
+ *
+ * "HIGH"
+ *
+ * {
+ *    risk:"HIGH"
+ * }
+ *
+ * {
+ *    evaluation:{
+ *       risk:"HIGH"
+ *    }
+ * }
+ *
+ * ============================================================
+ */
+
+
+function normalizeAssessment(
+
+    assessment
+
+){
+
+    if(
+
+        typeof assessment === "string"
+
+    ){
+
+        return assessment
+            .toUpperCase();
+
+    }
+
+
+
+    if(
+
+        assessment?.risk
+
+    ){
+
+        return assessment.risk
+            .toUpperCase();
+
+    }
+
+
+
+    if(
+
+        assessment?.evaluation?.risk
+
+    ){
+
+        return assessment.evaluation.risk
+            .toUpperCase();
+
+    }
+
+
+
+    return "LOW";
+
+}
+
+
+
+
+
+/**
+ * ============================================================
+ * GET BHR SOLUTION
+ * ============================================================
+ */
+
+
+export function getBHRSolution(
+
+    scenarioId,
+
+    assessment
+
+){
+
+
+    const risk =
+
+    normalizeAssessment(
+
+        assessment
+
+    );
+
+
+
+    const scenario =
+
+    BHR_SOLUTION_LIBRARY[scenarioId];
+
+
+
+    if(!scenario){
+
+        return {
+
+            solution:
+            "CONTINUE MONITORING AND PERIODIC REVIEW",
+
+            risk,
+
+            scenario:
+            scenarioId
+
+        };
+
+    }
+
+
+
+    return {
+
+
+        solution:
+
+        scenario[risk]
+
+        ||
+
+        scenario.LOW,
+
+
+        scenario:
+
+        scenarioId,
+
+
+        risk
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * BUILD BHR DOMAIN SOLUTION
+ * ============================================================
+ */
+
+
+export function buildBHRSolution(
+
+    scenarioId,
+
+    assessment
+
+){
+
+
+    const result =
+
+    getBHRSolution(
+
+        scenarioId,
+
+        assessment
+
+    );
+
+
+
+    return {
+
+
+        domain:
+
+        "BHR",
+
+
+        scenario:
+
+        scenarioId,
+
+
+        domainSolution:
+
+        result.solution,
+
+
+        risk:
+
+        result.risk,
+
+
+        goldenRuleAuthority:
+
+        true,
+
+
+        status:
+
+        "BHR SOLUTION GENERATED",
+
+
+        timestamp:
+
+        new Date().toISOString()
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VALIDATION
+ * ============================================================
+ */
+
+
+export function validateBHRSolutionEngine(){
+
+
+    return {
+
+
+        module:
+
+        "SPD v13.1 BHR Solution Engine",
+
+
+        domain:
+
+        "Business & Human Rights",
+
+
+        status:
+
+        "READY",
+
+
+        registeredRules:
+
+        Object.keys(
+
+            BHR_SOLUTION_LIBRARY
+
+        ),
+
+
+        totalRules:
+
+        Object.keys(
+
+            BHR_SOLUTION_LIBRARY
+
+        ).length,
+
+
+        deterministic:
+
+        true,
+
+
+        goldenRuleAuthority:
+
+        true,
+
+
+        timestamp:
+
+        new Date().toISOString()
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * EXPORT
+ * ============================================================
+ */
+
+
 export default {
-    getBHRSolution
+
+
+    getBHRSolution,
+
+    buildBHRSolution,
+
+    validateBHRSolutionEngine
+
+
 };
