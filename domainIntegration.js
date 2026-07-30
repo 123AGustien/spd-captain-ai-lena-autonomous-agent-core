@@ -21,7 +21,8 @@
 
 import {
 
-    runBHRRuleEngine
+    evaluateBHRScenario,
+    getBHRRuleDefinition
 
 } from "./BHR/bhr-rule-engine.js";
 
@@ -42,8 +43,6 @@ import {
 
 const DOMAIN_MAP = {
 
-
-    // BUSINESS & HUMAN RIGHTS
 
     HUMAN_RIGHTS_DUE_DILIGENCE:
         "BHR",
@@ -77,8 +76,6 @@ const DOMAIN_MAP = {
 
 
 
-    // FINANCIAL RESILIENCE
-
     FIN_STRESS:
         "FIN",
 
@@ -107,12 +104,75 @@ const DOMAIN_MAP = {
 
 export function getScenarioDomain(
 
-    scenario
+scenario
 
 ) {
 
 
-    return DOMAIN_MAP[scenario] || "CORE";
+return DOMAIN_MAP[scenario] || "CORE";
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * BHR DOMAIN EXECUTION
+ * ============================================================
+ */
+
+
+function runBHRDomain(
+
+scenario,
+
+state = {}
+
+) {
+
+
+const ruleMap = {
+
+
+HUMAN_RIGHTS_DUE_DILIGENCE:"BHR-001",
+
+FORCED_LABOUR:"BHR-002",
+
+CHILD_LABOUR:"BHR-003",
+
+DISCRIMINATION:"BHR-004",
+
+OCCUPATIONAL_HEALTH_AND_SAFETY:"BHR-005",
+
+MODERN_SLAVERY:"BHR-006",
+
+COMMUNITY_IMPACT:"BHR-007",
+
+INDIGENOUS_RIGHTS:"BHR-008",
+
+SUPPLY_CHAIN_RISK:"BHR-009",
+
+GRIEVANCE_MECHANISM:"BHR-010"
+
+
+};
+
+
+
+return evaluateBHRScenario({
+
+scenario,
+
+rule:
+
+ruleMap[scenario],
+
+intensity:
+
+state.intensity || 0
+
+});
 
 
 }
@@ -127,80 +187,71 @@ export function getScenarioDomain(
 
 export function runDomainIntegration(
 
-    scenario,
+scenario,
 
-    state = {}
+state = {}
 
 ) {
 
 
-    const domain =
+const domain =
 
-        getScenarioDomain(
+getScenarioDomain(
 
-            scenario
+scenario
 
-        );
-
-
-
-    switch(domain) {
+);
 
 
 
-        case "BHR":
+switch(domain) {
 
 
-            return runBHRRuleEngine(
-
-                scenario,
-
-                state
-
-            );
+case "BHR":
 
 
+return runBHRDomain(
 
-        case "FIN":
+scenario,
 
+state
 
-            return runFINRuleEngine(
-
-                scenario,
-
-                state
-
-            );
+);
 
 
 
-        default:
+case "FIN":
 
 
-            return {
+return runFINRuleEngine(
+
+scenario,
+
+state
+
+);
 
 
-                domain:
 
-                    "CORE",
-
-
-                status:
-
-                    "NO_DOMAIN_RULE",
+default:
 
 
-                scenario,
+return {
 
 
-                message:
+domain:"CORE",
 
-                    "Scenario handled by core Golden Rule Engine."
+status:"NO_DOMAIN_RULE",
 
-            };
+scenario,
+
+message:
+"Scenario handled by core Golden Rule Engine."
+
+};
 
 
-    }
+}
 
 
 }
@@ -216,36 +267,44 @@ export function runDomainIntegration(
 export function validateDomainIntegration() {
 
 
-    return {
+return {
 
 
-        module:
-
-            "SPD v13.1 Domain Integration Layer",
-
-
-        status:
-
-            "READY",
+module:
+"SPD v13.1 Domain Integration Layer",
 
 
-        registeredScenarios:
-
-            Object.keys(
-
-                DOMAIN_MAP
-
-            ),
+status:
+"READY",
 
 
-        timestamp:
+domains:
+[
 
-            new Date()
+"BHR",
 
-            .toISOString()
+"FIN"
+
+],
 
 
-    };
+registeredScenarios:
+
+Object.keys(
+
+DOMAIN_MAP
+
+),
+
+
+timestamp:
+
+new Date()
+
+.toISOString()
+
+
+};
 
 
 }
