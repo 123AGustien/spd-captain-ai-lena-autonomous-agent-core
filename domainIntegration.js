@@ -66,10 +66,6 @@ import {
 const DOMAIN_MAP = {
 
 
-    // ============================
-    // BHR DOMAIN
-    // ============================
-
     HUMAN_RIGHTS_DUE_DILIGENCE:"BHR",
 
     FORCED_LABOUR:"BHR",
@@ -91,10 +87,6 @@ const DOMAIN_MAP = {
     GRIEVANCE_MECHANISM:"BHR",
 
 
-
-    // ============================
-    // FIN DOMAIN
-    // ============================
 
     FIN_STRESS:"FIN",
 
@@ -135,14 +127,9 @@ export function getScenarioDomain(scenario){
  * ============================================================
  */
 
-function buildDomainDecisionBridge(
-
-    domainResult
-
-){
+function buildDomainDecisionBridge(domainResult){
 
     return {
-
 
         domain:
         domainResult.domain,
@@ -177,7 +164,11 @@ function buildDomainDecisionBridge(
 
 
         domainActions:
+        domainResult.evaluation?.recommendedActions
+        ||
         domainResult.evaluation?.actions
+        ||
+        domainResult.recommendedActions
         ||
         domainResult.actions
         ||
@@ -185,14 +176,11 @@ function buildDomainDecisionBridge(
 
 
         authority:
-
         "DOMAIN_RULE_ENGINE",
 
 
         timestamp:
-
         new Date().toISOString()
-
 
     };
 
@@ -249,7 +237,29 @@ function runBHRDomain(
 
 
 
+    /**
+     * ========================================================
+     * INTENSITY ROUTING FIX
+     *
+     * Supports cockpit slider value
+     *
+     * intensityValue
+     *
+     * ========================================================
+     */
+
+    const scenarioIntensity =
+
+    state.intensityValue
+    ??
+    state.intensity
+    ??
+    0;
+
+
+
     const evaluation =
+
     evaluateBHRScenario({
 
         scenario,
@@ -257,7 +267,7 @@ function runBHRDomain(
         rule,
 
         intensity:
-        state.intensity || 0
+        scenarioIntensity
 
     });
 
@@ -276,6 +286,10 @@ function runBHRDomain(
 
 
         ruleDefinition,
+
+
+        intensity:
+        scenarioIntensity,
 
 
         evaluation,
@@ -332,7 +346,6 @@ function runFINDomain(
     state={}
 
 ){
-
 
     const result =
 
@@ -442,7 +455,6 @@ export function runDomainIntegration(
 
 
                 timestamp:
-
                 new Date().toISOString()
 
 
