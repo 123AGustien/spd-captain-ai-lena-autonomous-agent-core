@@ -1,17 +1,14 @@
 /**
  * ============================================================
- * SPD v13.1 — DOMAIN DECISION BRIDGE FINAL
+ * SPD v13.1 — DOMAIN DECISION BRIDGE FINAL HARDENED
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * PURPOSE:
- *
- * Converts validated domain engine outputs into
- * a standardized decision object.
+ * DATA → DOMAIN INTELLIGENCE → DECISION AUTHORITY
  *
  *
- * ARCHITECTURE:
+ * Architecture:
  *
  * DOMAIN RULE ENGINE
  *          ↓
@@ -25,30 +22,26 @@
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
  *          ↓
+ * ACTION ENGINE
+ *          ↓
  * MEMORY CORE
  *          ↓
  * AUDIT RECORD
  *
  *
- * ACTIVE DOMAINS:
+ * Domain Engines:
  *
- * FIN — Financial Resilience
- * BHR — Business & Human Rights
- *
- * FUTURE:
- *
- * CYB
- * INF
- * DC
- * ENG
- * OPS
+ * Advisory + Verified Input Only
  *
  *
- * Golden Rule Engine remains authoritative.
+ * Final Decision Authority:
+ *
+ * CAPTAIN AI LENA DECISION CORE
+ *
  *
  * Deterministic.
- * No randomness.
- * No machine learning.
+ * No Machine Learning.
+ * No Randomness.
  *
  * ============================================================
  */
@@ -58,16 +51,6 @@
 /**
  * ============================================================
  * BUILD DOMAIN DECISION BRIDGE
- * ============================================================
- *
- * Input:
- *
- * Domain Engine Result
- *
- * Output:
- *
- * Standardized Decision Object
- *
  * ============================================================
  */
 
@@ -79,14 +62,10 @@ export function buildDomainDecisionBridge(
 ){
 
 
-    return {
+const bridge = {
 
 
-        /**
-         * DOMAIN IDENTIFICATION
-         */
-
-        domain:
+    domain:
 
         domainResult.domain
 
@@ -96,7 +75,7 @@ export function buildDomainDecisionBridge(
 
 
 
-        scenario:
+    scenario:
 
         domainResult.scenario
 
@@ -107,12 +86,7 @@ export function buildDomainDecisionBridge(
 
 
 
-
-        /**
-         * DOMAIN RISK
-         */
-
-        domainRisk:
+    domainRisk:
 
 
         domainResult.evaluation?.risk
@@ -133,11 +107,7 @@ export function buildDomainDecisionBridge(
 
 
 
-        /**
-         * DOMAIN ASSESSMENT DATA
-         */
-
-        domainAssessment:
+    domainAssessment:
 
 
         domainResult.evaluation
@@ -154,11 +124,7 @@ export function buildDomainDecisionBridge(
 
 
 
-        /**
-         * DOMAIN DECISION
-         */
-
-        domainDecision:
+    domainDecision:
 
 
         domainResult.evaluation?.decision
@@ -175,11 +141,7 @@ export function buildDomainDecisionBridge(
 
 
 
-        /**
-         * DOMAIN ACTION SEQUENCE
-         */
-
-        domainActions:
+    domainActions:
 
 
         domainResult.domainActions
@@ -200,11 +162,7 @@ export function buildDomainDecisionBridge(
 
 
 
-        /**
-         * DOMAIN SOLUTION OUTPUT
-         */
-
-        domainSolution:
+    domainSolution:
 
 
         domainResult.domainSolution
@@ -217,58 +175,64 @@ export function buildDomainDecisionBridge(
 
 
 
-        /**
-         * AUTHORITY CONTROL
-         */
+    /**
+     * CONTROL FLAGS
+     */
 
-        authority:
+
+    authority:
 
 
         "DOMAIN_RULE_ENGINE",
 
 
 
-        goldenRuleAuthority:
+    decisionAuthority:
+
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+    goldenRuleAuthority:
 
 
         true,
 
 
 
-        deterministic:
+    deterministic:
 
 
         true,
 
 
 
-        machineLearning:
+    machineLearning:
 
 
         false,
 
 
 
-        randomness:
+    randomness:
 
 
         false,
 
 
 
-
-
-        /**
-         * TIMESTAMP
-         */
-
-        timestamp:
+    timestamp:
 
 
         new Date().toISOString()
 
 
-    };
+};
+
+
+
+return bridge;
 
 
 }
@@ -281,7 +245,7 @@ export function buildDomainDecisionBridge(
 
 /**
  * ============================================================
- * VALIDATE DOMAIN DECISION OBJECT
+ * VALIDATE DOMAIN DECISION BRIDGE
  * ============================================================
  */
 
@@ -293,10 +257,10 @@ export function validateDomainDecisionBridge(
 ){
 
 
-    const checks = {
+const checks = {
 
 
-        domainPresent:
+    domainPresent:
 
 
         Boolean(
@@ -307,7 +271,7 @@ export function validateDomainDecisionBridge(
 
 
 
-        scenarioPresent:
+    scenarioPresent:
 
 
         Boolean(
@@ -318,7 +282,7 @@ export function validateDomainDecisionBridge(
 
 
 
-        riskPresent:
+    riskPresent:
 
 
         Boolean(
@@ -329,7 +293,7 @@ export function validateDomainDecisionBridge(
 
 
 
-        decisionPresent:
+    decisionPresent:
 
 
         Boolean(
@@ -340,48 +304,53 @@ export function validateDomainDecisionBridge(
 
 
 
-        goldenRuleAuthority:
+    goldenRuleAuthority:
 
 
-        bridge.goldenRuleAuthority === true
-
-
-    };
+        bridge.goldenRuleAuthority === true,
 
 
 
+    captainLenaAuthority:
 
 
-    const passed =
+        bridge.decisionAuthority ===
+
+        "CAPTAIN_AI_LENA_DECISION_CORE"
 
 
-    Object.values(
-
-        checks
-
-    )
-
-    .every(
-
-        value => value === true
-
-    );
+};
 
 
 
 
 
-    return {
+const passed =
 
 
-        module:
+Object.values(checks)
+
+.every(
+
+    check => check === true
+
+);
 
 
-        "SPD v13.1 Domain Decision Bridge",
 
 
 
-        validationStatus:
+return {
+
+
+    module:
+
+
+        "SPD v13.1 DOMAIN DECISION BRIDGE",
+
+
+
+    validationStatus:
 
 
         passed
@@ -396,31 +365,38 @@ export function validateDomainDecisionBridge(
 
 
 
-        checks,
+    checks,
 
 
 
-        authority:
+    finalAuthority:
 
 
-        "Golden Rule Engine",
+        "CAPTAIN AI LENA DECISION CORE",
 
 
 
-        deterministic:
+    goldenRuleEngine:
+
+
+        "ACTIVE",
+
+
+
+    deterministic:
 
 
         true,
 
 
 
-        timestamp:
+    timestamp:
 
 
         new Date().toISOString()
 
 
-    };
+};
 
 
 }
@@ -433,7 +409,7 @@ export function validateDomainDecisionBridge(
 
 /**
  * ============================================================
- * DOMAIN DECISION STATUS
+ * DOMAIN DECISION BRIDGE STATUS
  * ============================================================
  */
 
@@ -441,97 +417,117 @@ export function validateDomainDecisionBridge(
 export function getDomainDecisionBridgeStatus(){
 
 
-    return {
+return {
 
 
-        module:
+    module:
 
 
         "DOMAIN_DECISION_BRIDGE",
 
 
 
-        status:
+    status:
 
 
         "ACTIVE",
 
 
 
-        supportedDomains:[
+    activeDomains:[
 
 
-            "FIN",
+        "FIN",
 
 
-            "BHR",
+        "BHR"
 
 
-            "CYB",
-
-
-            "INF",
-
-
-            "DC",
-
-
-            "ENG",
-
-
-            "OPS"
-
-
-        ],
+    ],
 
 
 
-        architecture:
+    futureDomains:[
 
 
-        [
+        "CYB",
 
-            "DOMAIN_RULE_ENGINE",
 
-            "DOMAIN_ACTION_ENGINE",
+        "INF",
 
-            "DOMAIN_SOLUTION_ENGINE",
 
-            "DOMAIN_DECISION_BRIDGE",
+        "DC",
 
-            "GOLDEN_RULE_ENGINE",
 
-            "CAPTAIN_AI_LENA_DECISION",
+        "ENG",
 
-            "MEMORY_CORE",
 
-            "AUDIT_RECORD"
+        "OPS"
 
-        ],
+
+    ],
 
 
 
-        goldenRuleAuthority:
+    architecture:[
+
+
+        "DOMAIN_RULE_ENGINE",
+
+
+        "DOMAIN_ACTION_ENGINE",
+
+
+        "DOMAIN_SOLUTION_ENGINE",
+
+
+        "DOMAIN_DECISION_BRIDGE",
+
+
+        "GOLDEN_RULE_ENGINE",
+
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+        "MEMORY_CORE",
+
+
+        "AUDIT_RECORD"
+
+
+    ],
+
+
+
+    goldenRuleAuthority:
 
 
         true,
 
 
 
-        deterministic:
+    finalDecisionAuthority:
+
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+    deterministic:
 
 
         true,
 
 
 
-        timestamp:
+    timestamp:
 
 
         new Date().toISOString()
 
 
-    };
+};
 
 
 }
@@ -544,7 +540,7 @@ export function getDomainDecisionBridgeStatus(){
 
 /**
  * ============================================================
- * DEFAULT EXPORT
+ * EXPORT
  * ============================================================
  */
 
