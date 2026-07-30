@@ -9,6 +9,8 @@
  *          ↓
  * DOMAIN RULE ENGINES
  *          ↓
+ * DOMAIN IMPACT BRIDGE
+ *          ↓
  * GOLDEN RULE ENGINE
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
@@ -69,131 +71,106 @@ export const DOMAIN_REGISTRY = {
 
     FIN: {
 
-        name:
-            "Financial Resilience",
+        name: "Financial Resilience",
 
-        status:
-            "ACTIVE",
+        status: "ACTIVE",
 
-        engine:
-            "FIN_RULE_ENGINE"
+        engine: "FIN_RULE_ENGINE"
 
     },
 
 
     BHR: {
 
-        name:
-            "Business & Human Rights",
+        name: "Business & Human Rights",
 
-        status:
-            "ACTIVE",
+        status: "ACTIVE",
 
-        engine:
-            "BHR_RULE_ENGINE"
+        engine: "BHR_RULE_ENGINE"
 
     },
 
 
     FX: {
 
-        name:
-            "Foreign Exchange",
+        name: "Foreign Exchange",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "FX_RULE_ENGINE"
+        engine: "FX_RULE_ENGINE"
 
     },
 
 
     DC: {
 
-        name:
-            "Data Centre",
+        name: "Data Centre",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "DC_RULE_ENGINE"
+        engine: "DC_RULE_ENGINE"
 
     },
 
 
     CYB: {
 
-        name:
-            "Cyber Resilience",
+        name: "Cyber Resilience",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "CYB_RULE_ENGINE"
+        engine: "CYB_RULE_ENGINE"
 
     },
 
 
     INF: {
 
-        name:
-            "Infrastructure",
+        name: "Infrastructure",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "INF_RULE_ENGINE"
+        engine: "INF_RULE_ENGINE"
 
     },
 
 
     ENG: {
 
-        name:
-            "Energy",
+        name: "Energy",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "ENG_RULE_ENGINE"
+        engine: "ENG_RULE_ENGINE"
 
     },
 
 
     OPS: {
 
-        name:
-            "Operations",
+        name: "Operations",
 
-        status:
-            "PLANNED",
+        status: "PLANNED",
 
-        engine:
-            "OPS_RULE_ENGINE"
+        engine: "OPS_RULE_ENGINE"
 
     },
 
 
     SC: {
 
-        name:
-            "Scenario Control",
+        name: "Scenario Control",
 
-        status:
-            "ACTIVE",
+        status: "ACTIVE",
 
-        engine:
-            "SCENARIO_ENGINE"
+        engine: "SCENARIO_ENGINE"
 
     }
 
 
 };
+
+
 
 
 
@@ -210,9 +187,10 @@ const DOMAIN_ENGINES = {
         finRuleEngine,
 
 
+
     BHR:
 
-        function(input) {
+        function(input){
 
 
             const scenarioConfig =
@@ -241,6 +219,8 @@ const DOMAIN_ENGINES = {
 
 
 
+
+
 /* ============================================================
    REGISTER DOMAIN ENGINE
    ============================================================
@@ -252,7 +232,7 @@ export function registerDomainEngine(
 
     engine
 
-) {
+){
 
 
     const id =
@@ -265,7 +245,7 @@ export function registerDomainEngine(
 
 
 
-    if (!id) {
+    if(!id){
 
         throw new Error(
 
@@ -277,11 +257,7 @@ export function registerDomainEngine(
 
 
 
-    if (
-
-        typeof engine !== "function"
-
-    ) {
+    if(typeof engine !== "function"){
 
         throw new Error(
 
@@ -299,18 +275,21 @@ export function registerDomainEngine(
 
     return {
 
-        domain:
 
-            id,
+        domain:id,
+
 
         status:
 
             "ENGINE_REGISTERED"
 
+
     };
 
 
 }
+
+
 
 
 
@@ -323,7 +302,7 @@ export function getDomainStatus(
 
     domain
 
-) {
+){
 
 
     const id =
@@ -351,9 +330,7 @@ export function getDomainStatus(
     return {
 
 
-        domain:
-
-            id,
+        domain:id,
 
 
         name:
@@ -402,6 +379,79 @@ export function getDomainStatus(
 
 
 
+
+
+/* ============================================================
+   DOMAIN IMPACT BRIDGE
+   ============================================================
+ *
+ * Converts domain intelligence into
+ * Golden Rule compatible assessment data.
+ *
+ * Golden Rule Engine remains authoritative.
+ *
+ */
+
+function createDomainImpact(
+
+    domain,
+
+    assessment,
+
+    config
+
+){
+
+
+    return {
+
+
+        domain,
+
+
+        source:
+
+            config.engine,
+
+
+
+        riskScore:
+
+            Number(
+
+                assessment?.riskScore ??
+
+                0
+
+            ),
+
+
+
+        assessment:
+
+            assessment?.assessment ??
+
+            "UNKNOWN",
+
+
+
+        applied:
+
+            true
+
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
 /* ============================================================
    EXECUTE DOMAIN RULE
    ============================================================
@@ -413,7 +463,7 @@ export function executeDomainRule(
 
     input = {}
 
-) {
+){
 
 
     const id =
@@ -438,26 +488,29 @@ export function executeDomainRule(
 
 
 
-    if (!config) {
+
+
+    if(!config){
 
 
         return {
 
-            domain:
 
-                id,
+            domain:id,
 
-            status:
 
-                "UNKNOWN_DOMAIN",
+            status:"UNKNOWN_DOMAIN",
+
 
             decision:
 
                 "NO DOMAIN RULE AVAILABLE",
 
+
             action:
 
                 "MONITOR SYSTEM"
+
 
         };
 
@@ -466,31 +519,38 @@ export function executeDomainRule(
 
 
 
-    if (!engine) {
+
+
+    if(!engine){
 
 
         return {
 
-            domain:
 
-                id,
+            domain:id,
+
 
             status:
 
                 "ENGINE_NOT_REGISTERED",
 
+
             decision:
 
                 "DOMAIN ENGINE NOT AVAILABLE",
+
 
             action:
 
                 "MONITOR SYSTEM"
 
+
         };
 
 
     }
+
+
 
 
 
@@ -500,9 +560,7 @@ export function executeDomainRule(
         ...input,
 
 
-        domain:
-
-            id,
+        domain:id,
 
 
         domainName:
@@ -521,7 +579,9 @@ export function executeDomainRule(
 
 
 
-    try {
+
+
+    try{
 
 
         const verifiedInput =
@@ -531,6 +591,8 @@ export function executeDomainRule(
                 observedInput
 
             );
+
+
 
 
 
@@ -544,12 +606,43 @@ export function executeDomainRule(
 
 
 
+
+
+        const domainImpact =
+
+            createDomainImpact(
+
+                id,
+
+                assessment,
+
+                config
+
+            );
+
+
+
+
+
+        const integratedAssessment = {
+
+
+            ...assessment,
+
+
+            domainImpact
+
+
+        };
+
+
+
+
+
         return {
 
 
-            domain:
-
-                id,
+            domain:id,
 
 
             domainName:
@@ -557,12 +650,15 @@ export function executeDomainRule(
                 config.name,
 
 
+
             engine:
 
                 config.engine,
 
 
+
             pipeline:
+
 
             [
 
@@ -590,7 +686,7 @@ export function executeDomainRule(
 
             result:
 
-                assessment,
+                integratedAssessment,
 
 
 
@@ -610,21 +706,7 @@ export function executeDomainRule(
 
                     ??
 
-                    {
-
-                        domain:
-
-                            "BHR",
-
-                        scenario:
-
-                            "UNKNOWN",
-
-                        rule:
-
-                            null
-
-                    }
+                    null
 
                 )
 
@@ -634,13 +716,10 @@ export function executeDomainRule(
 
 
 
-            trace:
+            trace:{
 
-            {
 
-                domain:
-
-                    id,
+                domain:id,
 
 
                 engine:
@@ -649,6 +728,7 @@ export function executeDomainRule(
 
 
                 goldenRule:
+
 
                 [
 
@@ -667,31 +747,33 @@ export function executeDomainRule(
                 ],
 
 
-                deterministic:
 
-                    true
+                deterministic:true
+
+
 
             },
 
 
 
-            audit:
+            audit:{
 
-            {
 
                 status:
 
                     "RECORDED",
 
-                domain:
 
-                    id,
+                domain:id,
+
 
                 timestamp:
 
                     new Date()
 
                     .toISOString()
+
+
 
             },
 
@@ -707,16 +789,13 @@ export function executeDomainRule(
 
     }
 
-
-    catch(error) {
+    catch(error){
 
 
         return {
 
 
-            domain:
-
-                id,
+            domain:id,
 
 
             status:
@@ -736,14 +815,7 @@ export function executeDomainRule(
 
             action:
 
-                "HOLD AND MONITOR",
-
-
-            timestamp:
-
-                new Date()
-
-                .toISOString()
+                "HOLD AND MONITOR"
 
 
         };
@@ -756,6 +828,8 @@ export function executeDomainRule(
 
 
 
+
+
 /* ============================================================
    VERIFY DOMAIN INPUT
    ============================================================
@@ -765,7 +839,7 @@ function verifyDomainInput(
 
     input
 
-) {
+){
 
 
     const intensity =
@@ -778,7 +852,7 @@ function verifyDomainInput(
 
                 100,
 
-                Number(input.intensity) || 0
+                Number(input.intensity)||0
 
             )
 
@@ -841,12 +915,14 @@ function verifyDomainInput(
 
 
 
+
+
 /* ============================================================
    GET ALL DOMAIN STATUS
    ============================================================
  */
 
-export function getAllDomainStatus() {
+export function getAllDomainStatus(){
 
 
     return Object.keys(
@@ -868,12 +944,15 @@ export function getAllDomainStatus() {
 
 
 
+
+
 /* ============================================================
    CONSTANTS
    ============================================================
  */
 
 export const DOMAIN_IDS =
+
 
 [
 
@@ -901,6 +980,7 @@ export const DOMAIN_IDS =
 
 
 
+
 export const DOMAIN_INTEGRATION_STATUS = {
 
 
@@ -911,6 +991,7 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
     activeDomains:
+
 
     [
 
@@ -924,6 +1005,7 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
     scenarioRegistry:
 
+
     {
 
         FIN:
@@ -935,11 +1017,13 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
             "CONNECTED"
 
+
     },
 
 
 
     pipeline:
+
 
     [
 
@@ -959,24 +1043,19 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
-    deterministic:
-
-        true,
+    deterministic:true,
 
 
-
-    machineLearning:
-
-        false,
+    machineLearning:false,
 
 
-
-    randomness:
-
-        false
+    randomness:false
 
 
 };
+
+
+
 
 
 
