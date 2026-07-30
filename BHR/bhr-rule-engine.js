@@ -19,6 +19,10 @@
  *        ↓
  * domainIntegration.js
  *        ↓
+ * BHR Scenario Registry
+ *        ↓
+ * BHR Rule Registry
+ *        ↓
  * BHR Rule Engine
  *        ↓
  * Golden Rule Engine
@@ -34,8 +38,17 @@
 
 
 import {
+
     getBHRScenario
+
 } from "./bhr-scenario-registry.js";
+
+
+import {
+
+    getBHRRule
+
+} from "./rule-registry.js";
 
 
 
@@ -64,17 +77,55 @@ export function runBHRRuleEngine(
 
 
 
-    if (!scenario || !scenario.rule) {
+    const ruleDefinition =
+
+        scenario?.rule
+
+        ?
+
+        getBHRRule(
+
+            scenario.rule
+
+        )
+
+        :
+
+        null;
+
+
+
+    if (
+
+        !scenario ||
+
+        !scenario.rule ||
+
+        !ruleDefinition
+
+    ) {
+
 
         return {
 
-            domain: "BHR",
 
-            status: "ERROR",
+            domain:
 
-            message: "Unknown BHR scenario"
+                "BHR",
+
+
+            status:
+
+                "ERROR",
+
+
+            message:
+
+                "BHR rule not registered"
+
 
         };
+
 
     }
 
@@ -101,8 +152,11 @@ export function runBHRRuleEngine(
 
 
 
-    switch (scenario.rule) {
+    switch (
 
+        ruleDefinition.id
+
+    ) {
 
 
         case "BHR-001":
@@ -139,27 +193,6 @@ export function runBHRRuleEngine(
             (
                 (state.childLabourRisk || 0) * 0.40 +
                 (state.supplierRisk || 0) * 0.25 +
-                (state.auditFailure || 0) * 0.20 +
-                (state.complianceRisk || 0) * 0.15
-            );
-
-            break;
-
-
-
-        case "BHR-004":
-
-            riskScore =
-            (
-                (state.discriminationRisk || 0) * 0.40 +
-                (state.equalOpportunityRisk || 0) * 0.25 +
-                (state.complianceRisk || 0) * 0.20 +
-                (state.grievanceRisk || 0) * 0.15
-            );
-
-            break;
-
-
 
         case "BHR-005":
 
@@ -296,21 +329,37 @@ export function runBHRRuleEngine(
     return {
 
 
-        domain: "BHR",
+        domain:
 
-        status: "COMPLETE",
+            "BHR",
 
-        scenario: scenarioId,
 
-        ruleApplied: scenario.rule,
+        status:
 
-        riskScore: Number(
+            "COMPLETE",
 
-            riskScore.toFixed(2)
 
-        ),
+        scenario:
+
+            scenarioId,
+
+
+        ruleApplied:
+
+            ruleDefinition.id,
+
+
+        riskScore:
+
+            Number(
+
+                riskScore.toFixed(2)
+
+            ),
+
 
         assessment,
+
 
         recommendation:
 
@@ -320,16 +369,17 @@ export function runBHRRuleEngine(
 
             ),
 
+
         timestamp:
 
-            new Date().toISOString()
+            new Date()
+
+            .toISOString()
 
 
     };
 
 }
-
-
 
 /**
  * ============================================================
@@ -369,7 +419,10 @@ function applyBHRScenarioIntensity(
 
         ...state,
 
-        scenarioIntensity: value
+
+        scenarioIntensity:
+
+            value
 
 
     };
@@ -486,42 +539,4 @@ function applyBHRScenarioIntensity(
 
 
 
-    return updated;
-
-}
-
-
-
-/**
- * ============================================================
- * BHR RECOMMENDATION CORE
- * ============================================================
- */
-
-function generateBHRRecommendation(
-
-    assessment
-
-) {
-
-
-    if (assessment === "LOW") {
-
-        return "MONITOR HUMAN RIGHTS CONDITIONS";
-
-    }
-
-
-
-    if (assessment === "MEDIUM") {
-
-        return "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
-
-    }
-
-
-
-    return "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
-
-
-}
+   
