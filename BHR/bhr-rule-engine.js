@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * SPD v13.1 — BUSINESS & HUMAN RIGHTS RULE ENGINE
+ * SPD v13.1 — BUSINESS & HUMAN RIGHTS RULE ENGINE FINAL
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
@@ -14,6 +14,7 @@
  * - Risk assessment
  * - Rule evaluation
  * - Recommended actions
+ * - Domain decision
  * - Mitigation sequence
  *
  *
@@ -23,6 +24,8 @@
  * BHR Scenario Registry
  *          ↓
  * BHR Rule Engine
+ *          ↓
+ * Domain Decision Bridge
  *          ↓
  * Golden Rule Engine
  *          ↓
@@ -45,9 +48,11 @@
  */
 
 
-/* ============================================================
-   BHR RULE DATABASE
-   ============================================================
+
+/**
+ * ============================================================
+ * BHR RULE DATABASE
+ * ============================================================
  */
 
 
@@ -56,21 +61,17 @@ export const BHR_RULES = {
 
 "BHR-001": {
 
-scenario:
-"HUMAN_RIGHTS_DUE_DILIGENCE",
+scenario:"HUMAN_RIGHTS_DUE_DILIGENCE",
 
-category:
-"GOVERNANCE",
+category:"GOVERNANCE",
 
-riskFactors:
-[
+riskFactors:[
 "HUMAN RIGHTS POLICY FAILURE",
 "INSUFFICIENT DUE DILIGENCE",
 "INADEQUATE RISK MONITORING"
 ],
 
-actions:
-[
+actions:[
 "VERIFY HUMAN RIGHTS GOVERNANCE FRAMEWORK",
 "CONDUCT IMPACT ASSESSMENT",
 "IDENTIFY HUMAN RIGHTS RISKS",
@@ -84,21 +85,17 @@ actions:
 
 "BHR-002": {
 
-scenario:
-"FORCED_LABOUR",
+scenario:"FORCED_LABOUR",
 
-category:
-"LABOUR",
+category:"LABOUR",
 
-riskFactors:
-[
+riskFactors:[
 "WORKER EXPLOITATION",
 "SUPPLIER LABOUR VIOLATION",
 "ETHICAL COMPLIANCE FAILURE"
 ],
 
-actions:
-[
+actions:[
 "VERIFY SUPPLIER LABOUR CONDITIONS",
 "INITIATE HUMAN RIGHTS AUDIT",
 "STOP HIGH RISK SUPPLIER ACTIVITY",
@@ -112,21 +109,17 @@ actions:
 
 "BHR-003": {
 
-scenario:
-"CHILD_LABOUR",
+scenario:"CHILD_LABOUR",
 
-category:
-"LABOUR",
+category:"LABOUR",
 
-riskFactors:
-[
+riskFactors:[
 "CHILD LABOUR INDICATORS",
 "SUPPLY CHAIN FAILURE",
 "SERIOUS HUMAN RIGHTS IMPACT"
 ],
 
-actions:
-[
+actions:[
 "IMMEDIATELY PROTECT AFFECTED CHILDREN",
 "STOP IMPACTED SUPPLY CHAIN ACTIVITY",
 "VERIFY EMPLOYMENT RECORDS",
@@ -140,21 +133,17 @@ actions:
 
 "BHR-004": {
 
-scenario:
-"DISCRIMINATION",
+scenario:"DISCRIMINATION",
 
-category:
-"EQUALITY",
+category:"EQUALITY",
 
-riskFactors:
-[
+riskFactors:[
 "UNFAIR TREATMENT",
 "WORKPLACE INEQUALITY",
 "LOSS OF EMPLOYEE TRUST"
 ],
 
-actions:
-[
+actions:[
 "INVESTIGATE DISCRIMINATION CLAIMS",
 "VERIFY FAIR EMPLOYMENT PRACTICES",
 "IMPLEMENT CORRECTIVE MEASURES",
@@ -167,21 +156,17 @@ actions:
 
 "BHR-005": {
 
-scenario:
-"OCCUPATIONAL_HEALTH_AND_SAFETY",
+scenario:"OCCUPATIONAL_HEALTH_AND_SAFETY",
 
-category:
-"SAFETY",
+category:"SAFETY",
 
-riskFactors:
-[
+riskFactors:[
 "WORKPLACE SAFETY FAILURE",
 "EMPLOYEE HARM",
 "OPERATIONAL INTERRUPTION"
 ],
 
-actions:
-[
+actions:[
 "ASSESS SAFETY CONDITIONS",
 "APPLY IMMEDIATE SAFETY CONTROLS",
 "VERIFY REGULATORY COMPLIANCE",
@@ -195,21 +180,17 @@ actions:
 
 "BHR-006": {
 
-scenario:
-"MODERN_SLAVERY",
+scenario:"MODERN_SLAVERY",
 
-category:
-"LABOUR",
+category:"LABOUR",
 
-riskFactors:
-[
+riskFactors:[
 "EXPLOITATION RISK",
 "ILLEGAL LABOUR PRACTICES",
 "SUPPLY CHAIN NON-COMPLIANCE"
 ],
 
-actions:
-[
+actions:[
 "ACTIVATE HUMAN RIGHTS RESPONSE",
 "VERIFY SUPPLY CHAIN EXPOSURE",
 "REMOVE HIGH RISK ACTIVITIES",
@@ -223,21 +204,17 @@ actions:
 
 "BHR-007": {
 
-scenario:
-"COMMUNITY_IMPACT",
+scenario:"COMMUNITY_IMPACT",
 
-category:
-"SOCIAL",
+category:"SOCIAL",
 
-riskFactors:
-[
+riskFactors:[
 "COMMUNITY DISRUPTION",
 "SOCIAL CONFLICT",
 "STAKEHOLDER DAMAGE"
 ],
 
-actions:
-[
+actions:[
 "ASSESS COMMUNITY IMPACT",
 "ENGAGE STAKEHOLDERS",
 "IMPLEMENT MITIGATION PLAN",
@@ -250,21 +227,17 @@ actions:
 
 "BHR-008": {
 
-scenario:
-"INDIGENOUS_RIGHTS",
+scenario:"INDIGENOUS_RIGHTS",
 
-category:
-"HUMAN_RIGHTS",
+category:"HUMAN_RIGHTS",
 
-riskFactors:
-[
+riskFactors:[
 "CULTURAL IMPACT",
 "LAND RIGHTS CONFLICT",
 "STAKEHOLDER DISPUTE"
 ],
 
-actions:
-[
+actions:[
 "VERIFY INDIGENOUS RIGHTS CONSIDERATIONS",
 "ENGAGE AFFECTED COMMUNITIES",
 "ASSESS PROJECT IMPACT",
@@ -277,21 +250,17 @@ actions:
 
 "BHR-009": {
 
-scenario:
-"SUPPLY_CHAIN_RISK",
+scenario:"SUPPLY_CHAIN_RISK",
 
-category:
-"SUPPLY_CHAIN",
+category:"SUPPLY_CHAIN",
 
-riskFactors:
-[
+riskFactors:[
 "SUPPLIER DEPENDENCY",
 "TRACEABILITY FAILURE",
 "ETHICAL SUPPLY RISK"
 ],
 
-actions:
-[
+actions:[
 "MAP SUPPLY CHAIN EXPOSURE",
 "VERIFY SUPPLIER CONTROLS",
 "ASSESS ALTERNATIVE SOURCING",
@@ -305,21 +274,17 @@ actions:
 
 "BHR-010": {
 
-scenario:
-"GRIEVANCE_MECHANISM",
+scenario:"GRIEVANCE_MECHANISM",
 
-category:
-"GOVERNANCE",
+category:"GOVERNANCE",
 
-riskFactors:
-[
+riskFactors:[
 "REPORTING FAILURE",
 "LACK OF REMEDY CHANNEL",
 "STAKEHOLDER DISTRUST"
 ],
 
-actions:
-[
+actions:[
 "VERIFY GRIEVANCE SYSTEM",
 "ASSESS RESPONSE PROCESS",
 "IMPROVE REPORTING CHANNELS",
@@ -333,15 +298,16 @@ actions:
 
 
 
-/* ============================================================
-   NORMALIZE SCENARIO
-   ============================================================
+
+
+/**
+ * ============================================================
+ * NORMALIZE SCENARIO
+ * ============================================================
  */
 
 
-function normalizeScenario(
-scenario
-){
+function normalizeScenario(scenario){
 
 return String(
 scenario || ""
@@ -353,15 +319,16 @@ scenario || ""
 
 
 
-/* ============================================================
-   GET RULE
-   ============================================================
+
+
+/**
+ * ============================================================
+ * GET RULE DEFINITION
+ * ============================================================
  */
 
 
-export function getBHRRuleDefinition(
-rule
-){
+export function getBHRRuleDefinition(rule){
 
 return BHR_RULES[rule] || null;
 
@@ -369,15 +336,16 @@ return BHR_RULES[rule] || null;
 
 
 
-/* ============================================================
-   RISK CALCULATION
-   ============================================================
+
+
+/**
+ * ============================================================
+ * RISK CALCULATION
+ * ============================================================
  */
 
 
-export function calculateBHRRisk(
-intensity = 0
-){
+export function calculateBHRRisk(intensity=0){
 
 
 if(intensity >= 80){
@@ -401,9 +369,45 @@ return "LOW";
 
 
 
-/* ============================================================
-   BHR SCENARIO EVALUATION
-   ============================================================
+
+
+/**
+ * ============================================================
+ * DECISION ENGINE
+ * ============================================================
+ */
+
+
+function determineBHRDecision(risk){
+
+
+if(risk==="HIGH"){
+
+return "ACTIVATE BHR REMEDIATION MODE";
+
+}
+
+
+if(risk==="MEDIUM"){
+
+return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+
+}
+
+
+return "SYSTEM MONITORING MODE";
+
+
+}
+
+
+
+
+
+/**
+ * ============================================================
+ * BHR SCENARIO EVALUATION
+ * ============================================================
  */
 
 
@@ -413,7 +417,7 @@ scenario,
 
 rule,
 
-intensity = 0
+intensity=0
 
 }){
 
@@ -435,11 +439,11 @@ if(!ruleDefinition){
 
 return {
 
-domain:
-"BHR",
+domain:"BHR",
 
-status:
-"UNKNOWN_RULE"
+status:"UNKNOWN_RULE",
+
+goldenRuleAuthority:true
 
 };
 
@@ -455,18 +459,22 @@ intensity
 
 
 
+const decision =
+determineBHRDecision(
+risk
+);
+
+
+
 return {
 
 
-domain:
-"BHR",
+domain:"BHR",
 
 
-scenario:
-scenarioID,
+scenario:scenarioID,
 
 
-rule:
 rule,
 
 
@@ -474,8 +482,10 @@ category:
 ruleDefinition.category,
 
 
-risk:
 risk,
+
+
+decision,
 
 
 riskFactors:
@@ -486,12 +496,15 @@ recommendedActions:
 ruleDefinition.actions,
 
 
+actions:
+ruleDefinition.actions,
+
+
 status:
 "ASSESSED",
 
 
-goldenRuleAuthority:
-true
+goldenRuleAuthority:true
 
 
 };
@@ -501,40 +514,34 @@ true
 
 
 
-/* ============================================================
-   BHR STATUS
-   ============================================================
+
+
+/**
+ * ============================================================
+ * BHR ENGINE STATUS
+ * ============================================================
  */
 
 
 export const BHR_ENGINE_STATUS = {
 
 
-domain:
-"BHR",
+domain:"BHR",
 
+engine:"BHR_RULE_ENGINE",
 
-engine:
-"BHR_RULE_ENGINE",
+rules:Object.keys(BHR_RULES).length,
 
+status:"ACTIVE",
 
-rules:
-10,
+deterministic:true,
 
-
-status:
-"ACTIVE",
-
-
-deterministic:
-true,
-
-
-goldenRuleAuthority:
-true
+goldenRuleAuthority:true
 
 
 };
+
+
 
 
 
@@ -550,6 +557,5 @@ calculateBHRRisk,
 evaluateBHRScenario,
 
 BHR_ENGINE_STATUS
-
 
 };
