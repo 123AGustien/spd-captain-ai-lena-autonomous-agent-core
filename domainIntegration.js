@@ -48,9 +48,9 @@ import {
 
 import {
 
-    bhrRuleEngine
+    runBHRSPDBridge
 
-} from "./BHR/bhr-rule-engine.js";
+} from "./BHR/bhr-spd-stress-bridge.js";
 
 
 import {
@@ -71,106 +71,131 @@ export const DOMAIN_REGISTRY = {
 
     FIN: {
 
-        name: "Financial Resilience",
+        name:
+            "Financial Resilience",
 
-        status: "ACTIVE",
+        status:
+            "ACTIVE",
 
-        engine: "FIN_RULE_ENGINE"
+        engine:
+            "FIN_RULE_ENGINE"
 
     },
 
 
     BHR: {
 
-        name: "Business & Human Rights",
+        name:
+            "Business & Human Rights",
 
-        status: "ACTIVE",
+        status:
+            "ACTIVE",
 
-        engine: "BHR_RULE_ENGINE"
+        engine:
+            "BHR_SPD_STRESS_BRIDGE"
 
     },
 
 
     FX: {
 
-        name: "Foreign Exchange",
+        name:
+            "Foreign Exchange",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "FX_RULE_ENGINE"
+        engine:
+            "FX_RULE_ENGINE"
 
     },
 
 
     DC: {
 
-        name: "Data Centre",
+        name:
+            "Data Centre",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "DC_RULE_ENGINE"
+        engine:
+            "DC_RULE_ENGINE"
 
     },
 
 
     CYB: {
 
-        name: "Cyber Resilience",
+        name:
+            "Cyber Resilience",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "CYB_RULE_ENGINE"
+        engine:
+            "CYB_RULE_ENGINE"
 
     },
 
 
     INF: {
 
-        name: "Infrastructure",
+        name:
+            "Infrastructure",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "INF_RULE_ENGINE"
+        engine:
+            "INF_RULE_ENGINE"
 
     },
 
 
     ENG: {
 
-        name: "Energy",
+        name:
+            "Energy",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "ENG_RULE_ENGINE"
+        engine:
+            "ENG_RULE_ENGINE"
 
     },
 
 
     OPS: {
 
-        name: "Operations",
+        name:
+            "Operations",
 
-        status: "PLANNED",
+        status:
+            "PLANNED",
 
-        engine: "OPS_RULE_ENGINE"
+        engine:
+            "OPS_RULE_ENGINE"
 
     },
 
 
     SC: {
 
-        name: "Scenario Control",
+        name:
+            "Scenario Control",
 
-        status: "ACTIVE",
+        status:
+            "ACTIVE",
 
-        engine: "SCENARIO_ENGINE"
+        engine:
+            "SCENARIO_ENGINE"
 
     }
 
 
 };
-
-
 
 
 
@@ -187,36 +212,24 @@ const DOMAIN_ENGINES = {
         finRuleEngine,
 
 
-
     BHR:
 
         function(input){
 
 
-            const scenarioConfig =
+            return runBHRSPDBridge(
 
-                getBHRScenario(
+                input.scenario,
 
-                    input.scenario
+                input.state
 
-                );
-
-
-
-            return bhrRuleEngine({
-
-                ...input,
-
-                scenarioConfig
-
-            });
+            );
 
 
         }
 
 
 };
-
 
 
 
@@ -275,14 +288,10 @@ export function registerDomainEngine(
 
     return {
 
-
         domain:id,
 
-
         status:
-
             "ENGINE_REGISTERED"
-
 
     };
 
@@ -384,12 +393,6 @@ export function getDomainStatus(
 /* ============================================================
    DOMAIN IMPACT BRIDGE
    ============================================================
- *
- * Converts domain intelligence into
- * Golden Rule compatible assessment data.
- *
- * Golden Rule Engine remains authoritative.
- *
  */
 
 function createDomainImpact(
@@ -421,6 +424,8 @@ function createDomainImpact(
 
                 assessment?.riskScore ??
 
+                assessment?.stressContribution?.stress ??
+
                 0
 
             ),
@@ -431,6 +436,8 @@ function createDomainImpact(
 
             assessment?.assessment ??
 
+            assessment?.bhrAssessment?.assessment ??
+
             "UNKNOWN",
 
 
@@ -440,13 +447,10 @@ function createDomainImpact(
             true
 
 
-
     };
 
 
 }
-
-
 
 
 
@@ -488,8 +492,6 @@ export function executeDomainRule(
 
 
 
-
-
     if(!config){
 
 
@@ -498,17 +500,13 @@ export function executeDomainRule(
 
             domain:id,
 
-
-            status:"UNKNOWN_DOMAIN",
-
+            status:
+                "UNKNOWN_DOMAIN",
 
             decision:
-
                 "NO DOMAIN RULE AVAILABLE",
 
-
             action:
-
                 "MONITOR SYSTEM"
 
 
@@ -516,8 +514,6 @@ export function executeDomainRule(
 
 
     }
-
-
 
 
 
@@ -529,19 +525,13 @@ export function executeDomainRule(
 
             domain:id,
 
-
             status:
-
                 "ENGINE_NOT_REGISTERED",
 
-
             decision:
-
                 "DOMAIN ENGINE NOT AVAILABLE",
 
-
             action:
-
                 "MONITOR SYSTEM"
 
 
@@ -549,7 +539,6 @@ export function executeDomainRule(
 
 
     }
-
 
 
 
@@ -594,8 +583,6 @@ export function executeDomainRule(
 
 
 
-
-
         const assessment =
 
             engine(
@@ -603,8 +590,6 @@ export function executeDomainRule(
                 verifiedInput
 
             );
-
-
 
 
 
@@ -619,23 +604,6 @@ export function executeDomainRule(
                 config
 
             );
-
-
-
-
-
-        const integratedAssessment = {
-
-
-            ...assessment,
-
-
-            domainImpact
-
-
-        };
-
-
 
 
 
@@ -658,7 +626,6 @@ export function executeDomainRule(
 
 
             pipeline:
-
 
             [
 
@@ -686,7 +653,13 @@ export function executeDomainRule(
 
             result:
 
-                integratedAssessment,
+            {
+
+                ...assessment,
+
+                domainImpact
+
+            },
 
 
 
@@ -716,19 +689,16 @@ export function executeDomainRule(
 
 
 
-            trace:{
+            trace:
 
+            {
 
                 domain:id,
 
-
                 engine:
-
                     config.engine,
 
-
                 goldenRule:
-
 
                 [
 
@@ -747,33 +717,26 @@ export function executeDomainRule(
                 ],
 
 
-
                 deterministic:true
-
-
 
             },
 
 
 
-            audit:{
+            audit:
 
+            {
 
                 status:
-
                     "RECORDED",
 
-
                 domain:id,
-
 
                 timestamp:
 
                     new Date()
 
                     .toISOString()
-
-
 
             },
 
@@ -799,7 +762,6 @@ export function executeDomainRule(
 
 
             status:
-
                 "DOMAIN_ENGINE_ERROR",
 
 
@@ -852,7 +814,7 @@ function verifyDomainInput(
 
                 100,
 
-                Number(input.intensity)||0
+                Number(input.intensity) || 0
 
             )
 
@@ -953,7 +915,6 @@ export function getAllDomainStatus(){
 
 export const DOMAIN_IDS =
 
-
 [
 
     "FIN",
@@ -979,8 +940,6 @@ export const DOMAIN_IDS =
 
 
 
-
-
 export const DOMAIN_INTEGRATION_STATUS = {
 
 
@@ -991,7 +950,6 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
     activeDomains:
-
 
     [
 
@@ -1005,7 +963,6 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
     scenarioRegistry:
 
-
     {
 
         FIN:
@@ -1017,13 +974,11 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
             "CONNECTED"
 
-
     },
 
 
 
     pipeline:
-
 
     [
 
@@ -1043,17 +998,22 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
-    deterministic:true,
+    deterministic:
+
+        true,
 
 
-    machineLearning:false,
+    machineLearning:
+
+        false,
 
 
-    randomness:false
+    randomness:
+
+        false
 
 
 };
-
 
 
 
