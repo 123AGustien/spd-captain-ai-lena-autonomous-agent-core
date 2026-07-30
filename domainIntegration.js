@@ -188,21 +188,15 @@ function runBHRDomain(
 
     return {
 
-
         domain:"BHR",
-
 
         scenario,
 
-
         rule,
-
 
         ruleDefinition,
 
-
         evaluation,
-
 
         status:
         "BHR_RULE_EXECUTED",
@@ -303,16 +297,12 @@ export function runDomainIntegration(
 
             return {
 
-
                 domain:"CORE",
-
 
                 status:
                 "NO_DOMAIN_RULE",
 
-
                 scenario,
-
 
                 message:
                 "Scenario handled by Core Golden Rule Engine.",
@@ -327,6 +317,44 @@ export function runDomainIntegration(
 
     }
 
+
+}
+
+
+
+/**
+ * ============================================================
+ * EXECUTE DOMAIN RULE BRIDGE
+ * ============================================================
+ *
+ * Public cockpit interface.
+ *
+ * Cockpit
+ *    ↓
+ * executeDomainRule()
+ *    ↓
+ * runDomainIntegration()
+ *    ↓
+ * Domain Rule Engine
+ *
+ * ============================================================
+ */
+
+export function executeDomainRule(
+
+    scenario,
+
+    state = {}
+
+){
+
+    return runDomainIntegration(
+
+        scenario,
+
+        state
+
+    );
 
 }
 
@@ -453,12 +481,20 @@ export function getDomainStatus(){
 
 
 
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
 export default {
 
 
     getScenarioDomain,
 
     runDomainIntegration,
+
+    executeDomainRule,
 
     validateDomainIntegration,
 
