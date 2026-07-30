@@ -66,21 +66,34 @@ export function runBHRRuleEngine(
 
     if (!scenario || !scenario.rule) {
 
-
         return {
 
-            domain:
-                "BHR",
+            domain: "BHR",
 
-            status:
-                "ERROR",
+            status: "ERROR",
 
-            message:
-                "Unknown BHR scenario"
+            message: "Unknown BHR scenario"
 
         };
 
     }
+
+
+
+    /*
+     * Convert cockpit intensity
+     * into BHR risk indicators
+     */
+
+    state = applyBHRScenarioIntensity(
+
+        scenarioId,
+
+        state.intensity ?? 0,
+
+        state
+
+    );
 
 
 
@@ -91,10 +104,6 @@ export function runBHRRuleEngine(
     switch (scenario.rule) {
 
 
-        /*
-         * BHR-001
-         * Human Rights Due Diligence
-         */
 
         case "BHR-001":
 
@@ -110,11 +119,6 @@ export function runBHRRuleEngine(
 
 
 
-        /*
-         * BHR-002
-         * Forced Labour
-         */
-
         case "BHR-002":
 
             riskScore =
@@ -128,11 +132,6 @@ export function runBHRRuleEngine(
             break;
 
 
-
-        /*
-         * BHR-003
-         * Child Labour
-         */
 
         case "BHR-003":
 
@@ -148,11 +147,6 @@ export function runBHRRuleEngine(
 
 
 
-        /*
-         * BHR-004
-         * Discrimination
-         */
-
         case "BHR-004":
 
             riskScore =
@@ -166,11 +160,6 @@ export function runBHRRuleEngine(
             break;
 
 
-
-        /*
-         * BHR-005
-         * Occupational Health & Safety
-         */
 
         case "BHR-005":
 
@@ -186,11 +175,6 @@ export function runBHRRuleEngine(
 
 
 
-        /*
-         * BHR-006
-         * Modern Slavery
-         */
-
         case "BHR-006":
 
             riskScore =
@@ -204,11 +188,6 @@ export function runBHRRuleEngine(
             break;
 
 
-
-        /*
-         * BHR-007
-         * Community Impact
-         */
 
         case "BHR-007":
 
@@ -224,11 +203,6 @@ export function runBHRRuleEngine(
 
 
 
-        /*
-         * BHR-008
-         * Indigenous Rights
-         */
-
         case "BHR-008":
 
             riskScore =
@@ -243,11 +217,6 @@ export function runBHRRuleEngine(
 
 
 
-        /*
-         * BHR-009
-         * Supply Chain Risk
-         */
-
         case "BHR-009":
 
             riskScore =
@@ -261,11 +230,6 @@ export function runBHRRuleEngine(
             break;
 
 
-
-        /*
-         * BHR-010
-         * Grievance Mechanism
-         */
 
         case "BHR-010":
 
@@ -290,11 +254,17 @@ export function runBHRRuleEngine(
 
 
     riskScore = Math.max(
+
         0,
+
         Math.min(
+
             100,
+
             riskScore
+
         )
+
     );
 
 
@@ -326,35 +296,21 @@ export function runBHRRuleEngine(
     return {
 
 
-        domain:
+        domain: "BHR",
 
-            "BHR",
+        status: "COMPLETE",
 
+        scenario: scenarioId,
 
-        status:
+        ruleApplied: scenario.rule,
 
-            "COMPLETE",
+        riskScore: Number(
 
+            riskScore.toFixed(2)
 
-        scenario:
-
-            scenarioId,
-
-
-        ruleApplied:
-
-            scenario.rule,
-
-
-        riskScore:
-
-            Number(
-                riskScore.toFixed(2)
-            ),
-
+        ),
 
         assessment,
-
 
         recommendation:
 
@@ -364,12 +320,9 @@ export function runBHRRuleEngine(
 
             ),
 
-
         timestamp:
 
-            new Date()
-
-            .toISOString()
+            new Date().toISOString()
 
 
     };
@@ -378,19 +331,11 @@ export function runBHRRuleEngine(
 
 
 
-
-
 /**
  * ============================================================
  * BHR SCENARIO INTENSITY BRIDGE
  * ============================================================
- *
- * Converts cockpit intensity into
- * domain-specific human rights indicators.
- *
- * ============================================================
  */
-
 
 function applyBHRScenarioIntensity(
 
@@ -403,21 +348,19 @@ function applyBHRScenarioIntensity(
 ) {
 
 
-    const value =
+    const value = Math.max(
 
-        Math.max(
+        0,
 
-            0,
+        Math.min(
 
-            Math.min(
+            100,
 
-                100,
+            Number(intensity) || 0
 
-                Number(intensity) || 0
+        )
 
-            )
-
-        );
+    );
 
 
 
@@ -426,36 +369,23 @@ function applyBHRScenarioIntensity(
 
         ...state,
 
+        scenarioIntensity: value
 
-        scenarioIntensity:
-
-            value
 
     };
 
 
 
-    switch(scenario) {
+    switch (scenario) {
 
 
-        case "INDIGENOUS_RIGHTS":
 
+        case "HUMAN_RIGHTS_DUE_DILIGENCE":
 
-            updated.landRightsRisk =
-                value;
-
-
-            updated.consultationFailure =
-                value;
-
-
-            updated.culturalImpact =
-                value * 0.8;
-
-
-            updated.mitigationCapability =
-                100 - value;
-
+            updated.labourRisk = value;
+            updated.communityImpact = value;
+            updated.supplyChainRisk = value;
+            updated.complianceRisk = value;
 
             break;
 
@@ -463,22 +393,10 @@ function applyBHRScenarioIntensity(
 
         case "FORCED_LABOUR":
 
-
-            updated.workerFreedomRisk =
-                value;
-
-
-            updated.labourConditionRisk =
-                value;
-
-
-            updated.supplyChainRisk =
-                value * 0.8;
-
-
-            updated.monitoringLevel =
-                100 - value;
-
+            updated.workerFreedomRisk = value;
+            updated.labourConditionRisk = value;
+            updated.supplyChainRisk = value * 0.8;
+            updated.monitoringLevel = 100 - value;
 
             break;
 
@@ -486,18 +404,9 @@ function applyBHRScenarioIntensity(
 
         case "CHILD_LABOUR":
 
-
-            updated.childLabourRisk =
-                value;
-
-
-            updated.supplierRisk =
-                value;
-
-
-            updated.auditFailure =
-                value;
-
+            updated.childLabourRisk = value;
+            updated.supplierRisk = value;
+            updated.auditFailure = value;
 
             break;
 
@@ -505,18 +414,9 @@ function applyBHRScenarioIntensity(
 
         case "DISCRIMINATION":
 
-
-            updated.discriminationRisk =
-                value;
-
-
-            updated.equalOpportunityRisk =
-                value;
-
-
-            updated.grievanceRisk =
-                value;
-
+            updated.discriminationRisk = value;
+            updated.equalOpportunityRisk = value;
+            updated.grievanceRisk = value;
 
             break;
 
@@ -524,18 +424,9 @@ function applyBHRScenarioIntensity(
 
         case "OCCUPATIONAL_HEALTH_AND_SAFETY":
 
-
-            updated.safetyRisk =
-                value;
-
-
-            updated.incidentRate =
-                value;
-
-
-            updated.workerProtection =
-                100 - value;
-
+            updated.safetyRisk = value;
+            updated.incidentRate = value;
+            updated.workerProtection = 100 - value;
 
             break;
 
@@ -543,18 +434,9 @@ function applyBHRScenarioIntensity(
 
         case "MODERN_SLAVERY":
 
-
-            updated.modernSlaveryRisk =
-                value;
-
-
-            updated.workerVulnerability =
-                value;
-
-
-            updated.supplyChainRisk =
-                value;
-
+            updated.modernSlaveryRisk = value;
+            updated.workerVulnerability = value;
+            updated.supplyChainRisk = value;
 
             break;
 
@@ -562,18 +444,20 @@ function applyBHRScenarioIntensity(
 
         case "COMMUNITY_IMPACT":
 
+            updated.socialImpact = value;
+            updated.environmentalImpact = value;
+            updated.communityEngagement = 100 - value;
 
-            updated.socialImpact =
-                value;
-
-
-            updated.environmentalImpact =
-                value;
+            break;
 
 
-            updated.communityEngagement =
-                100 - value;
 
+        case "INDIGENOUS_RIGHTS":
+
+            updated.landRightsRisk = value;
+            updated.consultationFailure = value;
+            updated.culturalImpact = value * 0.8;
+            updated.mitigationCapability = 100 - value;
 
             break;
 
@@ -581,18 +465,9 @@ function applyBHRScenarioIntensity(
 
         case "SUPPLY_CHAIN_RISK":
 
-
-            updated.supplierRisk =
-                value;
-
-
-            updated.traceabilityRisk =
-                value;
-
-
-            updated.auditFailure =
-                value;
-
+            updated.supplierRisk = value;
+            updated.traceabilityRisk = value;
+            updated.auditFailure = value;
 
             break;
 
@@ -600,41 +475,9 @@ function applyBHRScenarioIntensity(
 
         case "GRIEVANCE_MECHANISM":
 
-
-            updated.grievanceFailure =
-                value;
-
-
-            updated.accessibility =
-                100 - value;
-
-
-            updated.responseCapability =
-                100 - value;
-
-
-            break;
-
-
-
-        case "HUMAN_RIGHTS_DUE_DILIGENCE":
-
-
-            updated.labourRisk =
-                value;
-
-
-            updated.communityImpact =
-                value;
-
-
-            updated.supplyChainRisk =
-                value;
-
-
-            updated.complianceRisk =
-                value;
-
+            updated.grievanceFailure = value;
+            updated.accessibility = 100 - value;
+            updated.responseCapability = 100 - value;
 
             break;
 
@@ -646,8 +489,6 @@ function applyBHRScenarioIntensity(
     return updated;
 
 }
-
-
 
 
 
@@ -666,10 +507,7 @@ function generateBHRRecommendation(
 
     if (assessment === "LOW") {
 
-
-        return:
-
-            "MONITOR HUMAN RIGHTS CONDITIONS";
+        return "MONITOR HUMAN RIGHTS CONDITIONS";
 
     }
 
@@ -677,18 +515,13 @@ function generateBHRRecommendation(
 
     if (assessment === "MEDIUM") {
 
-
-        return:
-
-            "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+        return "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
     }
 
 
 
-    return:
-
-        "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
+    return "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
 
 
 }
