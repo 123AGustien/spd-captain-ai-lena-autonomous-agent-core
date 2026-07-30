@@ -1,70 +1,47 @@
 /**
  * ============================================================
- * SPD v13.1 — BHR SOLUTION ENGINE FINAL
+ * SPD v13.1 — BHR SOLUTION ENGINE
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * DOMAIN:
- * Business & Human Rights (BHR)
+ * Business & Human Rights Domain
  *
- * PURPOSE:
- * Convert BHR assessment results into deterministic
- * corrective solutions.
- *
- *
- * ARCHITECTURE:
- *
- * BHR Scenario Registry
- *        ↓
- * BHR Rule Engine
- *        ↓
- * BHR Solution Engine
- *        ↓
- * BHR Action Engine
- *        ↓
- * Solution Decision Bridge
- *        ↓
- * Golden Rule Engine
- *        ↓
- * Captain AI Lena Decision Core
- *        ↓
- * Memory Core
- *        ↓
- * Audit Record
- *
- *
- * Golden Rule Engine remains authoritative.
- *
- * Deterministic.
- * No randomness.
- * No machine learning.
+ * Converts BHR assessment into deterministic
+ * corrective action.
  *
  * ============================================================
  */
 
 
-
-/**
- * ============================================================
- * BHR SOLUTION DATABASE
- * ============================================================
- */
-
-
-const BHR_SOLUTION_LIBRARY = {
+const BHR_SOLUTION_MAP = {
 
 
 "BHR-001": {
 
-    HIGH:
-    "ACTIVATE HUMAN RIGHTS DUE DILIGENCE REMEDIATION PROTOCOL",
+scenario:"HUMAN_RIGHTS_DUE_DILIGENCE",
 
-    MEDIUM:
-    "STRENGTHEN HUMAN RIGHTS DUE DILIGENCE CONTROLS",
+high:
+"ACTIVATE HUMAN RIGHTS DUE DILIGENCE REMEDIATION PROTOCOL",
 
-    LOW:
-    "CONTINUE HUMAN RIGHTS DUE DILIGENCE MONITORING"
+low:
+"CONTINUE HUMAN RIGHTS DUE DILIGENCE MONITORING",
+
+actions:[
+
+"IDENTIFY HUMAN RIGHTS RISK",
+
+"VERIFY AVAILABLE INFORMATION",
+
+"ASSESS POTENTIAL IMPACT",
+
+"IMPLEMENT PREVENTIVE MEASURES",
+
+"MONITOR EFFECTIVENESS",
+
+"UPDATE MEMORY CORE"
+
+]
 
 },
 
@@ -72,14 +49,29 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-002": {
 
-    HIGH:
-    "ACTIVATE FORCED LABOUR REMEDIATION PROTOCOL",
+scenario:"FORCED_LABOUR",
 
-    MEDIUM:
-    "ENHANCE FORCED LABOUR PREVENTION CONTROLS",
+high:
+"ACTIVATE FORCED LABOUR REMEDIATION PROTOCOL",
 
-    LOW:
-    "CONTINUE FORCED LABOUR MONITORING"
+low:
+"ENHANCE FORCED LABOUR MONITORING",
+
+actions:[
+
+"ACTIVATE HUMAN RIGHTS ESCALATION",
+
+"VERIFY WORKER CONDITIONS",
+
+"INVESTIGATE SUPPLY CHAIN SOURCE",
+
+"REMOVE EXPLOITATIVE PRACTICES",
+
+"IMPLEMENT REMEDIATION",
+
+"MONITOR COMPLIANCE"
+
+]
 
 },
 
@@ -87,14 +79,29 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-003": {
 
-    HIGH:
-    "ACTIVATE CHILD LABOUR REMEDIATION PROTOCOL",
+scenario:"CHILD_LABOUR",
 
-    MEDIUM:
-    "ENHANCE CHILD LABOUR PREVENTION CONTROLS",
+high:
+"ACTIVATE CHILD LABOUR REMEDIATION PROTOCOL",
 
-    LOW:
-    "CONTINUE CHILD LABOUR COMPLIANCE REVIEW"
+low:
+"CONTINUE CHILD LABOUR COMPLIANCE REVIEW",
+
+actions:[
+
+"IDENTIFY AFFECTED SUPPLIER",
+
+"VERIFY AGE AND WORK CONDITIONS",
+
+"REMOVE CHILD FROM HARMFUL EXPOSURE",
+
+"PROVIDE REMEDIATION SUPPORT",
+
+"CONDUCT SUPPLIER AUDIT",
+
+"MONITOR CORRECTIVE ACTION"
+
+]
 
 },
 
@@ -102,14 +109,25 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-004": {
 
-    HIGH:
-    "INITIATE DISCRIMINATION CORRECTIVE ACTION PLAN",
+scenario:"DISCRIMINATION",
 
-    MEDIUM:
-    "STRENGTHEN EQUALITY AND FAIRNESS CONTROLS",
+high:
+"INITIATE DISCRIMINATION CORRECTIVE ACTION PLAN",
 
-    LOW:
-    "CONTINUE EQUALITY AND FAIRNESS MONITORING"
+low:
+"CONTINUE EQUALITY MONITORING",
+
+actions:[
+
+"VERIFY INCIDENT DETAILS",
+
+"ASSESS HUMAN RIGHTS IMPACT",
+
+"REMOVE DISCRIMINATORY PRACTICES",
+
+"IMPLEMENT FAIR TREATMENT"
+
+]
 
 },
 
@@ -117,14 +135,25 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-005": {
 
-    HIGH:
-    "ACTIVATE OCCUPATIONAL HEALTH AND SAFETY RESPONSE",
+scenario:"OCCUPATIONAL_HEALTH_AND_SAFETY",
 
-    MEDIUM:
-    "IMPLEMENT ADDITIONAL SAFETY CONTROLS",
+high:
+"ACTIVATE OCCUPATIONAL HEALTH AND SAFETY RESPONSE",
 
-    LOW:
-    "CONTINUE SAFETY PERFORMANCE MONITORING"
+low:
+"CONTINUE SAFETY PERFORMANCE MONITORING",
+
+actions:[
+
+"ASSESS SAFETY RISK",
+
+"VERIFY INCIDENT CONDITIONS",
+
+"APPLY SAFETY CONTROLS",
+
+"VERIFY RECOVERY"
+
+]
 
 },
 
@@ -132,14 +161,25 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-006": {
 
-    HIGH:
-    "ACTIVATE MODERN SLAVERY RESPONSE PROTOCOL",
+scenario:"MODERN_SLAVERY",
 
-    MEDIUM:
-    "ENHANCE MODERN SLAVERY PREVENTION",
+high:
+"ACTIVATE MODERN SLAVERY RESPONSE PROTOCOL",
 
-    LOW:
-    "CONTINUE MODERN SLAVERY SURVEILLANCE"
+low:
+"ENHANCE MODERN SLAVERY SURVEILLANCE",
+
+actions:[
+
+"PROTECT AFFECTED PERSONS",
+
+"VERIFY SUPPLY CHAIN CONDITIONS",
+
+"CONDUCT INVESTIGATION",
+
+"IMPLEMENT REMEDIATION"
+
+]
 
 },
 
@@ -147,14 +187,23 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-007": {
 
-    HIGH:
-    "INITIATE COMMUNITY IMPACT MITIGATION PROGRAM",
+scenario:"COMMUNITY_IMPACT",
 
-    MEDIUM:
-    "STRENGTHEN COMMUNITY ENGAGEMENT CONTROLS",
+high:
+"INITIATE COMMUNITY IMPACT MITIGATION PROGRAM",
 
-    LOW:
-    "CONTINUE COMMUNITY ENGAGEMENT"
+low:
+"CONTINUE COMMUNITY ENGAGEMENT",
+
+actions:[
+
+"IDENTIFY COMMUNITY IMPACT",
+
+"VERIFY STAKEHOLDER CONCERNS",
+
+"IMPLEMENT MITIGATION"
+
+]
 
 },
 
@@ -162,14 +211,23 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-008": {
 
-    HIGH:
-    "ACTIVATE INDIGENOUS RIGHTS PROTECTION PLAN",
+scenario:"INDIGENOUS_RIGHTS",
 
-    MEDIUM:
-    "STRENGTHEN INDIGENOUS RIGHTS CONSULTATION",
+high:
+"ACTIVATE INDIGENOUS RIGHTS PROTECTION PLAN",
 
-    LOW:
-    "CONTINUE INDIGENOUS RIGHTS CONSULTATION"
+low:
+"CONTINUE INDIGENOUS RIGHTS CONSULTATION",
+
+actions:[
+
+"VERIFY RIGHTS IMPACT",
+
+"ENGAGE STAKEHOLDERS",
+
+"MONITOR COMPLIANCE"
+
+]
 
 },
 
@@ -177,14 +235,23 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-009": {
 
-    HIGH:
-    "ACTIVATE SUPPLY CHAIN ETHICAL REMEDIATION",
+scenario:"SUPPLY_CHAIN_RISK",
 
-    MEDIUM:
-    "STRENGTHEN SUPPLY CHAIN DUE DILIGENCE",
+high:
+"ACTIVATE SUPPLY CHAIN ETHICAL REMEDIATION",
 
-    LOW:
-    "CONTINUE SUPPLY CHAIN DUE DILIGENCE"
+low:
+"CONTINUE SUPPLY CHAIN DUE DILIGENCE",
+
+actions:[
+
+"IDENTIFY HIGH RISK SUPPLIERS",
+
+"VERIFY SUPPLIER PRACTICES",
+
+"APPLY CORRECTIVE ACTION"
+
+]
 
 },
 
@@ -192,97 +259,30 @@ const BHR_SOLUTION_LIBRARY = {
 
 "BHR-010": {
 
-    HIGH:
-    "ACTIVATE GRIEVANCE RESOLUTION PROCESS",
+scenario:"GRIEVANCE_MECHANISM",
 
-    MEDIUM:
-    "STRENGTHEN GRIEVANCE RESPONSE PROCESS",
+high:
+"ACTIVATE GRIEVANCE RESOLUTION PROCESS",
 
-    LOW:
-    "CONTINUE GRIEVANCE MONITORING"
+low:
+"CONTINUE GRIEVANCE MONITORING",
+
+actions:[
+
+"RECEIVE GRIEVANCE",
+
+"VERIFY INFORMATION",
+
+"ASSESS IMPACT",
+
+"TRACK RESOLUTION"
+
+]
 
 }
 
 
 };
-
-
-
-
-
-/**
- * ============================================================
- * NORMALIZE ASSESSMENT
- * ============================================================
- *
- * Supports:
- *
- * "HIGH"
- *
- * {
- *    risk:"HIGH"
- * }
- *
- * {
- *    evaluation:{
- *       risk:"HIGH"
- *    }
- * }
- *
- * ============================================================
- */
-
-
-function normalizeAssessment(
-
-    assessment
-
-){
-
-    if(
-
-        typeof assessment === "string"
-
-    ){
-
-        return assessment
-            .toUpperCase();
-
-    }
-
-
-
-    if(
-
-        assessment?.risk
-
-    ){
-
-        return assessment.risk
-            .toUpperCase();
-
-    }
-
-
-
-    if(
-
-        assessment?.evaluation?.risk
-
-    ){
-
-        return assessment.evaluation.risk
-            .toUpperCase();
-
-    }
-
-
-
-    return "LOW";
-
-}
-
-
 
 
 
@@ -295,150 +295,83 @@ function normalizeAssessment(
 
 export function getBHRSolution(
 
-    scenarioId,
+scenarioId,
 
-    assessment
+assessment="LOW"
 
 ){
 
 
-    const risk =
+const rule =
 
-    normalizeAssessment(
-
-        assessment
-
-    );
+BHR_SOLUTION_MAP[scenarioId];
 
 
 
-    const scenario =
+if(!rule){
 
-    BHR_SOLUTION_LIBRARY[scenarioId];
+return {
 
+solution:
 
+"CONTINUE MONITORING AND PERIODIC REVIEW",
 
-    if(!scenario){
+actions:[
 
-        return {
+"VERIFY",
 
-            solution:
-            "CONTINUE MONITORING AND PERIODIC REVIEW",
+"ASSESS",
 
-            risk,
+"MONITOR",
 
-            scenario:
-            scenarioId
+"UPDATE MEMORY CORE"
 
-        };
+]
 
-    }
-
-
-
-    return {
-
-
-        solution:
-
-        scenario[risk]
-
-        ||
-
-        scenario.LOW,
-
-
-        scenario:
-
-        scenarioId,
-
-
-        risk
-
-
-    };
-
+};
 
 }
 
 
 
+return {
 
 
+scenario:
+
+rule.scenario,
 
 
-/**
- * ============================================================
- * BUILD BHR DOMAIN SOLUTION
- * ============================================================
- */
+solution:
+
+assessment==="HIGH"
+
+?
+
+rule.high
+
+:
+
+rule.low,
 
 
-export function buildBHRSolution(
+actions:
 
-    scenarioId,
-
-    assessment
-
-){
+rule.actions,
 
 
-    const result =
+authority:
 
-    getBHRSolution(
-
-        scenarioId,
-
-        assessment
-
-    );
+"BHR_SOLUTION_ENGINE",
 
 
-
-    return {
-
-
-        domain:
-
-        "BHR",
+goldenRuleAuthority:true
 
 
-        scenario:
-
-        scenarioId,
-
-
-        domainSolution:
-
-        result.solution,
-
-
-        risk:
-
-        result.risk,
-
-
-        goldenRuleAuthority:
-
-        true,
-
-
-        status:
-
-        "BHR SOLUTION GENERATED",
-
-
-        timestamp:
-
-        new Date().toISOString()
-
-
-    };
+};
 
 
 }
-
-
 
 
 
@@ -454,83 +387,53 @@ export function buildBHRSolution(
 export function validateBHRSolutionEngine(){
 
 
-    return {
+return {
 
 
-        module:
+module:
 
-        "SPD v13.1 BHR Solution Engine",
-
-
-        domain:
-
-        "Business & Human Rights",
+"SPD v13.1 BHR Solution Engine",
 
 
-        status:
+status:
 
-        "READY",
-
-
-        registeredRules:
-
-        Object.keys(
-
-            BHR_SOLUTION_LIBRARY
-
-        ),
+"READY",
 
 
-        totalRules:
+registeredSolutions:
 
-        Object.keys(
-
-            BHR_SOLUTION_LIBRARY
-
-        ).length,
+Object.keys(BHR_SOLUTION_MAP),
 
 
-        deterministic:
+totalSolutions:
 
-        true,
-
-
-        goldenRuleAuthority:
-
-        true,
+Object.keys(BHR_SOLUTION_MAP).length,
 
 
-        timestamp:
-
-        new Date().toISOString()
+deterministic:true,
 
 
-    };
+goldenRuleAuthority:true,
+
+
+timestamp:
+
+new Date().toISOString()
+
+
+};
 
 
 }
 
 
 
-
-
-
-
-/**
- * ============================================================
- * EXPORT
- * ============================================================
- */
-
-
 export default {
 
 
-    getBHRSolution,
+getBHRSolution,
 
-    buildBHRSolution,
-
-    validateBHRSolutionEngine
+validateBHRSolutionEngine
 
 
 };
