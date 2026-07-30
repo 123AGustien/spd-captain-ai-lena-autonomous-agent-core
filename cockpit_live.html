@@ -104,6 +104,22 @@ border-radius:6px;
 
 border:0;
 
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+opacity:0.85;
+
+}
+
+
+input{
+
+width:100%;
+
 }
 
 
@@ -117,6 +133,17 @@ padding:10px;
 
 border:1px solid #00ff99;
 
+border-radius:6px;
+
+}
+
+
+.status{
+
+font-size:18px;
+
+color:white;
+
 }
 
 
@@ -129,13 +156,19 @@ border:1px solid #00ff99;
 
 
 <h2>
+
 🧠 CAPTAIN AI LENA
+
 <br>
+
 SPD v13.1 MOBILE HARDENED COCKPIT
+
 </h2>
 
 
+
 <div class="grid">
+
 
 
 <div class="panel">
@@ -155,7 +188,7 @@ INITIALIZING...
 <div class="panel">
 
 <div class="title">
-SYSTEM INPUT
+SYSTEM INPUT STATE
 </div>
 
 <pre id="input">
@@ -170,14 +203,17 @@ Waiting...
 
 <div class="title">
 DOMAIN MONITOR
+
 </div>
 
 <pre id="domains">
-FX
-DC
-CYB
-INF
-ENERGY
+
+FX:
+DC:
+CYB:
+INF:
+ENERGY:
+
 </pre>
 
 </div>
@@ -187,37 +223,103 @@ ENERGY
 <div class="panel">
 
 <div class="title">
-SCENARIO CONTROL
+🎛️ SCENARIO CONTROL
 </div>
+
 
 
 <button onclick="activateScenario('FX_STRESS')">
+
 FX STRESS
+
 </button>
 
 
-<button onclick="activateScenario('LIQUIDITY_CRISIS')">
-LIQUIDITY CRISIS
+
+<button onclick="activateScenario('DC_LOAD')">
+
+DATA CENTRE LOAD
+
 </button>
+
 
 
 <button onclick="activateScenario('CYBER_EVENT')">
+
 CYBER EVENT
+
 </button>
+
+
+
+<button onclick="activateScenario('INFRASTRUCTURE_STRESS')">
+
+INFRASTRUCTURE STRESS
+
+</button>
+
 
 
 <button onclick="activateScenario('BIODIESEL_SHORTAGE')">
+
 BIODIESEL SHORTAGE
+
 </button>
+
+
+
+<button onclick="activateScenario('FIN_STRESS')">
+
+FIN STRESS
+
+</button>
+
+
+
+<button onclick="activateScenario('BANKING_STRESS')">
+
+BANKING STRESS
+
+</button>
+
+
+
+<button onclick="activateScenario('LIQUIDITY_CRISIS')">
+
+LIQUIDITY CRISIS
+
+</button>
+
+
+
+<button onclick="activateScenario('CREDIT_STRESS')">
+
+CREDIT STRESS
+
+</button>
+
+
+
+<button onclick="activateScenario('SOVEREIGN_DEBT')">
+
+SOVEREIGN DEBT
+
+</button>
+
 
 
 <button onclick="runSelfTest()">
+
 🧪 RUN SELF TEST
+
 </button>
+
 
 
 <button onclick="runSelfTestAndCorrect()">
+
 🛠️ SELF TEST + CORRECTIVE ACTION
+
 </button>
 
 
@@ -228,83 +330,38 @@ BIODIESEL SHORTAGE
 <div class="panel">
 
 <div class="title">
-GOLDEN RULE PIPELINE
-</div>
 
-
-<div id="flow" class="flow">
-
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+🎚️ SCENARIO INTENSITY
 
 </div>
 
 
-</div>
+<input
+
+id="intensitySlider"
+
+type="range"
+
+min="0"
+
+max="100"
+
+step="10"
+
+value="50">
 
 
+<div>
 
-<div class="panel">
+INTENSITY:
 
-<div class="title">
-ASSESSMENT
-</div>
-
-<pre id="assessment">
-Waiting...
-</pre>
-
-</div>
-
-
-
-<div class="panel">
-
-<div class="title">
-CAPTAIN AI LENA DECISION
-</div>
-
-<pre id="decision">
-Waiting...
-</pre>
-
-</div>
-
-
-
-<div class="panel">
-
-<div class="title">
-MEMORY CORE
-</div>
-
-<pre id="memory">
-Waiting...
-</pre>
-
-</div>
-
-
-
-<div class="panel">
-
-<div class="title">
-AUDIT RECORD
-</div>
-
-<pre id="audit">
-Waiting...
-</pre>
-
-</div>
-
-
-</div>
+<span id="int
 <script type="module">
+
 
 /*
 ============================================================
-SPD v13.1 — CAPTAIN AI LENA MOBILE HARDENED COCKPIT
-AUTHORITATIVE ENGINE CONNECTION
+SPD v13.1 — AUTHORITATIVE ENGINE CORE
 ============================================================
 
 COCKPIT
@@ -317,7 +374,7 @@ goldenRuleEngine.js
    ↓
 Captain AI Lena Decision Core
    ↓
-Memory Core / Audit
+Memory / Audit
 
 ============================================================
 */
@@ -329,34 +386,45 @@ runGoldenRule,
 PHI,
 GOLDEN_RULE_STAGES
 
-} from "./goldenRuleEngine.js";
+}
 
+from "./goldenRuleEngine.js";
 
-import {
-
-executeDomainRule,
-getDomainStatus
-
-} from "./domainIntegration.js";
 
 
 import {
 
-runSelfTest as runAuthoritativeSelfTest,
+executeDomainRule
+
+}
+
+from "./domainIntegration.js";
+
+
+
+import {
+
+runSelfTest as authoritativeSelfTest,
+
 runValidationLoop
 
-} from "./selfTestEngine.js";
+}
+
+from "./selfTestEngine.js";
 
 
 
-let currentScenario = "FX_STRESS";
+
+let currentScenario="FX_STRESS";
 
 
-let intensity = 50;
+let intensity=50;
 
 
 
-const baseState = {
+
+const baseState={
+
 
 fx:12,
 
@@ -372,21 +440,29 @@ event:"NORMAL",
 
 mode:"AUTONOMOUS"
 
+
 };
+
+
 
 
 
 function display(id,value){
 
-const el=document.getElementById(id);
 
-if(el){
+const element=document.getElementById(id);
 
-el.innerText=value;
+
+if(element){
+
+element.innerText=value;
 
 }
 
+
 }
+
+
 
 
 
@@ -399,23 +475,63 @@ SCENARIO CONTROL
 
 window.activateScenario=function(scenario){
 
+
 currentScenario=scenario;
 
+
 runSystem();
+
 
 };
 
 
 
 
+
 /*
 ============================================================
-BUILD STATE
+INTENSITY CONTROL
+============================================================
+*/
+
+
+document
+.getElementById("intensitySlider")
+.oninput=function(){
+
+
+intensity=
+Number(this.value);
+
+
+
+document
+.getElementById("intensityDisplay")
+.innerText=
+intensity+"%";
+
+
+
+runSystem();
+
+
+};
+
+
+
+
+
+/*
+============================================================
+STATE BUILDER
 ============================================================
 */
 
 
 function buildState(){
+
+
+const factor=intensity/100;
 
 
 let state={
@@ -432,227 +548,145 @@ time:new Date().toISOString()
 
 
 
-const factor=intensity/100;
-
-
-
 switch(currentScenario){
+
 
 
 case "FX_STRESS":
 
 state.fx=Math.min(
+
 100,
-baseState.fx+(80*factor)
+
+baseState.fx+
+(80*factor)
+
 );
 
 break;
 
 
 
-case "LIQUIDITY_CRISIS":
 
-state.fx=Math.min(
+case "DC_LOAD":
+
+state.dc=Math.min(
+
 100,
-baseState.fx+(50*factor)
+
+baseState.dc+
+(80*factor)
+
 );
 
+break;
 
-state.energy=Math.max
 
+
+
+case "CYBER_EVENT":
+
+state.cyb=Math.min(
+
+100,
+
+baseState.cyb+
+(80*factor)
+
+);
+
+break;
+
+
+
+
+case "INFRASTRUCTURE_STRESS":
+
+state.inf=Math.min(
+
+100,
+
+baseState.inf+
+(80*factor)
+
+);
+
+break;
+
+
+
+
+case "BIODIESEL_SHORTAGE":
+
+state.energy=Math.max(
+
+0,
+
+baseState.energy-
+(80*factor)
+
+);
+
+break;
+
+
+
+
+
+case "LIQUIDITY_CRISIS":
 /*
 ============================================================
-SPD v13.1 — FINAL MOBILE HARDENING LAYER
+SELF TEST
 ============================================================
 */
 
 
-/*
-------------------------------
-INTENSITY CONTROL
-------------------------------
-*/
+window.runSelfTest=function(){
 
 
-const intensityControl = document.createElement("div");
-
-intensityControl.className="panel";
+try{
 
 
-intensityControl.innerHTML = `
+const result=
 
-<div class="title">
-🎚️ SCENARIO INTENSITY
-</div>
-
-
-<input
-id="intensitySlider"
-type="range"
-min="0"
-max="100"
-step="10"
-value="50"
-style="width:100%"
->
-
-
-<div>
-INTENSITY:
-<span id="intensityDisplay">
-50%
-</span>
-</div>
-
-`;
-
-
-document
-.querySelector(".grid")
-.appendChild(intensityControl);
-
-
-
-document
-.getElementById("intensitySlider")
-.oninput=function(){
-
-
-intensity =
-Number(this.value);
-
-
-document
-.getElementById("intensityDisplay")
-.innerText =
-intensity+"%";
-
-
-runSystem();
-
-
-};
-
-
-
-
-/*
-------------------------------
-GOLDEN RULE STAGE MONITOR
-------------------------------
-*/
-
-
-function updateGoldenStages(){
-
-
-const stages =
-GOLDEN_RULE_STAGES.join(
-" → "
-);
+authoritativeSelfTest();
 
 
 
 display(
 
-"flow",
+"selfTest",
 
-stages
+JSON.stringify(
+
+result,
+
+null,
+
+2
+
+)
 
 );
 
 
-}
-
-
-
-updateGoldenStages();
-
-
-
-
-/*
-------------------------------
-AUTONOMOUS MONITOR LOOP
-------------------------------
-*/
-
-
-let lastExecution=0;
-
-
-
-function autonomousLoop(time){
-
-
-if(
-time-lastExecution > 3000
-){
-
-
-runSystem();
-
-
-lastExecution=time;
-
 
 }
 
-
-requestAnimationFrame(
-autonomousLoop
-);
-
-
-}
-
-
-
-requestAnimationFrame(
-autonomousLoop
-);
-
-
-
-
-/*
-------------------------------
-ENGINE STATUS PROTECTION
-------------------------------
-*/
-
-
-window.addEventListener(
-"error",
-function(event){
+catch(error){
 
 
 display(
 
-"systemStatus",
-
-"ENGINE PROTECTION MODE"
-
-);
-
-
-display(
-
-"audit",
+"selfTest",
 
 JSON.stringify(
 
 {
 
-error:
-event.message,
+status:"ERROR",
 
-module:
-"SPD v13.1 cockpit.html",
-
-timestamp:
-new Date().toISOString()
-
+message:error.message
 
 },
 
@@ -665,4 +699,312 @@ null,
 );
 
 
-});
+}
+
+
+};
+
+
+
+
+
+/*
+============================================================
+SELF TEST + CORRECTIVE ACTION
+============================================================
+*/
+
+
+window.runSelfTestAndCorrect=function(){
+
+
+try{
+
+
+const validation=
+
+runValidationLoop();
+
+
+
+display(
+
+"selfTest",
+
+JSON.stringify(
+
+validation.selfTest,
+
+null,
+
+2
+
+)
+
+);
+
+
+
+display(
+
+"corrective",
+
+JSON.stringify(
+
+{
+
+authority:
+
+"Captain AI Lena",
+
+action:
+
+validation.correctiveAction,
+
+retest:
+
+validation.retest,
+
+recovery:
+
+validation.recoveryVerification
+
+},
+
+null,
+
+2
+
+)
+
+);
+
+
+
+display(
+
+"audit",
+
+JSON.stringify(
+
+{
+
+system:
+
+"SPD v13.1",
+
+process:
+
+"AUTONOMOUS VALIDATION LOOP",
+
+finalStatus:
+
+validation.finalStatus,
+
+timestamp:
+
+new Date().toISOString()
+
+},
+
+null,
+
+2
+
+)
+
+);
+
+
+
+}
+
+catch(error){
+
+
+display(
+
+"corrective",
+
+JSON.stringify(
+
+{
+
+status:"ERROR",
+
+message:error.message
+
+},
+
+null,
+
+2
+
+)
+
+);
+
+
+}
+
+
+};
+
+
+
+
+
+
+/*
+============================================================
+AUTONOMOUS MONITOR LOOP
+============================================================
+*/
+
+
+let lastExecution=0;
+
+
+
+function autonomousLoop(time){
+
+
+
+if(
+
+time-lastExecution > 3000
+
+){
+
+
+runSystem();
+
+
+lastExecution=time;
+
+
+}
+
+
+
+requestAnimationFrame(
+
+autonomousLoop
+
+);
+
+
+
+}
+
+
+
+
+requestAnimationFrame(
+
+autonomousLoop
+
+);
+
+
+
+
+
+
+/*
+============================================================
+ENGINE ERROR PROTECTION
+============================================================
+*/
+
+
+window.addEventListener(
+
+"error",
+
+function(event){
+
+
+
+display(
+
+"systemStatus",
+
+"ENGINE PROTECTION MODE"
+
+);
+
+
+
+display(
+
+"audit",
+
+JSON.stringify(
+
+{
+
+system:
+
+"SPD v13.1",
+
+error:
+
+event.message,
+
+module:
+
+"cockpit.html",
+
+timestamp:
+
+new Date().toISOString()
+
+},
+
+null,
+
+2
+
+)
+
+);
+
+
+
+}
+
+);
+
+
+
+
+
+
+/*
+============================================================
+INITIAL START
+============================================================
+*/
+
+
+display(
+
+"systemStatus",
+
+"ENGINE READY"
+
+);
+
+
+
+runSystem();
+
+
+
+</script>
+
+
+</body>
+
+</html>
