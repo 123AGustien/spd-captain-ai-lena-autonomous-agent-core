@@ -1,185 +1,425 @@
-import {
-  fxModule
-} from "./fx.js";
-
-import {
-  energyModule
-} from "./energy.js";
-
-import {
-  riskModule
-} from "./risk.js";
-
-import {
-  scenarioEngine
-} from "./scenarioEngine.js";
-
 /**
  * ============================================================
- * SPD V13 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE
+ * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE FINAL
  * ============================================================
  *
  * DATA → ALGORITHMS → COMPUTE
  *
  * Golden Rule:
- * OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+ *
+ * OBSERVE
+ * VERIFY
+ * ASSESS
+ * DECIDE
+ * ACT
+ * UPDATE
+ *
+ *
+ * Architecture:
+ *
+ * COCKPIT
+ *      ↓
+ * DOMAIN INTEGRATION
+ *      ↓
+ * DOMAIN RULE ENGINE
+ *      ↓
+ * DOMAIN DECISION BRIDGE
+ *      ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *      ↓
+ * GOLDEN RULE ENGINE
+ *      ↓
+ * ACTION ENGINE
+ *      ↓
+ * MEMORY CORE
+ *      ↓
+ * AUDIT RECORD
+ *
  *
  * Deterministic rule-based execution.
  * No machine learning.
  * No randomness.
  *
- * Backend decision engine is authoritative.
- * Frontend cockpit only displays system output.
+ * Backend decision engine authoritative.
+ * Frontend cockpit displays output only.
+ *
  * ============================================================
  */
 
-export function captainAILena(state = {}) {
 
-  // ==========================================================
-  // 1. OBSERVE
-  // ==========================================================
+import {
 
-  const observedState = normalizeState(state);
+    fxModule
 
-  // ==========================================================
-  // 2. VERIFY
-  // ==========================================================
+} from "./fx.js";
 
-  const verifiedState = verifyState(observedState);
 
-  // ==========================================================
-  // 3. ASSESS — ALGORITHM LAYER
-  // ==========================================================
+import {
 
-  const fx = fxModule(verifiedState.fx);
+    energyModule
 
-  const energy = energyModule(
-    verifiedState.energy
-  );
+} from "./energy.js";
 
-  const risk = riskModule(
-    verifiedState.cyb,
-    verifiedState.energy,
-    verifiedState.fx
-  );
 
-  const scenario = scenarioEngine(
-    verifiedState.event
-  );
+import {
 
-  // ==========================================================
-  // 4. ASSESSMENT CONTEXT
-  // ==========================================================
+    riskModule
 
-  const context = {
+} from "./risk.js";
+
+
+import {
+
+    scenarioEngine
+
+} from "./scenarioEngine.js";
+
+
+
+
+
+/**
+ * ============================================================
+ * CAPTAIN AI LENA CORE
+ * ============================================================
+ */
+
+
+export function captainAILena(
+
+    state = {}
+
+){
+
+
+/**
+ * ============================================================
+ * 1. OBSERVE
+ * ============================================================
+ */
+
+
+const observedState =
+
+    normalizeState(
+
+        state
+
+    );
+
+
+
+
+
+/**
+ * ============================================================
+ * 2. VERIFY
+ * ============================================================
+ */
+
+
+const verifiedState =
+
+    verifyState(
+
+        observedState
+
+    );
+
+
+
+
+
+/**
+ * ============================================================
+ * 3. ASSESS
+ * ============================================================
+ */
+
+
+const fx =
+
+    fxModule(
+
+        verifiedState.fx
+
+    );
+
+
+
+const energy =
+
+    energyModule(
+
+        verifiedState.energy
+
+    );
+
+
+
+const risk =
+
+    riskModule(
+
+        verifiedState.cyb,
+
+        verifiedState.energy,
+
+        verifiedState.fx
+
+    );
+
+
+
+const scenario =
+
+    scenarioEngine(
+
+        verifiedState.event
+
+    );
+
+
+
+
+
+/**
+ * ============================================================
+ * DOMAIN DECISION BRIDGE INPUT
+ * ============================================================
+ */
+
+
+const domainDecision =
+
+    verifiedState.domainDecision
+
+    ||
+
+    null;
+
+
+
+
+
+/**
+ * ============================================================
+ * ASSESSMENT CONTEXT
+ * ============================================================
+ */
+
+
+const context = {
+
 
     ...verifiedState,
 
-    modules: {
-      fx,
-      energy,
-      risk
-    },
 
-    scenario
+    modules:{
 
-  };
 
-  // ==========================================================
-  // 5. DECIDE
-  // ==========================================================
+        fx,
 
-  const decision = decide(context);
 
-  // ==========================================================
-  // 6. ACT
-  // ==========================================================
+        energy,
 
-  const action = executeAction(
-    decision
-  );
 
-  // ==========================================================
-  // 7. UPDATE
-  // ==========================================================
+        risk
 
-  const updatedState = {
-
-    ...verifiedState,
-
-    decision,
-
-    action
-
-  };
-
-  // ==========================================================
-  // 8. AUTONOMOUS AGENT OUTPUT
-  // ==========================================================
-
-  return {
-
-    timestamp:
-      new Date().toISOString(),
-
-    agent:
-      "CAPTAIN AI LENA",
-
-    engine:
-      "SPD V13 DETERMINISTIC AUTONOMOUS AGENT CORE",
-
-    mode:
-      verifiedState.mode,
-
-    loop: [
-      "OBSERVE",
-      "VERIFY",
-      "ASSESS",
-      "DECIDE",
-      "ACT",
-      "UPDATE"
-    ],
-
-    input:
-      verifiedState,
-
-    modules: {
-
-      fx,
-
-      energy,
-
-      risk
 
     },
+
 
     scenario,
 
+
+    domainDecision
+
+
+};
+
+
+
+
+
+/**
+ * ============================================================
+ * 4. DECIDE
+ * ============================================================
+ */
+
+
+const decision =
+
+    decide(
+
+        context
+
+    );
+
+
+
+
+
+/**
+ * ============================================================
+ * 5. ACT
+ * ============================================================
+ */
+
+
+const action =
+
+    executeAction(
+
+        decision
+
+    );
+
+
+
+
+
+/**
+ * ============================================================
+ * 6. UPDATE
+ * ============================================================
+ */
+
+
+const updatedState = {
+
+
+    ...verifiedState,
+
+
     decision,
 
-    action,
 
-    systemState: {
+    action
 
-      fx,
 
-      energy,
+};
 
-      risk,
 
-      scenarioType:
-        scenario?.type ?? "NORMAL"
+
+
+
+/**
+ * ============================================================
+ * AUTONOMOUS AGENT OUTPUT
+ * ============================================================
+ */
+
+
+return {
+
+
+    timestamp:
+
+        new Date().toISOString(),
+
+
+
+    agent:
+
+        "CAPTAIN AI LENA",
+
+
+
+    engine:
+
+        "SPD v13.1 DETERMINISTIC AUTONOMOUS AGENT CORE",
+
+
+
+    mode:
+
+        verifiedState.mode,
+
+
+
+    loop:[
+
+
+        "OBSERVE",
+
+
+        "VERIFY",
+
+
+        "ASSESS",
+
+
+        "DECIDE",
+
+
+        "ACT",
+
+
+        "UPDATE"
+
+
+    ],
+
+
+
+    input:
+
+        verifiedState,
+
+
+
+    modules:{
+
+
+        fx,
+
+
+        energy,
+
+
+        risk
+
 
     },
 
+
+
+    domainDecision,
+
+
+
+    scenario,
+
+
+
+    decision,
+
+
+
+    action,
+
+
+
     updatedState,
 
-    status:
-      "EXECUTED"
 
-  };
+
+    status:
+
+        "EXECUTED"
+
+
+};
+
 
 }
+
+
+
+
+
 
 
 /**
@@ -188,350 +428,554 @@ export function captainAILena(state = {}) {
  * ============================================================
  */
 
-function normalizeState(state) {
 
-  return {
+function normalizeState(
+
+    state
+
+){
+
+
+return {
+
 
     fx:
-      Number(state?.fx ?? 0),
+
+        Number(state?.fx ?? 0),
+
+
 
     energy:
-      Number(state?.energy ?? 50),
+
+        Number(state?.energy ?? 50),
+
+
 
     cyb:
-      Number(state?.cyb ?? 50),
+
+        Number(state?.cyb ?? 50),
+
+
 
     inf:
-      Number(state?.inf ?? 0),
+
+        Number(state?.inf ?? 0),
+
+
 
     dc:
-      Number(state?.dc ?? 0),
+
+        Number(state?.dc ?? 0),
+
+
 
     event:
-      state?.event ?? "NORMAL",
+
+        state?.event ?? "NORMAL",
+
+
 
     mode:
-      state?.mode ?? "AUTONOMOUS",
+
+        state?.mode ?? "AUTONOMOUS",
+
+
+
+    domainDecision:
+
+        state?.domainDecision ?? null,
+
+
 
     time:
-      state?.time ??
-      new Date().toISOString()
 
-  };
+        state?.time ??
+
+        new Date().toISOString()
+
+
+};
+
 
 }
 
 
+
+
+
+
+
 /**
  * ============================================================
- * VERIFY
- * ============================================================
- *
- * Ensures the state entering the decision engine is valid.
- * Does not alter decision rules.
+ * VERIFY STATE
  * ============================================================
  */
 
-function verifyState(state) {
 
-  return {
+function verifyState(
+
+    state
+
+){
+
+
+return {
+
 
     ...state,
 
+
     fx:
-      Number.isFinite(state.fx)
-        ? state.fx
-        : 0,
+
+        Number.isFinite(state.fx)
+
+        ?
+
+        state.fx
+
+        :
+
+        0,
+
+
 
     energy:
-      Number.isFinite(state.energy)
-        ? state.energy
-        : 50,
+
+        Number.isFinite(state.energy)
+
+        ?
+
+        state.energy
+
+        :
+
+        50,
+
+
 
     cyb:
-      Number.isFinite(state.cyb)
-        ? state.cyb
-        : 50,
+
+        Number.isFinite(state.cyb)
+
+        ?
+
+        state.cyb
+
+        :
+
+        50,
+
+
 
     inf:
-      Number.isFinite(state.inf)
-        ? state.inf
-        : 0,
+
+        Number.isFinite(state.inf)
+
+        ?
+
+        state.inf
+
+        :
+
+        0,
+
+
 
     dc:
-      Number.isFinite(state.dc)
-        ? state.dc
-        : 0
 
-  };
+        Number.isFinite(state.dc)
+
+        ?
+
+        state.dc
+
+        :
+
+        0
+
+
+};
+
 
 }
 
 
+
+
+
+
+
 /**
  * ============================================================
- * SPD V13 — DECISION CORE
+ * SPD v13.1 DECISION CORE
  * ============================================================
  *
- * Priority order:
+ * Priority:
  *
- * 1. CRITICAL / HIGH RISK
- * 2. ENERGY PROTECTION
- * 3. FX STABILITY
- * 4. SCENARIO RESPONSE
- * 5. NORMAL OPERATION
+ * 1. Critical Safety Override
+ * 2. Domain Decision Bridge
+ * 3. High Risk Stabilization
+ * 4. Energy Protection
+ * 5. FX Stability
+ * 6. Scenario Response
+ * 7. Normal Operation
  *
- * Higher-priority safety conditions always take precedence.
  * ============================================================
  */
 
-function decide(state) {
 
-  const {
-    risk,
-    energy,
-    fx,
-    scenario
-  } = state;
+function decide(
+
+state
+
+){
 
 
-  // ==========================================================
-  // PRIORITY 1 — CRITICAL SAFETY OVERRIDE
-  // ==========================================================
+const {
 
-  if (
-    risk === "CRITICAL" ||
+
+risk,
+
+
+energy,
+
+
+fx,
+
+
+scenario,
+
+
+domainDecision
+
+
+} = state;
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 1
+ * CRITICAL SAFETY OVERRIDE
+ * ============================================================
+ */
+
+
+if(
+
+    risk === "CRITICAL"
+
+    ||
+
     risk === "HIGH RISK"
-  ) {
 
-    return "ACTIVATE STABILIZATION MODE";
-
-  }
+){
 
 
-  // ==========================================================
-  // PRIORITY 2 — ENERGY PROTECTION
-  // ==========================================================
+return "ACTIVATE STABILIZATION MODE";
 
-  if (
-    energy === "LOW ENERGY MODE" ||
-    energy?.level === "LOW" ||
-    energy?.status === "LOW ENERGY MODE" ||
-    energy?.value < 30
-  ) {
-
-    return "REDUCE SYSTEM LOAD";
-
-  }
-
-
-  // ==========================================================
-  // PRIORITY 3 — FX STABILITY
-  // ==========================================================
-
-  if (
-    fx?.status === "UNSTABLE" ||
-    (
-      typeof fx === "string" &&
-      fx.includes("STABILIZATION")
-    )
-  ) {
-
-    return "FX CORRECTION ACTIVE";
-
-  }
-
-
-  // ==========================================================
-  // PRIORITY 4 — SCENARIO RESPONSE
-  // ==========================================================
-
-  if (
-    scenario?.type === "FX_SHOCK"
-  ) {
-
-    return "FX SHOCK RESPONSE ACTIVE";
-
-  }
-
-
-  if (
-    scenario?.type === "ENERGY_CRISIS"
-  ) {
-
-    return "ENERGY RESERVE MODE ACTIVE";
-
-  }
-
-
-  if (
-    scenario?.type === "CYBER_ATTACK"
-  ) {
-
-    return "CYBER DEFENSE MODE ACTIVE";
-
-  }
-
-
-  if (
-    scenario?.type === "INFRA_FAILURE"
-  ) {
-
-    return "INFRASTRUCTURE RECOVERY MODE";
-
-  }
-
-
-  // ==========================================================
-  // PRIORITY 5 — NORMAL OPERATION
-  // ==========================================================
-
-  return "SYSTEM STABLE";
 
 }
 
 
+
+
+
+
 /**
  * ============================================================
- * ACTION EXECUTION LAYER
- * ============================================================
- *
- * Converts the deterministic decision into an explicit
- * operational action state for cockpit and audit layers.
+ * PRIORITY 2
+ * DOMAIN DECISION BRIDGE
  * ============================================================
  */
 
-function executeAction(decision) {
 
-  switch (decision) {
-
-    case "ACTIVATE STABILIZATION MODE":
-
-      return {
-
-        mode:
-          "STABILIZATION",
-
-        command:
-          "STABILIZE SYSTEM",
-
-        status:
-          "ACTIVE"
-
-      };
+if(
 
 
-    case "REDUCE SYSTEM LOAD":
+    domainDecision
 
-      return {
+    &&
 
-        mode:
-          "ENERGY PROTECTION",
+    domainDecision.decision
 
-        command:
-          "REDUCE SYSTEM LOAD",
+    &&
 
-        status:
-          "ACTIVE"
-
-      };
+    domainDecision.goldenRuleAuthority === true
 
 
-    case "FX CORRECTION ACTIVE":
-
-      return {
-
-        mode:
-          "FX CORRECTION",
-
-        command:
-          "ACTIVATE FX CORRECTION",
-
-        status:
-          "ACTIVE"
-
-      };
+){
 
 
-    case "FX SHOCK RESPONSE ACTIVE":
-
-      return {
-
-        mode:
-          "SCENARIO RESPONSE",
-
-        command:
-          "ACTIVATE FX SHOCK RESPONSE",
-
-        status:
-          "ACTIVE"
-
-      };
+return domainDecision.decision;
 
 
-    case "ENERGY RESERVE MODE ACTIVE":
-
-      return {
-
-        mode:
-          "ENERGY RESERVE",
-
-        command:
-          "PRESERVE ENERGY RESERVES",
-
-        status:
-          "ACTIVE"
-
-      };
+}
 
 
-    case "CYBER DEFENSE MODE ACTIVE":
-
-      return {
-
-        mode:
-          "CYBER DEFENSE",
-
-        command:
-          "PROTECT SYSTEM INTEGRITY",
-
-        status:
-          "ACTIVE"
-
-      };
 
 
-    case "INFRASTRUCTURE RECOVERY MODE":
-
-      return {
-
-        mode:
-          "INFRASTRUCTURE RECOVERY",
-
-        command:
-          "INITIATE RECOVERY RESPONSE",
-
-        status:
-          "ACTIVE"
-
-      };
 
 
-    default:
+/**
+ * ============================================================
+ * PRIORITY 3
+ * ENERGY PROTECTION
+ * ============================================================
+ */
 
-      return {
 
-        mode:
-          "NORMAL",
+if(
 
-        command:
-          "MONITOR SYSTEM",
 
-        status:
-          "STABLE"
+    energy === "LOW ENERGY MODE"
 
-      };
+    ||
 
-  }
+    energy?.level === "LOW"
+
+    ||
+
+    energy?.status === "LOW ENERGY MODE"
+
+    ||
+
+    energy?.value < 30
+
+
+){
+
+
+return "REDUCE SYSTEM LOAD";
+
+
+}
+
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 4
+ * FX STABILITY
+ * ============================================================
+ */
+
+
+if(
+
+
+    fx?.status === "UNSTABLE"
+
+
+){
+
+
+return "FX CORRECTION ACTIVE";
+
+
+}
+
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 5
+ * SCENARIO RESPONSE
+ * ============================================================
+ */
+
+
+if(
+
+scenario?.type === "FX_SHOCK"
+
+)
+
+return "FX SHOCK RESPONSE ACTIVE";
+
+
+
+if(
+
+scenario?.type === "ENERGY_CRISIS"
+
+)
+
+return "ENERGY RESERVE MODE ACTIVE";
+
+
+
+if(
+
+scenario?.type === "CYBER_ATTACK"
+
+)
+
+return "CYBER DEFENSE MODE ACTIVE";
+
+
+
+if(
+
+scenario?.type === "INFRA_FAILURE"
+
+)
+
+return "INFRASTRUCTURE RECOVERY MODE";
+
+
+
+
+
+return "SYSTEM STABLE";
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * ACTION EXECUTION
+ * ============================================================
+ */
+
+
+function executeAction(
+
+decision
+
+){
+
+
+switch(decision){
+
+
+
+case "ACTIVATE STABILIZATION MODE":
+
+
+return {
+
+
+mode:"STABILIZATION",
+
+command:"STABILIZE SYSTEM",
+
+status:"ACTIVE"
+
+
+};
+
+
+
+
+
+case "ACTIVATE BHR REMEDIATION MODE":
+
+
+return {
+
+
+mode:"BHR REMEDIATION",
+
+command:"EXECUTE HUMAN RIGHTS REMEDIATION",
+
+status:"ACTIVE"
+
+
+};
+
+
+
+
+
+case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
+
+
+return {
+
+
+mode:"BHR PREVENTION",
+
+command:"APPLY HUMAN RIGHTS PREVENTIVE CONTROLS",
+
+status:"ACTIVE"
+
+
+};
+
+
+
+
+
+case "FINANCIAL_MONITORING":
+
+
+return {
+
+
+mode:"FINANCIAL MONITORING",
+
+command:"MONITOR FINANCIAL RESILIENCE",
+
+status:"ACTIVE"
+
+
+};
+
+
+
+
+
+case "REDUCE SYSTEM LOAD":
+
+
+return {
+
+
+mode:"ENERGY PROTECTION",
+
+command:"REDUCE SYSTEM LOAD",
+
+status:"ACTIVE"
+
+
+};
+
+
+
+
+
+default:
+
+
+return {
+
+
+mode:"NORMAL",
+
+command:"MONITOR SYSTEM",
+
+status:"STABLE"
+
+
+};
+
+
+}
+
 
 }
