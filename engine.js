@@ -6,23 +6,16 @@
 //
 // DATA → ALGORITHMS → COMPUTE
 //
-// Golden Rule:
 // OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 //
-// Engine Authority:
-// Captain AI Lena Decision Core
+// Backend decision authority:
+// CAPTAIN AI LENA DECISION CORE
 //
-// Analytics:
-// Advisory only
-// Does not modify decisions
-//
-// Domain Integration:
-// FIN / BHR / DC / CYB / INF gateway
-// Provides verified domain intelligence
 // ============================================================
 
 
-import { captainAILena } from "./captainAILena.js";
+import { captainAILena } 
+from "./captainAILena.js";
 
 import { GOLDEN_RATIO } 
 from "./constants/math.constants.js";
@@ -30,7 +23,13 @@ from "./constants/math.constants.js";
 import { runAnalytics } 
 from "./analytics/index.js";
 
-import { executeDomainRule } 
+import { executeMemoryCore }
+from "./memoryCore.js";
+
+import { createAuditRecord }
+from "./auditRecord.js";
+
+import { executeDomainIntegration }
 from "./domainIntegration.js";
 
 
@@ -40,248 +39,305 @@ from "./domainIntegration.js";
 
 export const GOLDEN_RULE_STAGES = [
 
-  "OBSERVE",
-  "VERIFY",
-  "ASSESS",
-  "DECIDE",
-  "ACT",
-  "UPDATE"
+"OBSERVE",
+"VERIFY",
+"ASSESS",
+"DECIDE",
+"ACT",
+"UPDATE"
 
 ];
 
 
 // ============================================================
-// SPD EXECUTION ENGINE
+// SPD v13.1 EXECUTION ENGINE
 // ============================================================
 
-export function runEngine(state = {}) {
 
+export function runEngine(state = {}){
 
-  // ==========================================================
-  // INPUT VALIDATION
-  // ==========================================================
 
-  if (
-    !state ||
-    typeof state !== "object"
-  ) {
+// ============================================================
+// OBSERVE
+// ============================================================
 
-    throw new Error(
-      "SPD ENGINE ERROR: Invalid system state"
-    );
+const inputState = {
 
-  }
+...state
 
+};
 
 
-  // ==========================================================
-  // OBSERVE
-  //
-  // Preserve original system data.
-  // ==========================================================
 
-  const inputState = {
+// ============================================================
+// VERIFY
+// ============================================================
 
-    ...state
 
-  };
+const verifiedState = {
 
 
+fx:Number(state.fx ?? 0),
 
-  // ==========================================================
-  // VERIFY
-  //
-  // Deterministic normalization layer.
-  // Original input unchanged.
-  // ==========================================================
+energy:Number(state.energy ?? 50),
 
-  const normalizedState = {
+cyb:Number(state.cyb ?? 50),
 
+inf:Number(state.inf ?? 0),
 
-    ...state,
+dc:Number(state.dc ?? 0),
 
+event:
+state.event ?? "NORMAL",
 
-    energy:
+scenario:
+state.scenario ?? "NORMAL",
 
-      Number(state.energy ?? 50)
-      / GOLDEN_RATIO,
+mode:
+state.mode ?? "AUTONOMOUS",
 
+intensity:
+state.intensity ?? 0,
 
-    fx:
 
-      Number(state.fx ?? 0)
-      / GOLDEN_RATIO,
+time:
+new Date().toISOString()
 
+};
 
-    cyb:
 
-      Number(state.cyb ?? 50),
 
 
-    inf:
+// ============================================================
+// DOMAIN INTEGRATION
+// ============================================================
 
-      Number(state.inf ?? 0),
 
+const domainDecision =
 
-    dc:
+executeDomainIntegration(
 
-      Number(state.dc ?? 0),
+verifiedState
 
+);
 
-    event:
 
-      state.event ?? "NORMAL",
 
 
-    scenario:
 
-      state.scenario ?? "NORMAL",
+// ============================================================
+// ASSESS
+// ============================================================
 
 
-    mode:
+const analytics =
 
-      state.mode ?? "AUTONOMOUS"
+runAnalytics(
 
+{
 
-  };
+...verifiedState,
 
+domainDecision
 
+}
 
-  // ==========================================================
-  // ASSESS
-  //
-  // DOMAIN INTEGRATION LAYER
-  //
-  // FIN / BHR / DC / CYB / INF
-  //
-  // Advisory intelligence.
-  // Does not override Captain AI Lena.
-  // ==========================================================
+);
 
-  const domainAssessment =
 
-    executeDomainRule(
-      normalizedState
-    );
 
 
 
-  // ==========================================================
-  // ANALYTICS LAYER
-  //
-  // Advisory only.
-  // ==========================================================
+// ============================================================
+// DECIDE
+// ============================================================
 
-  const analytics =
 
-    runAnalytics(
-      normalizedState
-    );
+const decision =
 
+captainAILena(
 
+{
 
-  // ==========================================================
-  // DECIDE
-  //
-  // Captain AI Lena remains authority.
-  // ==========================================================
+...verifiedState,
 
-  const result =
+domainDecision,
 
-    captainAILena({
+analytics
 
-      ...normalizedState,
+}
 
-      domainAssessment
+);
 
-    });
 
 
 
-  // ==========================================================
-  // ACT + UPDATE
-  //
-  // Complete execution record.
-  // ==========================================================
 
-  return {
+// ============================================================
+// ACT
+// ============================================================
 
 
-    timestamp:
+const action = {
 
-      new Date().toISOString(),
 
+decision:
 
+decision.decision 
+||
+decision,
 
-    engine:
 
-      "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
+status:
 
+"ACTIVE"
 
 
-    agent:
+};
 
-      "CAPTAIN AI LENA",
 
 
 
-    pipeline:
 
-      GOLDEN_RULE_STAGES,
+// ============================================================
+// UPDATE MEMORY CORE
+// ============================================================
 
 
+const memory =
 
-    input:
+executeMemoryCore({
 
-      inputState,
+scenario:
+verifiedState.scenario,
 
+decision,
 
+action
 
-    normalizedInput:
+});
 
-      normalizedState,
 
 
 
-    domainAssessment,
 
+// ============================================================
+// AUDIT RECORD
+// ============================================================
 
 
-    analytics,
+const audit =
 
+createAuditRecord({
 
+inputState,
 
-    output:
+verifiedState,
 
-      result,
+domainDecision,
 
+decision,
 
+action,
 
-    constants: {
+memory
 
+});
 
-      GOLDEN_RATIO,
 
 
-      GOLDEN_RULE_STAGES
 
 
-    },
 
+// ============================================================
+// FINAL OUTPUT
+// ============================================================
 
 
-    authority:
+return {
 
-      "CAPTAIN AI LENA DECISION CORE",
 
+timestamp:
 
+new Date().toISOString(),
 
-    status:
 
-      "EXECUTED"
+engine:
 
+"SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
 
-  };
+
+agent:
+
+"CAPTAIN AI LENA",
+
+
+
+pipeline:
+
+GOLDEN_RULE_STAGES,
+
+
+
+input:
+
+inputState,
+
+
+
+verifiedState,
+
+
+
+domainDecision,
+
+
+
+analytics,
+
+
+
+decision,
+
+
+
+action,
+
+
+
+memory,
+
+
+
+audit,
+
+
+
+constants:{
+
+
+PHI:GOLDEN_RATIO,
+
+
+GOLDEN_RULE_STAGES
+
+
+},
+
+
+
+authority:
+
+"CAPTAIN AI LENA DECISION CORE",
+
+
+
+status:
+
+"EXECUTED"
+
+
+};
 
 
 }
