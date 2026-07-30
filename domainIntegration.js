@@ -14,6 +14,9 @@
  * Domain Rule Engines
  *    ↓
  * Golden Rule Engine
+ *    ↓
+ * Captain AI Lena Decision Core
+ *
  *
  * Active Domains:
  *
@@ -30,6 +33,13 @@ import {
     getBHRRuleDefinition
 
 } from "./BHR/bhr-rule-engine.js";
+
+
+import {
+
+    getBHRRuleFromScenario
+
+} from "./BHR/bhr-scenario-rule-bridge.js";
 
 
 import {
@@ -111,59 +121,6 @@ const DOMAIN_MAP = {
 
 /**
  * ============================================================
- * DOMAIN RULE MAP
- * ============================================================
- */
-
-const BHR_RULE_MAP = {
-
-
-    HUMAN_RIGHTS_DUE_DILIGENCE:
-        "BHR-001",
-
-
-    FORCED_LABOUR:
-        "BHR-002",
-
-
-    CHILD_LABOUR:
-        "BHR-003",
-
-
-    DISCRIMINATION:
-        "BHR-004",
-
-
-    OCCUPATIONAL_HEALTH_AND_SAFETY:
-        "BHR-005",
-
-
-    MODERN_SLAVERY:
-        "BHR-006",
-
-
-    COMMUNITY_IMPACT:
-        "BHR-007",
-
-
-    INDIGENOUS_RIGHTS:
-        "BHR-008",
-
-
-    SUPPLY_CHAIN_RISK:
-        "BHR-009",
-
-
-    GRIEVANCE_MECHANISM:
-        "BHR-010"
-
-
-};
-
-
-
-/**
- * ============================================================
  * GET DOMAIN
  * ============================================================
  */
@@ -176,7 +133,6 @@ export function getScenarioDomain(
 
 
     return DOMAIN_MAP[scenario] || "CORE";
-
 
 }
 
@@ -199,7 +155,11 @@ function runBHRDomain(
 
     const rule =
 
-        BHR_RULE_MAP[scenario];
+        getBHRRuleFromScenario(
+
+            scenario
+
+        );
 
 
 
@@ -211,10 +171,13 @@ function runBHRDomain(
             "BHR",
 
 
+
         scenario,
 
 
+
         rule,
+
 
 
         ruleDefinition:
@@ -224,6 +187,7 @@ function runBHRDomain(
                 rule
 
             ),
+
 
 
         evaluation:
@@ -241,9 +205,11 @@ function runBHRDomain(
             }),
 
 
+
         status:
 
             "BHR_RULE_EXECUTED",
+
 
 
         timestamp:
@@ -254,6 +220,34 @@ function runBHRDomain(
 
 
     };
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * FIN DOMAIN EXECUTION
+ * ============================================================
+ */
+
+function runFINDomain(
+
+    scenario,
+
+    state = {}
+
+) {
+
+
+    return runFINRuleEngine(
+
+        scenario,
+
+        state
+
+    );
 
 
 }
@@ -304,7 +298,7 @@ export function runDomainIntegration(
         case "FIN":
 
 
-            return runFINRuleEngine(
+            return runFINDomain(
 
                 scenario,
 
@@ -325,17 +319,21 @@ export function runDomainIntegration(
                     "CORE",
 
 
+
                 status:
 
                     "NO_DOMAIN_RULE",
 
 
+
                 scenario,
+
 
 
                 message:
 
                     "Scenario handled by core Golden Rule Engine.",
+
 
 
                 timestamp:
@@ -372,9 +370,11 @@ export function validateDomainIntegration() {
             "SPD v13.1 Domain Integration Layer",
 
 
+
         status:
 
             "READY",
+
 
 
         architecture:
@@ -394,6 +394,7 @@ export function validateDomainIntegration() {
             ],
 
 
+
         activeDomains:
 
             [
@@ -405,6 +406,7 @@ export function validateDomainIntegration() {
             ],
 
 
+
         registeredScenarios:
 
             Object.keys(
@@ -412,6 +414,64 @@ export function validateDomainIntegration() {
                 DOMAIN_MAP
 
             ),
+
+
+
+        timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+    };
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * DOMAIN STATUS
+ * ============================================================
+ */
+
+export function getDomainStatus(
+
+) {
+
+
+    return {
+
+
+        FIN:
+
+        {
+
+            status:
+                "ACTIVE"
+
+        },
+
+
+        BHR:
+
+        {
+
+            status:
+                "ACTIVE"
+
+        },
+
+
+        totalScenarios:
+
+            Object.keys(
+
+                DOMAIN_MAP
+
+            ).length,
 
 
         timestamp:
