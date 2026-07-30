@@ -18,6 +18,7 @@ function detectCascade(state) {
             path: ["CYB", "DC"],
             risk: "POTENTIAL CASCADE"
         });
+        
     }
 
     if (state.energy <= 30 && state.dc >= 40) {
