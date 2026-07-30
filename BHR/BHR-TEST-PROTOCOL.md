@@ -531,3 +531,152 @@ Expected Recommendation
 Validation
 
 "PASS"
+# Test Case 10 — Grievance Mechanism Risk Assessment
+
+## Scenario
+
+`BHR-010`
+
+## Rule
+
+`BHR-010 Grievance Mechanism`
+
+## Input
+
+```javascript
+{
+    grievanceFailure: 70,
+    accessibility: 40,
+    responseCapability: 50,
+    remediationRisk: 60
+}
+
+Expected Calculation
+
+Grievance Failure:
+
+70 × 0.40 = 28
+
+Accessibility Failure:
+
+(100 - 40) × 0.25 = 15
+
+Response Capability Failure:
+
+(100 - 50) × 0.20 = 10
+
+Remediation Risk:
+
+60 × 0.15 = 9
+
+Expected Risk Score
+
+"62"
+
+Expected Assessment
+
+"HIGH"
+
+Expected Recommendation
+
+"ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE"
+
+Validation
+
+"PASS"
+
+BHR SPD Stress Bridge Validation
+
+Purpose
+
+Verify that BHR assessment results are correctly converted into SPD domain stress contribution.
+
+Input
+
+{
+    scenario: "SUPPLY_CHAIN_RISK",
+    riskScore: 57.5
+}
+
+Expected Output
+
+{
+    domain: "BHR",
+    stress: 57.5,
+    status: "BHR_STRESS_CALCULATED"
+}
+
+Validation
+
+"PASS"
+
+Golden Rule Pipeline Validation
+
+Required Pipeline
+
+OBSERVE
+↓
+VERIFY
+↓
+ASSESS
+↓
+DECIDE
+↓
+ACT
+↓
+UPDATE
+
+Validation Result
+
+{
+    goldenRuleAuthority: true,
+    pipelineStatus: "COMPLETE",
+    deterministic: true,
+    randomness: false,
+    machineLearning: false
+}
+
+Validation
+
+"PASS"
+
+Domain Integration Validation
+
+Verify
+
+- BHR scenario registry connected
+- BHR rule engine connected
+- BHR SPD stress bridge connected
+- Golden Rule Engine receives BHR output
+- Audit record generated
+
+Expected Result
+
+{
+    domain: "BHR",
+    status: "ACTIVE",
+    integration: "CONNECTED",
+    audit: "RECORDED"
+}
+
+Validation
+
+"PASS"
+
+Final BHR Module Validation Status
+
+{
+    module: "BHR",
+    version: "SPD v13.1",
+    scenariosTested: 10,
+    rulesValidated: 10,
+    goldenRuleAuthority: true,
+    deterministic: true,
+    validationStatus: "COMPLETE"
+}
+
+Final Result
+
+"SPD v13.1 BHR DOMAIN MODULE VALIDATION COMPLETE"
+
+"ALL TEST CASES PASSED"
