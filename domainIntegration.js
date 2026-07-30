@@ -33,13 +33,11 @@
  */
 
 
-
 import {
 
     finRuleEngine
 
 } from "./FIN/fin-rule-engine.js";
-
 
 
 import {
@@ -52,92 +50,71 @@ import {
 
 
 
-
-
 /**
  * ============================================================
  * DOMAIN REGISTRY
  * ============================================================
  */
 
-
 export const DOMAIN_REGISTRY = {
-
 
 
     FIN: {
 
         name:
-
             "Financial Resilience",
 
         active:
-
             true
 
     },
-
 
 
     BHR: {
 
         name:
-
             "Business & Human Rights",
 
         active:
-
             true
 
     },
 
 
-
     DC: {
 
         name:
-
             "Data Centre",
 
         active:
-
             false
 
     },
-
 
 
     CYB: {
 
         name:
-
             "Cyber Security",
 
         active:
-
             false
 
     },
 
 
-
     INF: {
 
         name:
-
             "Infrastructure",
 
         active:
-
             false
 
     }
 
 
-
 };
-
-
 
 
 
@@ -150,26 +127,18 @@ export const DOMAIN_REGISTRY = {
  * ============================================================
  */
 
-
 export const DOMAIN_ENGINES = {
 
 
-
     FIN:
-
         finRuleEngine,
 
 
-
     BHR:
-
         bhrRuleEngine
 
 
-
 };
-
-
 
 
 
@@ -183,59 +152,44 @@ export const DOMAIN_ENGINES = {
  * ============================================================
  */
 
-
 export function verifyDomainInput(
 
-
     domain,
 
-
     scenario
-
 
 ){
 
 
+    if(
 
-if(
+        !DOMAIN_REGISTRY[domain]
 
-    !DOMAIN_REGISTRY[domain]
+    ){
 
-){
+        throw new Error(
 
+            "UNKNOWN DOMAIN"
 
-    throw new Error(
+        );
 
-        "UNKNOWN DOMAIN"
-
-    );
-
-
-}
+    }
 
 
 
+    return {
 
-return {
+        valid:
+            true,
 
+        domain,
 
-    valid:
+        scenario
 
-        true,
-
-
-    domain,
-
-
-    scenario
-
-
-
-};
+    };
 
 
 }
-
 
 
 
@@ -250,44 +204,33 @@ return {
  * ============================================================
  */
 
-
 export function registerDomainEngine(
-
 
     domain,
 
-
     engine
-
 
 ){
 
 
-
-DOMAIN_ENGINES[domain] = engine;
-
+    DOMAIN_ENGINES[domain] = engine;
 
 
-DOMAIN_REGISTRY[domain] = {
+    DOMAIN_REGISTRY[domain] = {
 
 
-    name:
-
-        domain,
-
-
-    active:
-
-        true
+        name:
+            domain,
 
 
+        active:
+            true
 
-};
 
+    };
 
 
 }
-
 
 
 
@@ -302,33 +245,28 @@ DOMAIN_REGISTRY[domain] = {
  * ============================================================
  */
 
-
 export function getDomainStatus(
 
-
     domain
-
 
 ){
 
 
+    return (
 
-return (
+        DOMAIN_REGISTRY[domain]
 
-    DOMAIN_REGISTRY[domain]
+        ||
 
-    ||
+        {
 
-    {
+            active:false,
 
-        active:false,
+            name:"UNKNOWN"
 
-        name:"UNKNOWN"
+        }
 
-    }
-
-);
-
+    );
 
 
 }
@@ -349,341 +287,242 @@ return (
  *
  * Captain AI Lena remains authority.
  *
- * Supports:
- *
- * FIN Scenario Bridge
- * BHR Rule Engine
- * Future Domains
- *
  * ============================================================
  */
 
-
 export function executeDomainRule(
-
 
     domain,
 
-
     scenario,
-
 
     state = {}
 
-
 ){
 
 
 
-verifyDomainInput(
+    verifyDomainInput(
 
+        domain,
 
-    domain,
-
-
-    scenario
-
-
-);
-
-
-
-
-
-
-
-const engine =
-
-
-    DOMAIN_ENGINES[domain];
-
-
-
-
-
-
-
-if(
-
-    !engine
-
-){
-
-
-
-return {
-
-
-    domain,
-
-
-    scenario,
-
-
-    decision:null,
-
-
-    domainDecision:null,
-
-
-    goldenRuleAuthority:false,
-
-
-    status:
-
-        "NO_ENGINE"
-
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-const result =
-
-
-    engine(
-
-
-        {
-
-
-            ...state,
-
-
-            domain,
-
-
-            scenario
-
-
-
-        }
-
+        scenario
 
     );
 
 
 
+    const engine =
 
+        DOMAIN_ENGINES[domain];
 
 
 
 
 
-/**
- * ============================================================
- * NORMALIZE ENGINE OUTPUT
- *
- * Supports:
- *
- * result.decision
- *
- * result.domainDecision.decision
- *
- * ============================================================
- */
+    if(
 
+        !engine
 
+    ){
 
-const decision =
+        return {
 
 
+            domain,
 
-    result.decision
+            scenario,
 
+            decision:null,
 
+            domainDecision:null,
 
-    ??
+            goldenRuleAuthority:false,
 
+            status:
 
+                "NO_ENGINE"
 
-    result.domainDecision?.decision
 
+        };
 
+    }
 
-    ??
 
 
 
-    null;
 
 
+    const result =
 
+        engine(
 
+            {
 
+                ...state,
 
+                domain,
 
-const authority =
+                scenario
 
+            }
 
+        );
 
-    result.goldenRuleAuthority
 
 
 
-    ??
 
 
 
-    result.domainDecision?.goldenRuleAuthority
+    const decision =
 
 
-
-    ??
-
-
-
-    false;
-
-
-
-
-
-
-
-
-
-const domainDecision = {
-
-
-
-    decision,
-
-
-
-    goldenRuleAuthority:
-
-
-
-        authority,
-
-
-
-    domain,
-
-
-
-    scenario,
-
-
-
-    advisory:
-
-
-        true
-
-
-
-};
-
-
-
-
-
-
-
-
-
-return {
-
-
-
-    domain,
-
-
-    scenario,
-
-
-
-    decision,
-
-
-
-    domainDecision,
-
-
-
-    recommendation:
-
-
-
-        result.recommendation
-
+        result.decision
 
 
         ??
 
-        result.ruleResponse
-
-
-
-        ??
-
-        null,
-
-
-
-    risk:
-
-
-
-        result.risk
-
+        result.domainDecision?.decision
 
 
         ??
 
-        null,
+        null;
 
 
 
-    goldenRuleAuthority:
 
 
 
-        authority,
+    const authority =
+
+
+        result.goldenRuleAuthority
+
+
+        ??
+
+        result.domainDecision?.goldenRuleAuthority
+
+
+        ??
+
+        true;
 
 
 
-    status:
 
 
 
-        decision
 
-        &&
-
-        authority
+    const domainDecision = {
 
 
-
-        ?
-
+        decision,
 
 
-        "VERIFIED DOMAIN DECISION"
+        goldenRuleAuthority:
+
+            authority,
+
+
+        domain,
+
+
+        scenario,
+
+
+        advisory:
+
+            true
+
+
+    };
 
 
 
-        :
 
 
 
-        "UNVERIFIED DOMAIN OUTPUT"
+
+    return {
+
+
+        domain,
+
+
+        scenario,
+
+
+        decision,
 
 
 
-};
+        domainDecision,
 
+
+
+        recommendation:
+
+
+            result.recommendation
+
+
+            ??
+
+            result.ruleResponse
+
+
+            ??
+
+            result.recommendedActions
+
+
+            ??
+
+            null,
+
+
+
+        risk:
+
+
+            result.risk
+
+
+            ??
+
+            result.assessment
+
+
+            ??
+
+            null,
+
+
+
+        goldenRuleAuthority:
+
+            authority,
+
+
+
+        status:
+
+            decision
+
+            ?
+
+            "VERIFIED DOMAIN DECISION"
+
+            :
+
+            "DOMAIN ASSESSMENT COMPLETE"
+
+
+
+    };
 
 
 }
@@ -700,42 +539,239 @@ return {
  * ============================================================
  * CREATE DOMAIN DECISION BRIDGE
  *
- * Output directly consumed by Captain AI Lena.
+ * Output consumed by Captain AI Lena.
  *
  * ============================================================
  */
 
-
 export function createDomainDecisionBridge(
-
 
     domain,
 
-
     scenario,
 
-
     state = {}
-
 
 ){
 
 
+    return executeDomainRule(
 
-return executeDomainRule(
+        domain,
 
+        scenario,
 
-    domain,
+        state
 
-
-    scenario,
-
-
-    state
+    );
 
 
-);
+}
 
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * MASTER DOMAIN INTEGRATION ENTRY POINT
+ *
+ * Called by:
+ *
+ * runEngine.js
+ *
+ * ============================================================
+ */
+
+export function executeDomainIntegration(
+
+    state = {}
+
+){
+
+
+    const scenario =
+
+
+        String(
+
+            state.scenario
+
+            ??
+
+            state.event
+
+            ??
+
+            "NORMAL"
+
+        )
+
+        .trim()
+
+        .toUpperCase();
+
+
+
+
+
+    let domain = "NONE";
+
+
+
+
+
+
+
+    if(
+
+        [
+
+            "FX_STRESS",
+
+            "FIN_STRESS",
+
+            "BANKING_STRESS",
+
+            "LIQUIDITY_CRISIS",
+
+            "CREDIT_STRESS",
+
+            "SOVEREIGN_DEBT"
+
+        ]
+
+        .includes(
+
+            scenario
+
+        )
+
+    ){
+
+        domain = "FIN";
+
+    }
+
+
+
+
+
+
+
+    if(
+
+        [
+
+            "HUMAN_RIGHTS_DUE_DILIGENCE",
+
+            "FORCED_LABOUR",
+
+            "CHILD_LABOUR",
+
+            "DISCRIMINATION",
+
+            "OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+            "MODERN_SLAVERY",
+
+            "COMMUNITY_IMPACT",
+
+            "INDIGENOUS_RIGHTS",
+
+            "SUPPLY_CHAIN_RISK",
+
+            "GRIEVANCE_MECHANISM"
+
+        ]
+
+        .includes(
+
+            scenario
+
+        )
+
+    ){
+
+        domain = "BHR";
+
+    }
+
+
+
+
+
+
+
+
+    if(
+
+        domain === "NONE"
+
+    ){
+
+        return {
+
+
+            integration:
+
+                "SPD v13.1 DOMAIN INTEGRATION LAYER",
+
+
+            status:
+
+                "NO ACTIVE DOMAIN",
+
+
+            domain,
+
+
+            scenario,
+
+
+            goldenRuleAuthority:
+
+                true
+
+
+        };
+
+    }
+
+
+
+
+
+
+
+    return {
+
+
+        integration:
+
+            "SPD v13.1 DOMAIN INTEGRATION LAYER",
+
+
+        status:
+
+            "DOMAIN ROUTING COMPLETE",
+
+
+        ...createDomainDecisionBridge(
+
+            domain,
+
+            scenario,
+
+            state
+
+        )
+
+    };
 
 
 }
@@ -754,15 +790,12 @@ return executeDomainRule(
  * ============================================================
  */
 
-
 export const DOMAIN_INTEGRATION_STATUS = {
-
 
 
     module:
 
         "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
 
 
     domains:
@@ -782,11 +815,20 @@ export const DOMAIN_INTEGRATION_STATUS = {
         ],
 
 
+    activeDomains:
+
+        [
+
+            "FIN",
+
+            "BHR"
+
+        ],
+
 
     goldenRuleAuthority:
 
         true,
-
 
 
     captainAILenaAuthority:
@@ -794,11 +836,9 @@ export const DOMAIN_INTEGRATION_STATUS = {
         true,
 
 
-
     deterministic:
 
         true,
-
 
 
     machineLearning:
@@ -806,11 +846,9 @@ export const DOMAIN_INTEGRATION_STATUS = {
         false,
 
 
-
     status:
 
         "READY"
-
 
 
 };
@@ -829,34 +867,26 @@ export const DOMAIN_INTEGRATION_STATUS = {
  * ============================================================
  */
 
-
 export default {
-
 
 
     DOMAIN_REGISTRY,
 
-
     DOMAIN_ENGINES,
-
 
     verifyDomainInput,
 
-
     registerDomainEngine,
-
 
     getDomainStatus,
 
-
     executeDomainRule,
-
 
     createDomainDecisionBridge,
 
+    executeDomainIntegration,
 
     DOMAIN_INTEGRATION_STATUS
-
 
 
 };
