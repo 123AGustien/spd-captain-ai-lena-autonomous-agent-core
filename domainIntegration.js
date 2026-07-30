@@ -14,12 +14,11 @@
  * Domain Rule Engines
  *    ↓
  * Golden Rule Engine
- *    ↓
- * Captain AI Lena Decision Core
- *    ↓
- * Memory Core
- *    ↓
- * Audit Record
+ *
+ * Active Domains:
+ *
+ * FIN  — Financial Resilience
+ * BHR  — Business & Human Rights
  *
  * ============================================================
  */
@@ -27,7 +26,8 @@
 
 import {
 
-    evaluateBHRScenario
+    evaluateBHRScenario,
+    getBHRRuleDefinition
 
 } from "./BHR/bhr-rule-engine.js";
 
@@ -46,48 +46,63 @@ import {
  * ============================================================
  */
 
-export const DOMAIN_MAP = {
+const DOMAIN_MAP = {
 
 
-    // ============================
-    // BUSINESS & HUMAN RIGHTS
-    // ============================
+    // ========================================================
+    // BUSINESS & HUMAN RIGHTS DOMAIN
+    // ========================================================
 
-    HUMAN_RIGHTS_DUE_DILIGENCE:"BHR",
+    HUMAN_RIGHTS_DUE_DILIGENCE:
+        "BHR",
 
-    FORCED_LABOUR:"BHR",
+    FORCED_LABOUR:
+        "BHR",
 
-    CHILD_LABOUR:"BHR",
+    CHILD_LABOUR:
+        "BHR",
 
-    DISCRIMINATION:"BHR",
+    DISCRIMINATION:
+        "BHR",
 
-    OCCUPATIONAL_HEALTH_AND_SAFETY:"BHR",
+    OCCUPATIONAL_HEALTH_AND_SAFETY:
+        "BHR",
 
-    MODERN_SLAVERY:"BHR",
+    MODERN_SLAVERY:
+        "BHR",
 
-    COMMUNITY_IMPACT:"BHR",
+    COMMUNITY_IMPACT:
+        "BHR",
 
-    INDIGENOUS_RIGHTS:"BHR",
+    INDIGENOUS_RIGHTS:
+        "BHR",
 
-    SUPPLY_CHAIN_RISK:"BHR",
+    SUPPLY_CHAIN_RISK:
+        "BHR",
 
-    GRIEVANCE_MECHANISM:"BHR",
+    GRIEVANCE_MECHANISM:
+        "BHR",
 
 
 
-    // ============================
-    // FINANCIAL RESILIENCE
-    // ============================
+    // ========================================================
+    // FINANCIAL RESILIENCE DOMAIN
+    // ========================================================
 
-    FIN_STRESS:"FIN",
+    FIN_STRESS:
+        "FIN",
 
-    BANKING_STRESS:"FIN",
+    BANKING_STRESS:
+        "FIN",
 
-    LIQUIDITY_CRISIS:"FIN",
+    LIQUIDITY_CRISIS:
+        "FIN",
 
-    CREDIT_STRESS:"FIN",
+    CREDIT_STRESS:
+        "FIN",
 
-    SOVEREIGN_DEBT:"FIN"
+    SOVEREIGN_DEBT:
+        "FIN"
 
 
 };
@@ -96,32 +111,51 @@ export const DOMAIN_MAP = {
 
 /**
  * ============================================================
- * BHR RULE MAP
+ * DOMAIN RULE MAP
  * ============================================================
  */
 
 const BHR_RULE_MAP = {
 
 
-    HUMAN_RIGHTS_DUE_DILIGENCE:"BHR-001",
+    HUMAN_RIGHTS_DUE_DILIGENCE:
+        "BHR-001",
 
-    FORCED_LABOUR:"BHR-002",
 
-    CHILD_LABOUR:"BHR-003",
+    FORCED_LABOUR:
+        "BHR-002",
 
-    DISCRIMINATION:"BHR-004",
 
-    OCCUPATIONAL_HEALTH_AND_SAFETY:"BHR-005",
+    CHILD_LABOUR:
+        "BHR-003",
 
-    MODERN_SLAVERY:"BHR-006",
 
-    COMMUNITY_IMPACT:"BHR-007",
+    DISCRIMINATION:
+        "BHR-004",
 
-    INDIGENOUS_RIGHTS:"BHR-008",
 
-    SUPPLY_CHAIN_RISK:"BHR-009",
+    OCCUPATIONAL_HEALTH_AND_SAFETY:
+        "BHR-005",
 
-    GRIEVANCE_MECHANISM:"BHR-010"
+
+    MODERN_SLAVERY:
+        "BHR-006",
+
+
+    COMMUNITY_IMPACT:
+        "BHR-007",
+
+
+    INDIGENOUS_RIGHTS:
+        "BHR-008",
+
+
+    SUPPLY_CHAIN_RISK:
+        "BHR-009",
+
+
+    GRIEVANCE_MECHANISM:
+        "BHR-010"
 
 
 };
@@ -138,9 +172,11 @@ export function getScenarioDomain(
 
     scenario
 
-){
+) {
+
 
     return DOMAIN_MAP[scenario] || "CORE";
+
 
 }
 
@@ -148,7 +184,7 @@ export function getScenarioDomain(
 
 /**
  * ============================================================
- * RUN BHR DOMAIN ENGINE
+ * BHR DOMAIN EXECUTION
  * ============================================================
  */
 
@@ -158,28 +194,12 @@ function runBHRDomain(
 
     state = {}
 
-){
+) {
 
 
     const rule =
 
         BHR_RULE_MAP[scenario];
-
-
-
-    const result =
-
-        evaluateBHRScenario({
-
-            scenario,
-
-            rule,
-
-            intensity:
-
-                state.intensity || 0
-
-        });
 
 
 
@@ -197,29 +217,40 @@ function runBHRDomain(
         rule,
 
 
-        assessment:
+        ruleDefinition:
 
-            result,
+            getBHRRuleDefinition(
+
+                rule
+
+            ),
 
 
-        recommendedActions:
+        evaluation:
 
-            result.recommendedActions || [],
+            evaluateBHRScenario({
 
+                scenario,
 
-        riskFactors:
+                rule,
 
-            result.riskFactors || [],
+                intensity:
+
+                    state.intensity || 0
+
+            }),
 
 
         status:
 
-            "DOMAIN_ASSESSED",
+            "BHR_RULE_EXECUTED",
 
 
-        goldenRuleAuthority:
+        timestamp:
 
-            true
+            new Date()
+
+            .toISOString()
 
 
     };
@@ -231,7 +262,7 @@ function runBHRDomain(
 
 /**
  * ============================================================
- * DOMAIN ROUTER
+ * CENTRAL DOMAIN ROUTER
  * ============================================================
  */
 
@@ -241,7 +272,7 @@ export function runDomainIntegration(
 
     state = {}
 
-){
+) {
 
 
     const domain =
@@ -254,8 +285,7 @@ export function runDomainIntegration(
 
 
 
-    switch(domain){
-
+    switch(domain) {
 
 
         case "BHR":
@@ -305,7 +335,15 @@ export function runDomainIntegration(
 
                 message:
 
-                    "Scenario handled by Core Golden Rule Engine."
+                    "Scenario handled by core Golden Rule Engine.",
+
+
+                timestamp:
+
+                    new Date()
+
+                    .toISOString()
+
 
             };
 
@@ -323,7 +361,7 @@ export function runDomainIntegration(
  * ============================================================
  */
 
-export function validateDomainIntegration(){
+export function validateDomainIntegration() {
 
 
     return {
@@ -339,13 +377,30 @@ export function validateDomainIntegration(){
             "READY",
 
 
+        architecture:
+
+            [
+
+                "COCKPIT",
+
+                "DOMAIN_INTEGRATION",
+
+                "DOMAIN_RULE_ENGINE",
+
+                "GOLDEN_RULE_ENGINE",
+
+                "CAPTAIN_AI_LENA_DECISION"
+
+            ],
+
+
         activeDomains:
 
             [
 
-                "BHR",
+                "FIN",
 
-                "FIN"
+                "BHR"
 
             ],
 
@@ -359,11 +414,6 @@ export function validateDomainIntegration(){
             ),
 
 
-        goldenRuleAuthority:
-
-            true,
-
-
         timestamp:
 
             new Date()
@@ -375,19 +425,3 @@ export function validateDomainIntegration(){
 
 
 }
-
-
-
-export default {
-
-
-    DOMAIN_MAP,
-
-    getScenarioDomain,
-
-    runDomainIntegration,
-
-    validateDomainIntegration
-
-
-};
