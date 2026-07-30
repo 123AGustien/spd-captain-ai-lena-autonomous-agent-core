@@ -1,10 +1,16 @@
 /**
- * SPD v13.1 — BHR Scenario Registry
+ * ============================================================
+ * SPD v13.1 — BUSINESS & HUMAN RIGHTS SCENARIO REGISTRY
+ * ============================================================
  *
- * Purpose:
- * Central registry for Business & Human Rights scenarios.
+ * Captain AI Lena Autonomous Agent Core
  *
- * Architecture:
+ * PURPOSE
+ * -------
+ * Central registry for all BHR scenarios.
+ *
+ * ARCHITECTURE
+ * ------------
  *
  * Cockpit
  *    ↓
@@ -17,118 +23,207 @@
  * Golden Rule Engine
  *    ↓
  * Captain AI Lena Decision Core
+ *    ↓
+ * Memory Core
+ *    ↓
+ * Audit Record
+ *
+ * IMPORTANT
+ * ---------
+ * Registry only defines scenarios and rule mapping.
+ * Assessment logic remains inside BHR Rule Engine.
  *
  * Golden Rule Engine remains authoritative.
+ * ============================================================
  */
+
+
 
 export const BHR_SCENARIOS = {
 
-    HUMAN_RIGHTS_RISK: {
-        id: "BHR-001",
-        name: "Human Rights Risk Assessment",
-        description:
-            "Assessment of potential human rights impacts within operations and supply chains.",
-        domain: "BHR",
-        severity: "MEDIUM",
 
-        inputs: {
-            labourRisk: 0,
-            communityImpact: 0,
-            supplyChainRisk: 0,
-            complianceRisk: 0
-        },
-
-        ruleSet: [
-            "BHR-001"
-        ]
-    },
+    HUMAN_RIGHTS_DUE_DILIGENCE:
+        "HUMAN_RIGHTS_DUE_DILIGENCE",
 
 
-    SUPPLY_CHAIN_HUMAN_RIGHTS: {
-        id: "BHR-002",
-        name: "Supply Chain Human Rights Stress",
-        description:
-            "Assessment of human rights exposure across suppliers and contractors.",
-        domain: "BHR",
-        severity: "MEDIUM",
-
-        inputs: {
-            supplierRisk: 0,
-            labourConditions: 0,
-            monitoringLevel: 100,
-            remediationCapacity: 100
-        },
-
-        ruleSet: [
-            "BHR-002"
-        ]
-    },
+    FORCED_LABOUR:
+        "FORCED_LABOUR",
 
 
-    WORKPLACE_RIGHTS_STRESS: {
-        id: "BHR-003",
-        name: "Workplace Rights Stress",
-        description:
-            "Assessment of workplace rights, safety and employee welfare conditions.",
-        domain: "BHR",
-        severity: "MEDIUM",
-
-        inputs: {
-            safetyRisk: 0,
-            workerProtection: 100,
-            grievanceRisk: 0,
-            complianceRisk: 0
-        },
-
-        ruleSet: [
-            "BHR-003"
-        ]
-    },
+    CHILD_LABOUR:
+        "CHILD_LABOUR",
 
 
-    COMMUNITY_IMPACT: {
-        id: "BHR-004",
-        name: "Community Impact Assessment",
-        description:
-            "Assessment of operational impact on surrounding communities.",
-        domain: "BHR",
-        severity: "MEDIUM",
+    DISCRIMINATION:
+        "DISCRIMINATION",
 
-        inputs: {
-            environmentalImpact: 0,
-            socialImpact: 0,
-            consultationLevel: 100,
-            mitigationCapability: 100
-        },
 
-        ruleSet: [
-            "BHR-004"
-        ]
-    }
+    OCCUPATIONAL_HEALTH_AND_SAFETY:
+        "OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+
+    MODERN_SLAVERY:
+        "MODERN_SLAVERY",
+
+
+    COMMUNITY_IMPACT:
+        "COMMUNITY_IMPACT",
+
+
+    INDIGENOUS_RIGHTS:
+        "INDIGENOUS_RIGHTS",
+
+
+    SUPPLY_CHAIN_RISK:
+        "SUPPLY_CHAIN_RISK",
+
+
+    GRIEVANCE_MECHANISM:
+        "GRIEVANCE_MECHANISM"
 
 };
 
 
+
 /**
- * Retrieve BHR scenario by identifier
+ * ============================================================
+ * BHR SCENARIO TO RULE MAPPING
+ * ============================================================
  */
 
-export function getBHRScenario(scenarioId) {
+export const BHR_SCENARIO_RULE_MAP = {
 
-    return Object.values(BHR_SCENARIOS)
-        .find(
-            scenario => scenario.id === scenarioId
-        );
+
+    HUMAN_RIGHTS_DUE_DILIGENCE:
+        "BHR-001",
+
+
+    FORCED_LABOUR:
+        "BHR-002",
+
+
+    CHILD_LABOUR:
+        "BHR-003",
+
+
+    DISCRIMINATION:
+        "BHR-004",
+
+
+    OCCUPATIONAL_HEALTH_AND_SAFETY:
+        "BHR-005",
+
+
+    MODERN_SLAVERY:
+        "BHR-006",
+
+
+    COMMUNITY_IMPACT:
+        "BHR-007",
+
+
+    INDIGENOUS_RIGHTS:
+        "BHR-008",
+
+
+    SUPPLY_CHAIN_RISK:
+        "BHR-009",
+
+
+    GRIEVANCE_MECHANISM:
+        "BHR-010"
+
+};
+
+
+
+/**
+ * ============================================================
+ * GET RULE FOR SCENARIO
+ * ============================================================
+ */
+
+export function getBHRRule(
+    scenario
+) {
+
+    return (
+
+        BHR_SCENARIO_RULE_MAP[scenario]
+        ??
+        null
+
+    );
 
 }
 
 
+
 /**
- * List available BHR scenarios
+ * ============================================================
+ * GET ALL BHR SCENARIOS
+ * ============================================================
  */
 
-export function listBHRScenarios() {
+export function getAllBHRScenarios() {
 
-    return Object.values(BHR_SCENARIOS);
+    return Object.values(
+        BHR_SCENARIOS
+    );
 
 }
+
+
+
+/**
+ * ============================================================
+ * GET SCENARIO BY ID
+ * ============================================================
+ */
+
+export function getBHRScenario(
+    scenario
+) {
+
+    return {
+
+        scenario,
+
+        rule:
+            getBHRRule(
+                scenario
+            ),
+
+        domain:
+            "BHR"
+
+    };
+
+}
+
+
+
+/**
+ * ============================================================
+ * EXPORT STATUS
+ * ============================================================
+ */
+
+export const BHR_REGISTRY_STATUS = {
+
+    domain:
+        "BHR",
+
+    scenarios:
+        10,
+
+    status:
+        "ACTIVE",
+
+    deterministic:
+        true,
+
+    goldenRuleAuthority:
+        true
+
+};
