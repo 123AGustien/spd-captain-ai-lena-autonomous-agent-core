@@ -56,6 +56,7 @@ import {
  * ============================================================
  */
 
+
 export const DOMAIN_REGISTRY = {
 
 
@@ -127,18 +128,22 @@ export const DOMAIN_REGISTRY = {
  * ============================================================
  */
 
+
 export const DOMAIN_ENGINES = {
 
 
     FIN:
+
         finRuleEngine,
 
 
     BHR:
+
         bhrRuleEngine
 
 
 };
+
 
 
 
@@ -151,6 +156,7 @@ export const DOMAIN_ENGINES = {
  * VERIFY DOMAIN INPUT
  * ============================================================
  */
+
 
 export function verifyDomainInput(
 
@@ -177,14 +183,36 @@ export function verifyDomainInput(
 
 
 
+    if(
+
+        !DOMAIN_REGISTRY[domain].active
+
+    ){
+
+        throw new Error(
+
+            "DOMAIN NOT ACTIVE"
+
+        );
+
+    }
+
+
+
+
     return {
 
+
         valid:
+
             true,
+
 
         domain,
 
+
         scenario
+
 
     };
 
@@ -198,11 +226,13 @@ export function verifyDomainInput(
 
 
 
+
 /**
  * ============================================================
  * REGISTER NEW DOMAIN ENGINE
  * ============================================================
  */
+
 
 export function registerDomainEngine(
 
@@ -220,10 +250,12 @@ export function registerDomainEngine(
 
 
         name:
+
             domain,
 
 
         active:
+
             true
 
 
@@ -239,11 +271,13 @@ export function registerDomainEngine(
 
 
 
+
 /**
  * ============================================================
  * GET DOMAIN STATUS
  * ============================================================
  */
+
 
 export function getDomainStatus(
 
@@ -290,6 +324,7 @@ export function getDomainStatus(
  * ============================================================
  */
 
+
 export function executeDomainRule(
 
     domain,
@@ -301,7 +336,6 @@ export function executeDomainRule(
 ){
 
 
-
     verifyDomainInput(
 
         domain,
@@ -309,6 +343,8 @@ export function executeDomainRule(
         scenario
 
     );
+
+
 
 
 
@@ -353,6 +389,7 @@ export function executeDomainRule(
 
 
 
+
     const result =
 
         engine(
@@ -365,9 +402,12 @@ export function executeDomainRule(
 
                 scenario
 
+
             }
 
         );
+
+
 
 
 
@@ -395,6 +435,17 @@ export function executeDomainRule(
 
 
 
+
+
+
+    /*
+    Domain engines are advisory only.
+
+    Golden Rule Engine remains authority.
+
+    */
+
+
     const authority =
 
 
@@ -408,7 +459,9 @@ export function executeDomainRule(
 
         ??
 
-        true;
+        false;
+
+
 
 
 
@@ -446,6 +499,8 @@ export function executeDomainRule(
 
 
 
+
+
     return {
 
 
@@ -453,6 +508,7 @@ export function executeDomainRule(
 
 
         scenario,
+
 
 
         decision,
@@ -504,19 +560,24 @@ export function executeDomainRule(
 
         goldenRuleAuthority:
 
+
             authority,
 
 
 
         status:
 
+
             decision
 
             ?
 
+
             "VERIFIED DOMAIN DECISION"
 
+
             :
+
 
             "DOMAIN ASSESSMENT COMPLETE"
 
@@ -543,6 +604,7 @@ export function executeDomainRule(
  *
  * ============================================================
  */
+
 
 export function createDomainDecisionBridge(
 
@@ -587,11 +649,13 @@ export function createDomainDecisionBridge(
  * ============================================================
  */
 
+
 export function executeDomainIntegration(
 
     state = {}
 
 ){
+
 
 
     const scenario =
@@ -619,7 +683,67 @@ export function executeDomainIntegration(
 
 
 
+
     let domain = "NONE";
+
+
+
+
+
+
+
+
+    const FIN_SCENARIOS = [
+
+
+        "FX_STRESS",
+
+        "FIN_STRESS",
+
+        "BANKING_STRESS",
+
+        "LIQUIDITY_CRISIS",
+
+        "CREDIT_STRESS",
+
+        "SOVEREIGN_DEBT"
+
+
+    ];
+
+
+
+
+
+
+
+    const BHR_SCENARIOS = [
+
+
+        "HUMAN_RIGHTS_DUE_DILIGENCE",
+
+        "FORCED_LABOUR",
+
+        "CHILD_LABOUR",
+
+        "DISCRIMINATION",
+
+        "OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+        "MODERN_SLAVERY",
+
+        "COMMUNITY_IMPACT",
+
+        "INDIGENOUS_RIGHTS",
+
+        "SUPPLY_CHAIN_RISK",
+
+        "GRIEVANCE_MECHANISM"
+
+
+    ];
+
+
 
 
 
@@ -629,23 +753,7 @@ export function executeDomainIntegration(
 
     if(
 
-        [
-
-            "FX_STRESS",
-
-            "FIN_STRESS",
-
-            "BANKING_STRESS",
-
-            "LIQUIDITY_CRISIS",
-
-            "CREDIT_STRESS",
-
-            "SOVEREIGN_DEBT"
-
-        ]
-
-        .includes(
+        FIN_SCENARIOS.includes(
 
             scenario
 
@@ -662,34 +770,9 @@ export function executeDomainIntegration(
 
 
 
-
     if(
 
-        [
-
-            "HUMAN_RIGHTS_DUE_DILIGENCE",
-
-            "FORCED_LABOUR",
-
-            "CHILD_LABOUR",
-
-            "DISCRIMINATION",
-
-            "OCCUPATIONAL_HEALTH_AND_SAFETY",
-
-            "MODERN_SLAVERY",
-
-            "COMMUNITY_IMPACT",
-
-            "INDIGENOUS_RIGHTS",
-
-            "SUPPLY_CHAIN_RISK",
-
-            "GRIEVANCE_MECHANISM"
-
-        ]
-
-        .includes(
+        BHR_SCENARIOS.includes(
 
             scenario
 
@@ -700,6 +783,7 @@ export function executeDomainIntegration(
         domain = "BHR";
 
     }
+
 
 
 
@@ -748,6 +832,8 @@ export function executeDomainIntegration(
 
 
 
+
+
     return {
 
 
@@ -771,6 +857,7 @@ export function executeDomainIntegration(
 
         )
 
+
     };
 
 
@@ -789,6 +876,7 @@ export function executeDomainIntegration(
  * DOMAIN INTEGRATION STATUS
  * ============================================================
  */
+
 
 export const DOMAIN_INTEGRATION_STATUS = {
 
@@ -815,6 +903,7 @@ export const DOMAIN_INTEGRATION_STATUS = {
         ],
 
 
+
     activeDomains:
 
         [
@@ -826,9 +915,11 @@ export const DOMAIN_INTEGRATION_STATUS = {
         ],
 
 
+
     goldenRuleAuthority:
 
         true,
+
 
 
     captainAILenaAuthority:
@@ -836,14 +927,17 @@ export const DOMAIN_INTEGRATION_STATUS = {
         true,
 
 
+
     deterministic:
 
         true,
 
 
+
     machineLearning:
 
         false,
+
 
 
     status:
@@ -866,6 +960,7 @@ export const DOMAIN_INTEGRATION_STATUS = {
  * DEFAULT EXPORT
  * ============================================================
  */
+
 
 export default {
 
