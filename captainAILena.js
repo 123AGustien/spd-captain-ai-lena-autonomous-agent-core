@@ -1,6 +1,7 @@
 /**
  * ============================================================
  * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE FINAL
+ * PART 1/3
  * ============================================================
  *
  * DATA → ALGORITHMS → COMPUTE
@@ -92,9 +93,13 @@ export function captainAILena(
 ){
 
 
+
 /**
  * ============================================================
  * 1. OBSERVE
+ *
+ * Receive system state.
+ * Preserve data integrity.
  * ============================================================
  */
 
@@ -114,6 +119,8 @@ const observedState =
 /**
  * ============================================================
  * 2. VERIFY
+ *
+ * Validate deterministic input.
  * ============================================================
  */
 
@@ -133,6 +140,11 @@ const verifiedState =
 /**
  * ============================================================
  * 3. ASSESS
+ *
+ * Execute system assessment modules.
+ *
+ * Modules provide intelligence.
+ * They do not directly decide.
  * ============================================================
  */
 
@@ -186,6 +198,18 @@ const scenario =
 /**
  * ============================================================
  * DOMAIN DECISION BRIDGE INPUT
+ *
+ * Domain engines:
+ *
+ * FIN
+ * BHR
+ * DC
+ * CYB
+ * INF
+ *
+ * provide verified recommendations.
+ *
+ * Captain AI Lena remains authority.
  * ============================================================
  */
 
@@ -244,7 +268,7 @@ const context = {
 
 /**
  * ============================================================
- * 4. DECIDE
+ * CONTINUE TO PART 2
  * ============================================================
  */
 
@@ -259,15 +283,6 @@ const decision =
 
 
 
-
-
-/**
- * ============================================================
- * 5. ACT
- * ============================================================
- */
-
-
 const action =
 
     executeAction(
@@ -275,16 +290,6 @@ const action =
         decision
 
     );
-
-
-
-
-
-/**
- * ============================================================
- * 6. UPDATE
- * ============================================================
- */
 
 
 const updatedState = {
@@ -300,16 +305,6 @@ const updatedState = {
 
 
 };
-
-
-
-
-
-/**
- * ============================================================
- * AUTONOMOUS AGENT OUTPUT
- * ============================================================
- */
 
 
 return {
@@ -415,196 +410,6 @@ return {
 
 
 }
-
-
-
-
-
-
-
-/**
- * ============================================================
- * INPUT NORMALIZATION
- * ============================================================
- */
-
-
-function normalizeState(
-
-    state
-
-){
-
-
-return {
-
-
-    fx:
-
-        Number(state?.fx ?? 0),
-
-
-
-    energy:
-
-        Number(state?.energy ?? 50),
-
-
-
-    cyb:
-
-        Number(state?.cyb ?? 50),
-
-
-
-    inf:
-
-        Number(state?.inf ?? 0),
-
-
-
-    dc:
-
-        Number(state?.dc ?? 0),
-
-
-
-    event:
-
-        state?.event ?? "NORMAL",
-
-
-
-    mode:
-
-        state?.mode ?? "AUTONOMOUS",
-
-
-
-    domainDecision:
-
-        state?.domainDecision ?? null,
-
-
-
-    time:
-
-        state?.time ??
-
-        new Date().toISOString()
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-/**
- * ============================================================
- * VERIFY STATE
- * ============================================================
- */
-
-
-function verifyState(
-
-    state
-
-){
-
-
-return {
-
-
-    ...state,
-
-
-    fx:
-
-        Number.isFinite(state.fx)
-
-        ?
-
-        state.fx
-
-        :
-
-        0,
-
-
-
-    energy:
-
-        Number.isFinite(state.energy)
-
-        ?
-
-        state.energy
-
-        :
-
-        50,
-
-
-
-    cyb:
-
-        Number.isFinite(state.cyb)
-
-        ?
-
-        state.cyb
-
-        :
-
-        50,
-
-
-
-    inf:
-
-        Number.isFinite(state.inf)
-
-        ?
-
-        state.inf
-
-        :
-
-        0,
-
-
-
-    dc:
-
-        Number.isFinite(state.dc)
-
-        ?
-
-        state.dc
-
-        :
-
-        0
-
-
-};
-
-
-}
-
-
-
-
-
-
-
 /**
  * ============================================================
  * SPD v13.1 DECISION CORE
@@ -634,19 +439,15 @@ state
 const {
 
 
-risk,
+    risk,
 
+    energy,
 
-energy,
+    fx,
 
+    scenario,
 
-fx,
-
-
-scenario,
-
-
-domainDecision
+    domainDecision
 
 
 } = state;
@@ -658,7 +459,10 @@ domainDecision
 /**
  * ============================================================
  * PRIORITY 1
+ *
  * CRITICAL SAFETY OVERRIDE
+ *
+ * Absolute authority.
  * ============================================================
  */
 
@@ -666,10 +470,6 @@ domainDecision
 if(
 
     risk === "CRITICAL"
-
-    ||
-
-    risk === "HIGH RISK"
 
 ){
 
@@ -683,11 +483,20 @@ return "ACTIVATE STABILIZATION MODE";
 
 
 
-
 /**
  * ============================================================
  * PRIORITY 2
+ *
  * DOMAIN DECISION BRIDGE
+ *
+ * FIN
+ * BHR
+ * DC
+ * CYB
+ * INF
+ *
+ * Domain intelligence accepted only
+ * when Golden Rule authority is confirmed.
  * ============================================================
  */
 
@@ -718,10 +527,35 @@ return domainDecision.decision;
 
 
 
-
 /**
  * ============================================================
  * PRIORITY 3
+ *
+ * HIGH RISK STABILIZATION
+ * ============================================================
+ */
+
+
+if(
+
+    risk === "HIGH RISK"
+
+){
+
+
+return "ACTIVATE STABILIZATION MODE";
+
+
+}
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 4
+ *
  * ENERGY PROTECTION
  * ============================================================
  */
@@ -757,10 +591,10 @@ return "REDUCE SYSTEM LOAD";
 
 
 
-
 /**
  * ============================================================
- * PRIORITY 4
+ * PRIORITY 5
+ *
  * FX STABILITY
  * ============================================================
  */
@@ -768,9 +602,7 @@ return "REDUCE SYSTEM LOAD";
 
 if(
 
-
     fx?.status === "UNSTABLE"
-
 
 ){
 
@@ -784,10 +616,10 @@ return "FX CORRECTION ACTIVE";
 
 
 
-
 /**
  * ============================================================
- * PRIORITY 5
+ * PRIORITY 6
+ *
  * SCENARIO RESPONSE
  * ============================================================
  */
@@ -795,7 +627,7 @@ return "FX CORRECTION ACTIVE";
 
 if(
 
-scenario?.type === "FX_SHOCK"
+    scenario?.type === "FX_SHOCK"
 
 )
 
@@ -803,9 +635,10 @@ return "FX SHOCK RESPONSE ACTIVE";
 
 
 
+
 if(
 
-scenario?.type === "ENERGY_CRISIS"
+    scenario?.type === "ENERGY_CRISIS"
 
 )
 
@@ -813,9 +646,10 @@ return "ENERGY RESERVE MODE ACTIVE";
 
 
 
+
 if(
 
-scenario?.type === "CYBER_ATTACK"
+    scenario?.type === "CYBER_ATTACK"
 
 )
 
@@ -823,9 +657,10 @@ return "CYBER DEFENSE MODE ACTIVE";
 
 
 
+
 if(
 
-scenario?.type === "INFRA_FAILURE"
+    scenario?.type === "INFRA_FAILURE"
 
 )
 
@@ -833,6 +668,15 @@ return "INFRASTRUCTURE RECOVERY MODE";
 
 
 
+
+
+/**
+ * ============================================================
+ * PRIORITY 7
+ *
+ * NORMAL OPERATION
+ * ============================================================
+ */
 
 
 return "SYSTEM STABLE";
@@ -848,7 +692,11 @@ return "SYSTEM STABLE";
 
 /**
  * ============================================================
- * ACTION EXECUTION
+ * ACTION EXECUTION ENGINE
+ * ============================================================
+ *
+ * Converts decisions into executable commands.
+ *
  * ============================================================
  */
 
@@ -860,9 +708,14 @@ decision
 ){
 
 
+
 switch(decision){
 
 
+
+/**
+ * SYSTEM STABILIZATION
+ */
 
 case "ACTIVATE STABILIZATION MODE":
 
@@ -870,11 +723,19 @@ case "ACTIVATE STABILIZATION MODE":
 return {
 
 
-mode:"STABILIZATION",
+    mode:
 
-command:"STABILIZE SYSTEM",
+        "STABILIZATION",
 
-status:"ACTIVE"
+
+    command:
+
+        "STABILIZE SYSTEM",
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
@@ -882,6 +743,10 @@ status:"ACTIVE"
 
 
 
+
+/**
+ * BHR HUMAN RIGHTS REMEDIATION
+ */
 
 case "ACTIVATE BHR REMEDIATION MODE":
 
@@ -889,11 +754,19 @@ case "ACTIVATE BHR REMEDIATION MODE":
 return {
 
 
-mode:"BHR REMEDIATION",
+    mode:
 
-command:"EXECUTE HUMAN RIGHTS REMEDIATION",
+        "BHR REMEDIATION",
 
-status:"ACTIVE"
+
+    command:
+
+        "EXECUTE HUMAN RIGHTS REMEDIATION",
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
@@ -901,6 +774,10 @@ status:"ACTIVE"
 
 
 
+
+/**
+ * BHR PREVENTIVE CONTROL
+ */
 
 case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
 
@@ -908,11 +785,19 @@ case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
 return {
 
 
-mode:"BHR PREVENTION",
+    mode:
 
-command:"APPLY HUMAN RIGHTS PREVENTIVE CONTROLS",
+        "BHR PREVENTION",
 
-status:"ACTIVE"
+
+    command:
+
+        "APPLY HUMAN RIGHTS PREVENTIVE CONTROLS",
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
@@ -920,6 +805,10 @@ status:"ACTIVE"
 
 
 
+
+/**
+ * FINANCIAL RESILIENCE
+ */
 
 case "FINANCIAL_MONITORING":
 
@@ -927,11 +816,19 @@ case "FINANCIAL_MONITORING":
 return {
 
 
-mode:"FINANCIAL MONITORING",
+    mode:
 
-command:"MONITOR FINANCIAL RESILIENCE",
+        "FINANCIAL MONITORING",
 
-status:"ACTIVE"
+
+    command:
+
+        "MONITOR FINANCIAL RESILIENCE",
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
@@ -939,6 +836,10 @@ status:"ACTIVE"
 
 
 
+
+/**
+ * ENERGY MANAGEMENT
+ */
 
 case "REDUCE SYSTEM LOAD":
 
@@ -946,11 +847,19 @@ case "REDUCE SYSTEM LOAD":
 return {
 
 
-mode:"ENERGY PROTECTION",
+    mode:
 
-command:"REDUCE SYSTEM LOAD",
+        "ENERGY PROTECTION",
 
-status:"ACTIVE"
+
+    command:
+
+        "REDUCE SYSTEM LOAD",
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
@@ -958,6 +867,41 @@ status:"ACTIVE"
 
 
 
+
+/**
+ * FX RESPONSE
+ */
+
+case "FX CORRECTION ACTIVE":
+
+
+return {
+
+
+    mode:
+
+        "FX MANAGEMENT",
+
+
+    command:
+
+        "EXECUTE FX STABILITY CONTROL",
+
+
+    status:
+
+        "ACTIVE"
+
+
+};
+
+
+
+
+
+/**
+ * DEFAULT
+ */
 
 default:
 
@@ -965,11 +909,19 @@ default:
 return {
 
 
-mode:"NORMAL",
+    mode:
 
-command:"MONITOR SYSTEM",
+        "NORMAL",
 
-status:"STABLE"
+
+    command:
+
+        "MONITOR SYSTEM",
+
+
+    status:
+
+        "STABLE"
 
 
 };
@@ -979,3 +931,301 @@ status:"STABLE"
 
 
 }
+/**
+ * ============================================================
+ * INPUT NORMALIZATION
+ * ============================================================
+ *
+ * OBSERVE protection layer.
+ *
+ * Converts incoming cockpit/domain data
+ * into deterministic engine format.
+ *
+ * ============================================================
+ */
+
+
+function normalizeState(
+
+    state
+
+){
+
+
+return {
+
+
+    fx:
+
+        Number(
+
+            state?.fx ?? 0
+
+        ),
+
+
+
+    energy:
+
+        Number(
+
+            state?.energy ?? 50
+
+        ),
+
+
+
+    cyb:
+
+        Number(
+
+            state?.cyb ?? 50
+
+        ),
+
+
+
+    inf:
+
+        Number(
+
+            state?.inf ?? 0
+
+        ),
+
+
+
+    dc:
+
+        Number(
+
+            state?.dc ?? 0
+
+        ),
+
+
+
+    event:
+
+        state?.event ??
+
+        "NORMAL",
+
+
+
+    scenario:
+
+        state?.scenario ??
+
+        null,
+
+
+
+    mode:
+
+        state?.mode ??
+
+        "AUTONOMOUS",
+
+
+
+    domainDecision:
+
+        state?.domainDecision ??
+
+        null,
+
+
+
+    intensity:
+
+        Number(
+
+            state?.intensity ?? 0
+
+        ),
+
+
+
+    time:
+
+        state?.time ??
+
+        new Date().toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VERIFY STATE
+ * ============================================================
+ *
+ * Validation layer.
+ *
+ * Prevents invalid values entering
+ * the decision engine.
+ *
+ * ============================================================
+ */
+
+
+function verifyState(
+
+    state
+
+){
+
+
+return {
+
+
+    ...state,
+
+
+
+    fx:
+
+        Number.isFinite(
+
+            state.fx
+
+        )
+
+        ?
+
+        state.fx
+
+        :
+
+        0,
+
+
+
+    energy:
+
+        Number.isFinite(
+
+            state.energy
+
+        )
+
+        ?
+
+        state.energy
+
+        :
+
+        50,
+
+
+
+    cyb:
+
+        Number.isFinite(
+
+            state.cyb
+
+        )
+
+        ?
+
+        state.cyb
+
+        :
+
+        50,
+
+
+
+    inf:
+
+        Number.isFinite(
+
+            state.inf
+
+        )
+
+        ?
+
+        state.inf
+
+        :
+
+        0,
+
+
+
+    dc:
+
+        Number.isFinite(
+
+            state.dc
+
+        )
+
+        ?
+
+        state.dc
+
+        :
+
+        0,
+
+
+
+    intensity:
+
+        Number.isFinite(
+
+            state.intensity
+
+        )
+
+        ?
+
+        state.intensity
+
+        :
+
+        0
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * SPD v13.1 FINAL CORE EXPORT
+ * ============================================================
+ *
+ * Captain AI Lena remains:
+ *
+ * Decision Authority
+ *
+ * Domain engines:
+ *
+ * Advisory + verified input
+ *
+ * ============================================================
+ */
+
+
+export default captainAILena;
