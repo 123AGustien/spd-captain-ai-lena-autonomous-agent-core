@@ -1,89 +1,203 @@
+// ============================================================
+// SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+// runEngine.js
+//
+// CAPTAIN AI LENA AUTONOMOUS AGENT CORE
+//
+// DATA → ALGORITHMS → COMPUTE
+//
+// Golden Rule:
+// OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+//
+// Engine Authority:
+// Captain AI Lena Decision Core
+//
+// Analytics:
+// Advisory only
+// Does not modify decisions
+// ============================================================
+
+
 import { captainAILena } from "./captainAILena.js";
 import { GOLDEN_RATIO } from "./constants/math.constants.js";
 import { runAnalytics } from "./analytics/index.js";
 
-export function runEngine(state) {
 
-  // =========================
-  // SPD V13 EXECUTION ENGINE
-  // =========================
-  // DATA → ALGORITHMS → COMPUTE
-  //
-  // This layer is responsible for:
-  // 1. Receiving system state
-  // 2. Preserving original input for audit
-  // 3. Applying deterministic normalization
-  // 4. Running supporting analytics
-  // 5. Passing normalized state to Captain AI Lena
-  // 6. Returning a complete execution record
-  //
-  // The engine does not redefine decision rules.
-  // Captain AI Lena remains the decision authority.
-  // Analytics is advisory only.
-  // =========================
+// ============================================================
+// GOLDEN RULE PIPELINE
+// ============================================================
 
-  // =========================
+export const GOLDEN_RULE_STAGES = [
+  "OBSERVE",
+  "VERIFY",
+  "ASSESS",
+  "DECIDE",
+  "ACT",
+  "UPDATE"
+];
+
+
+// ============================================================
+// SPD EXECUTION ENGINE
+// ============================================================
+
+export function runEngine(state = {}) {
+
+
+  // ==========================================================
   // INPUT VALIDATION
-  // =========================
+  // ==========================================================
 
-  if (!state || typeof state !== "object") {
-    throw new Error("SPD ENGINE ERROR: Invalid system state");
+  if (
+    !state ||
+    typeof state !== "object"
+  ) {
+
+    throw new Error(
+      "SPD ENGINE ERROR: Invalid system state"
+    );
+
   }
 
-  // =========================
-  // SAFE NORMALIZATION LAYER
-  // =========================
-  // Normalization is transparent and deterministic.
+
+
+  // ==========================================================
+  // OBSERVE
+  //
+  // Preserve original system data.
+  // ==========================================================
+
+  const inputState = {
+    ...state
+  };
+
+
+
+  // ==========================================================
+  // VERIFY
+  //
+  // Deterministic normalization layer.
   // Original input remains unchanged.
-  // =========================
+  // ==========================================================
 
   const normalizedState = {
+
     ...state,
-    energy: Number(state.energy ?? 0) / GOLDEN_RATIO,
-    fx: Number(state.fx ?? 0) / GOLDEN_RATIO
+
+    energy:
+      Number(state.energy ?? 50)
+      / GOLDEN_RATIO,
+
+    fx:
+      Number(state.fx ?? 0)
+      / GOLDEN_RATIO,
+
+    cyb:
+      Number(state.cyb ?? 50),
+
+    inf:
+      Number(state.inf ?? 0),
+
+    dc:
+      Number(state.dc ?? 0),
+
+    event:
+      state.event ?? "NORMAL",
+
+    mode:
+      state.mode ?? "AUTONOMOUS"
+
   };
 
-  // =========================
-  // ANALYTICS LAYER
-  // =========================
-  // Supporting intelligence only.
-  // Does NOT modify the normalized state
-  // or Captain AI Lena decisions.
-  // =========================
 
-  const analytics = runAnalytics(normalizedState);
 
-  // =========================
-  // CORE COMPUTE EXECUTION
-  // =========================
+  // ==========================================================
+  // ASSESS
+  //
+  // Analytics intelligence layer.
+  // Advisory only.
+  // Cannot alter decision authority.
+  // ==========================================================
 
-  const result = captainAILena(normalizedState);
+  const analytics =
+    runAnalytics(normalizedState);
 
-  // =========================
-  // EXECUTION RESPONSE
-  // =========================
+
+
+  // ==========================================================
+  // DECIDE
+  //
+  // Captain AI Lena authoritative core.
+  // ==========================================================
+
+  const result =
+    captainAILena(normalizedState);
+
+
+
+  // ==========================================================
+  // ACT + UPDATE
+  //
+  // Complete execution record.
+  // ==========================================================
 
   return {
-    timestamp: new Date().toISOString(),
 
-    // Original client/system input
-    input: state,
+    timestamp:
+      new Date().toISOString(),
 
-    // Normalized state used by compute layer
-    normalizedInput: normalizedState,
 
-    // Analytics layer output
+    engine:
+
+      "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
+
+
+    agent:
+
+      "CAPTAIN AI LENA",
+
+
+    pipeline:
+
+      GOLDEN_RULE_STAGES,
+
+
+    input:
+
+      inputState,
+
+
+    normalizedInput:
+
+      normalizedState,
+
+
     analytics,
 
-    // Captain AI Lena decision output
-    output: result,
 
-    // Deterministic execution metadata
+    output:
+
+      result,
+
+
     constants: {
-      GOLDEN_RATIO
+
+      GOLDEN_RATIO,
+
+      GOLDEN_RULE_STAGES
+
     },
 
-    // Execution status
-    status: "EXECUTED"
+
+    authority:
+
+      "CAPTAIN AI LENA DECISION CORE",
+
+
+    status:
+
+      "EXECUTED"
+
   };
+
 }
