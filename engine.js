@@ -15,12 +15,23 @@
 // Analytics:
 // Advisory only
 // Does not modify decisions
+//
+// Domain Integration:
+// FIN / BHR / DC / CYB / INF gateway
+// Provides verified domain intelligence
 // ============================================================
 
 
 import { captainAILena } from "./captainAILena.js";
-import { GOLDEN_RATIO } from "./constants/math.constants.js";
-import { runAnalytics } from "./analytics/index.js";
+
+import { GOLDEN_RATIO } 
+from "./constants/math.constants.js";
+
+import { runAnalytics } 
+from "./analytics/index.js";
+
+import { executeDomainRule } 
+from "./domainIntegration.js";
 
 
 // ============================================================
@@ -28,12 +39,14 @@ import { runAnalytics } from "./analytics/index.js";
 // ============================================================
 
 export const GOLDEN_RULE_STAGES = [
+
   "OBSERVE",
   "VERIFY",
   "ASSESS",
   "DECIDE",
   "ACT",
   "UPDATE"
+
 ];
 
 
@@ -68,7 +81,9 @@ export function runEngine(state = {}) {
   // ==========================================================
 
   const inputState = {
+
     ...state
+
   };
 
 
@@ -77,35 +92,56 @@ export function runEngine(state = {}) {
   // VERIFY
   //
   // Deterministic normalization layer.
-  // Original input remains unchanged.
+  // Original input unchanged.
   // ==========================================================
 
   const normalizedState = {
 
+
     ...state,
 
+
     energy:
+
       Number(state.energy ?? 50)
       / GOLDEN_RATIO,
 
+
     fx:
+
       Number(state.fx ?? 0)
       / GOLDEN_RATIO,
 
+
     cyb:
+
       Number(state.cyb ?? 50),
 
+
     inf:
+
       Number(state.inf ?? 0),
 
+
     dc:
+
       Number(state.dc ?? 0),
 
+
     event:
+
       state.event ?? "NORMAL",
 
+
+    scenario:
+
+      state.scenario ?? "NORMAL",
+
+
     mode:
+
       state.mode ?? "AUTONOMOUS"
+
 
   };
 
@@ -114,24 +150,51 @@ export function runEngine(state = {}) {
   // ==========================================================
   // ASSESS
   //
-  // Analytics intelligence layer.
+  // DOMAIN INTEGRATION LAYER
+  //
+  // FIN / BHR / DC / CYB / INF
+  //
+  // Advisory intelligence.
+  // Does not override Captain AI Lena.
+  // ==========================================================
+
+  const domainAssessment =
+
+    executeDomainRule(
+      normalizedState
+    );
+
+
+
+  // ==========================================================
+  // ANALYTICS LAYER
+  //
   // Advisory only.
-  // Cannot alter decision authority.
   // ==========================================================
 
   const analytics =
-    runAnalytics(normalizedState);
+
+    runAnalytics(
+      normalizedState
+    );
 
 
 
   // ==========================================================
   // DECIDE
   //
-  // Captain AI Lena authoritative core.
+  // Captain AI Lena remains authority.
   // ==========================================================
 
   const result =
-    captainAILena(normalizedState);
+
+    captainAILena({
+
+      ...normalizedState,
+
+      domainAssessment
+
+    });
 
 
 
@@ -143,8 +206,11 @@ export function runEngine(state = {}) {
 
   return {
 
+
     timestamp:
+
       new Date().toISOString(),
+
 
 
     engine:
@@ -152,9 +218,11 @@ export function runEngine(state = {}) {
       "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
 
 
+
     agent:
 
       "CAPTAIN AI LENA",
+
 
 
     pipeline:
@@ -162,9 +230,11 @@ export function runEngine(state = {}) {
       GOLDEN_RULE_STAGES,
 
 
+
     input:
 
       inputState,
+
 
 
     normalizedInput:
@@ -172,7 +242,13 @@ export function runEngine(state = {}) {
       normalizedState,
 
 
+
+    domainAssessment,
+
+
+
     analytics,
+
 
 
     output:
@@ -180,13 +256,18 @@ export function runEngine(state = {}) {
       result,
 
 
+
     constants: {
+
 
       GOLDEN_RATIO,
 
+
       GOLDEN_RULE_STAGES
 
+
     },
+
 
 
     authority:
@@ -194,10 +275,13 @@ export function runEngine(state = {}) {
       "CAPTAIN AI LENA DECISION CORE",
 
 
+
     status:
 
       "EXECUTED"
 
+
   };
+
 
 }
