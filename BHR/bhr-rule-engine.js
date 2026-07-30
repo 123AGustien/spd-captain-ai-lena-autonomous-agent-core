@@ -9,6 +9,7 @@
  * BHR — Business & Human Rights
  *
  * PURPOSE:
+ *
  * Converts BHR scenarios into:
  *
  * - Risk assessment
@@ -16,14 +17,16 @@
  * - Recommended actions
  * - Domain decision
  * - Mitigation sequence
+ * - Validation-compatible output
  *
  *
- * ARCHITECTURE
- * ------------
+ * ARCHITECTURE:
  *
  * BHR Scenario Registry
  *          ↓
  * BHR Rule Engine
+ *          ↓
+ * BHR Validation Engine
  *          ↓
  * Domain Decision Bridge
  *          ↓
@@ -478,11 +481,20 @@ scenario:scenarioID,
 rule,
 
 
+ruleApplied:rule,
+
+
 category:
 ruleDefinition.category,
 
 
 risk,
+
+
+assessment:risk,
+
+
+riskScore:intensity,
 
 
 decision,
@@ -501,10 +513,23 @@ ruleDefinition.actions,
 
 
 status:
-"ASSESSED",
+"COMPLETE",
 
 
-goldenRuleAuthority:true
+goldenRuleAuthority:true,
+
+
+deterministic:true,
+
+
+machineLearning:false,
+
+
+randomness:false,
+
+
+timestamp:
+new Date().toISOString()
 
 
 };
@@ -543,6 +568,13 @@ goldenRuleAuthority:true
 
 
 
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
 
 
 export default {
