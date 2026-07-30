@@ -1,42 +1,14 @@
 /**
  * ============================================================
- * SPD v13.1 — BUSINESS & HUMAN RIGHTS SCENARIO RULE BRIDGE
+ * SPD v13.1 — BHR SCENARIO RULE BRIDGE
  * ============================================================
  *
- * Captain AI Lena Autonomous Agent Core
- *
- * PURPOSE:
- * Maps cockpit-selected BHR scenarios
- * to authoritative BHR rule definitions.
- *
- *
- * ARCHITECTURE:
- *
- * COCKPIT SCENARIO
- *        ↓
- * BHR SCENARIO RULE BRIDGE
- *        ↓
- * BHR RULE ENGINE
- *        ↓
- * GOLDEN RULE ENGINE
- *        ↓
- * CAPTAIN AI LENA DECISION CORE
- *
- *
- * IMPORTANT:
+ * Maps cockpit BHR scenarios
+ * to authoritative BHR rules.
  *
  * Golden Rule Engine remains authoritative.
  *
- * Deterministic.
- * No randomness.
- *
  * ============================================================
- */
-
-
-/* ============================================================
-   BHR SCENARIO → RULE MAPPING
-   ============================================================
  */
 
 
@@ -87,46 +59,12 @@ export const BHR_SCENARIO_RULE_MAP = {
 
 
 
-/* ============================================================
-   NORMALIZE SCENARIO
-   ============================================================
- */
-
-
-function normalizeScenario(
+export function getBHRRuleForScenario(
     scenario
 ){
-
-    return String(
-        scenario || ""
-    )
-    .trim()
-    .toUpperCase();
-
-}
-
-
-
-/* ============================================================
-   GET BHR RULE FROM SCENARIO
-   ============================================================
- */
-
-
-export function getBHRRuleFromScenario(
-    scenario
-){
-
-    const normalizedScenario =
-        normalizeScenario(
-            scenario
-        );
-
 
     return (
-        BHR_SCENARIO_RULE_MAP[
-            normalizedScenario
-        ]
+        BHR_SCENARIO_RULE_MAP[scenario]
         ||
         null
     );
@@ -135,57 +73,38 @@ export function getBHRRuleFromScenario(
 
 
 
-/* ============================================================
-   VERIFY BHR SCENARIO SUPPORT
-   ============================================================
- */
+export function validateBHRScenarioMapping(){
 
 
-export function isBHRScenarioSupported(
-    scenario
-){
+    return {
 
-    return (
-        getBHRRuleFromScenario(
-            scenario
-        )
-        !==
-        null
-    );
+
+        domain:
+            "BHR",
+
+
+        rules:
+            Object.keys(
+                BHR_SCENARIO_RULE_MAP
+            ).length,
+
+
+        status:
+            "BHR SCENARIO BRIDGE READY",
+
+
+        deterministic:
+            true,
+
+
+        goldenRuleAuthority:
+            true
+
+
+    };
+
 
 }
-
-
-
-/* ============================================================
-   BHR BRIDGE STATUS
-   ============================================================
- */
-
-
-export const BHR_BRIDGE_STATUS = {
-
-    domain:
-        "BHR",
-
-    bridge:
-        "BHR_SCENARIO_RULE_BRIDGE",
-
-    scenarios:
-        Object.keys(
-            BHR_SCENARIO_RULE_MAP
-        ).length,
-
-    status:
-        "ACTIVE",
-
-    deterministic:
-        true,
-
-    goldenRuleAuthority:
-        true
-
-};
 
 
 
@@ -194,11 +113,9 @@ export default {
 
     BHR_SCENARIO_RULE_MAP,
 
-    getBHRRuleFromScenario,
+    getBHRRuleForScenario,
 
-    isBHRScenarioSupported,
-
-    BHR_BRIDGE_STATUS
+    validateBHRScenarioMapping
 
 
 };
