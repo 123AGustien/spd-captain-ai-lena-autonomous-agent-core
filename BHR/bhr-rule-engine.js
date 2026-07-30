@@ -13,6 +13,22 @@
  *
  * Golden Rule Engine remains authoritative.
  *
+ * Pipeline:
+ *
+ * Cockpit Scenario
+ *        ↓
+ * domainIntegration.js
+ *        ↓
+ * BHR Rule Engine
+ *        ↓
+ * Golden Rule Engine
+ *        ↓
+ * Captain AI Lena Decision Core
+ *        ↓
+ * Memory Core
+ *        ↓
+ * Audit Record
+ *
  * ============================================================
  */
 
@@ -30,24 +46,34 @@ import {
  */
 
 export function runBHRRuleEngine(
+
     scenarioId,
+
     state = {}
+
 ) {
 
 
     const scenario =
+
         getBHRScenario(
+
             scenarioId
+
         );
+
 
 
     if (!scenario || !scenario.rule) {
 
+
         return {
 
-            domain: "BHR",
+            domain:
+                "BHR",
 
-            status: "ERROR",
+            status:
+                "ERROR",
 
             message:
                 "Unknown BHR scenario"
@@ -63,7 +89,6 @@ export function runBHRRuleEngine(
 
 
     switch (scenario.rule) {
-
 
 
         /*
@@ -264,7 +289,18 @@ export function runBHRRuleEngine(
 
 
 
+    riskScore = Math.max(
+        0,
+        Math.min(
+            100,
+            riskScore
+        )
+    );
+
+
+
     let assessment;
+
 
 
     if (riskScore < 30) {
@@ -291,22 +327,27 @@ export function runBHRRuleEngine(
 
 
         domain:
+
             "BHR",
 
 
         status:
+
             "COMPLETE",
 
 
         scenario:
+
             scenarioId,
 
 
         ruleApplied:
+
             scenario.rule,
 
 
         riskScore:
+
             Number(
                 riskScore.toFixed(2)
             ),
@@ -316,19 +357,297 @@ export function runBHRRuleEngine(
 
 
         recommendation:
+
             generateBHRRecommendation(
-                scenario.rule,
+
                 assessment
+
             ),
 
 
         timestamp:
+
             new Date()
+
             .toISOString()
+
 
     };
 
 }
+
+
+
+
+
+/**
+ * ============================================================
+ * BHR SCENARIO INTENSITY BRIDGE
+ * ============================================================
+ *
+ * Converts cockpit intensity into
+ * domain-specific human rights indicators.
+ *
+ * ============================================================
+ */
+
+
+function applyBHRScenarioIntensity(
+
+    scenario,
+
+    intensity,
+
+    state
+
+) {
+
+
+    const value =
+
+        Math.max(
+
+            0,
+
+            Math.min(
+
+                100,
+
+                Number(intensity) || 0
+
+            )
+
+        );
+
+
+
+    const updated = {
+
+
+        ...state,
+
+
+        scenarioIntensity:
+
+            value
+
+    };
+
+
+
+    switch(scenario) {
+
+
+        case "INDIGENOUS_RIGHTS":
+
+
+            updated.landRightsRisk =
+                value;
+
+
+            updated.consultationFailure =
+                value;
+
+
+            updated.culturalImpact =
+                value * 0.8;
+
+
+            updated.mitigationCapability =
+                100 - value;
+
+
+            break;
+
+
+
+        case "FORCED_LABOUR":
+
+
+            updated.workerFreedomRisk =
+                value;
+
+
+            updated.labourConditionRisk =
+                value;
+
+
+            updated.supplyChainRisk =
+                value * 0.8;
+
+
+            updated.monitoringLevel =
+                100 - value;
+
+
+            break;
+
+
+
+        case "CHILD_LABOUR":
+
+
+            updated.childLabourRisk =
+                value;
+
+
+            updated.supplierRisk =
+                value;
+
+
+            updated.auditFailure =
+                value;
+
+
+            break;
+
+
+
+        case "DISCRIMINATION":
+
+
+            updated.discriminationRisk =
+                value;
+
+
+            updated.equalOpportunityRisk =
+                value;
+
+
+            updated.grievanceRisk =
+                value;
+
+
+            break;
+
+
+
+        case "OCCUPATIONAL_HEALTH_AND_SAFETY":
+
+
+            updated.safetyRisk =
+                value;
+
+
+            updated.incidentRate =
+                value;
+
+
+            updated.workerProtection =
+                100 - value;
+
+
+            break;
+
+
+
+        case "MODERN_SLAVERY":
+
+
+            updated.modernSlaveryRisk =
+                value;
+
+
+            updated.workerVulnerability =
+                value;
+
+
+            updated.supplyChainRisk =
+                value;
+
+
+            break;
+
+
+
+        case "COMMUNITY_IMPACT":
+
+
+            updated.socialImpact =
+                value;
+
+
+            updated.environmentalImpact =
+                value;
+
+
+            updated.communityEngagement =
+                100 - value;
+
+
+            break;
+
+
+
+        case "SUPPLY_CHAIN_RISK":
+
+
+            updated.supplierRisk =
+                value;
+
+
+            updated.traceabilityRisk =
+                value;
+
+
+            updated.auditFailure =
+                value;
+
+
+            break;
+
+
+
+        case "GRIEVANCE_MECHANISM":
+
+
+            updated.grievanceFailure =
+                value;
+
+
+            updated.accessibility =
+                100 - value;
+
+
+            updated.responseCapability =
+                100 - value;
+
+
+            break;
+
+
+
+        case "HUMAN_RIGHTS_DUE_DILIGENCE":
+
+
+            updated.labourRisk =
+                value;
+
+
+            updated.communityImpact =
+                value;
+
+
+            updated.supplyChainRisk =
+                value;
+
+
+            updated.complianceRisk =
+                value;
+
+
+            break;
+
+
+    }
+
+
+
+    return updated;
+
+}
+
+
 
 
 
@@ -339,14 +658,18 @@ export function runBHRRuleEngine(
  */
 
 function generateBHRRecommendation(
-    rule,
+
     assessment
+
 ) {
 
 
     if (assessment === "LOW") {
 
-        return "MONITOR HUMAN RIGHTS CONDITIONS";
+
+        return:
+
+            "MONITOR HUMAN RIGHTS CONDITIONS";
 
     }
 
@@ -354,52 +677,18 @@ function generateBHRRecommendation(
 
     if (assessment === "MEDIUM") {
 
-        return "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+
+        return:
+
+            "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
     }
 
 
 
-    return "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
+    return:
+
+        "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
 
 
 }
-
-
-
-/**
- * ============================================================
- * DOMAIN INTEGRATION WRAPPER
- * ============================================================
- */
-
-export function bhrRuleEngine(
-    input = {}
-) {
-
-
-    return runBHRRuleEngine(
-
-        input.scenario,
-
-        input.state
-
-    );
-
-}
-
-
-
-/**
- * ============================================================
- * DEFAULT EXPORT
- * ============================================================
- */
-
-export default {
-
-    runBHRRuleEngine,
-
-    bhrRuleEngine
-
-};
