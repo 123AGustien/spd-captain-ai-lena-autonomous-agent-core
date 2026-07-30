@@ -15,11 +15,21 @@
  * - State updates
  *
  *
+ * Supports:
+ *
+ * CORE SPD ENGINE
+ * FIN DOMAIN
+ * BHR DOMAIN
+ * FUTURE DOMAIN EXTENSIONS
+ *
+ *
  * Architecture:
  *
  * GOLDEN RULE ENGINE
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
+ *          ↓
+ * DOMAIN SOLUTION LAYER
  *          ↓
  * SOLUTION DECISION BRIDGE
  *          ↓
@@ -29,6 +39,8 @@
  *          ↓
  * AUDIT RECORD
  *
+ *
+ * Golden Rule Engine remains authoritative.
  *
  * Deterministic.
  * No randomness.
@@ -48,111 +60,106 @@
 const SOLUTION_LIBRARY = {
 
 
-"SYSTEM STABLE": {
+    "SYSTEM STABLE": {
+
+        solution:
+
+        "CONTINUE NORMAL OPERATIONS",
 
 
-solution:
+        actions:[
 
-"CONTINUE NORMAL OPERATIONS",
+            "CONFIRM SYSTEM STATE",
 
+            "MAINTAIN CURRENT OPERATIONS",
 
-actions:[
+            "MONITOR SYSTEM RESPONSE",
 
-"CONFIRM SYSTEM STATE",
+            "UPDATE MEMORY CORE"
 
-"MAINTAIN CURRENT OPERATIONS",
+        ]
 
-"MONITOR SYSTEM RESPONSE",
-
-"UPDATE MEMORY CORE"
-
-]
-
-
-},
-
-
-
-"ENERGY PROTECTION MODE": {
-
-
-solution:
-
-"REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES",
-
-
-actions:[
-
-"CONFIRM SYSTEM STATE",
-
-"APPLY ENERGY CONSERVATION CONTROLS",
-
-"REDUCE SYSTEM LOAD",
-
-"MONITOR ENERGY RECOVERY",
-
-"UPDATE MEMORY CORE"
-
-]
-
-
-},
+    },
 
 
 
-"PREVENTIVE RESILIENCE MODE": {
+    "ENERGY PROTECTION MODE": {
 
 
-solution:
+        solution:
 
-"APPLY PREVENTIVE RESILIENCE MEASURES",
-
-
-actions:[
-
-"CONFIRM SYSTEM STRESS",
-
-"APPLY MITIGATION CONTROLS",
-
-"STRENGTHEN SYSTEM RESILIENCE",
-
-"MONITOR RECOVERY",
-
-"UPDATE MEMORY CORE"
-
-]
+        "REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES",
 
 
-},
+        actions:[
+
+            "CONFIRM SYSTEM STATE",
+
+            "APPLY ENERGY CONSERVATION CONTROLS",
+
+            "REDUCE SYSTEM LOAD",
+
+            "MONITOR ENERGY RECOVERY",
+
+            "UPDATE MEMORY CORE"
+
+        ]
+
+    },
 
 
 
-"ACTIVATE STABILIZATION MODE": {
+    "PREVENTIVE RESILIENCE MODE": {
 
 
-solution:
+        solution:
 
-"EXECUTE SYSTEM STABILIZATION RESPONSE",
-
-
-actions:[
-
-"CONFIRM CRITICAL STATE",
-
-"ACTIVATE EMERGENCY MITIGATION",
-
-"ISOLATE HIGH RISK CONDITIONS",
-
-"RESTORE SYSTEM BALANCE",
-
-"VERIFY RECOVERY",
-
-"UPDATE MEMORY CORE"
-
-]
+        "APPLY PREVENTIVE RESILIENCE MEASURES",
 
 
-}
+        actions:[
+
+            "CONFIRM SYSTEM STRESS",
+
+            "APPLY MITIGATION CONTROLS",
+
+            "STRENGTHEN SYSTEM RESILIENCE",
+
+            "MONITOR RECOVERY",
+
+            "UPDATE MEMORY CORE"
+
+        ]
+
+    },
+
+
+
+    "ACTIVATE STABILIZATION MODE": {
+
+
+        solution:
+
+        "EXECUTE SYSTEM STABILIZATION RESPONSE",
+
+
+        actions:[
+
+            "CONFIRM CRITICAL STATE",
+
+            "ACTIVATE EMERGENCY MITIGATION",
+
+            "ISOLATE HIGH RISK CONDITIONS",
+
+            "RESTORE SYSTEM BALANCE",
+
+            "VERIFY RECOVERY",
+
+            "UPDATE MEMORY CORE"
+
+        ]
+
+    }
 
 
 
@@ -160,50 +167,53 @@ actions:[
 
 
 
+
+
 /**
  * ============================================================
- * GET SOLUTION
+ * GET STANDARD SOLUTION
  * ============================================================
  */
 
 
 export function getSolutionDecision(
 
-decision
+    decision
 
 ){
 
 
 return (
 
-SOLUTION_LIBRARY[decision]
+    SOLUTION_LIBRARY[decision]
 
-||
+    ||
 
-{
+    {
 
-solution:
+        solution:
 
-"MONITOR SYSTEM CONDITION",
-
-
-actions:[
-
-"CONFIRM SYSTEM STATE",
-
-"CONTINUE OBSERVATION",
-
-"UPDATE MEMORY CORE"
-
-]
+        "MONITOR SYSTEM CONDITION",
 
 
-}
+        actions:[
+
+            "CONFIRM SYSTEM STATE",
+
+            "CONTINUE OBSERVATION",
+
+            "UPDATE MEMORY CORE"
+
+        ]
+
+    }
 
 );
 
 
 }
+
+
 
 
 
@@ -211,76 +221,212 @@ actions:[
  * ============================================================
  * BUILD SOLUTION BRIDGE
  * ============================================================
+ *
+ * Priority:
+ *
+ * 1. Domain Solution (BHR / FIN)
+ * 2. Core SPD Solution Library
+ *
+ * Golden Rule Engine remains authority.
+ *
+ * ============================================================
  */
 
 
 export function buildSolutionDecisionBridge(
 
-decisionResult
+    decisionResult
 
 ){
 
 
+
 const decision =
 
-decisionResult.decision
+    decisionResult.decision
 
-||
+    ||
 
-"SYSTEM STABLE";
+    "SYSTEM STABLE";
 
 
 
-const solution =
 
-getSolutionDecision(
 
-decision
+/**
+ * ============================================================
+ * DOMAIN SOLUTION HANDLING
+ * ============================================================
+ *
+ * Example:
+ *
+ * BHR:
+ *
+ * CHILD_LABOUR
+ *       ↓
+ * CHILD LABOUR REMEDIATION PROTOCOL
+ *
+ * FIN:
+ *
+ * LIQUIDITY_CRISIS
+ *       ↓
+ * FINANCIAL STABILIZATION ACTION
+ *
+ * ============================================================
+ */
 
-);
 
+if(
+
+    decisionResult.domainSolution
+
+){
 
 
 return {
 
 
-decision,
+    decision,
 
 
-solution:
+    solution:
 
-solution.solution,
-
-
-actionSequence:
-
-solution.actions,
+        decisionResult.domainSolution,
 
 
-authority:
+    actionSequence:
 
-"CAPTAIN_AI_LENA_DECISION_CORE",
+        decisionResult.domainActions
+
+        ||
+
+        [
+
+            "CONFIRM SYSTEM STATE",
+
+            "APPLY SELECTED MITIGATION",
+
+            "MONITOR SYSTEM RESPONSE",
+
+            "UPDATE MEMORY CORE"
+
+        ],
 
 
-goldenRuleAuthority:
+    domain:
 
-true,
+        decisionResult.domain
+
+        ||
+
+        "DOMAIN",
 
 
-status:
+    authority:
 
-"SOLUTION GENERATED",
+        "CAPTAIN_AI_LENA_DECISION_CORE",
 
 
-timestamp:
+    goldenRuleAuthority:
 
-new Date().toISOString()
+        true,
+
+
+    domainOverride:
+
+        true,
+
+
+    status:
+
+        "DOMAIN SOLUTION GENERATED",
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
 
 
 }
+
+
+
+
+
+/**
+ * ============================================================
+ * STANDARD CORE SOLUTION
+ * ============================================================
+ */
+
+
+const solution =
+
+    getSolutionDecision(
+
+        decision
+
+    );
+
+
+
+return {
+
+
+    decision,
+
+
+    solution:
+
+        solution.solution,
+
+
+    actionSequence:
+
+        solution.actions,
+
+
+    domain:
+
+        "CORE",
+
+
+    authority:
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+    domainOverride:
+
+        false,
+
+
+    status:
+
+        "SOLUTION GENERATED",
+
+
+    timestamp:
+
+        new Date().toISOString()
+
+
+};
+
+
+}
+
+
+
+
 
 
 
@@ -293,84 +439,94 @@ new Date().toISOString()
 
 export function applySolutionDecision(
 
-solutionBridge,
+    solutionBridge,
 
-state={}
+    state={}
 
 ){
+
 
 
 return {
 
 
-previousState:
+    previousState:
 
-state,
-
-
-appliedAction:
-
-solutionBridge.solution,
+        state,
 
 
-actionSequence:
+    appliedAction:
 
-solutionBridge.actionSequence,
-
-
-updatedState:{
+        solutionBridge.solution,
 
 
-...state,
+    actionSequence:
+
+        solutionBridge.actionSequence,
 
 
-lastAction:
 
-solutionBridge.solution,
-
-
-status:
-
-"SOLUTION APPLIED"
+    updatedState:{
 
 
-},
+        ...state,
 
 
-memoryUpdate:
+        lastAction:
 
-{
-
-status:
-
-"MEMORY CORE UPDATED",
-
-timestamp:
-
-new Date().toISOString()
-
-},
+            solutionBridge.solution,
 
 
-audit:
+        status:
 
-{
+            "SOLUTION APPLIED"
 
-status:
 
-"ACTION RECORDED",
+    },
 
-authority:
 
-"SPD v13.1"
 
-}
+    memoryUpdate:
+
+    {
+
+        status:
+
+        "MEMORY CORE UPDATED",
+
+
+        timestamp:
+
+        new Date().toISOString()
+
+    },
+
+
+
+    audit:
+
+    {
+
+        status:
+
+        "ACTION RECORDED",
+
+
+        authority:
+
+        "SPD v13.1"
+
+    }
 
 
 };
 
 
 }
+
+
+
+
 
 
 
@@ -387,45 +543,65 @@ export function validateSolutionDecisionBridge(){
 return {
 
 
-module:
+    module:
 
-"SPD v13.1 Solution Decision Bridge",
-
-
-status:
-
-"READY",
+        "SPD v13.1 Solution Decision Bridge",
 
 
-solutions:
 
-Object.keys(
+    status:
 
-SOLUTION_LIBRARY
-
-),
+        "READY",
 
 
-architecture:[
 
-"GOLDEN_RULE_ENGINE",
+    solutions:
 
-"CAPTAIN_AI_LENA_DECISION",
+        Object.keys(
 
-"SOLUTION_DECISION_BRIDGE",
+            SOLUTION_LIBRARY
 
-"ACTION_EXECUTION",
-
-"MEMORY_CORE",
-
-"AUDIT_RECORD"
-
-],
+        ),
 
 
-timestamp:
 
-new Date().toISOString()
+    architecture:[
+
+
+        "GOLDEN_RULE_ENGINE",
+
+
+        "CAPTAIN_AI_LENA_DECISION",
+
+
+        "DOMAIN_SOLUTION_LAYER",
+
+
+        "SOLUTION_DECISION_BRIDGE",
+
+
+        "ACTION_EXECUTION",
+
+
+        "MEMORY_CORE",
+
+
+        "AUDIT_RECORD"
+
+
+    ],
+
+
+
+    deterministic:
+
+        true,
+
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -435,16 +611,30 @@ new Date().toISOString()
 
 
 
+
+
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
 export default {
 
 
-getSolutionDecision,
+    getSolutionDecision,
 
-buildSolutionDecisionBridge,
 
-applySolutionDecision,
+    buildSolutionDecisionBridge,
 
-validateSolutionDecisionBridge
+
+    applySolutionDecision,
+
+
+    validateSolutionDecisionBridge
 
 
 };
