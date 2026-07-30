@@ -3,6 +3,7 @@
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
  * Purpose:
+ *
  * Gateway between:
  *
  * COCKPIT
@@ -11,7 +12,12 @@
  *      ↓
  * DOMAIN RULE ENGINE
  *      ↓
+ * DOMAIN DECISION BRIDGE
+ *      ↓
  * CAPTAIN AI LENA DECISION CORE
+ *      ↓
+ * GOLDEN RULE ENGINE
+ *
  *
  * Golden Rule Engine remains authoritative.
  *
@@ -27,69 +33,106 @@
  */
 
 
+
 import {
+
     finRuleEngine
+
 } from "./FIN/fin-rule-engine.js";
 
 
+
 import {
+
     bhrRuleEngine
+
 } from "./BHR/bhr-rule-engine.js";
 
 
 
 
 
+
+
 /**
+ * ============================================================
  * DOMAIN REGISTRY
+ * ============================================================
  */
+
 
 export const DOMAIN_REGISTRY = {
 
 
+
     FIN: {
 
-        name:"Financial Resilience",
+        name:
 
-        active:true
+            "Financial Resilience",
+
+        active:
+
+            true
 
     },
+
 
 
     BHR: {
 
-        name:"Business & Human Rights",
+        name:
 
-        active:true
+            "Business & Human Rights",
+
+        active:
+
+            true
 
     },
+
 
 
     DC: {
 
-        name:"Data Centre",
+        name:
 
-        active:false
+            "Data Centre",
+
+        active:
+
+            false
 
     },
+
 
 
     CYB: {
 
-        name:"Cyber Security",
+        name:
 
-        active:false
+            "Cyber Security",
+
+        active:
+
+            false
 
     },
 
 
+
     INF: {
 
-        name:"Infrastructure",
+        name:
 
-        active:false
+            "Infrastructure",
+
+        active:
+
+            false
 
     }
+
 
 
 };
@@ -99,11 +142,17 @@ export const DOMAIN_REGISTRY = {
 
 
 
+
+
 /**
+ * ============================================================
  * DOMAIN ENGINE MAP
+ * ============================================================
  */
 
+
 export const DOMAIN_ENGINES = {
+
 
 
     FIN:
@@ -111,9 +160,11 @@ export const DOMAIN_ENGINES = {
         finRuleEngine,
 
 
+
     BHR:
 
         bhrRuleEngine
+
 
 
 };
@@ -123,17 +174,27 @@ export const DOMAIN_ENGINES = {
 
 
 
+
+
+
 /**
+ * ============================================================
  * VERIFY DOMAIN INPUT
+ * ============================================================
  */
+
 
 export function verifyDomainInput(
 
+
     domain,
+
 
     scenario
 
+
 ){
+
 
 
 if(
@@ -142,23 +203,32 @@ if(
 
 ){
 
+
     throw new Error(
 
         "UNKNOWN DOMAIN"
 
     );
 
+
 }
+
+
 
 
 return {
 
 
-    valid:true,
+    valid:
+
+        true,
+
 
     domain,
 
+
     scenario
+
 
 
 };
@@ -171,116 +241,174 @@ return {
 
 
 
+
+
+
 /**
+ * ============================================================
  * REGISTER NEW DOMAIN ENGINE
+ * ============================================================
  */
+
 
 export function registerDomainEngine(
 
+
     domain,
+
 
     engine
 
+
 ){
+
 
 
 DOMAIN_ENGINES[domain] = engine;
 
 
+
 DOMAIN_REGISTRY[domain] = {
 
 
-    name:domain,
-
-    active:true
-
-
-};
-
-
-}
-
-
-
-
-
-
-/**
- * GET DOMAIN STATUS
- */
-
-export function getDomainStatus(
-
-    domain
-
-){
-
-
-return DOMAIN_REGISTRY[domain]
-
-||
-
-
-{
-
-    active:false,
-
-    name:"UNKNOWN"
-
-
-};
-
-
-}
-
-
-
-
-
-
-/**
- * EXECUTE DOMAIN RULE
- *
- * Creates verified recommendation
- * for Captain AI Lena.
- *
- */
-
-export function executeDomainRule(
-
-    domain,
-
-    scenario,
-
-    state
-
-){
-
-
-
-const validation =
-
-    verifyDomainInput(
+    name:
 
         domain,
 
-        scenario
 
-    );
+    active:
+
+        true
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * GET DOMAIN STATUS
+ * ============================================================
+ */
+
+
+export function getDomainStatus(
+
+
+    domain
+
+
+){
+
+
+
+return (
+
+    DOMAIN_REGISTRY[domain]
+
+    ||
+
+    {
+
+        active:false,
+
+        name:"UNKNOWN"
+
+    }
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * EXECUTE DOMAIN RULE
+ *
+ * Domain engines provide verified advice.
+ *
+ * Captain AI Lena remains authority.
+ *
+ * Supports:
+ *
+ * FIN Scenario Bridge
+ * BHR Rule Engine
+ * Future Domains
+ *
+ * ============================================================
+ */
+
+
+export function executeDomainRule(
+
+
+    domain,
+
+
+    scenario,
+
+
+    state = {}
+
+
+){
+
+
+
+verifyDomainInput(
+
+
+    domain,
+
+
+    scenario
+
+
+);
+
+
+
 
 
 
 
 const engine =
 
+
     DOMAIN_ENGINES[domain];
 
 
 
 
-if(!engine)
 
-{
+
+
+if(
+
+    !engine
+
+){
+
 
 
 return {
@@ -288,19 +416,32 @@ return {
 
     domain,
 
+
     scenario,
+
 
     decision:null,
 
+
+    domainDecision:null,
+
+
     goldenRuleAuthority:false,
 
-    status:"NO_ENGINE"
+
+    status:
+
+        "NO_ENGINE"
+
 
 
 };
 
 
 }
+
+
+
 
 
 
@@ -308,17 +449,144 @@ return {
 
 const result =
 
+
     engine(
+
 
         {
 
+
             ...state,
+
+
+            domain,
+
 
             scenario
 
+
+
         }
 
+
     );
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * NORMALIZE ENGINE OUTPUT
+ *
+ * Supports:
+ *
+ * result.decision
+ *
+ * result.domainDecision.decision
+ *
+ * ============================================================
+ */
+
+
+
+const decision =
+
+
+
+    result.decision
+
+
+
+    ??
+
+
+
+    result.domainDecision?.decision
+
+
+
+    ??
+
+
+
+    null;
+
+
+
+
+
+
+
+const authority =
+
+
+
+    result.goldenRuleAuthority
+
+
+
+    ??
+
+
+
+    result.domainDecision?.goldenRuleAuthority
+
+
+
+    ??
+
+
+
+    false;
+
+
+
+
+
+
+
+
+
+const domainDecision = {
+
+
+
+    decision,
+
+
+
+    goldenRuleAuthority:
+
+
+
+        authority,
+
+
+
+    domain,
+
+
+
+    scenario,
+
+
+
+    advisory:
+
+
+        true
+
+
+
+};
+
+
+
 
 
 
@@ -328,35 +596,90 @@ const result =
 return {
 
 
+
     domain,
 
 
     scenario,
 
 
-    decision:
 
-        result.decision,
+    decision,
+
+
+
+    domainDecision,
+
 
 
     recommendation:
 
-        result.recommendation || null,
+
+
+        result.recommendation
+
+
+
+        ??
+
+        result.ruleResponse
+
+
+
+        ??
+
+        null,
+
 
 
     risk:
 
-        result.risk || null,
+
+
+        result.risk
+
+
+
+        ??
+
+        null,
+
 
 
     goldenRuleAuthority:
 
-        true,
+
+
+        authority,
+
 
 
     status:
 
+
+
+        decision
+
+        &&
+
+        authority
+
+
+
+        ?
+
+
+
         "VERIFIED DOMAIN DECISION"
+
+
+
+        :
+
+
+
+        "UNVERIFIED DOMAIN OUTPUT"
+
 
 
 };
@@ -370,17 +693,30 @@ return {
 
 
 
+
+
+
 /**
- * DOMAIN BRIDGE TO CAPTAIN AI LENA
+ * ============================================================
+ * CREATE DOMAIN DECISION BRIDGE
+ *
+ * Output directly consumed by Captain AI Lena.
+ *
+ * ============================================================
  */
+
 
 export function createDomainDecisionBridge(
 
+
     domain,
+
 
     scenario,
 
-    state
+
+    state = {}
+
 
 ){
 
@@ -388,13 +724,139 @@ export function createDomainDecisionBridge(
 
 return executeDomainRule(
 
+
     domain,
+
 
     scenario,
 
+
     state
+
 
 );
 
 
+
 }
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DOMAIN INTEGRATION STATUS
+ * ============================================================
+ */
+
+
+export const DOMAIN_INTEGRATION_STATUS = {
+
+
+
+    module:
+
+        "SPD v13.1 DOMAIN INTEGRATION LAYER",
+
+
+
+    domains:
+
+        [
+
+            "FIN",
+
+            "BHR",
+
+            "DC",
+
+            "CYB",
+
+            "INF"
+
+        ],
+
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+
+    captainAILenaAuthority:
+
+        true,
+
+
+
+    deterministic:
+
+        true,
+
+
+
+    machineLearning:
+
+        false,
+
+
+
+    status:
+
+        "READY"
+
+
+
+};
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
+export default {
+
+
+
+    DOMAIN_REGISTRY,
+
+
+    DOMAIN_ENGINES,
+
+
+    verifyDomainInput,
+
+
+    registerDomainEngine,
+
+
+    getDomainStatus,
+
+
+    executeDomainRule,
+
+
+    createDomainDecisionBridge,
+
+
+    DOMAIN_INTEGRATION_STATUS
+
+
+
+};
