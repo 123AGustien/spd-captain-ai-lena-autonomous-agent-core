@@ -7,6 +7,8 @@
  *
  * Central domain routing bridge.
  *
+ * Architecture:
+ *
  * Cockpit
  *    ↓
  * domainIntegration.js
@@ -14,15 +16,39 @@
  * Domain Rule Engines
  *    ↓
  * Golden Rule Engine
+ *    ↓
+ * Captain AI Lena Decision Core
+ *    ↓
+ * Memory Core
+ *    ↓
+ * Audit Record
  *
+ *
+ * IMPORTANT:
+ *
+ * Domain engines provide assessment,
+ * risk factors and recommended actions.
+ *
+ * Golden Rule Engine remains authoritative.
+ *
+ * Deterministic.
+ * No randomness.
+ * No machine learning.
+ *
+ * ============================================================
+ */
+
+
+/**
+ * ============================================================
+ * DOMAIN ENGINE IMPORTS
  * ============================================================
  */
 
 
 import {
 
-    evaluateBHRScenario,
-    getBHRRuleDefinition
+    evaluateBHRScenario
 
 } from "./BHR/bhr-rule-engine.js";
 
@@ -41,52 +67,76 @@ import {
  * ============================================================
  */
 
+
 const DOMAIN_MAP = {
+
+
+    // ================================
+    // BUSINESS & HUMAN RIGHTS
+    // ================================
 
 
     HUMAN_RIGHTS_DUE_DILIGENCE:
         "BHR",
 
+
     FORCED_LABOUR:
         "BHR",
+
 
     CHILD_LABOUR:
         "BHR",
 
+
     DISCRIMINATION:
         "BHR",
+
 
     OCCUPATIONAL_HEALTH_AND_SAFETY:
         "BHR",
 
+
     MODERN_SLAVERY:
         "BHR",
+
 
     COMMUNITY_IMPACT:
         "BHR",
 
+
     INDIGENOUS_RIGHTS:
         "BHR",
 
+
     SUPPLY_CHAIN_RISK:
         "BHR",
+
 
     GRIEVANCE_MECHANISM:
         "BHR",
 
 
 
+    // ================================
+    // FINANCIAL RESILIENCE
+    // ================================
+
+
     FIN_STRESS:
         "FIN",
+
 
     BANKING_STRESS:
         "FIN",
 
+
     LIQUIDITY_CRISIS:
         "FIN",
 
+
     CREDIT_STRESS:
         "FIN",
+
 
     SOVEREIGN_DEBT:
         "FIN"
@@ -98,18 +148,65 @@ const DOMAIN_MAP = {
 
 /**
  * ============================================================
- * GET DOMAIN
+ * NORMALIZE SCENARIO
  * ============================================================
  */
 
-export function getScenarioDomain(
 
-scenario
+function normalizeScenario(
+
+    scenario
 
 ) {
 
 
-return DOMAIN_MAP[scenario] || "CORE";
+    return String(
+
+        scenario || ""
+
+    )
+
+    .trim()
+
+    .toUpperCase();
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * GET DOMAIN
+ * ============================================================
+ */
+
+
+export function getScenarioDomain(
+
+    scenario
+
+) {
+
+
+    const id =
+
+        normalizeScenario(
+
+            scenario
+
+        );
+
+
+    return (
+
+        DOMAIN_MAP[id]
+
+        ||
+
+        "CORE"
+
+    );
 
 
 }
@@ -125,54 +222,96 @@ return DOMAIN_MAP[scenario] || "CORE";
 
 function runBHRDomain(
 
-scenario,
+    scenario,
 
-state = {}
+    state = {}
 
 ) {
 
 
-const ruleMap = {
+    const scenarioID =
 
+        normalizeScenario(
 
-HUMAN_RIGHTS_DUE_DILIGENCE:"BHR-001",
+            scenario
 
-FORCED_LABOUR:"BHR-002",
-
-CHILD_LABOUR:"BHR-003",
-
-DISCRIMINATION:"BHR-004",
-
-OCCUPATIONAL_HEALTH_AND_SAFETY:"BHR-005",
-
-MODERN_SLAVERY:"BHR-006",
-
-COMMUNITY_IMPACT:"BHR-007",
-
-INDIGENOUS_RIGHTS:"BHR-008",
-
-SUPPLY_CHAIN_RISK:"BHR-009",
-
-GRIEVANCE_MECHANISM:"BHR-010"
-
-
-};
+        );
 
 
 
-return evaluateBHRScenario({
+    const BHR_RULE_MAP = {
 
-scenario,
 
-rule:
+        HUMAN_RIGHTS_DUE_DILIGENCE:
+            "BHR-001",
 
-ruleMap[scenario],
 
-intensity:
+        FORCED_LABOUR:
+            "BHR-002",
 
-state.intensity || 0
 
-});
+        CHILD_LABOUR:
+            "BHR-003",
+
+
+        DISCRIMINATION:
+            "BHR-004",
+
+
+        OCCUPATIONAL_HEALTH_AND_SAFETY:
+            "BHR-005",
+
+
+        MODERN_SLAVERY:
+            "BHR-006",
+
+
+        COMMUNITY_IMPACT:
+            "BHR-007",
+
+
+        INDIGENOUS_RIGHTS:
+            "BHR-008",
+
+
+        SUPPLY_CHAIN_RISK:
+            "BHR-009",
+
+
+        GRIEVANCE_MECHANISM:
+            "BHR-010"
+
+
+    };
+
+
+
+    return evaluateBHRScenario({
+
+        scenario:
+
+            scenarioID,
+
+
+        rule:
+
+            BHR_RULE_MAP[scenarioID],
+
+
+        intensity:
+
+            state.intensityValue
+
+            ||
+
+            state.intensity
+
+            ||
+
+            0
+
+
+    });
 
 
 }
@@ -185,73 +324,103 @@ state.intensity || 0
  * ============================================================
  */
 
+
 export function runDomainIntegration(
 
-scenario,
+    scenario,
 
-state = {}
+    state = {}
 
 ) {
 
 
-const domain =
+    const scenarioID =
 
-getScenarioDomain(
+        normalizeScenario(
 
-scenario
+            scenario
 
-);
-
-
-
-switch(domain) {
-
-
-case "BHR":
-
-
-return runBHRDomain(
-
-scenario,
-
-state
-
-);
+        );
 
 
 
-case "FIN":
+    const domain =
 
+        getScenarioDomain(
 
-return runFINRuleEngine(
+            scenarioID
 
-scenario,
-
-state
-
-);
+        );
 
 
 
-default:
+    switch(domain) {
 
 
-return {
+
+        case "BHR":
 
 
-domain:"CORE",
 
-status:"NO_DOMAIN_RULE",
+            return runBHRDomain(
 
-scenario,
+                scenarioID,
 
-message:
-"Scenario handled by core Golden Rule Engine."
+                state
 
-};
+            );
 
 
-}
+
+
+
+        case "FIN":
+
+
+
+            return runFINRuleEngine(
+
+                scenarioID,
+
+                state
+
+            );
+
+
+
+
+
+        default:
+
+
+
+            return {
+
+
+                domain:
+
+                    "CORE",
+
+
+                status:
+
+                    "NO_DOMAIN_RULE",
+
+
+                scenario:
+
+                    scenarioID,
+
+
+                message:
+
+                    "Scenario handled by Core Golden Rule Engine."
+
+
+            };
+
+
+    }
 
 
 }
@@ -264,47 +433,120 @@ message:
  * ============================================================
  */
 
+
 export function validateDomainIntegration() {
 
 
-return {
+    return {
 
 
-module:
-"SPD v13.1 Domain Integration Layer",
+        module:
+
+            "SPD v13.1 Domain Integration Layer",
 
 
-status:
-"READY",
+
+        status:
+
+            "READY",
 
 
-domains:
-[
 
-"BHR",
+        domains:
 
-"FIN"
+            [
 
-],
+                "BHR",
 
+                "FIN"
 
-registeredScenarios:
-
-Object.keys(
-
-DOMAIN_MAP
-
-),
+            ],
 
 
-timestamp:
 
-new Date()
+        registeredScenarios:
 
-.toISOString()
+            Object.keys(
+
+                DOMAIN_MAP
+
+            ),
+
+
+
+        timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+    };
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * DOMAIN STATUS
+ * ============================================================
+ */
+
+
+export const DOMAIN_INTEGRATION_STATUS = {
+
+
+    module:
+
+        "SPD v13.1 Domain Integration Layer",
+
+
+
+    activeDomains:
+
+        [
+
+            "BHR",
+
+            "FIN"
+
+        ],
+
+
+
+    deterministic:
+
+        true,
+
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+
+    status:
+
+        "ACTIVE"
 
 
 };
 
 
-}
+
+export default {
+
+
+    getScenarioDomain,
+
+    runDomainIntegration,
+
+    validateDomainIntegration,
+
+    DOMAIN_INTEGRATION_STATUS
+
+
+};
