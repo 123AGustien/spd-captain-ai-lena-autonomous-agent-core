@@ -5,384 +5,342 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
+ * DOMAIN:
  * Business & Human Rights
- * Corrective Action & Remediation Layer
+ *
+ * PURPOSE:
+ * Convert BHR scenario rules into
+ * deterministic operational actions.
  *
  * Architecture:
  *
- * BHR Scenario
- *      ↓
  * BHR Rule Engine
- *      ↓
+ *        ↓
  * BHR Action Engine
- *      ↓
+ *        ↓
+ * BHR Solution Engine
+ *        ↓
+ * Solution Decision Bridge
+ *        ↓
  * Golden Rule Engine
- *      ↓
+ *        ↓
  * Captain AI Lena Decision Core
  *
  * ============================================================
  */
 
 
-const BHR_ACTION_MAP = {
+const BHR_ACTION_LIBRARY = {
 
 
-    HUMAN_RIGHTS_DUE_DILIGENCE: {
+"HUMAN_RIGHTS_DUE_DILIGENCE": {
 
-        action:
-        "HUMAN RIGHTS DUE DILIGENCE PROTOCOL",
+action:
+"ACTIVATE HUMAN RIGHTS DUE DILIGENCE PROCESS",
 
-        steps:[
+steps:[
 
-            "IDENTIFY HUMAN RIGHTS RISK",
+"CONFIRM HUMAN RIGHTS RISK PROFILE",
 
-            "VERIFY AVAILABLE INFORMATION",
+"VERIFY DUE DILIGENCE REQUIREMENTS",
 
-            "ASSESS POTENTIAL IMPACT",
+"IDENTIFY POTENTIAL IMPACTS",
 
-            "IMPLEMENT PREVENTIVE MEASURES",
+"APPLY REMEDIATION MEASURES",
 
-            "MONITOR EFFECTIVENESS",
+"MONITOR HUMAN RIGHTS PERFORMANCE"
 
-            "UPDATE MEMORY CORE"
+]
 
-        ]
+},
 
-    },
 
 
+"FORCED_LABOUR": {
 
-    FORCED_LABOUR: {
+action:
+"ACTIVATE FORCED LABOUR RESPONSE",
 
-        action:
-        "FORCED LABOUR ELIMINATION PROTOCOL",
+steps:[
 
-        steps:[
+"VERIFY LABOUR CONDITIONS",
 
-            "ACTIVATE HUMAN RIGHTS ESCALATION",
+"ASSESS SUPPLY CHAIN EXPOSURE",
 
-            "VERIFY WORKER CONDITIONS",
+"REMOVE FORCED LABOUR RISK",
 
-            "INVESTIGATE SUPPLY CHAIN SOURCE",
+"APPLY REMEDIATION ACTIONS",
 
-            "REMOVE EXPLOITATIVE PRACTICES",
+"MONITOR COMPLIANCE"
 
-            "IMPLEMENT REMEDIATION",
+]
 
-            "MONITOR COMPLIANCE"
+},
 
-        ]
 
-    },
 
+"CHILD_LABOUR": {
 
+action:
+"ACTIVATE CHILD LABOUR REMEDIATION PROTOCOL",
 
-    CHILD_LABOUR: {
+steps:[
 
-        action:
-        "CHILD LABOUR REMEDIATION PROTOCOL",
+"CONFIRM CHILD LABOUR INDICATORS",
 
-        steps:[
+"STOP IDENTIFIED CHILD LABOUR EXPOSURE",
 
-            "IDENTIFY AFFECTED SUPPLIER OR OPERATION",
+"PROTECT AFFECTED CHILDREN",
 
-            "VERIFY AGE AND WORK CONDITIONS",
+"IMPLEMENT REMEDIATION PROGRAM",
 
-            "REMOVE CHILD FROM HARMFUL EXPOSURE",
+"VERIFY CORRECTIVE ACTION"
 
-            "PROVIDE REMEDIATION SUPPORT",
+]
 
-            "CONDUCT INDEPENDENT SUPPLIER AUDIT",
+},
 
-            "MONITOR CORRECTIVE ACTION"
 
-        ]
 
-    },
+"DISCRIMINATION": {
 
+action:
+"INITIATE EQUALITY AND FAIRNESS CORRECTIVE ACTION",
 
+steps:[
 
-    DISCRIMINATION: {
+"VERIFY DISCRIMINATION CLAIM",
 
-        action:
-        "EQUALITY AND NON-DISCRIMINATION PROTOCOL",
+"ASSESS ORGANISATIONAL IMPACT",
 
-        steps:[
+"REMOVE DISCRIMINATION RISKS",
 
-            "VERIFY INCIDENT DETAILS",
+"APPLY FAIRNESS CONTROLS",
 
-            "ASSESS HUMAN RIGHTS IMPACT",
+"MONITOR WORKPLACE CONDITIONS"
 
-            "REMOVE DISCRIMINATORY PRACTICES",
+]
 
-            "IMPLEMENT FAIR TREATMENT MEASURES",
+},
 
-            "MONITOR ORGANISATIONAL COMPLIANCE"
 
-        ]
 
-    },
+"OCCUPATIONAL_HEALTH_AND_SAFETY": {
 
+action:
+"ACTIVATE SAFETY RESPONSE PROTOCOL",
 
+steps:[
 
-    OCCUPATIONAL_HEALTH_AND_SAFETY: {
+"CONFIRM SAFETY INCIDENT",
 
-        action:
-        "WORKPLACE SAFETY PROTECTION PROTOCOL",
+"CONTROL IMMEDIATE HAZARDS",
 
-        steps:[
+"APPLY SAFETY MITIGATION",
 
-            "ASSESS SAFETY RISK",
+"VERIFY WORKPLACE RECOVERY",
 
-            "VERIFY INCIDENT CONDITIONS",
+"UPDATE SAFETY RECORD"
 
-            "APPLY IMMEDIATE SAFETY CONTROLS",
+]
 
-            "INVESTIGATE ROOT CAUSE",
+},
 
-            "IMPLEMENT PREVENTIVE ACTION",
 
-            "VERIFY RECOVERY"
 
-        ]
+"MODERN_SLAVERY": {
 
-    },
+action:
+"ACTIVATE MODERN SLAVERY RESPONSE",
 
+steps:[
 
+"IDENTIFY EXPLOITATION RISK",
 
-    MODERN_SLAVERY: {
+"SECURE AFFECTED PERSONS",
 
-        action:
-        "MODERN SLAVERY RESPONSE PROTOCOL",
+"REMOVE EXPLOITATION CONDITIONS",
 
-        steps:[
+"APPLY REMEDIATION",
 
-            "ACTIVATE ESCALATION PROCESS",
+"VERIFY RECOVERY"
 
-            "PROTECT AFFECTED PERSONS",
+]
 
-            "VERIFY SUPPLY CHAIN CONDITIONS",
+},
 
-            "CONDUCT INDEPENDENT INVESTIGATION",
 
-            "IMPLEMENT REMEDIATION",
 
-            "PREVENT RECURRENCE"
+"COMMUNITY_IMPACT": {
 
-        ]
+action:
+"INITIATE COMMUNITY IMPACT MITIGATION",
 
-    },
+steps:[
 
+"ASSESS COMMUNITY IMPACT",
 
+"ENGAGE AFFECTED GROUPS",
 
-    COMMUNITY_IMPACT: {
+"APPLY MITIGATION",
 
-        action:
-        "COMMUNITY IMPACT MITIGATION PROTOCOL",
+"MONITOR COMMUNITY RECOVERY"
 
-        steps:[
+]
 
-            "IDENTIFY COMMUNITY IMPACT",
+},
 
-            "VERIFY STAKEHOLDER CONCERNS",
 
-            "ASSESS POTENTIAL HARM",
 
-            "IMPLEMENT MITIGATION",
+"INDIGENOUS_RIGHTS": {
 
-            "MONITOR OUTCOME"
+action:
+"ACTIVATE INDIGENOUS RIGHTS PROTECTION",
 
-        ]
+steps:[
 
-    },
+"VERIFY RIGHTS IMPACT",
 
+"ENGAGE STAKEHOLDERS",
 
+"APPLY PROTECTION MEASURES",
 
-    INDIGENOUS_RIGHTS: {
+"MONITOR COMPLIANCE"
 
-        action:
-        "INDIGENOUS RIGHTS PROTECTION PROTOCOL",
+]
 
-        steps:[
+},
 
-            "VERIFY RIGHTS IMPACT",
 
-            "ENGAGE STAKEHOLDERS",
 
-            "ASSESS CONSENT PROCESS",
+"SUPPLY_CHAIN_RISK": {
 
-            "IMPLEMENT PROTECTION MEASURES",
+action:
+"ACTIVATE SUPPLY CHAIN ETHICAL REMEDIATION",
 
-            "MONITOR COMPLIANCE"
+steps:[
 
-        ]
+"ASSESS SUPPLY CHAIN EXPOSURE",
 
-    },
+"VERIFY SUPPLIER COMPLIANCE",
 
+"APPLY CORRECTIVE ACTION",
 
+"MONITOR SUPPLIER RECOVERY"
 
-    SUPPLY_CHAIN_RISK: {
+]
 
-        action:
-        "SUPPLY CHAIN HUMAN RIGHTS CONTROL PROTOCOL",
+},
 
-        steps:[
 
-            "IDENTIFY HIGH RISK SUPPLIERS",
 
-            "VERIFY SUPPLIER PRACTICES",
+"GRIEVANCE_MECHANISM": {
 
-            "CONDUCT DUE DILIGENCE",
+action:
+"ACTIVATE GRIEVANCE RESOLUTION PROCESS",
 
-            "APPLY CORRECTIVE ACTION",
+steps:[
 
-            "CONTINUOUS MONITORING"
+"RECEIVE GRIEVANCE",
 
-        ]
+"VERIFY CLAIM",
 
-    },
+"INVESTIGATE IMPACT",
 
+"APPLY REMEDY",
 
+"CONFIRM RESOLUTION"
 
-    GRIEVANCE_MECHANISM: {
+]
 
-        action:
-        "GRIEVANCE RESPONSE PROTOCOL",
+}
 
-        steps:[
-
-            "RECEIVE GRIEVANCE",
-
-            "VERIFY INFORMATION",
-
-            "ASSESS IMPACT",
-
-            "RESPOND WITH REMEDIATION",
-
-            "TRACK RESOLUTION"
-
-        ]
-
-    }
 
 
 };
 
 
 
+export function getBHRAction(scenario){
 
 
-/**
- * ============================================================
- * GET BHR ACTION
- * ============================================================
- */
+return (
 
-export function getBHRAction(
+BHR_ACTION_LIBRARY[scenario]
 
-    scenario
+||
 
-){
+{
 
+action:
+"CONTINUE BHR MONITORING",
 
-    return (
+steps:[
 
-        BHR_ACTION_MAP[scenario]
+"CONFIRM SYSTEM STATE",
 
-        ||
+"CONTINUE OBSERVATION",
 
-        {
+"UPDATE MEMORY CORE"
 
-            action:
-            "GENERAL BHR DUE DILIGENCE PROTOCOL",
+]
 
-            steps:[
+}
 
-                "VERIFY",
-
-                "ASSESS",
-
-                "MITIGATE",
-
-                "MONITOR",
-
-                "UPDATE"
-
-            ]
-
-        }
-
-    );
+);
 
 
 }
 
 
-
-
-
-/**
- * ============================================================
- * VALIDATE BHR ACTION ENGINE
- * ============================================================
- */
 
 export function validateBHRActionEngine(){
 
 
-    return {
+return {
 
 
-        module:
-        "SPD v13.1 BHR Action Engine",
+module:
+
+"SPD v13.1 BHR Action Engine",
 
 
-        status:
-        "READY",
+status:
+
+"READY",
 
 
-        registeredActions:
+actions:
 
-        Object.keys(
+Object.keys(
 
-            BHR_ACTION_MAP
+BHR_ACTION_LIBRARY
 
-        ),
-
-
-        totalActions:
-
-        Object.keys(
-
-            BHR_ACTION_MAP
-
-        ).length,
+),
 
 
-        goldenRuleAuthority:
-        true,
+deterministic:
+
+true,
 
 
-        timestamp:
+timestamp:
 
-        new Date().toISOString()
+new Date().toISOString()
 
 
-    };
+};
 
 
 }
-
-
 
 
 
 export default {
 
 
-    getBHRAction,
+getBHRAction,
 
-    validateBHRActionEngine
-
+validateBHRActionEngine
 
 };
