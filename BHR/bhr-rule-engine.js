@@ -131,11 +131,6 @@ export function runBHRRuleEngine(
 
 
 
-    /*
-     * Convert cockpit intensity
-     * into BHR risk indicators
-     */
-
     state = applyBHRScenarioIntensity(
 
         scenarioId,
@@ -193,6 +188,26 @@ export function runBHRRuleEngine(
             (
                 (state.childLabourRisk || 0) * 0.40 +
                 (state.supplierRisk || 0) * 0.25 +
+                (state.auditFailure || 0) * 0.20 +
+                (state.traceabilityRisk || 0) * 0.15
+            );
+
+            break;
+
+
+
+        case "BHR-004":
+
+            riskScore =
+            (
+                (state.discriminationRisk || 0) * 0.40 +
+                (state.equalOpportunityRisk || 0) * 0.30 +
+                (state.grievanceRisk || 0) * 0.30
+            );
+
+            break;
+
+
 
         case "BHR-005":
 
@@ -328,7 +343,6 @@ export function runBHRRuleEngine(
 
     return {
 
-
         domain:
 
             "BHR",
@@ -376,167 +390,194 @@ export function runBHRRuleEngine(
 
             .toISOString()
 
-
     };
 
-}
 
+}
 /**
  * ============================================================
- * BHR SCENARIO INTENSITY BRIDGE
+ * COMPLETE BHR SCENARIO INTENSITY BRIDGE
  * ============================================================
  */
 
-function applyBHRScenarioIntensity(
+    return updated;
 
-    scenario,
+}
 
-    intensity,
 
-    state
+
+/**
+ * ============================================================
+ * BHR RECOMMENDATION ENGINE
+ * ============================================================
+ */
+
+function generateBHRRecommendation(
+
+    assessment
 
 ) {
 
 
-    const value = Math.max(
+    switch (
 
-        0,
+        assessment
 
-        Math.min(
+    ) {
 
-            100,
 
-            Number(intensity) || 0
+        case "LOW":
 
-        )
+            return {
 
-    );
+                mode:
+                    "MONITOR",
 
+                action:
 
+                    "Continue human rights due diligence monitoring.",
 
-    const updated = {
+                priority:
 
+                    "NORMAL"
 
-        ...state,
+            };
 
 
-        scenarioIntensity:
 
-            value
+        case "MEDIUM":
 
+            return {
 
-    };
+                mode:
+                    "PREVENTIVE RESILIENCE MODE",
 
+                action:
 
+                    "Increase verification, supplier review, worker engagement and corrective controls.",
 
-    switch (scenario) {
+                priority:
 
+                    "ELEVATED"
 
+            };
 
-        case "HUMAN_RIGHTS_DUE_DILIGENCE":
 
-            updated.labourRisk = value;
-            updated.communityImpact = value;
-            updated.supplyChainRisk = value;
-            updated.complianceRisk = value;
 
-            break;
+        case "HIGH":
 
+            return {
 
+                mode:
+                    "HUMAN RIGHTS PROTECTION MODE",
 
-        case "FORCED_LABOUR":
+                action:
 
-            updated.workerFreedomRisk = value;
-            updated.labourConditionRisk = value;
-            updated.supplyChainRisk = value * 0.8;
-            updated.monitoringLevel = 100 - value;
+                    "Activate immediate investigation, mitigation, remediation and executive escalation.",
 
-            break;
+                priority:
 
+                    "CRITICAL"
 
+            };
 
-        case "CHILD_LABOUR":
 
-            updated.childLabourRisk = value;
-            updated.supplierRisk = value;
-            updated.auditFailure = value;
 
-            break;
+        default:
 
+            return {
 
+                mode:
+                    "UNKNOWN",
 
-        case "DISCRIMINATION":
+                action:
 
-            updated.discriminationRisk = value;
-            updated.equalOpportunityRisk = value;
-            updated.grievanceRisk = value;
+                    "No recommendation available.",
 
-            break;
+                priority:
 
+                    "UNKNOWN"
 
-
-        case "OCCUPATIONAL_HEALTH_AND_SAFETY":
-
-            updated.safetyRisk = value;
-            updated.incidentRate = value;
-            updated.workerProtection = 100 - value;
-
-            break;
-
-
-
-        case "MODERN_SLAVERY":
-
-            updated.modernSlaveryRisk = value;
-            updated.workerVulnerability = value;
-            updated.supplyChainRisk = value;
-
-            break;
-
-
-
-        case "COMMUNITY_IMPACT":
-
-            updated.socialImpact = value;
-            updated.environmentalImpact = value;
-            updated.communityEngagement = 100 - value;
-
-            break;
-
-
-
-        case "INDIGENOUS_RIGHTS":
-
-            updated.landRightsRisk = value;
-            updated.consultationFailure = value;
-            updated.culturalImpact = value * 0.8;
-            updated.mitigationCapability = 100 - value;
-
-            break;
-
-
-
-        case "SUPPLY_CHAIN_RISK":
-
-            updated.supplierRisk = value;
-            updated.traceabilityRisk = value;
-            updated.auditFailure = value;
-
-            break;
-
-
-
-        case "GRIEVANCE_MECHANISM":
-
-            updated.grievanceFailure = value;
-            updated.accessibility = 100 - value;
-            updated.responseCapability = 100 - value;
-
-            break;
+            };
 
 
     }
 
 
+}
 
-   
+
+
+/**
+ * ============================================================
+ * BHR ENGINE VALIDATION EXPORT
+ * ============================================================
+ */
+
+export function validateBHRRuleEngine() {
+
+
+    return {
+
+
+        module:
+
+            "SPD v13.1 BHR Rule Engine",
+
+
+        status:
+
+            "READY",
+
+
+        deterministic:
+
+            true,
+
+
+        machineLearning:
+
+            false,
+
+
+        authority:
+
+            "Golden Rule Engine",
+
+
+        pipeline:
+
+            [
+
+                "Cockpit Scenario",
+
+                "domainIntegration.js",
+
+                "BHR Scenario Registry",
+
+                "BHR Rule Registry",
+
+                "BHR Rule Engine",
+
+                "Golden Rule Engine",
+
+                "Captain AI Lena Decision Core",
+
+                "Memory Core",
+
+                "Audit Record"
+
+            ],
+
+
+        timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+    };
+
+
+}
