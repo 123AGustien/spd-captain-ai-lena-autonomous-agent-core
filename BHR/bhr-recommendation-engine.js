@@ -14,6 +14,8 @@
  * RECOMMENDATION
  *    ↓
  * ACTION SEQUENCE
+ *    ↓
+ * AUDIT VERIFICATION
  *
  * Deterministic.
  * No randomness.
@@ -28,6 +30,7 @@ export function generateBHRRecommendation(
     assessment = {}
 
 ){
+
 
     const scenario =
 
@@ -61,7 +64,14 @@ export function generateBHRRecommendation(
 
 
 
+    let riskCategory =
+
+        "LOW_SOCIAL_IMPACT";
+
+
+
     let actions = [];
+
 
 
 
@@ -74,6 +84,11 @@ export function generateBHRRecommendation(
         scenario.includes("MODERN_SLAVERY")
 
     ){
+
+        riskCategory =
+
+            "CRITICAL_HUMAN_RIGHTS_RISK";
+
 
         recommendation =
 
@@ -100,11 +115,17 @@ export function generateBHRRecommendation(
 
 
 
+
     else if(
 
         scenario.includes("CHILD_LABOUR")
 
     ){
+
+        riskCategory =
+
+            "SEVERE_SOCIAL_RISK";
+
 
         recommendation =
 
@@ -117,7 +138,7 @@ export function generateBHRRecommendation(
 
             "REMOVE CHILD LABOUR EXPOSURE",
 
-            "ENGAGE APPROPRIATE SAFEGUARDING PROCESS",
+            "ENGAGE SAFEGUARDING PROCESS",
 
             "SUPPORT AFFECTED CHILDREN",
 
@@ -129,11 +150,17 @@ export function generateBHRRecommendation(
 
 
 
+
     else if(
 
         scenario.includes("OCCUPATIONAL_HEALTH")
 
     ){
+
+        riskCategory =
+
+            "WORKPLACE_SAFETY_RISK";
+
 
         recommendation =
 
@@ -158,6 +185,7 @@ export function generateBHRRecommendation(
 
 
 
+
     else if(
 
         scenario.includes("COMMUNITY")
@@ -167,6 +195,11 @@ export function generateBHRRecommendation(
         scenario.includes("INDIGENOUS")
 
     ){
+
+        riskCategory =
+
+            "STAKEHOLDER_IMPACT_RISK";
+
 
         recommendation =
 
@@ -193,11 +226,17 @@ export function generateBHRRecommendation(
 
 
 
+
     else if(
 
         scenario.includes("SUPPLY_CHAIN")
 
     ){
+
+        riskCategory =
+
+            "SUPPLY_CHAIN_RISK";
+
 
         recommendation =
 
@@ -222,6 +261,7 @@ export function generateBHRRecommendation(
 
 
 
+
     if(intensity >= 80){
 
         actions.push(
@@ -234,6 +274,7 @@ export function generateBHRRecommendation(
 
 
 
+
     return {
 
 
@@ -243,15 +284,62 @@ export function generateBHRRecommendation(
         intensity,
 
 
+        riskCategory,
+
+
         recommendation,
-
-
-        actions,
 
 
         decision:
 
             recommendation,
+
+
+        actionSequence:
+
+            actions,
+
+
+
+        correctiveAction:
+
+        {
+
+            required:
+
+                actions.length > 0,
+
+
+            owner:
+
+                "RESPONSIBLE MANAGEMENT",
+
+
+            verification:
+
+                "FOLLOW-UP AUDIT REQUIRED"
+
+        },
+
+
+
+        goldenRule:
+
+        [
+
+            "OBSERVE",
+
+            "VERIFY",
+
+            "ASSESS",
+
+            "DECIDE",
+
+            "ACT",
+
+            "UPDATE"
+
+        ],
 
 
 
