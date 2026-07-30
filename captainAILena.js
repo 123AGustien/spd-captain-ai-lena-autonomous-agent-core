@@ -48,6 +48,7 @@
  */
 
 
+
 import {
 
     fxModule
@@ -79,6 +80,7 @@ import {
 
 
 
+
 /**
  * ============================================================
  * CAPTAIN AI LENA CORE
@@ -98,8 +100,10 @@ export function captainAILena(
  * ============================================================
  * 1. OBSERVE
  *
- * Receive system state.
- * Preserve data integrity.
+ * Receive complete system state.
+ *
+ * Preserve original input.
+ *
  * ============================================================
  */
 
@@ -121,6 +125,9 @@ const observedState =
  * 2. VERIFY
  *
  * Validate deterministic input.
+ *
+ * No invalid state enters decision layer.
+ *
  * ============================================================
  */
 
@@ -141,12 +148,14 @@ const verifiedState =
  * ============================================================
  * 3. ASSESS
  *
- * Execute system assessment modules.
+ * Execute intelligence modules.
  *
- * Modules provide intelligence.
- * They do not directly decide.
+ * Modules analyse.
+ * Modules do not decide.
+ *
  * ============================================================
  */
+
 
 
 const fx =
@@ -159,6 +168,7 @@ const fx =
 
 
 
+
 const energy =
 
     energyModule(
@@ -166,6 +176,7 @@ const energy =
         verifiedState.energy
 
     );
+
 
 
 
@@ -183,6 +194,8 @@ const risk =
 
 
 
+
+
 const scenario =
 
     scenarioEngine(
@@ -195,11 +208,15 @@ const scenario =
 
 
 
+
+
 /**
  * ============================================================
- * DOMAIN DECISION BRIDGE INPUT
+ * DOMAIN DECISION BRIDGE
  *
- * Domain engines:
+ * Receives verified domain recommendations.
+ *
+ * Supported domains:
  *
  * FIN
  * BHR
@@ -207,14 +224,17 @@ const scenario =
  * CYB
  * INF
  *
- * provide verified recommendations.
+ *
+ * Domain engines provide recommendations.
  *
  * Captain AI Lena remains authority.
+ *
  * ============================================================
  */
 
 
 const domainDecision =
+
 
     verifiedState.domainDecision
 
@@ -226,9 +246,14 @@ const domainDecision =
 
 
 
+
+
 /**
  * ============================================================
  * ASSESSMENT CONTEXT
+ *
+ * Combined intelligence layer.
+ *
  * ============================================================
  */
 
@@ -266,9 +291,14 @@ const context = {
 
 
 
+
+
 /**
  * ============================================================
- * CONTINUE TO PART 2
+ * 4. DECIDE
+ *
+ * Captain AI Lena Decision Core
+ *
  * ============================================================
  */
 
@@ -283,6 +313,20 @@ const decision =
 
 
 
+
+
+
+
+/**
+ * ============================================================
+ * 5. ACT
+ *
+ * Convert decision into command.
+ *
+ * ============================================================
+ */
+
+
 const action =
 
     executeAction(
@@ -290,6 +334,21 @@ const action =
         decision
 
     );
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * 6. UPDATE
+ *
+ * Produce updated state.
+ *
+ * ============================================================
+ */
 
 
 const updatedState = {
@@ -305,6 +364,18 @@ const updatedState = {
 
 
 };
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * AUTONOMOUS AGENT OUTPUT
+ * ============================================================
+ */
 
 
 return {
@@ -334,7 +405,7 @@ return {
 
 
 
-    loop:[
+    goldenRule:[
 
 
         "OBSERVE",
@@ -415,15 +486,18 @@ return {
  * SPD v13.1 DECISION CORE
  * ============================================================
  *
+ * Captain AI Lena Authority Layer
+ *
  * Priority:
  *
- * 1. Critical Safety Override
- * 2. Domain Decision Bridge
- * 3. High Risk Stabilization
- * 4. Energy Protection
- * 5. FX Stability
- * 6. Scenario Response
- * 7. Normal Operation
+ * 1. CRITICAL SAFETY OVERRIDE
+ * 2. VERIFIED DOMAIN DECISION BRIDGE
+ * 3. HIGH RISK STABILIZATION
+ * 4. BHR HUMAN RIGHTS PROTECTION
+ * 5. ENERGY PROTECTION
+ * 6. FX STABILITY
+ * 7. SCENARIO RESPONSE
+ * 8. NORMAL OPERATION
  *
  * ============================================================
  */
@@ -431,7 +505,7 @@ return {
 
 function decide(
 
-state
+    state
 
 ){
 
@@ -456,6 +530,8 @@ const {
 
 
 
+
+
 /**
  * ============================================================
  * PRIORITY 1
@@ -473,11 +549,11 @@ if(
 
 ){
 
-
-return "ACTIVATE STABILIZATION MODE";
-
+    return "ACTIVATE STABILIZATION MODE";
 
 }
+
+
 
 
 
@@ -495,14 +571,16 @@ return "ACTIVATE STABILIZATION MODE";
  * CYB
  * INF
  *
- * Domain intelligence accepted only
- * when Golden Rule authority is confirmed.
+ * Domain engines provide verified advice.
+ *
+ * Captain AI Lena accepts only
+ * Golden Rule authorised decisions.
+ *
  * ============================================================
  */
 
 
 if(
-
 
     domainDecision
 
@@ -514,14 +592,13 @@ if(
 
     domainDecision.goldenRuleAuthority === true
 
-
 ){
 
-
-return domainDecision.decision;
-
+    return domainDecision.decision;
 
 }
+
+
 
 
 
@@ -531,7 +608,7 @@ return domainDecision.decision;
  * ============================================================
  * PRIORITY 3
  *
- * HIGH RISK STABILIZATION
+ * HIGH RISK SYSTEM CONDITION
  * ============================================================
  */
 
@@ -542,11 +619,11 @@ if(
 
 ){
 
-
-return "ACTIVATE STABILIZATION MODE";
-
+    return "ACTIVATE STABILIZATION MODE";
 
 }
+
+
 
 
 
@@ -556,13 +633,41 @@ return "ACTIVATE STABILIZATION MODE";
  * ============================================================
  * PRIORITY 4
  *
- * ENERGY PROTECTION
+ * BUSINESS & HUMAN RIGHTS PROTECTION
+ *
+ * Fallback protection if BHR bridge
+ * is unavailable.
+ *
  * ============================================================
  */
 
 
 if(
 
+    scenario?.domain === "BHR"
+
+){
+
+    return "ACTIVATE BHR REMEDIATION MODE";
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 5
+ *
+ * ENERGY PROTECTION
+ * ============================================================
+ */
+
+
+if(
 
     energy === "LOW ENERGY MODE"
 
@@ -578,12 +683,9 @@ if(
 
     energy?.value < 30
 
-
 ){
 
-
-return "REDUCE SYSTEM LOAD";
-
+    return "REDUCE SYSTEM LOAD";
 
 }
 
@@ -591,9 +693,11 @@ return "REDUCE SYSTEM LOAD";
 
 
 
+
+
 /**
  * ============================================================
- * PRIORITY 5
+ * PRIORITY 6
  *
  * FX STABILITY
  * ============================================================
@@ -606,65 +710,11 @@ if(
 
 ){
 
-
-return "FX CORRECTION ACTIVE";
-
+    return "FX CORRECTION ACTIVE";
 
 }
 
 
-
-
-
-/**
- * ============================================================
- * PRIORITY 6
- *
- * SCENARIO RESPONSE
- * ============================================================
- */
-
-
-if(
-
-    scenario?.type === "FX_SHOCK"
-
-)
-
-return "FX SHOCK RESPONSE ACTIVE";
-
-
-
-
-if(
-
-    scenario?.type === "ENERGY_CRISIS"
-
-)
-
-return "ENERGY RESERVE MODE ACTIVE";
-
-
-
-
-if(
-
-    scenario?.type === "CYBER_ATTACK"
-
-)
-
-return "CYBER DEFENSE MODE ACTIVE";
-
-
-
-
-if(
-
-    scenario?.type === "INFRA_FAILURE"
-
-)
-
-return "INFRASTRUCTURE RECOVERY MODE";
 
 
 
@@ -673,6 +723,59 @@ return "INFRASTRUCTURE RECOVERY MODE";
 /**
  * ============================================================
  * PRIORITY 7
+ *
+ * SCENARIO RESPONSE
+ * ============================================================
+ */
+
+
+switch(
+
+    scenario?.type
+
+){
+
+
+case "FX_SHOCK":
+
+    return "FX SHOCK RESPONSE ACTIVE";
+
+
+
+case "ENERGY_CRISIS":
+
+    return "ENERGY RESERVE MODE ACTIVE";
+
+
+
+case "CYBER_ATTACK":
+
+    return "CYBER DEFENSE MODE ACTIVE";
+
+
+
+case "INFRA_FAILURE":
+
+    return "INFRASTRUCTURE RECOVERY MODE";
+
+
+
+default:
+
+    break;
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * PRIORITY 8
  *
  * NORMAL OPERATION
  * ============================================================
@@ -690,12 +793,15 @@ return "SYSTEM STABLE";
 
 
 
+
+
 /**
  * ============================================================
  * ACTION EXECUTION ENGINE
  * ============================================================
  *
- * Converts decisions into executable commands.
+ * Converts Captain AI Lena decisions
+ * into executable commands.
  *
  * ============================================================
  */
@@ -703,7 +809,7 @@ return "SYSTEM STABLE";
 
 function executeAction(
 
-decision
+    decision
 
 ){
 
@@ -713,9 +819,12 @@ switch(decision){
 
 
 
+
+
 /**
  * SYSTEM STABILIZATION
  */
+
 
 case "ACTIVATE STABILIZATION MODE":
 
@@ -744,9 +853,12 @@ return {
 
 
 
+
+
 /**
- * BHR HUMAN RIGHTS REMEDIATION
+ * BHR REMEDIATION
  */
+
 
 case "ACTIVATE BHR REMEDIATION MODE":
 
@@ -775,9 +887,12 @@ return {
 
 
 
+
+
 /**
  * BHR PREVENTIVE CONTROL
  */
+
 
 case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
 
@@ -806,9 +921,12 @@ return {
 
 
 
+
+
 /**
- * FINANCIAL RESILIENCE
+ * FINANCIAL MONITORING
  */
+
 
 case "FINANCIAL_MONITORING":
 
@@ -837,9 +955,12 @@ return {
 
 
 
+
+
 /**
- * ENERGY MANAGEMENT
+ * ENERGY PROTECTION
  */
+
 
 case "REDUCE SYSTEM LOAD":
 
@@ -854,7 +975,7 @@ return {
 
     command:
 
-        "REDUCE SYSTEM LOAD",
+        "REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES",
 
 
     status:
@@ -868,9 +989,12 @@ return {
 
 
 
+
+
 /**
- * FX RESPONSE
+ * FX CONTROL
  */
+
 
 case "FX CORRECTION ACTIVE":
 
@@ -899,9 +1023,142 @@ return {
 
 
 
+
+
 /**
- * DEFAULT
+ * FX SHOCK
  */
+
+
+case "FX SHOCK RESPONSE ACTIVE":
+
+
+return {
+
+
+    mode:
+
+        "FX RESPONSE",
+
+
+    command:
+
+        "APPLY FX SHOCK MITIGATION",
+
+
+    status:
+
+        "ACTIVE"
+
+
+};
+
+
+
+
+
+
+
+/**
+ * ENERGY CRISIS
+ */
+
+
+case "ENERGY RESERVE MODE ACTIVE":
+
+
+return {
+
+
+    mode:
+
+        "ENERGY RESERVE",
+
+    command:
+
+        "PROTECT ENERGY AVAILABILITY",
+
+    status:
+
+        "ACTIVE"
+
+
+};
+
+
+
+
+
+
+
+/**
+ * CYBER DEFENCE
+ */
+
+
+case "CYBER DEFENSE MODE ACTIVE":
+
+
+return {
+
+
+    mode:
+
+        "CYBER DEFENSE",
+
+    command:
+
+        "EXECUTE CYBER RESPONSE CONTROLS",
+
+    status:
+
+        "ACTIVE"
+
+
+};
+
+
+
+
+
+
+
+/**
+ * INFRASTRUCTURE RECOVERY
+ */
+
+
+case "INFRASTRUCTURE RECOVERY MODE":
+
+
+return {
+
+
+    mode:
+
+        "INFRASTRUCTURE RECOVERY",
+
+    command:
+
+        "RESTORE CRITICAL INFRASTRUCTURE",
+
+    status:
+
+        "ACTIVE"
+
+
+};
+
+
+
+
+
+
+
+/**
+ * DEFAULT NORMAL OPERATION
+ */
+
 
 default:
 
@@ -938,7 +1195,7 @@ return {
  *
  * OBSERVE protection layer.
  *
- * Converts incoming cockpit/domain data
+ * Converts cockpit and domain input
  * into deterministic engine format.
  *
  * ============================================================
@@ -955,6 +1212,10 @@ function normalizeState(
 return {
 
 
+    /**
+     * FINANCIAL DOMAIN
+     */
+
     fx:
 
         Number(
@@ -964,6 +1225,12 @@ return {
         ),
 
 
+
+
+
+    /**
+     * ENERGY DOMAIN
+     */
 
     energy:
 
@@ -975,6 +1242,12 @@ return {
 
 
 
+
+
+    /**
+     * CYBER DOMAIN
+     */
+
     cyb:
 
         Number(
@@ -984,6 +1257,12 @@ return {
         ),
 
 
+
+
+
+    /**
+     * INFRASTRUCTURE DOMAIN
+     */
 
     inf:
 
@@ -995,6 +1274,12 @@ return {
 
 
 
+
+
+    /**
+     * DATA CENTRE DOMAIN
+     */
+
     dc:
 
         Number(
@@ -1005,6 +1290,12 @@ return {
 
 
 
+
+
+    /**
+     * EVENT IDENTIFICATION
+     */
+
     event:
 
         state?.event ??
@@ -1012,6 +1303,12 @@ return {
         "NORMAL",
 
 
+
+
+
+    /**
+     * SCENARIO IDENTIFICATION
+     */
 
     scenario:
 
@@ -1021,13 +1318,47 @@ return {
 
 
 
-    mode:
-
-        state?.mode ??
-
-        "AUTONOMOUS",
 
 
+    /**
+     * DOMAIN IDENTIFICATION
+     *
+     * FIN
+     * BHR
+     * DC
+     * CYB
+     * INF
+     */
+
+    domain:
+
+        state?.domain ??
+
+        null,
+
+
+
+
+
+    /**
+     * SCENARIO TYPE
+     */
+
+    scenarioType:
+
+        state?.scenarioType ??
+
+        null,
+
+
+
+
+
+    /**
+     * DOMAIN DECISION BRIDGE
+     *
+     * Verified recommendation only.
+     */
 
     domainDecision:
 
@@ -1036,6 +1367,26 @@ return {
         null,
 
 
+
+
+
+    /**
+     * EXECUTION MODE
+     */
+
+    mode:
+
+        state?.mode ??
+
+        "AUTONOMOUS",
+
+
+
+
+
+    /**
+     * SCENARIO INTENSITY
+     */
 
     intensity:
 
@@ -1046,6 +1397,12 @@ return {
         ),
 
 
+
+
+
+    /**
+     * TIMESTAMP
+     */
 
     time:
 
@@ -1065,12 +1422,14 @@ return {
 
 
 
+
+
 /**
  * ============================================================
  * VERIFY STATE
  * ============================================================
  *
- * Validation layer.
+ * Validation barrier.
  *
  * Prevents invalid values entering
  * the decision engine.
@@ -1093,6 +1452,8 @@ return {
 
 
 
+
+
     fx:
 
         Number.isFinite(
@@ -1108,6 +1469,8 @@ return {
         :
 
         0,
+
+
 
 
 
@@ -1129,6 +1492,8 @@ return {
 
 
 
+
+
     cyb:
 
         Number.isFinite(
@@ -1144,6 +1509,8 @@ return {
         :
 
         50,
+
+
 
 
 
@@ -1165,6 +1532,8 @@ return {
 
 
 
+
+
     dc:
 
         Number.isFinite(
@@ -1180,6 +1549,8 @@ return {
         :
 
         0,
+
+
 
 
 
@@ -1211,18 +1582,109 @@ return {
 
 
 
+
+
 /**
  * ============================================================
- * SPD v13.1 FINAL CORE EXPORT
+ * SPD v13.1 CORE VALIDATION COMPATIBILITY
+ * ============================================================
+ *
+ * Provides data required by:
+ *
+ * SELF-TEST ENGINE
+ * FAULT IDENTIFICATION
+ * MEMORY CORE
+ * AUDIT RECORD
+ *
+ * ============================================================
+ */
+
+
+export const SPD_CORE_STATUS = {
+
+
+    engine:
+
+        "SPD v13.1 DETERMINISTIC AUTONOMOUS AGENT CORE",
+
+
+    agent:
+
+        "CAPTAIN AI LENA",
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+
+    goldenRule:
+
+
+    [
+
+        "OBSERVE",
+
+        "VERIFY",
+
+        "ASSESS",
+
+        "DECIDE",
+
+        "ACT",
+
+        "UPDATE"
+
+    ],
+
+
+    deterministic:
+
+        true,
+
+
+    machineLearning:
+
+        false,
+
+
+    randomness:
+
+        false,
+
+
+    status:
+
+        "READY"
+
+
+};
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * SPD v13.1 FINAL EXPORT
  * ============================================================
  *
  * Captain AI Lena remains:
  *
- * Decision Authority
+ * DECISION AUTHORITY
  *
- * Domain engines:
  *
- * Advisory + verified input
+ * Domain Engines:
+ *
+ * VERIFIED ADVISORY INPUT
+ *
+ * Golden Rule Engine:
+ *
+ * UNCHANGED
  *
  * ============================================================
  */
