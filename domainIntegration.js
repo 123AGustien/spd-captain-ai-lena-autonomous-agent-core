@@ -1,27 +1,33 @@
 /**
  * ============================================================
- * SPD v13.1 — DOMAIN INTEGRATION LAYER
+ * SPD v13.1 — DOMAIN INTEGRATION LAYER FINAL
  * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * Central domain routing bridge.
+ * Central Domain Routing Bridge
  *
- * Cockpit
+ * COCKPIT
  *    ↓
  * domainIntegration.js
  *    ↓
- * Domain Rule Engines
+ * DOMAIN RULE ENGINES
  *    ↓
- * Golden Rule Engine
+ * DOMAIN DECISION BRIDGE
  *    ↓
- * Captain AI Lena Decision Core
+ * GOLDEN RULE ENGINE
+ *    ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *    ↓
+ * MEMORY CORE
+ *    ↓
+ * AUDIT RECORD
  *
  *
- * Active Domains:
+ * ACTIVE DOMAINS:
  *
- * FIN  — Financial Resilience
- * BHR  — Business & Human Rights
+ * FIN — Financial Resilience
+ * BHR — Business & Human Rights
  *
  * ============================================================
  */
@@ -107,15 +113,11 @@ const DOMAIN_MAP = {
 
 /**
  * ============================================================
- * GET SCENARIO DOMAIN
+ * GET DOMAIN
  * ============================================================
  */
 
-export function getScenarioDomain(
-
-    scenario
-
-){
+export function getScenarioDomain(scenario){
 
     return DOMAIN_MAP[scenario] || "CORE";
 
@@ -125,7 +127,82 @@ export function getScenarioDomain(
 
 /**
  * ============================================================
- * BHR DOMAIN EXECUTION
+ * DOMAIN DECISION BRIDGE
+ *
+ * Normalizes domain outputs before
+ * Golden Rule Engine processing.
+ *
+ * ============================================================
+ */
+
+function buildDomainDecisionBridge(
+
+    domainResult
+
+){
+
+    return {
+
+
+        domain:
+        domainResult.domain,
+
+
+        scenario:
+        domainResult.scenario,
+
+
+        domainRisk:
+        domainResult.evaluation?.risk
+        ||
+        domainResult.risk
+        ||
+        "UNKNOWN",
+
+
+        domainAssessment:
+        domainResult.evaluation
+        ||
+        domainResult.assessment
+        ||
+        {},
+
+
+        domainDecision:
+        domainResult.evaluation?.decision
+        ||
+        domainResult.decision
+        ||
+        "MONITOR",
+
+
+        domainActions:
+        domainResult.evaluation?.actions
+        ||
+        domainResult.actions
+        ||
+        [],
+
+
+        authority:
+
+        "DOMAIN_RULE_ENGINE",
+
+
+        timestamp:
+
+        new Date().toISOString()
+
+
+    };
+
+}
+
+
+
+/**
+ * ============================================================
+ * RUN BHR DOMAIN
  * ============================================================
  */
 
@@ -133,14 +210,16 @@ function runBHRDomain(
 
     scenario,
 
-    state = {}
+    state={}
 
 ){
 
+
     const rule =
-        getBHRRuleFromScenario(
-            scenario
-        );
+    getBHRRuleFromScenario(
+        scenario
+    );
+
 
 
     if(!rule){
@@ -151,10 +230,8 @@ function runBHRDomain(
 
             scenario,
 
-            status:"UNKNOWN_BHR_RULE",
-
-            message:
-            "No BHR rule mapping found.",
+            status:
+            "UNKNOWN_BHR_RULE",
 
             timestamp:
             new Date().toISOString()
@@ -166,37 +243,43 @@ function runBHRDomain(
 
 
     const ruleDefinition =
-        getBHRRuleDefinition(
-            rule
-        );
+    getBHRRuleDefinition(
+        rule
+    );
 
 
 
     const evaluation =
-        evaluateBHRScenario({
-
-            scenario,
-
-            rule,
-
-            intensity:
-            state.intensity || 0
-
-        });
-
-
-
-    return {
-
-        domain:"BHR",
+    evaluateBHRScenario({
 
         scenario,
 
         rule,
 
+        intensity:
+        state.intensity || 0
+
+    });
+
+
+
+    const result = {
+
+
+        domain:"BHR",
+
+
+        scenario,
+
+
+        rule,
+
+
         ruleDefinition,
 
+
         evaluation,
+
 
         status:
         "BHR_RULE_EXECUTED",
@@ -213,13 +296,32 @@ function runBHRDomain(
     };
 
 
+
+    return {
+
+
+        ...result,
+
+
+        domainDecisionBridge:
+
+        buildDomainDecisionBridge(
+
+            result
+
+        )
+
+
+    };
+
+
 }
 
 
 
 /**
  * ============================================================
- * FIN DOMAIN EXECUTION
+ * RUN FIN DOMAIN
  * ============================================================
  */
 
@@ -227,17 +329,40 @@ function runFINDomain(
 
     scenario,
 
-    state = {}
+    state={}
 
 ){
 
-    return runFINRuleEngine(
+
+    const result =
+
+    runFINRuleEngine(
 
         scenario,
 
         state
 
     );
+
+
+
+    return {
+
+
+        ...result,
+
+
+        domainDecisionBridge:
+
+        buildDomainDecisionBridge(
+
+            result
+
+        )
+
+
+    };
+
 
 }
 
@@ -253,15 +378,18 @@ export function runDomainIntegration(
 
     scenario,
 
-    state = {}
+    state={}
 
 ){
 
 
     const domain =
-        getScenarioDomain(
-            scenario
-        );
+
+    getScenarioDomain(
+
+        scenario
+
+    );
 
 
 
@@ -297,18 +425,24 @@ export function runDomainIntegration(
 
             return {
 
+
                 domain:"CORE",
+
+
+                scenario,
+
 
                 status:
                 "NO_DOMAIN_RULE",
 
-                scenario,
 
                 message:
-                "Scenario handled by Core Golden Rule Engine.",
+
+                "Handled by Core Golden Rule Engine.",
 
 
                 timestamp:
+
                 new Date().toISOString()
 
 
@@ -324,45 +458,7 @@ export function runDomainIntegration(
 
 /**
  * ============================================================
- * EXECUTE DOMAIN RULE BRIDGE
- * ============================================================
- *
- * Public cockpit interface.
- *
- * Cockpit
- *    ↓
- * executeDomainRule()
- *    ↓
- * runDomainIntegration()
- *    ↓
- * Domain Rule Engine
- *
- * ============================================================
- */
-
-export function executeDomainRule(
-
-    scenario,
-
-    state = {}
-
-){
-
-    return runDomainIntegration(
-
-        scenario,
-
-        state
-
-    );
-
-}
-
-
-
-/**
- * ============================================================
- * DOMAIN VALIDATION
+ * VALIDATION
  * ============================================================
  */
 
@@ -373,10 +469,12 @@ export function validateDomainIntegration(){
 
 
         module:
-        "SPD v13.1 Domain Integration Layer",
+
+        "SPD v13.1 Domain Integration Layer Final",
 
 
         status:
+
         "READY",
 
 
@@ -388,9 +486,15 @@ export function validateDomainIntegration(){
 
             "DOMAIN_RULE_ENGINE",
 
+            "DOMAIN_DECISION_BRIDGE",
+
             "GOLDEN_RULE_ENGINE",
 
-            "CAPTAIN_AI_LENA_DECISION"
+            "CAPTAIN_AI_LENA_DECISION",
+
+            "MEMORY_CORE",
+
+            "AUDIT_RECORD"
 
         ],
 
@@ -409,7 +513,6 @@ export function validateDomainIntegration(){
         validateBHRScenarioMapping(),
 
 
-
         registeredScenarios:
 
         Object.keys(
@@ -417,7 +520,6 @@ export function validateDomainIntegration(){
             DOMAIN_MAP
 
         ),
-
 
 
         timestamp:
@@ -481,12 +583,6 @@ export function getDomainStatus(){
 
 
 
-/**
- * ============================================================
- * DEFAULT EXPORT
- * ============================================================
- */
-
 export default {
 
 
@@ -494,11 +590,8 @@ export default {
 
     runDomainIntegration,
 
-    executeDomainRule,
-
     validateDomainIntegration,
 
     getDomainStatus
-
 
 };
