@@ -12,6 +12,10 @@
  * GOLDEN RULE ENGINE
  *          ↓
  * CAPTAIN AI LENA DECISION CORE
+ *          ↓
+ * MEMORY CORE
+ *          ↓
+ * AUDIT RECORD
  *
  * Active Domains:
  * FIN — Financial Resilience
@@ -34,13 +38,24 @@
  */
 
 import {
+
     finRuleEngine
+
 } from "./FIN/fin-rule-engine.js";
 
 
 import {
+
     bhrRuleEngine
+
 } from "./BHR/bhr-rule-engine.js";
+
+
+import {
+
+    getBHRScenario
+
+} from "./BHR/bhr-scenario-registry.js";
 
 
 
@@ -51,67 +66,132 @@ import {
 
 const DOMAIN_REGISTRY = {
 
+
     FIN: {
-        name: "Financial Resilience",
-        status: "ACTIVE",
-        engine: "FIN_RULE_ENGINE"
+
+        name:
+            "Financial Resilience",
+
+        status:
+            "ACTIVE",
+
+        engine:
+            "FIN_RULE_ENGINE"
+
     },
 
 
     BHR: {
-        name: "Business & Human Rights",
-        status: "ACTIVE",
-        engine: "BHR_RULE_ENGINE"
+
+        name:
+            "Business & Human Rights",
+
+        status:
+            "ACTIVE",
+
+        engine:
+            "BHR_RULE_ENGINE"
+
     },
 
 
     FX: {
-        name: "Foreign Exchange",
-        status: "PLANNED",
-        engine: "FX_RULE_ENGINE"
+
+        name:
+            "Foreign Exchange",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "FX_RULE_ENGINE"
+
     },
 
 
     DC: {
-        name: "Data Centre",
-        status: "PLANNED",
-        engine: "DC_RULE_ENGINE"
+
+        name:
+            "Data Centre",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "DC_RULE_ENGINE"
+
     },
 
 
     CYB: {
-        name: "Cyber Resilience",
-        status: "PLANNED",
-        engine: "CYB_RULE_ENGINE"
+
+        name:
+            "Cyber Resilience",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "CYB_RULE_ENGINE"
+
     },
 
 
     INF: {
-        name: "Infrastructure",
-        status: "PLANNED",
-        engine: "INF_RULE_ENGINE"
+
+        name:
+            "Infrastructure",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "INF_RULE_ENGINE"
+
     },
 
 
     ENG: {
-        name: "Energy",
-        status: "PLANNED",
-        engine: "ENG_RULE_ENGINE"
+
+        name:
+            "Energy",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "ENG_RULE_ENGINE"
+
     },
 
 
     OPS: {
-        name: "Operations",
-        status: "PLANNED",
-        engine: "OPS_RULE_ENGINE"
+
+        name:
+            "Operations",
+
+        status:
+            "PLANNED",
+
+        engine:
+            "OPS_RULE_ENGINE"
+
     },
 
 
     SC: {
-        name: "Scenario Control",
-        status: "ACTIVE",
-        engine: "SCENARIO_ENGINE"
+
+        name:
+            "Scenario Control",
+
+        status:
+            "ACTIVE",
+
+        engine:
+            "SCENARIO_ENGINE"
+
     }
+
 
 };
 
@@ -124,11 +204,40 @@ const DOMAIN_REGISTRY = {
 
 const DOMAIN_ENGINES = {
 
-    FIN: finRuleEngine,
 
-    BHR: bhrRuleEngine
+    FIN:
+
+        finRuleEngine,
+
+
+    BHR:
+
+        function(input) {
+
+
+            const scenarioConfig =
+
+                getBHRScenario(
+
+                    input.scenario
+
+                );
+
+
+            return bhrRuleEngine({
+
+                ...input,
+
+                scenarioConfig
+
+            });
+
+
+        }
+
 
 };
+
 
 
 
@@ -138,47 +247,79 @@ const DOMAIN_ENGINES = {
  */
 
 export function registerDomainEngine(
+
     domain,
+
     engine
+
 ) {
 
+
     const id =
+
         String(domain || "")
+
         .trim()
+
         .toUpperCase();
+
 
 
     if (!id) {
 
+
         throw new Error(
+
             "DOMAIN INTEGRATION ERROR: DOMAIN ID REQUIRED"
+
         );
+
 
     }
 
 
-    if (typeof engine !== "function") {
+
+    if (
+
+        typeof engine !== "function"
+
+    ) {
+
 
         throw new Error(
+
             "DOMAIN INTEGRATION ERROR: ENGINE MUST BE FUNCTION"
+
         );
 
+
     }
+
 
 
     DOMAIN_ENGINES[id] = engine;
 
 
+
     return {
 
-        domain: id,
+
+        domain:
+
+            id,
+
 
         status:
+
             "ENGINE_REGISTERED"
+
 
     };
 
+
 }
+
+
 
 
 
@@ -188,52 +329,86 @@ export function registerDomainEngine(
  */
 
 export function getDomainStatus(
+
     domain
+
 ) {
 
+
     const id =
+
         String(domain || "")
+
         .trim()
+
         .toUpperCase();
 
 
+
     const config =
+
         DOMAIN_REGISTRY[id];
 
 
+
     const engine =
+
         DOMAIN_ENGINES[id];
+
 
 
     return {
 
-        domain: id,
+
+        domain:
+
+            id,
+
 
         name:
+
             config?.name ??
+
             "UNKNOWN DOMAIN",
 
 
+
         configured:
+
             Boolean(config),
 
 
+
         engineRegistered:
+
             Boolean(engine),
 
 
+
         status:
+
             engine
-            ? "ACTIVE"
-            :
-            (
-                config?.status ??
-                "UNAVAILABLE"
-            )
+
+                ?
+
+                "ACTIVE"
+
+                :
+
+                (
+
+                    config?.status ??
+
+                    "UNAVAILABLE"
+
+                )
+
 
     };
 
+
 }
+
 
 
 
@@ -243,109 +418,197 @@ export function getDomainStatus(
  */
 
 export function executeDomainRule(
+
     domain,
+
     input = {}
+
 ) {
 
+
     const id =
+
         String(domain || "")
+
         .trim()
+
         .toUpperCase();
 
 
+
     const config =
+
         DOMAIN_REGISTRY[id];
 
 
+
     const engine =
+
         DOMAIN_ENGINES[id];
+
+
+
 
 
     if (!config) {
 
+
         return {
 
-            domain: id,
+
+            domain:
+
+                id,
+
 
             status:
+
                 "UNKNOWN_DOMAIN",
 
+
+
             decision:
+
                 "NO DOMAIN RULE AVAILABLE",
 
+
+
             action:
+
                 "MONITOR SYSTEM"
+
 
         };
 
+
     }
+
+
+
 
 
     if (!engine) {
 
+
         return {
 
-            domain: id,
+
+            domain:
+
+                id,
+
 
             status:
+
                 "ENGINE_NOT_REGISTERED",
 
+
+
             decision:
+
                 "DOMAIN ENGINE NOT AVAILABLE",
 
+
+
             action:
+
                 "MONITOR SYSTEM"
 
+
         };
+
 
     }
 
 
+
+
+
     const observedInput = {
+
 
         ...input,
 
-        domain: id,
+
+        domain:
+
+            id,
+
 
         domainName:
+
             config.name,
 
 
+
         timestamp:
+
             new Date()
+
             .toISOString()
+
 
     };
 
 
+
+
+
     try {
 
+
+
         const verifiedInput =
+
             verifyDomainInput(
+
                 observedInput
+
             );
+
+
+
 
 
         const assessment =
+
             engine(
+
                 verifiedInput
+
             );
+
+
+
 
 
         return {
 
-            domain: id,
+
+
+            domain:
+
+                id,
+
 
 
             domainName:
+
                 config.name,
 
 
+
             engine:
+
                 config.engine,
 
 
-            pipeline: [
+
+            pipeline:
+
+
+
+            [
 
                 "OBSERVE",
 
@@ -362,67 +625,142 @@ export function executeDomainRule(
             ],
 
 
+
+
             input:
+
                 verifiedInput,
 
 
+
+
             result:
+
                 assessment,
 
 
-            audit: {
+
+
+
+            scenarioRegistry:
+
+                id === "BHR"
+
+                ?
+
+                getBHRScenario(
+
+                    verifiedInput.scenario
+
+                )
+
+                :
+
+                null,
+
+
+
+
+
+            audit:
+
+            {
+
 
                 status:
+
                     "TERCATAT",
 
+
                 bahasa:
+
                     "INDONESIA",
 
+
+                domain:
+
+                    id,
+
+
                 timestamp:
+
                     new Date()
+
                     .toISOString()
+
 
             },
 
 
+
+
+
             status:
+
                 "EXECUTED"
+
+
 
         };
 
 
-    } catch(error) {
+
+
+    }
+
+    catch(error) {
+
 
 
         return {
 
-            domain: id,
+
+            domain:
+
+                id,
+
+
 
             status:
+
                 "DOMAIN_ENGINE_ERROR",
 
 
+
             error:
+
                 error.message,
 
 
+
             decision:
+
                 "NO DECISION — ENGINE ERROR",
 
 
+
             action:
+
                 "HOLD AND MONITOR",
 
 
+
             timestamp:
+
                 new Date()
+
                 .toISOString()
+
 
         };
 
+
     }
 
+
 }
+
+
 
 
 
@@ -432,54 +770,88 @@ export function executeDomainRule(
  */
 
 function verifyDomainInput(
+
     input
+
 ) {
 
+
     const intensity =
+
+
         Math.max(
+
             0,
+
             Math.min(
+
                 100,
+
                 Number(input.intensity) || 0
+
             )
+
         );
+
 
 
     return {
 
+
         ...input,
+
 
 
         intensity,
 
 
+
         intensityFactor:
+
             intensity / 100,
 
 
+
         scenario:
+
             input.scenario ??
+
             input.event ??
+
             "DEFAULT",
+
 
 
         event:
+
             input.event ??
+
             input.scenario ??
+
             "DEFAULT",
 
 
+
         state:
+
             input.state ?? {},
 
 
+
         mode:
+
             input.mode ??
+
             "AUTONOMOUS"
+
+
 
     };
 
+
 }
+
+
 
 
 
@@ -490,15 +862,24 @@ function verifyDomainInput(
 
 export function getAllDomainStatus() {
 
+
     return Object.keys(
+
         DOMAIN_REGISTRY
+
     )
+
     .map(
+
         domain =>
+
             getDomainStatus(domain)
+
     );
 
+
 }
+
 
 
 
@@ -508,6 +889,7 @@ export function getAllDomainStatus() {
  */
 
 export const DOMAIN_IDS = [
+
 
     "FIN",
 
@@ -527,7 +909,10 @@ export const DOMAIN_IDS = [
 
     "SC"
 
+
 ];
+
+
 
 
 
@@ -535,10 +920,13 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
     engine:
+
         "SPD V13.1 DOMAIN INTEGRATION LAYER",
 
 
+
     activeDomains:
+
 
     [
 
@@ -549,7 +937,9 @@ export const DOMAIN_INTEGRATION_STATUS = {
     ],
 
 
+
     pipeline:
+
 
     [
 
@@ -568,18 +958,28 @@ export const DOMAIN_INTEGRATION_STATUS = {
     ],
 
 
+
     deterministic:
+
         true,
 
 
+
     machineLearning:
+
         false,
 
 
+
     randomness:
+
         false
 
+
+
 };
+
+
 
 
 
@@ -590,18 +990,26 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 export default {
 
+
     registerDomainEngine,
+
 
     executeDomainRule,
 
+
     getDomainStatus,
+
 
     getAllDomainStatus,
 
+
     DOMAIN_IDS,
+
 
     DOMAIN_REGISTRY,
 
+
     DOMAIN_INTEGRATION_STATUS
+
 
 };
