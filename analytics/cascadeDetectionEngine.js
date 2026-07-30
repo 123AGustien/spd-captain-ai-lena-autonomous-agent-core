@@ -7,9 +7,14 @@
  *
  * Authority:
  * Supporting analytics layer only.
+ *
+ * This engine does NOT:
+ * - Modify system state
+ * - Override Captain AI Lena
+ * - Change Golden Rule decisions
  */
 
-function detectCascade(state) {
+export function detectCascade(state) {
 
     const cascadePaths = [];
 
@@ -18,7 +23,6 @@ function detectCascade(state) {
             path: ["CYB", "DC"],
             risk: "POTENTIAL CASCADE"
         });
-        
     }
 
     if (state.energy <= 30 && state.dc >= 40) {
@@ -42,7 +46,3 @@ function detectCascade(state) {
         paths: cascadePaths
     };
 }
-
-module.exports = {
-    detectCascade
-};
