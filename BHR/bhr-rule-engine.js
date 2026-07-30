@@ -5,27 +5,13 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * Business & Human Rights Domain Assessment Engine
- *
- * Architecture:
- *
- * BHR Scenario Registry
- *        ↓
- * BHR Rule Engine
- *        ↓
- * Domain Risk Assessment
- *        ↓
- * BHR Solution Recommendation
- *        ↓
- * Golden Rule Engine
- *        ↓
- * Captain AI Lena Decision Core
- *
- * Golden Rule Engine remains authoritative.
+ * Business & Human Rights Assessment Engine
  *
  * Deterministic.
- * Explainable.
  * No randomness.
+ * No machine learning.
+ *
+ * Golden Rule Engine remains authoritative.
  *
  * ============================================================
  */
@@ -39,82 +25,7 @@ import {
 
 /**
  * ============================================================
- * BHR SOLUTION MAPPING
- * ============================================================
- */
-
-function getBHRSolution(
-    scenarioId,
-    assessment
-) {
-
-
-    switch (scenarioId) {
-
-
-        case "BHR-001":
-
-            if (assessment === "HIGH")
-                return "ACTIVATE HUMAN RIGHTS DUE DILIGENCE REMEDIATION PROTOCOL";
-
-            if (assessment === "MEDIUM")
-                return "ENHANCE HUMAN RIGHTS MONITORING AND REVIEW";
-
-            return "CONTINUE HUMAN RIGHTS DUE DILIGENCE MONITORING";
-
-
-
-        case "BHR-002":
-
-            if (assessment === "HIGH")
-                return "ACTIVATE SUPPLY CHAIN HUMAN RIGHTS CORRECTIVE ACTION";
-
-            if (assessment === "MEDIUM")
-                return "INCREASE SUPPLY CHAIN MONITORING";
-
-            return "CONTINUE SUPPLY CHAIN OVERSIGHT";
-
-
-
-        case "BHR-003":
-
-            if (assessment === "HIGH")
-                return "ACTIVATE WORKPLACE RIGHTS REMEDIATION PLAN";
-
-            if (assessment === "MEDIUM")
-                return "ENHANCE WORKPLACE RIGHTS CONTROLS";
-
-            return "CONTINUE WORKPLACE RIGHTS MONITORING";
-
-
-
-        case "BHR-004":
-
-            if (assessment === "HIGH")
-                return "INITIATE INDIGENOUS RIGHTS CONSULTATION AND REMEDIATION PROTOCOL";
-
-            if (assessment === "MEDIUM")
-                return "ENHANCE COMMUNITY CONSULTATION AND IMPACT REVIEW";
-
-            return "CONTINUE COMMUNITY ENGAGEMENT MONITORING";
-
-
-
-        default:
-
-            return "CONTINUE BHR RISK MONITORING";
-
-    }
-
-}
-
-
-
-
-
-/**
- * ============================================================
- * DIRECT BHR SCENARIO EXECUTION
+ * RUN BHR RULE ENGINE
  * ============================================================
  */
 
@@ -130,16 +41,16 @@ export function runBHRRuleEngine(
         );
 
 
-    if (!scenario) {
-
+    if (!scenario || !scenario.rule) {
 
         return {
 
-            domain:"BHR",
+            domain: "BHR",
 
-            status:"ERROR",
+            status: "ERROR",
 
-            message:"Unknown BHR scenario"
+            message:
+                "Unknown BHR scenario"
 
         };
 
@@ -151,7 +62,7 @@ export function runBHRRuleEngine(
 
 
 
-    switch (scenario.id) {
+    switch (scenario.rule) {
 
 
 
@@ -176,17 +87,17 @@ export function runBHRRuleEngine(
 
         /*
          * BHR-002
-         * Supply Chain Human Rights Risk
+         * Forced Labour
          */
 
         case "BHR-002":
 
             riskScore =
             (
-                (state.supplierRisk || 0) * 0.35 +
-                (state.labourConditions || 0) * 0.25 +
-                (100 - (state.monitoringLevel ?? 100)) * 0.20 +
-                (100 - (state.remediationCapacity ?? 100)) * 0.20
+                (state.workerFreedomRisk || 0) * 0.35 +
+                (state.labourConditionRisk || 0) * 0.25 +
+                (state.supplyChainRisk || 0) * 0.20 +
+                (100 - (state.monitoringLevel ?? 100)) * 0.20
             );
 
             break;
@@ -195,17 +106,17 @@ export function runBHRRuleEngine(
 
         /*
          * BHR-003
-         * Workplace Rights
+         * Child Labour
          */
 
         case "BHR-003":
 
             riskScore =
             (
-                (state.safetyRisk || 0) * 0.35 +
-                (100 - (state.workerProtection ?? 100)) * 0.25 +
-                (state.grievanceRisk || 0) * 0.20 +
-                (state.complianceRisk || 0) * 0.20
+                (state.childLabourRisk || 0) * 0.40 +
+                (state.supplierRisk || 0) * 0.25 +
+                (state.auditFailure || 0) * 0.20 +
+                (state.complianceRisk || 0) * 0.15
             );
 
             break;
@@ -214,17 +125,131 @@ export function runBHRRuleEngine(
 
         /*
          * BHR-004
-         * Indigenous Rights / Community Impact
+         * Discrimination
          */
 
         case "BHR-004":
 
             riskScore =
             (
+                (state.discriminationRisk || 0) * 0.40 +
+                (state.equalOpportunityRisk || 0) * 0.25 +
+                (state.complianceRisk || 0) * 0.20 +
+                (state.grievanceRisk || 0) * 0.15
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-005
+         * Occupational Health & Safety
+         */
+
+        case "BHR-005":
+
+            riskScore =
+            (
+                (state.safetyRisk || 0) * 0.40 +
+                (state.incidentRate || 0) * 0.25 +
+                (100 - (state.workerProtection ?? 100)) * 0.20 +
+                (state.complianceRisk || 0) * 0.15
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-006
+         * Modern Slavery
+         */
+
+        case "BHR-006":
+
+            riskScore =
+            (
+                (state.modernSlaveryRisk || 0) * 0.40 +
+                (state.supplyChainRisk || 0) * 0.25 +
+                (state.workerVulnerability || 0) * 0.20 +
+                (state.monitoringFailure || 0) * 0.15
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-007
+         * Community Impact
+         */
+
+        case "BHR-007":
+
+            riskScore =
+            (
                 (state.environmentalImpact || 0) * 0.30 +
                 (state.socialImpact || 0) * 0.30 +
-                (100 - (state.consultationLevel ?? 100)) * 0.20 +
+                (100 - (state.communityEngagement ?? 100)) * 0.20 +
+                (state.mitigationFailure || 0) * 0.20
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-008
+         * Indigenous Rights
+         */
+
+        case "BHR-008":
+
+            riskScore =
+            (
+                (state.landRightsRisk || 0) * 0.30 +
+                (state.consultationFailure || 0) * 0.30 +
+                (state.culturalImpact || 0) * 0.20 +
                 (100 - (state.mitigationCapability ?? 100)) * 0.20
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-009
+         * Supply Chain Risk
+         */
+
+        case "BHR-009":
+
+            riskScore =
+            (
+                (state.supplierRisk || 0) * 0.35 +
+                (state.auditFailure || 0) * 0.25 +
+                (state.labourRisk || 0) * 0.20 +
+                (state.traceabilityRisk || 0) * 0.20
+            );
+
+            break;
+
+
+
+        /*
+         * BHR-010
+         * Grievance Mechanism
+         */
+
+        case "BHR-010":
+
+            riskScore =
+            (
+                (state.grievanceFailure || 0) * 0.40 +
+                (100 - (state.accessibility ?? 100)) * 0.25 +
+                (100 - (state.responseCapability ?? 100)) * 0.20 +
+                (state.remediationRisk || 0) * 0.15
             );
 
             break;
@@ -262,28 +287,23 @@ export function runBHRRuleEngine(
 
 
 
-    const solution =
-        getBHRSolution(
-            scenario.id,
-            assessment
-        );
-
-
-
     return {
 
 
-        domain:"BHR",
+        domain:
+            "BHR",
 
-        status:"COMPLETE",
+
+        status:
+            "COMPLETE",
 
 
         scenario:
-            scenario.name,
+            scenarioId,
 
 
-        scenarioId:
-            scenario.id,
+        ruleApplied:
+            scenario.rule,
 
 
         riskScore:
@@ -295,20 +315,16 @@ export function runBHRRuleEngine(
         assessment,
 
 
-        solution,
-
-
-        ruleApplied:
-            scenario.ruleSet,
-
-
-        goldenRuleReady:true,
+        recommendation:
+            generateBHRRecommendation(
+                scenario.rule,
+                assessment
+            ),
 
 
         timestamp:
             new Date()
             .toISOString()
-
 
     };
 
@@ -316,16 +332,45 @@ export function runBHRRuleEngine(
 
 
 
+/**
+ * ============================================================
+ * BHR RECOMMENDATION CORE
+ * ============================================================
+ */
+
+function generateBHRRecommendation(
+    rule,
+    assessment
+) {
+
+
+    if (assessment === "LOW") {
+
+        return "MONITOR HUMAN RIGHTS CONDITIONS";
+
+    }
+
+
+
+    if (assessment === "MEDIUM") {
+
+        return "ACTIVATE PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+
+    }
+
+
+
+    return "ACTIVATE HUMAN RIGHTS PROTECTION AND REMEDIATION MODE";
+
+
+}
+
 
 
 /**
  * ============================================================
  * DOMAIN INTEGRATION WRAPPER
  * ============================================================
- *
- * Called by:
- * domainIntegration.js
- *
  */
 
 export function bhrRuleEngine(
@@ -345,8 +390,6 @@ export function bhrRuleEngine(
 
 
 
-
-
 /**
  * ============================================================
  * DEFAULT EXPORT
@@ -354,7 +397,6 @@ export function bhrRuleEngine(
  */
 
 export default {
-
 
     runBHRRuleEngine,
 
