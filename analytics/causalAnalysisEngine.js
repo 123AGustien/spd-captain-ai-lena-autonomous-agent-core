@@ -4,10 +4,13 @@
  * Purpose:
  * Monitor possible stress relationships.
  *
- * This does not replace Golden Rule Engine.
+ * This is an advisory analytics layer.
+ * It does not replace:
+ * - Golden Rule Engine
+ * - Captain AI Lena Decision Core
  */
 
-function analyseRelationships(state) {
+export function analyseRelationships(state) {
 
     const relationships = [];
 
@@ -30,7 +33,3 @@ function analyseRelationships(state) {
         relationships
     };
 }
-
-module.exports = {
-    analyseRelationships
-};
