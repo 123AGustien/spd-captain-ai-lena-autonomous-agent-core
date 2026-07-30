@@ -57,11 +57,13 @@ const DOMAIN_REGISTRY = {
         engine: "FIN_RULE_ENGINE"
     },
 
+
     BHR: {
         name: "Business & Human Rights",
         status: "ACTIVE",
         engine: "BHR_RULE_ENGINE"
     },
+
 
     FX: {
         name: "Foreign Exchange",
@@ -69,11 +71,13 @@ const DOMAIN_REGISTRY = {
         engine: "FX_RULE_ENGINE"
     },
 
+
     DC: {
         name: "Data Centre",
         status: "PLANNED",
         engine: "DC_RULE_ENGINE"
     },
+
 
     CYB: {
         name: "Cyber Resilience",
@@ -81,11 +85,13 @@ const DOMAIN_REGISTRY = {
         engine: "CYB_RULE_ENGINE"
     },
 
+
     INF: {
         name: "Infrastructure",
         status: "PLANNED",
         engine: "INF_RULE_ENGINE"
     },
+
 
     ENG: {
         name: "Energy",
@@ -93,11 +99,13 @@ const DOMAIN_REGISTRY = {
         engine: "ENG_RULE_ENGINE"
     },
 
+
     OPS: {
         name: "Operations",
         status: "PLANNED",
         engine: "OPS_RULE_ENGINE"
     },
+
 
     SC: {
         name: "Scenario Control",
@@ -136,8 +144,8 @@ export function registerDomainEngine(
 
     const id =
         String(domain || "")
-            .trim()
-            .toUpperCase();
+        .trim()
+        .toUpperCase();
 
 
     if (!id) {
@@ -165,7 +173,8 @@ export function registerDomainEngine(
 
         domain: id,
 
-        status: "ENGINE_REGISTERED"
+        status:
+            "ENGINE_REGISTERED"
 
     };
 
@@ -184,8 +193,8 @@ export function getDomainStatus(
 
     const id =
         String(domain || "")
-            .trim()
-            .toUpperCase();
+        .trim()
+        .toUpperCase();
 
 
     const config =
@@ -204,19 +213,23 @@ export function getDomainStatus(
             config?.name ??
             "UNKNOWN DOMAIN",
 
+
         configured:
             Boolean(config),
+
 
         engineRegistered:
             Boolean(engine),
 
+
         status:
             engine
-                ? "ACTIVE"
-                : (
-                    config?.status ??
-                    "UNAVAILABLE"
-                )
+            ? "ACTIVE"
+            :
+            (
+                config?.status ??
+                "UNAVAILABLE"
+            )
 
     };
 
@@ -236,8 +249,8 @@ export function executeDomainRule(
 
     const id =
         String(domain || "")
-            .trim()
-            .toUpperCase();
+        .trim()
+        .toUpperCase();
 
 
     const config =
@@ -297,9 +310,10 @@ export function executeDomainRule(
         domainName:
             config.name,
 
+
         timestamp:
             new Date()
-                .toISOString()
+            .toISOString()
 
     };
 
@@ -322,8 +336,10 @@ export function executeDomainRule(
 
             domain: id,
 
+
             domainName:
                 config.name,
+
 
             engine:
                 config.engine,
@@ -364,16 +380,19 @@ export function executeDomainRule(
 
                 timestamp:
                     new Date()
-                        .toISOString()
+                    .toISOString()
 
             },
 
 
             status:
-                "EXECUTED
+                "EXECUTED"
+
         };
 
+
     } catch(error) {
+
 
         return {
 
@@ -382,24 +401,29 @@ export function executeDomainRule(
             status:
                 "DOMAIN_ENGINE_ERROR",
 
+
             error:
                 error.message,
+
 
             decision:
                 "NO DECISION — ENGINE ERROR",
 
+
             action:
                 "HOLD AND MONITOR",
 
+
             timestamp:
                 new Date()
-                    .toISOString()
+                .toISOString()
 
         };
 
     }
 
 }
+
 
 
 /* ============================================================
@@ -425,23 +449,29 @@ function verifyDomainInput(
 
         ...input,
 
+
         intensity,
+
 
         intensityFactor:
             intensity / 100,
+
 
         scenario:
             input.scenario ??
             input.event ??
             "DEFAULT",
 
+
         event:
             input.event ??
             input.scenario ??
             "DEFAULT",
 
+
         state:
             input.state ?? {},
+
 
         mode:
             input.mode ??
@@ -450,6 +480,7 @@ function verifyDomainInput(
     };
 
 }
+
 
 
 /* ============================================================
@@ -461,12 +492,14 @@ export function getAllDomainStatus() {
 
     return Object.keys(
         DOMAIN_REGISTRY
-    ).map(
+    )
+    .map(
         domain =>
             getDomainStatus(domain)
     );
 
 }
+
 
 
 /* ============================================================
@@ -497,39 +530,57 @@ export const DOMAIN_IDS = [
 ];
 
 
+
 export const DOMAIN_INTEGRATION_STATUS = {
+
 
     engine:
         "SPD V13.1 DOMAIN INTEGRATION LAYER",
 
+
     activeDomains:
 
     [
+
         "FIN",
+
         "BHR"
+
     ],
+
 
     pipeline:
 
     [
+
         "OBSERVE",
+
         "VERIFY",
+
         "ASSESS",
+
         "DECIDE",
+
         "ACT",
+
         "UPDATE"
+
     ],
+
 
     deterministic:
         true,
 
+
     machineLearning:
         false,
+
 
     randomness:
         false
 
 };
+
 
 
 /* ============================================================
