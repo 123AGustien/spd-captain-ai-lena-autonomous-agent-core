@@ -1,7 +1,7 @@
-/**
+ /**
  * ============================================================
  * SPD v13.1 — BHR VALIDATION ENGINE FINAL
- * ============================================================
+ * CORRECTED INTEGRATION VERSION
  *
  * File:
  * BHR/bhr-validation-engine.js
@@ -9,22 +9,24 @@
  * Domain:
  * Business & Human Rights
  *
- * Purpose:
+ * Pipeline:
  *
- * Validate:
+ * BHR RULE ENGINE
+ *        ↓
+ * BHR VALIDATION ENGINE
+ *        ↓
+ * BHR DECISION BRIDGE
+ *        ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *        ↓
+ * GOLDEN RULE ENGINE
+ *        ↓
+ * ACTION ENGINE
  *
- * - BHR input
- * - Scenario recognition
- * - Risk classification
- * - Decision consistency
- * - Action generation
- *
- *
- * Golden Rule Engine remains authoritative.
  *
  * Deterministic.
- * No randomness.
  * No machine learning.
+ * No randomness.
  *
  * ============================================================
  */
@@ -46,14 +48,14 @@ from "./bhr-rule-engine.js";
 
 /**
  * ============================================================
- * VALIDATE INPUT
+ * VALIDATE BHR INPUT
  * ============================================================
  */
 
 
 export function validateBHRInput(
 
-state = {}
+    state = {}
 
 ){
 
@@ -63,7 +65,7 @@ const valid =
 
 Boolean(
 
-state.scenario
+    state.scenario
 
 )
 
@@ -71,57 +73,52 @@ state.scenario
 
 Number.isFinite(
 
-Number(
+    Number(
 
-state.intensity ?? 0
+        state.intensity ?? 0
 
-)
+    )
 
 );
-
 
 
 
 return {
 
 
-status:
+    status:
 
-valid
+        valid
 
-?
+        ?
 
-"PASS"
+        "PASS"
 
-:
+        :
 
-"FAIL",
-
-
-
-valid,
+        "FAIL",
 
 
-
-scenario:
-
-state.scenario ?? null,
+    valid,
 
 
+    scenario:
 
-intensity:
-
-Number(
-
-state.intensity ?? 0
-
-),
+        state.scenario ?? null,
 
 
+    intensity:
 
-timestamp:
+        Number(
 
-new Date().toISOString()
+            state.intensity ?? 0
+
+        ),
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -139,14 +136,16 @@ new Date().toISOString()
 
 /**
  * ============================================================
- * VALIDATE RISK
+ * VALIDATE BHR RISK
+ *
+ * Compatible with BHR Rule Engine output
  * ============================================================
  */
 
 
 export function validateBHRRisk(
 
-result = {}
+    result = {}
 
 ){
 
@@ -156,9 +155,18 @@ const intensity =
 
 Number(
 
-result.riskScore ?? 0
+    result.intensity
+
+    ??
+
+    result.riskScore
+
+    ??
+
+    0
 
 );
+
 
 
 
@@ -171,29 +179,25 @@ let expectedRisk;
 
 if(
 
-intensity >= 80
+    intensity >= 80
 
 )
 
 {
 
-
-expectedRisk = "HIGH";
-
+    expectedRisk = "HIGH";
 
 }
 
 else if(
 
-intensity >= 50
+    intensity >= 50
 
 )
 
 {
 
-
-expectedRisk = "MEDIUM";
-
+    expectedRisk = "MEDIUM";
 
 }
 
@@ -201,9 +205,7 @@ else
 
 {
 
-
-expectedRisk = "LOW";
-
+    expectedRisk = "LOW";
 
 }
 
@@ -227,37 +229,40 @@ expectedRisk === result.risk;
 return {
 
 
-status:
+    status:
 
-valid
+        valid
 
-?
+        ?
 
-"PASS"
+        "PASS"
 
-:
+        :
 
-"FAIL",
-
-
-
-expectedRisk,
+        "FAIL",
 
 
 
-actualRisk:
-
-result.risk,
+    expectedRisk,
 
 
+    actualRisk:
 
-valid,
+        result.risk,
 
 
 
-timestamp:
+    intensity,
 
-new Date().toISOString()
+
+
+    valid,
+
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -275,16 +280,40 @@ new Date().toISOString()
 
 /**
  * ============================================================
- * VALIDATE DECISION
+ * VALIDATE BHR DECISION
+ *
+ * Accepts Decision Bridge output
  * ============================================================
  */
 
 
 export function validateBHRDecision(
 
-result = {}
+    result = {}
 
 ){
+
+
+
+const decision =
+
+
+result.decision
+
+
+??
+
+result.domainDecision?.domainDecision
+
+
+??
+
+null;
+
+
+
+
+
 
 
 let valid = false;
@@ -293,7 +322,9 @@ let valid = false;
 
 
 
+
 switch(result.risk){
+
 
 
 case "HIGH":
@@ -301,7 +332,7 @@ case "HIGH":
 
 valid =
 
-result.decision ===
+decision ===
 
 "ACTIVATE BHR REMEDIATION MODE";
 
@@ -317,7 +348,7 @@ case "MEDIUM":
 
 valid =
 
-result.decision ===
+decision ===
 
 "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
@@ -333,12 +364,15 @@ case "LOW":
 
 valid =
 
-result.decision ===
+decision ===
 
-"SYSTEM MONITORING MODE";
+"BHR MONITORING";
 
 
 break;
+
+
+
 
 
 default:
@@ -354,42 +388,41 @@ valid = false;
 
 
 
+
 return {
 
 
-status:
+    status:
 
-valid
+        valid
 
-?
+        ?
 
-"PASS"
+        "PASS"
 
-:
+        :
 
-"FAIL",
-
-
-
-risk:
-
-result.risk,
+        "FAIL",
 
 
 
-decision:
+    risk:
 
-result.decision,
-
-
-
-valid,
+        result.risk,
 
 
 
-timestamp:
+    decision,
 
-new Date().toISOString()
+
+
+    valid,
+
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -407,14 +440,16 @@ new Date().toISOString()
 
 /**
  * ============================================================
- * VALIDATE ACTIONS
+ * VALIDATE ACTION OUTPUT
+ *
+ * Compatible with SPD Action Engine
  * ============================================================
  */
 
 
 export function validateBHRActions(
 
-result = {}
+    result = {}
 
 ){
 
@@ -423,15 +458,20 @@ result = {}
 const valid =
 
 
-Array.isArray(
+Boolean(
 
-result.actions
+    result.action
 
-)
+    ||
 
-&&
+    result.command
 
-result.actions.length > 0;
+    ||
+
+    result.domainDecision
+
+);
+
 
 
 
@@ -441,41 +481,33 @@ result.actions.length > 0;
 return {
 
 
-status:
+    status:
 
-valid
+        valid
 
-?
+        ?
 
-"PASS"
+        "PASS"
 
-:
+        :
 
-"FAIL",
-
-
-
-actionCount:
-
-result.actions
-
-?
-
-result.actions.length
-
-:
-
-0,
+        "FAIL",
 
 
 
-valid,
+    actionDetected:
+
+        valid,
 
 
 
-timestamp:
+    valid,
 
-new Date().toISOString()
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -500,7 +532,7 @@ new Date().toISOString()
 
 export function validateBHREngine(
 
-state = {}
+    state = {}
 
 ){
 
@@ -511,7 +543,7 @@ const inputValidation =
 
 validateBHRInput(
 
-state
+    state
 
 );
 
@@ -522,7 +554,7 @@ state
 
 if(
 
-!inputValidation.valid
+    !inputValidation.valid
 
 )
 
@@ -532,19 +564,19 @@ if(
 return {
 
 
-status:
+    status:
 
-"FAIL",
-
-
-
-stage:
-
-"INPUT_VALIDATION",
+        "FAIL",
 
 
 
-inputValidation
+    stage:
+
+        "INPUT_VALIDATION",
+
+
+
+    inputValidation
 
 
 };
@@ -563,7 +595,7 @@ const result =
 
 bhrRuleEngine(
 
-state
+    state
 
 );
 
@@ -578,7 +610,7 @@ const riskValidation =
 
 validateBHRRisk(
 
-result
+    result
 
 );
 
@@ -592,7 +624,7 @@ const decisionValidation =
 
 validateBHRDecision(
 
-result
+    result
 
 );
 
@@ -606,7 +638,7 @@ const actionValidation =
 
 validateBHRActions(
 
-result
+    result
 
 );
 
@@ -620,19 +652,19 @@ const overall =
 
 [
 
-riskValidation,
+    riskValidation,
 
-decisionValidation,
+    decisionValidation,
 
-actionValidation
+    actionValidation
 
 ]
 
 .every(
 
-item =>
+    item =>
 
-item.valid === true
+    item.valid === true
 
 );
 
@@ -645,57 +677,57 @@ item.valid === true
 return {
 
 
-engine:
+    engine:
 
-"SPD v13.1 BHR VALIDATION ENGINE",
-
-
-
-domain:
-
-"BHR",
+        "SPD v13.1 BHR VALIDATION ENGINE",
 
 
 
-status:
+    domain:
 
-overall
-
-?
-
-"PASS"
-
-:
-
-"FAIL",
+        "BHR",
 
 
 
-inputValidation,
+    status:
+
+        overall
+
+        ?
+
+        "PASS"
+
+        :
+
+        "FAIL",
 
 
 
-riskValidation,
+    inputValidation,
 
 
 
-decisionValidation,
+    riskValidation,
 
 
 
-actionValidation,
+    decisionValidation,
 
 
 
-engineResult:
-
-result,
+    actionValidation,
 
 
 
-timestamp:
+    engineResult:
 
-new Date().toISOString()
+        result,
+
+
+
+    timestamp:
+
+        new Date().toISOString()
 
 
 };
@@ -721,7 +753,10 @@ new Date().toISOString()
 export function runBHRValidationSelfTest(){
 
 
+
 const tests = [
+
+
 
 {
 
@@ -750,6 +785,8 @@ expected:
 
 
 
+
+
 {
 
 
@@ -774,6 +811,8 @@ expected:
 
 
 },
+
+
 
 
 
@@ -814,6 +853,7 @@ expected:
 const results = tests.map(
 
 test => {
+
 
 
 const output =
@@ -881,6 +921,7 @@ output.risk === test.expected
 };
 
 
+
 }
 
 );
@@ -896,9 +937,9 @@ const passed =
 
 results.filter(
 
-x =>
+item =>
 
-x.status === "PASS"
+item.status === "PASS"
 
 ).length;
 
@@ -981,13 +1022,19 @@ export const BHR_VALIDATION_STATUS = {
 
 domain:
 
-"BHR",
+"BUSINESS & HUMAN RIGHTS",
 
 
 
 engine:
 
 "SPD v13.1 BHR VALIDATION ENGINE",
+
+
+
+authority:
+
+"CAPTAIN AI LENA DECISION CORE",
 
 
 
@@ -1009,32 +1056,21 @@ false,
 
 
 
-authority:
+pipeline:
 
-"CAPTAIN AI LENA DECISION CORE",
-
-
-
-pipeline:[
-
+[
 
 "OBSERVE",
 
-
 "VERIFY",
-
 
 "ASSESS",
 
-
 "DECIDE",
-
 
 "ACT",
 
-
 "UPDATE"
-
 
 ],
 
