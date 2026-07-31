@@ -799,7 +799,390 @@ return (
 
 
 
-case "PREVENT
+case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
+
+
+return (
+
+    "APPLY PREVENTIVE HUMAN RIGHTS CONTROLS AND MONITORING"
+
+);
+
+
+
+
+
+case "ENERGY PROTECTION MODE":
+
+
+return (
+
+    "REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES"
+
+);
+
+
+
+
+
+case "FX CORRECTION ACTIVE":
+
+
+return (
+
+    "APPLY FINANCIAL STABILITY CORRECTION"
+
+);
+
+
+
+
+
+case "ACTIVATE STABILIZATION MODE":
+
+
+return (
+
+    "ACTIVATE SYSTEM STABILIZATION PROCEDURE"
+
+);
+
+
+
+
+
+case "CYBER DEFENSE MODE ACTIVE":
+
+
+return (
+
+    "ACTIVATE CYBER DEFENSE CONTROLS"
+
+);
+
+
+
+
+
+case "INFRASTRUCTURE RECOVERY MODE":
+
+
+return (
+
+    "EXECUTE INFRASTRUCTURE RECOVERY ACTIONS"
+
+);
+
+
+
+
+
+default:
+
+
+return (
+
+    "MONITOR SYSTEM NORMAL OPERATIONS"
+
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+// ============================================================
+// INPUT NORMALIZATION
+//
+// OBSERVE PROTECTION LAYER
+//
+// ============================================================
+
+
+function normalizeState(
+
+    state
+
+)
+
+{
+
+
+return {
+
+
+    fx:
+
+        Number(
+
+            state?.fx ?? 0
+
+        ),
+
+
+
+
+    energy:
+
+        Number(
+
+            state?.energy ?? 50
+
+        ),
+
+
+
+
+    cyb:
+
+        Number(
+
+            state?.cyb ?? 50
+
+        ),
+
+
+
+
+    inf:
+
+        Number(
+
+            state?.inf ?? 0
+
+        ),
+
+
+
+
+    dc:
+
+        Number(
+
+            state?.dc ?? 0
+
+        ),
+
+
+
+
+    event:
+
+        state?.event
+
+        ??
+
+        "NORMAL",
+
+
+
+
+    scenario:
+
+        state?.scenario
+
+        ??
+
+        null,
+
+
+
+
+    domain:
+
+        state?.domain
+
+        ??
+
+        null,
+
+
+
+
+    domainResult:
+
+        state?.domainResult
+
+        ??
+
+        null,
+
+
+
+
+    domainDecision:
+
+        state?.domainDecision
+
+        ??
+
+        null,
+
+
+
+
+    intensity:
+
+        Number(
+
+            state?.intensity ?? 0
+
+        ),
+
+
+
+
+    mode:
+
+        state?.mode
+
+        ??
+
+        "AUTONOMOUS",
+
+
+
+
+    time:
+
+        state?.time
+
+        ??
+
+        new Date().toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+// ============================================================
+// VERIFY STATE
+//
+// Validation Barrier
+//
+// ============================================================
+
+
+function verifyState(
+
+    state
+
+)
+
+{
+
+
+return {
+
+
+    ...state,
+
+
+
+    fx:
+
+        Number.isFinite(state.fx)
+
+        ?
+
+        state.fx
+
+        :
+
+        0,
+
+
+
+    energy:
+
+        Number.isFinite(state.energy)
+
+        ?
+
+        state.energy
+
+        :
+
+        50,
+
+
+
+    cyb:
+
+        Number.isFinite(state.cyb)
+
+        ?
+
+        state.cyb
+
+        :
+
+        50,
+
+
+
+    inf:
+
+        Number.isFinite(state.inf)
+
+        ?
+
+        state.inf
+
+        :
+
+        0,
+
+
+
+    dc:
+
+        Number.isFinite(state.dc)
+
+        ?
+
+        state.dc
+
+        :
+
+        0,
+
+
+
+    intensity:
+
+        Number.isFinite(state.intensity)
+
+        ?
+
+        state.intensity
+
+        :
+
+        0
+
+
+};
+
+
+}
 /**
  * ============================================================
  * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE FINAL
