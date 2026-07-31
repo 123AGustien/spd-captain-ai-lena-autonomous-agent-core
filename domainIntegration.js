@@ -3,7 +3,10 @@
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
  * FIN + BHR DECISION AUTHORITY BRIDGE
- * FINAL INTEGRATED VERSION
+ * WITH BHR VALIDATION ENGINE
+ *
+ * File:
+ * domainIntegration.js
  *
  * Gateway:
  *
@@ -31,6 +34,10 @@
  *
  * Golden Rule Engine remains authoritative.
  *
+ * Deterministic.
+ * No machine learning.
+ * No randomness.
+ *
  * ============================================================
  */
 
@@ -41,11 +48,13 @@
  * ============================================================
  */
 
+
 import {
 
     finRuleEngine
 
 } from "./FIN/fin-rule-engine.js";
+
 
 
 import {
@@ -55,6 +64,7 @@ import {
 } from "./FIN/fin-decision-bridge.js";
 
 
+
 import {
 
     bhrRuleEngine
@@ -62,11 +72,33 @@ import {
 } from "./BHR/bhr-rule-engine.js";
 
 
+
 import {
 
     buildBHRDecisionBridge
 
 } from "./BHR/bhr-decision-bridge.js";
+
+
+
+/**
+ * BHR VALIDATION ENGINE
+ *
+ * BHR Rule Engine
+ *        ↓
+ * BHR Validation
+ *        ↓
+ * Decision Bridge
+ *
+ */
+
+import {
+
+    validateBHREngine
+
+} from "./BHR/bhr-validation-engine.js";
+
+
 
 
 
@@ -78,75 +110,97 @@ import {
  * ============================================================
  */
 
+
 export const DOMAIN_REGISTRY = {
 
 
     FIN: {
 
+
         name:
 
             "Financial Resilience",
+
 
         active:
 
             true
 
+
     },
 
 
+
     BHR: {
+
 
         name:
 
             "Business & Human Rights",
 
+
         active:
 
             true
 
+
     },
 
 
+
     DC: {
+
 
         name:
 
             "Data Centre",
 
+
         active:
 
             false
 
+
     },
 
 
+
     CYB: {
+
 
         name:
 
             "Cyber Security",
 
+
         active:
 
             false
 
+
     },
 
 
+
     INF: {
+
 
         name:
 
             "Infrastructure",
 
+
         active:
 
             false
+
 
     }
 
 
 };
+
+
 
 
 
@@ -158,12 +212,14 @@ export const DOMAIN_REGISTRY = {
  * ============================================================
  */
 
+
 export const DOMAIN_ENGINES = {
 
 
     FIN:
 
         finRuleEngine,
+
 
 
     BHR:
@@ -177,11 +233,14 @@ export const DOMAIN_ENGINES = {
 
 
 
+
+
 /**
  * ============================================================
  * VERIFY DOMAIN INPUT
  * ============================================================
  */
+
 
 export function verifyDomainInput(
 
@@ -198,11 +257,13 @@ export function verifyDomainInput(
 
     ){
 
+
         throw new Error(
 
             "UNKNOWN DOMAIN"
 
         );
+
 
     }
 
@@ -214,11 +275,13 @@ export function verifyDomainInput(
 
     ){
 
+
         throw new Error(
 
             "DOMAIN NOT ACTIVE"
 
         );
+
 
     }
 
@@ -229,7 +292,9 @@ export function verifyDomainInput(
 
         valid:true,
 
+
         domain,
+
 
         scenario
 
@@ -243,11 +308,14 @@ export function verifyDomainInput(
 
 
 
+
+
 /**
  * ============================================================
  * REGISTER DOMAIN ENGINE
  * ============================================================
  */
+
 
 export function registerDomainEngine(
 
@@ -267,6 +335,7 @@ export function registerDomainEngine(
 
         name:domain,
 
+
         active:true
 
 
@@ -279,11 +348,14 @@ export function registerDomainEngine(
 
 
 
+
+
 /**
  * ============================================================
  * GET DOMAIN STATUS
  * ============================================================
  */
+
 
 export function getDomainStatus(
 
@@ -300,9 +372,12 @@ export function getDomainStatus(
 
         {
 
+
             active:false,
 
+
             name:"UNKNOWN"
+
 
         }
 
@@ -310,22 +385,19 @@ export function getDomainStatus(
 
 
 }
-
-
-
-
-
-
 /**
  * ============================================================
  * EXECUTE DOMAIN RULE
  *
  * Domain engines provide advisory assessment.
  *
+ * Validation layer verifies domain output.
+ *
  * Captain AI Lena remains final authority.
  *
  * ============================================================
  */
+
 
 export function executeDomainRule(
 
@@ -365,12 +437,18 @@ export function executeDomainRule(
 
             scenario,
 
-            status:"NO_ENGINE"
+
+            status:
+
+                "NO_ENGINE"
 
 
         };
 
+
     }
+
+
 
 
 
@@ -395,14 +473,66 @@ export function executeDomainRule(
 
 
 
-    let decisionBridge = null;
 
+
+    /**
+     * ========================================================
+     * DOMAIN VALIDATION
+     *
+     * Currently active:
+     * BHR Validation Engine
+     *
+     * ========================================================
+     */
+
+
+    let validation = null;
+
+
+
+    if(domain === "BHR")
+
+    {
+
+
+        validation =
+
+            validateBHREngine(
+
+                {
+
+                    ...state,
+
+                    scenario
+
+                }
+
+            );
+
+
+    }
+
+
+
+
+
+
+
+    /**
+     * ========================================================
+     * DECISION BRIDGE
+     * ========================================================
+     */
+
+
+    let decisionBridge = null;
 
 
 
     if(domain === "FIN")
 
     {
+
 
         decisionBridge =
 
@@ -411,6 +541,7 @@ export function executeDomainRule(
                 result
 
             );
+
 
     }
 
@@ -422,6 +553,7 @@ export function executeDomainRule(
 
     {
 
+
         decisionBridge =
 
             buildBHRDecisionBridge(
@@ -430,7 +562,10 @@ export function executeDomainRule(
 
             );
 
+
     }
+
+
 
 
 
@@ -460,6 +595,8 @@ export function executeDomainRule(
 
 
 
+
+
     const action =
 
 
@@ -483,88 +620,6 @@ export function executeDomainRule(
 
 
 
-    return {
-
-
-        domain,
-
-        scenario,
-
-
-        decision,
-
-        action,
-
-
-        domainDecision:{
-
-
-            decision,
-
-            action,
-
-
-            goldenRuleAuthority:true,
-
-
-            advisory:true
-
-
-        },
-
-
-        decisionBridge,
-
-
-        goldenRuleAuthority:true,
-
-
-        status:"DOMAIN EXECUTION COMPLETE"
-
-
-    };
-
-
-}
-
-
-
-
-
-
-
-/**
- * ============================================================
- * CREATE DOMAIN DECISION BRIDGE
- *
- * Domain → Captain AI Lena
- *
- * ============================================================
- */
-
-export function createDomainDecisionBridge(
-
-    domain,
-
-    scenario,
-
-    state = {}
-
-){
-
-
-    const result =
-
-        executeDomainRule(
-
-            domain,
-
-            scenario,
-
-            state
-
-        );
-
 
 
     return {
@@ -572,358 +627,13 @@ export function createDomainDecisionBridge(
 
         domain,
 
+
         scenario,
 
 
-        domainResult:
 
-            result,
+        validation,
 
 
-        decision:
 
-            result.decision,
-
-
-        action:
-
-            result.action,
-
-
-        domainDecision:
-
-            result.domainDecision,
-
-
-        decisionBridge:
-
-            result.decisionBridge,
-
-
-        captainAILenaAuthority:true,
-
-
-        goldenRuleAuthority:true,
-
-
-        status:
-
-            "DECISION BRIDGE COMPLETE"
-
-
-    };
-
-
-}
-
-
-
-
-
-
-
-/**
- * ============================================================
- * MASTER DOMAIN INTEGRATION ENTRY POINT
- *
- * Called by runEngine.js
- *
- * ============================================================
- */
-
-export function executeDomainIntegration(
-
-    state = {}
-
-){
-
-
-    const scenario =
-
-        String(
-
-            state.scenario
-
-            ??
-
-            state.event
-
-            ??
-
-            "NORMAL"
-
-        )
-
-        .trim()
-
-        .toUpperCase();
-
-
-
-
-
-    let domain = "NONE";
-
-
-
-
-
-    const FIN_SCENARIOS = [
-
-
-        "FX_STRESS",
-
-        "FIN_STRESS",
-
-        "BANKING_STRESS",
-
-        "LIQUIDITY_CRISIS",
-
-        "CREDIT_STRESS",
-
-        "SOVEREIGN_DEBT"
-
-
-    ];
-
-
-
-
-
-    const BHR_SCENARIOS = [
-
-
-        "HUMAN_RIGHTS_DUE_DILIGENCE",
-
-        "FORCED_LABOUR",
-
-        "CHILD_LABOUR",
-
-        "DISCRIMINATION",
-
-        "OCCUPATIONAL_HEALTH_AND_SAFETY",
-
-        "MODERN_SLAVERY",
-
-        "COMMUNITY_IMPACT",
-
-        "INDIGENOUS_RIGHTS",
-
-        "SUPPLY_CHAIN_RISK",
-
-        "GRIEVANCE_MECHANISM"
-
-
-    ];
-
-
-
-
-
-    if(
-
-        FIN_SCENARIOS.includes(
-
-            scenario
-
-        )
-
-    )
-
-    {
-
-        domain="FIN";
-
-    }
-
-
-
-
-
-    if(
-
-        BHR_SCENARIOS.includes(
-
-            scenario
-
-        )
-
-    )
-
-    {
-
-        domain="BHR";
-
-    }
-
-
-
-
-
-
-    if(domain==="NONE")
-
-    {
-
-        return {
-
-
-            integration:
-
-                "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-            status:
-
-                "NO ACTIVE DOMAIN",
-
-
-            domain,
-
-            scenario,
-
-
-            goldenRuleAuthority:true
-
-
-        };
-
-    }
-
-
-
-
-
-    return {
-
-
-        integration:
-
-            "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-        status:
-
-            "DOMAIN ROUTING COMPLETE",
-
-
-        ...createDomainDecisionBridge(
-
-            domain,
-
-            scenario,
-
-            state
-
-        )
-
-
-    };
-
-
-}
-
-
-
-
-
-
-
-/**
- * ============================================================
- * DOMAIN INTEGRATION STATUS
- * ============================================================
- */
-
-export const DOMAIN_INTEGRATION_STATUS = {
-
-
-    module:
-
-        "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-    version:
-
-        "FIN+BHR DECISION AUTHORITY BRIDGE",
-
-
-    activeDomains:
-
-    [
-
-        "FIN",
-
-        "BHR"
-
-    ],
-
-
-    integratedBridges:
-
-    [
-
-        "FIN DECISION AUTHORITY BRIDGE",
-
-        "BHR DECISION AUTHORITY BRIDGE"
-
-    ],
-
-
-    deterministic:true,
-
-
-    machineLearning:false,
-
-
-    randomness:false,
-
-
-    goldenRuleAuthority:true,
-
-
-    captainAILenaAuthority:true,
-
-
-    status:
-
-        "READY"
-
-
-};
-
-
-
-
-
-
-/**
- * ============================================================
- * DEFAULT EXPORT
- * ============================================================
- */
-
-export default {
-
-
-    DOMAIN_REGISTRY,
-
-    DOMAIN_ENGINES,
-
-    DOMAIN_INTEGRATION_STATUS,
-
-
-    verifyDomainInput,
-
-    registerDomainEngine,
-
-    getDomainStatus,
-
-    executeDomainRule,
-
-    createDomainDecisionBridge,
-
-    executeDomainIntegration
-
-
-};
+        validation
