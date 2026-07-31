@@ -28,15 +28,6 @@
  * GOLDEN RULE ENGINE
  *
  *
- * Validation:
- *
- * INPUT
- * OUTPUT
- * RISK
- * DECISION
- * ACTION
- *
- *
  * Deterministic.
  * No machine learning.
  * No randomness.
@@ -71,20 +62,15 @@ state = {}
 
 const requiredFields = [
 
-
 "scenario",
 
 "intensity"
-
 
 ];
 
 
 
-
-
 const missing =
-
 
 requiredFields.filter(
 
@@ -93,10 +79,6 @@ field =>
 state[field] === undefined
 
 );
-
-
-
-
 
 
 
@@ -134,11 +116,11 @@ timestamp:
 new Date().toISOString()
 
 
-
 };
 
 
 }
+
 
 
 
@@ -225,8 +207,6 @@ value => value === true
 
 
 
-
-
 return {
 
 
@@ -259,25 +239,22 @@ timestamp:
 new Date().toISOString()
 
 
-
 };
 
 
 }
 
+
+
+
+
+
+
+
+
 /**
  * ============================================================
  * VALIDATE FIN RISK CLASSIFICATION
- * ============================================================
- *
- * Ensures:
- *
- * LOW
- * MEDIUM
- * HIGH
- *
- * matches calculated financial stress.
- *
  * ============================================================
  */
 
@@ -287,6 +264,7 @@ export function validateFINRisk(
 assessment = {}
 
 ){
+
 
 
 const stress =
@@ -303,8 +281,6 @@ assessment.financialStress
 
 
 let expectedRisk;
-
-
 
 
 
@@ -397,7 +373,6 @@ timestamp:
 new Date().toISOString()
 
 
-
 };
 
 
@@ -415,10 +390,6 @@ new Date().toISOString()
  * ============================================================
  * VALIDATE FIN DECISION
  * ============================================================
- *
- * Checks that FIN recommendation matches risk.
- *
- * ============================================================
  */
 
 
@@ -427,6 +398,7 @@ export function validateFINDecision(
 result = {}
 
 ){
+
 
 
 const risk =
@@ -457,8 +429,6 @@ let valid = false;
 
 
 
-
-
 switch(risk){
 
 
@@ -466,14 +436,11 @@ switch(risk){
 case "HIGH":
 
 
-
 valid =
-
 
 decision ===
 
 "ACTIVATE FINANCIAL STABILIZATION MODE";
-
 
 
 break;
@@ -487,14 +454,11 @@ break;
 case "MEDIUM":
 
 
-
 valid =
-
 
 decision ===
 
 "ACTIVATE PREVENTIVE FINANCIAL RESILIENCE MODE";
-
 
 
 break;
@@ -508,22 +472,22 @@ break;
 case "LOW":
 
 
-
 valid =
-
 
 decision ===
 
 "CONTINUE FINANCIAL RESILIENCE MONITORING";
 
 
-
 break;
 
 
 
-default:
 
+
+
+
+default:
 
 
 valid = false;
@@ -571,7 +535,6 @@ timestamp:
 new Date().toISOString()
 
 
-
 };
 
 
@@ -588,16 +551,6 @@ new Date().toISOString()
 /**
  * ============================================================
  * FIN ENGINE FULL VALIDATION
- * ============================================================
- *
- * Executes:
- *
- * INPUT VALIDATION
- * ENGINE EXECUTION
- * OUTPUT VALIDATION
- * RISK VALIDATION
- * DECISION VALIDATION
- *
  * ============================================================
  */
 
@@ -623,6 +576,8 @@ state
 
 
 
+
+
 if(
 
 !inputValidation.valid
@@ -631,6 +586,12 @@ if(
 
 
 return {
+
+
+engine:
+
+"SPD v13.1 FIN VALIDATION ENGINE",
+
 
 
 status:
@@ -784,19 +745,35 @@ riskValidation,
 
 decisionValidation,
 
+
+
+engineResult:
+
+result,
+
+
+
+timestamp:
+
+new Date().toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
 /**
  * ============================================================
  * FIN VALIDATION SELF-TEST
- * ============================================================
- *
- * Independent FIN domain verification.
- *
- * Does not replace:
- *
- * SPD v13.1 SELF-TEST ENGINE
- *
- * It provides domain-level validation.
- *
  * ============================================================
  */
 
@@ -858,6 +835,7 @@ expectedRisk:
 
 "LOW"
 
+
 },
 
 
@@ -915,6 +893,7 @@ dc:
 expectedRisk:
 
 "MEDIUM"
+
 
 },
 
@@ -974,8 +953,8 @@ expectedRisk:
 
 "HIGH"
 
-}
 
+}
 
 
 ];
@@ -1015,6 +994,8 @@ validation
 .assessment
 
 .risk;
+
+
 
 
 
@@ -1082,3 +1063,152 @@ item =>
 item.status === "PASS"
 
 ).length;
+
+
+
+
+
+
+
+return {
+
+
+engine:
+
+"SPD v13.1 FIN VALIDATION SELF-TEST",
+
+
+
+totalTests:
+
+results.length,
+
+
+
+passed,
+
+
+
+failed:
+
+results.length - passed,
+
+
+
+results,
+
+
+
+status:
+
+passed === results.length
+
+?
+
+"PASS"
+
+:
+
+"FAIL",
+
+
+
+timestamp:
+
+new Date().toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * FIN VALIDATION STATUS
+ * ============================================================
+ */
+
+
+export const FIN_VALIDATION_STATUS = {
+
+
+domain:
+
+"FINANCIAL RESILIENCE",
+
+
+
+module:
+
+"FIN VALIDATION ENGINE",
+
+
+
+authority:
+
+"FIN RULE ENGINE ADVISORY OUTPUT",
+
+
+
+decisionAuthority:
+
+"CAPTAIN AI LENA DECISION CORE",
+
+
+
+goldenRuleAuthority:
+
+true,
+
+
+
+deterministic:
+
+true,
+
+
+
+machineLearning:
+
+false,
+
+
+
+randomness:
+
+false,
+
+
+
+status:
+
+"READY"
+
+
+};
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
+export default validateFINEngine;
