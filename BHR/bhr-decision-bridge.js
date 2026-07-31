@@ -45,6 +45,7 @@
  */
 
 
+
 // ============================================================
 // BUILD BHR DECISION BRIDGE
 // ============================================================
@@ -150,7 +151,7 @@ const verifiedBHR = {
 // ============================================================
 
 
-const domainDecision =
+const decision =
 
 
     mapBHRDecision(
@@ -158,6 +159,43 @@ const domainDecision =
         verifiedBHR
 
     );
+
+
+
+
+
+
+const action =
+
+
+    mapBHRActions(
+
+        decision
+
+    );
+
+
+
+
+
+
+const domainDecision = {
+
+
+    decision,
+
+
+    action,
+
+
+    goldenRuleAuthority:true,
+
+
+    advisory:true
+
+
+};
+
 
 
 
@@ -240,12 +278,13 @@ if(
 
     bhr.risk === "CRITICAL"
 
-){
+)
+
+{
 
 return "ACTIVATE BHR REMEDIATION MODE";
 
 }
-
 
 
 
@@ -255,7 +294,9 @@ if(
 
     bhr.risk === "HIGH"
 
-){
+)
+
+{
 
 return "ACTIVATE BHR REMEDIATION MODE";
 
@@ -265,17 +306,17 @@ return "ACTIVATE BHR REMEDIATION MODE";
 
 
 
-
 if(
 
     bhr.risk === "MEDIUM"
 
-){
+)
+
+{
 
 return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
 }
-
 
 
 
@@ -285,7 +326,9 @@ if(
 
     bhr.severity === "HIGH"
 
-){
+)
+
+{
 
 return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
@@ -295,8 +338,69 @@ return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
 
 
 
-
 return "BHR MONITORING";
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
+// BHR ACTION MAP
+// ============================================================
+
+
+function mapBHRActions(
+
+    decision
+
+){
+
+
+
+switch(decision){
+
+
+
+case "ACTIVATE BHR REMEDIATION MODE":
+
+
+return (
+
+"IMMEDIATE HUMAN RIGHTS REMEDIATION AND SUPPLY CHAIN CONTROL"
+
+);
+
+
+
+case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
+
+
+return (
+
+"APPLY PREVENTIVE HUMAN RIGHTS CONTROLS AND MONITORING"
+
+);
+
+
+
+default:
+
+
+return (
+
+"CONTINUE BHR MONITORING"
+
+);
+
+
+}
 
 
 }
@@ -465,13 +569,19 @@ export const BHR_BRIDGE_STATUS = {
     [
 
         "OBSERVE",
+
         "VERIFY",
+
         "ASSESS",
+
         "DECIDE",
+
         "ACT",
+
         "UPDATE"
 
     ],
+
 
 
     deterministic:
@@ -479,14 +589,23 @@ export const BHR_BRIDGE_STATUS = {
         true,
 
 
+
     machineLearning:
 
         false,
 
 
+
     randomness:
 
         false,
+
+
+
+    domainIntegration:
+
+        true,
+
 
 
     status:
@@ -495,6 +614,12 @@ export const BHR_BRIDGE_STATUS = {
 
 
 };
+
+
+
+
+
+
 
 
 
