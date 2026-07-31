@@ -41,13 +41,11 @@
  * ============================================================
  */
 
-
 import {
 
     finRuleEngine
 
 } from "./FIN/fin-rule-engine.js";
-
 
 
 import {
@@ -57,13 +55,11 @@ import {
 } from "./FIN/fin-decision-bridge.js";
 
 
-
 import {
 
     bhrRuleEngine
 
 } from "./BHR/bhr-rule-engine.js";
-
 
 
 import {
@@ -81,7 +77,6 @@ import {
  * DOMAIN REGISTRY
  * ============================================================
  */
-
 
 export const DOMAIN_REGISTRY = {
 
@@ -163,7 +158,6 @@ export const DOMAIN_REGISTRY = {
  * ============================================================
  */
 
-
 export const DOMAIN_ENGINES = {
 
 
@@ -188,7 +182,6 @@ export const DOMAIN_ENGINES = {
  * VERIFY DOMAIN INPUT
  * ============================================================
  */
-
 
 export function verifyDomainInput(
 
@@ -234,13 +227,9 @@ export function verifyDomainInput(
     return {
 
 
-        valid:
-
-            true,
-
+        valid:true,
 
         domain,
-
 
         scenario
 
@@ -260,7 +249,6 @@ export function verifyDomainInput(
  * ============================================================
  */
 
-
 export function registerDomainEngine(
 
     domain,
@@ -277,14 +265,9 @@ export function registerDomainEngine(
     DOMAIN_REGISTRY[domain] = {
 
 
-        name:
+        name:domain,
 
-            domain,
-
-
-        active:
-
-            true
+        active:true
 
 
     };
@@ -301,7 +284,6 @@ export function registerDomainEngine(
  * GET DOMAIN STATUS
  * ============================================================
  */
-
 
 export function getDomainStatus(
 
@@ -328,19 +310,22 @@ export function getDomainStatus(
 
 
 }
+
+
+
+
+
+
 /**
  * ============================================================
  * EXECUTE DOMAIN RULE
  *
  * Domain engines provide advisory assessment.
  *
- * Decision Bridges translate domain output.
- *
- * Captain AI Lena remains final decision authority.
+ * Captain AI Lena remains final authority.
  *
  * ============================================================
  */
-
 
 export function executeDomainRule(
 
@@ -363,19 +348,15 @@ export function executeDomainRule(
 
 
 
-
     const engine =
 
         DOMAIN_ENGINES[domain];
 
 
 
+    if(!engine)
 
-    if(
-
-        !engine
-
-    ){
+    {
 
         return {
 
@@ -384,17 +365,7 @@ export function executeDomainRule(
 
             scenario,
 
-            decision:null,
-
-            action:null,
-
-            decisionBridge:null,
-
-            goldenRuleAuthority:false,
-
-            status:
-
-                "NO_ENGINE"
+            status:"NO_ENGINE"
 
 
         };
@@ -402,15 +373,6 @@ export function executeDomainRule(
     }
 
 
-
-
-
-
-    /*
-    ========================================================
-    EXECUTE DOMAIN RULE ENGINE
-    ========================================================
-    */
 
 
     const result =
@@ -433,49 +395,14 @@ export function executeDomainRule(
 
 
 
-
-
-
-    /*
-    ========================================================
-    DOMAIN DECISION BRIDGE ROUTING
-    ========================================================
-
-
-    FIN:
-
-    FIN RULE ENGINE
-          ↓
-    FIN DECISION BRIDGE
-          ↓
-    CAPTAIN AI LENA
-
-
-    BHR:
-
-    BHR RULE ENGINE
-          ↓
-    BHR DECISION BRIDGE
-          ↓
-    CAPTAIN AI LENA
-
-
-    ========================================================
-    */
-
-
     let decisionBridge = null;
 
 
 
 
+    if(domain === "FIN")
 
-    if(
-
-        domain === "FIN"
-
-    ){
-
+    {
 
         decisionBridge =
 
@@ -485,20 +412,15 @@ export function executeDomainRule(
 
             );
 
-
     }
 
 
 
 
 
+    if(domain === "BHR")
 
-    if(
-
-        domain === "BHR"
-
-    ){
-
+    {
 
         decisionBridge =
 
@@ -508,7 +430,6 @@ export function executeDomainRule(
 
             );
 
-
     }
 
 
@@ -516,32 +437,19 @@ export function executeDomainRule(
 
 
 
-
-    /*
-    ========================================================
-    CAPTAIN AI LENA DECISION EXTRACTION
-    ========================================================
-    */
-
-
     const decision =
 
 
         decisionBridge
 
-            ?.domainDecision
+        ?.domainDecision
 
-            ?.decision
+        ?.decision
 
 
         ??
 
         result.decision
-
-
-        ??
-
-        result.domainDecision?.decision
 
 
         ??
@@ -552,17 +460,14 @@ export function executeDomainRule(
 
 
 
-
-
-
     const action =
 
 
         decisionBridge
 
-            ?.domainDecision
+        ?.domainDecision
 
-            ?.action
+        ?.action
 
 
         ??
@@ -578,24 +483,153 @@ export function executeDomainRule(
 
 
 
+    return {
+
+
+        domain,
+
+        scenario,
+
+
+        decision,
+
+        action,
+
+
+        domainDecision:{
+
+
+            decision,
+
+            action,
+
+
+            goldenRuleAuthority:true,
+
+
+            advisory:true
+
+
+        },
+
+
+        decisionBridge,
+
+
+        goldenRuleAuthority:true,
+
+
+        status:"DOMAIN EXECUTION COMPLETE"
+
+
+    };
+
+
+}
 
 
 
-    const authority =
 
 
-        decisionBridge
+
+
 /**
  * ============================================================
- * MASTER DOMAIN INTEGRATION ENTRY POINT
+ * CREATE DOMAIN DECISION BRIDGE
  *
- * Called by:
- *
- * runEngine.js
+ * Domain → Captain AI Lena
  *
  * ============================================================
  */
 
+export function createDomainDecisionBridge(
+
+    domain,
+
+    scenario,
+
+    state = {}
+
+){
+
+
+    const result =
+
+        executeDomainRule(
+
+            domain,
+
+            scenario,
+
+            state
+
+        );
+
+
+
+    return {
+
+
+        domain,
+
+        scenario,
+
+
+        domainResult:
+
+            result,
+
+
+        decision:
+
+            result.decision,
+
+
+        action:
+
+            result.action,
+
+
+        domainDecision:
+
+            result.domainDecision,
+
+
+        decisionBridge:
+
+            result.decisionBridge,
+
+
+        captainAILenaAuthority:true,
+
+
+        goldenRuleAuthority:true,
+
+
+        status:
+
+            "DECISION BRIDGE COMPLETE"
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * MASTER DOMAIN INTEGRATION ENTRY POINT
+ *
+ * Called by runEngine.js
+ *
+ * ============================================================
+ */
 
 export function executeDomainIntegration(
 
@@ -605,7 +639,6 @@ export function executeDomainIntegration(
 
 
     const scenario =
-
 
         String(
 
@@ -629,22 +662,10 @@ export function executeDomainIntegration(
 
 
 
-
-
     let domain = "NONE";
 
 
 
-
-
-
-
-
-    /*
-    ========================================================
-    FIN SCENARIO REGISTRY
-    ========================================================
-    */
 
 
     const FIN_SCENARIOS = [
@@ -667,16 +688,6 @@ export function executeDomainIntegration(
 
 
 
-
-
-
-
-
-    /*
-    ========================================================
-    BHR SCENARIO REGISTRY
-    ========================================================
-    */
 
 
     const BHR_SCENARIOS = [
@@ -709,16 +720,6 @@ export function executeDomainIntegration(
 
 
 
-
-
-
-    /*
-    ========================================================
-    DOMAIN IDENTIFICATION
-    ========================================================
-    */
-
-
     if(
 
         FIN_SCENARIOS.includes(
@@ -727,12 +728,13 @@ export function executeDomainIntegration(
 
         )
 
-    ){
+    )
 
-        domain = "FIN";
+    {
+
+        domain="FIN";
 
     }
-
 
 
 
@@ -746,9 +748,11 @@ export function executeDomainIntegration(
 
         )
 
-    ){
+    )
 
-        domain = "BHR";
+    {
+
+        domain="BHR";
 
     }
 
@@ -757,20 +761,9 @@ export function executeDomainIntegration(
 
 
 
+    if(domain==="NONE")
 
-
-    /*
-    ========================================================
-    NO ACTIVE DOMAIN
-    ========================================================
-    */
-
-
-    if(
-
-        domain === "NONE"
-
-    ){
+    {
 
         return {
 
@@ -780,24 +773,17 @@ export function executeDomainIntegration(
                 "SPD v13.1 DOMAIN INTEGRATION LAYER",
 
 
-
             status:
 
                 "NO ACTIVE DOMAIN",
 
 
-
             domain,
-
-
 
             scenario,
 
 
-
-            goldenRuleAuthority:
-
-                true
+            goldenRuleAuthority:true
 
 
         };
@@ -808,30 +794,17 @@ export function executeDomainIntegration(
 
 
 
-
-
-
-    /*
-    ========================================================
-    EXECUTE DOMAIN BRIDGE
-    ========================================================
-    */
-
-
     return {
 
 
         integration:
 
-            "
             "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
 
 
         status:
 
             "DOMAIN ROUTING COMPLETE",
-
 
 
         ...createDomainDecisionBridge(
@@ -856,14 +829,11 @@ export function executeDomainIntegration(
 
 
 
-
-
 /**
  * ============================================================
  * DOMAIN INTEGRATION STATUS
  * ============================================================
  */
-
 
 export const DOMAIN_INTEGRATION_STATUS = {
 
@@ -873,32 +843,9 @@ export const DOMAIN_INTEGRATION_STATUS = {
         "SPD v13.1 DOMAIN INTEGRATION LAYER",
 
 
-
     version:
 
         "FIN+BHR DECISION AUTHORITY BRIDGE",
-
-
-
-    domains:
-
-    [
-
-        "FIN",
-
-        "BHR",
-
-        "DC",
-
-        "CYB",
-
-        "INF"
-
-    ],
-
-
-
-
 
 
     activeDomains:
@@ -912,10 +859,6 @@ export const DOMAIN_INTEGRATION_STATUS = {
     ],
 
 
-
-
-
-
     integratedBridges:
 
     [
@@ -927,69 +870,19 @@ export const DOMAIN_INTEGRATION_STATUS = {
     ],
 
 
+    deterministic:true,
 
 
+    machineLearning:false,
 
 
-    deterministic:
-
-        true,
+    randomness:false,
 
 
-
-    machineLearning:
-
-        false,
+    goldenRuleAuthority:true,
 
 
-
-    randomness:
-
-        false,
-
-
-
-    goldenRuleAuthority:
-
-        true,
-
-
-
-    captainAILenaAuthority:
-
-        true,
-
-
-
-    pipeline:
-
-    [
-
-        "SCENARIO IDENTIFICATION",
-
-        "DOMAIN ROUTING",
-
-        "RULE ENGINE EXECUTION",
-
-        "DOMAIN VALIDATION",
-
-        "DECISION BRIDGE",
-
-        "CAPTAIN AI LENA DECISION",
-
-        "GOLDEN RULE ENGINE",
-
-        "ACTION",
-
-        "MEMORY",
-
-        "AUDIT"
-
-    ],
-
-
-
-
+    captainAILenaAuthority:true,
 
 
     status:
@@ -1004,42 +897,31 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
-
-
-
 /**
  * ============================================================
  * DEFAULT EXPORT
  * ============================================================
  */
 
-
 export default {
 
 
     DOMAIN_REGISTRY,
 
-
     DOMAIN_ENGINES,
-
 
     DOMAIN_INTEGRATION_STATUS,
 
 
     verifyDomainInput,
 
-
     registerDomainEngine,
-
 
     getDomainStatus,
 
-
     executeDomainRule,
 
-
     createDomainDecisionBridge,
-
 
     executeDomainIntegration
 
