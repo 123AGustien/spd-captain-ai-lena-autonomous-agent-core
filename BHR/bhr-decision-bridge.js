@@ -464,4 +464,43 @@ export const BHR_BRIDGE_STATUS = {
 
     [
 
-        "OBS
+        "OBSERVE",
+        "VERIFY",
+        "ASSESS",
+        "DECIDE",
+        "ACT",
+        "UPDATE"
+
+    ],
+
+
+    deterministic:
+
+        true,
+
+
+    machineLearning:
+
+        false,
+
+
+    randomness:
+
+        false,
+
+
+    status:
+
+        "READY"
+
+
+};
+
+
+
+// ============================================================
+// DEFAULT EXPORT
+// ============================================================
+
+
+export default buildBHRDecisionBridge;
