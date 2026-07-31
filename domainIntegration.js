@@ -2,7 +2,8 @@
  * ============================================================
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
- * FIN + BHR DECISION AUTHORITY BRIDGE INTEGRATED VERSION
+ * FIN + BHR DECISION AUTHORITY BRIDGE
+ * FINAL INTEGRATED VERSION
  *
  * Gateway:
  *
@@ -19,6 +20,8 @@
  * CAPTAIN AI LENA DECISION CORE
  *      ↓
  * GOLDEN RULE ENGINE
+ *      ↓
+ * ACTION / MEMORY / AUDIT
  *
  *
  * PRINCIPLE:
@@ -32,10 +35,11 @@
  */
 
 
-
-// ============================================================
-// DOMAIN ENGINE IMPORTS
-// ============================================================
+/**
+ * ============================================================
+ * DOMAIN ENGINE IMPORTS
+ * ============================================================
+ */
 
 
 import {
@@ -72,9 +76,11 @@ import {
 
 
 
-// ============================================================
-// DOMAIN REGISTRY
-// ============================================================
+/**
+ * ============================================================
+ * DOMAIN REGISTRY
+ * ============================================================
+ */
 
 
 export const DOMAIN_REGISTRY = {
@@ -93,7 +99,6 @@ export const DOMAIN_REGISTRY = {
     },
 
 
-
     BHR: {
 
         name:
@@ -105,7 +110,6 @@ export const DOMAIN_REGISTRY = {
             true
 
     },
-
 
 
     DC: {
@@ -121,7 +125,6 @@ export const DOMAIN_REGISTRY = {
     },
 
 
-
     CYB: {
 
         name:
@@ -133,7 +136,6 @@ export const DOMAIN_REGISTRY = {
             false
 
     },
-
 
 
     INF: {
@@ -155,9 +157,11 @@ export const DOMAIN_REGISTRY = {
 
 
 
-// ============================================================
-// DOMAIN ENGINE MAP
-// ============================================================
+/**
+ * ============================================================
+ * DOMAIN ENGINE MAP
+ * ============================================================
+ */
 
 
 export const DOMAIN_ENGINES = {
@@ -166,7 +170,6 @@ export const DOMAIN_ENGINES = {
     FIN:
 
         finRuleEngine,
-
 
 
     BHR:
@@ -180,9 +183,11 @@ export const DOMAIN_ENGINES = {
 
 
 
-// ============================================================
-// VERIFY DOMAIN INPUT
-// ============================================================
+/**
+ * ============================================================
+ * VERIFY DOMAIN INPUT
+ * ============================================================
+ */
 
 
 export function verifyDomainInput(
@@ -249,9 +254,11 @@ export function verifyDomainInput(
 
 
 
-// ============================================================
-// REGISTER DOMAIN ENGINE
-// ============================================================
+/**
+ * ============================================================
+ * REGISTER DOMAIN ENGINE
+ * ============================================================
+ */
 
 
 export function registerDomainEngine(
@@ -289,9 +296,11 @@ export function registerDomainEngine(
 
 
 
-// ============================================================
-// GET DOMAIN STATUS
-// ============================================================
+/**
+ * ============================================================
+ * GET DOMAIN STATUS
+ * ============================================================
+ */
 
 
 export function getDomainStatus(
@@ -305,7 +314,7 @@ export function getDomainStatus(
 
         DOMAIN_REGISTRY[domain]
 
-        ||
+        ??
 
         {
 
@@ -319,14 +328,18 @@ export function getDomainStatus(
 
 
 }
-// ============================================================
-// EXECUTE DOMAIN RULE
-//
-// Domain output is advisory.
-//
-// Captain AI Lena remains final authority.
-//
-// ============================================================
+/**
+ * ============================================================
+ * EXECUTE DOMAIN RULE
+ *
+ * Domain engines provide advisory assessment.
+ *
+ * Decision Bridges translate domain output.
+ *
+ * Captain AI Lena remains final decision authority.
+ *
+ * ============================================================
+ */
 
 
 export function executeDomainRule(
@@ -351,11 +364,9 @@ export function executeDomainRule(
 
 
 
-
     const engine =
 
         DOMAIN_ENGINES[domain];
-
 
 
 
@@ -375,6 +386,8 @@ export function executeDomainRule(
 
             decision:null,
 
+            action:null,
+
             decisionBridge:null,
 
             goldenRuleAuthority:false,
@@ -386,11 +399,18 @@ export function executeDomainRule(
 
         };
 
-
     }
 
 
 
+
+
+
+    /*
+    ========================================================
+    EXECUTE DOMAIN RULE ENGINE
+    ========================================================
+    */
 
 
     const result =
@@ -415,24 +435,39 @@ export function executeDomainRule(
 
 
 
-    let decisionBridge = null;
-
-
-
-
 
     /*
     ========================================================
-    FIN DECISION AUTHORITY BRIDGE
-    
+    DOMAIN DECISION BRIDGE ROUTING
+    ========================================================
+
+
+    FIN:
+
     FIN RULE ENGINE
           ↓
     FIN DECISION BRIDGE
           ↓
     CAPTAIN AI LENA
-    
+
+
+    BHR:
+
+    BHR RULE ENGINE
+          ↓
+    BHR DECISION BRIDGE
+          ↓
+    CAPTAIN AI LENA
+
+
     ========================================================
     */
+
+
+    let decisionBridge = null;
+
+
+
 
 
     if(
@@ -456,21 +491,6 @@ export function executeDomainRule(
 
 
 
-
-
-
-    /*
-    ========================================================
-    BHR DECISION AUTHORITY BRIDGE
-    
-    BHR RULE ENGINE
-          ↓
-    BHR DECISION BRIDGE
-          ↓
-    CAPTAIN AI LENA
-    
-    ========================================================
-    */
 
 
     if(
@@ -507,7 +527,11 @@ export function executeDomainRule(
     const decision =
 
 
-        decisionBridge?.domainDecision?.decision
+        decisionBridge
+
+            ?.domainDecision
+
+            ?.decision
 
 
         ??
@@ -530,10 +554,15 @@ export function executeDomainRule(
 
 
 
+
     const action =
 
 
-        decisionBridge?.domainDecision?.action
+        decisionBridge
+
+            ?.domainDecision
+
+            ?.action
 
 
         ??
@@ -551,123 +580,21 @@ export function executeDomainRule(
 
 
 
+
     const authority =
 
 
-        decisionBridge?.goldenRuleAuthority
-
-
-        ??
-
-        result.goldenRuleAuthority
-
-
-        ??
-
-        false;
-
-
-
-
-
-
-
-    const domainDecision = {
-
-
-        decision,
-
-
-        action,
-
-
-        goldenRuleAuthority:
-
-            authority,
-
-
-        domain,
-
-
-        scenario,
-
-
-        advisory:
-
-            true
-
-
-    };
-
-
-
-
-
-
-
-
-    return {
-
-
-        domain,
-
-
-        scenario,
-
-
-        decision,
-
-
-
-        action,
-
-
-
-        domainDecision,
-
-
-
-        decisionBridge,
-
-
-
-        finDecisionBridge:
-
-            domain === "FIN"
-
-            ?
-
-            decisionBridge
-
-            :
-
-            null,
-
-
-
-        bhrDecisionBridge:
-
-            domain === "BHR"
-
-            ?
-
-            decisionBridge
-
-            :
-
-            null,
-
-
-
-        recommendation
-// ============================================================
-// MASTER DOMAIN INTEGRATION ENTRY POINT
-//
-// Called by:
-//
-// runEngine.js
-//
-// ============================================================
+        decisionBridge
+/**
+ * ============================================================
+ * MASTER DOMAIN INTEGRATION ENTRY POINT
+ *
+ * Called by:
+ *
+ * runEngine.js
+ *
+ * ============================================================
+ */
 
 
 export function executeDomainIntegration(
@@ -703,6 +630,7 @@ export function executeDomainIntegration(
 
 
 
+
     let domain = "NONE";
 
 
@@ -711,9 +639,12 @@ export function executeDomainIntegration(
 
 
 
-    // ========================================================
-    // FIN SCENARIO REGISTRY
-    // ========================================================
+
+    /*
+    ========================================================
+    FIN SCENARIO REGISTRY
+    ========================================================
+    */
 
 
     const FIN_SCENARIOS = [
@@ -740,9 +671,12 @@ export function executeDomainIntegration(
 
 
 
-    // ========================================================
-    // BHR SCENARIO REGISTRY
-    // ========================================================
+
+    /*
+    ========================================================
+    BHR SCENARIO REGISTRY
+    ========================================================
+    */
 
 
     const BHR_SCENARIOS = [
@@ -778,6 +712,13 @@ export function executeDomainIntegration(
 
 
 
+    /*
+    ========================================================
+    DOMAIN IDENTIFICATION
+    ========================================================
+    */
+
+
     if(
 
         FIN_SCENARIOS.includes(
@@ -791,8 +732,6 @@ export function executeDomainIntegration(
         domain = "FIN";
 
     }
-
-
 
 
 
@@ -818,6 +757,13 @@ export function executeDomainIntegration(
 
 
 
+
+
+    /*
+    ========================================================
+    NO ACTIVE DOMAIN
+    ========================================================
+    */
 
 
     if(
@@ -856,7 +802,6 @@ export function executeDomainIntegration(
 
         };
 
-
     }
 
 
@@ -866,81 +811,16 @@ export function executeDomainIntegration(
 
 
 
+    /*
+    ========================================================
+    EXECUTE DOMAIN BRIDGE
+    ========================================================
+    */
+
+
     return {
 
 
         integration:
 
-            "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-
-        status:
-
-            "DOMAIN ROUTING COMPLETE",
-
-
-
-        ...createDomainDecisionBridge(
-
-            domain,
-
-            scenario,
-
-            state
-
-        )
-
-
-    };
-
-
-}
-
-
-
-
-
-
-
-
-
-// ============================================================
-// DOMAIN INTEGRATION STATUS
-// ============================================================
-
-
-export const DOMAIN_INTEGRATION_STATUS = {
-
-
-    module:
-
-        "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-
-    domains:
-
-
-    [
-
-        "FIN",
-
-        "BHR",
-
-        "DC",
-
-        "CYB",
-
-        "INF"
-
-    ],
-
-
-
-
-
-    activeDomains:
-
-
-    [
+            "
