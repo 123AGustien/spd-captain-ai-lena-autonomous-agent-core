@@ -1,28 +1,28 @@
 /**
- * SPD v13.1 — BHR Validation Engine
+ * SPD v13.1 — Business & Human Rights (BHR)
+ * Validation Engine
  *
  * Purpose:
- * Validates BHR domain scenario processing.
+ * Validates BHR domain scenario execution.
  *
  * Flow:
  *
  * BHR Scenario
- *       ↓
+ *      ↓
  * BHR Rule Engine
- *       ↓
+ *      ↓
  * BHR Validation Engine
- *       ↓
- * Self-Test Validation Engine
- *       ↓
+ *      ↓
  * Golden Rule Engine
- *       ↓
+ *      ↓
  * Captain AI Lena Decision Core
  *
  * Golden Rule Engine remains authoritative.
  *
- * Deterministic.
- * No randomness.
- * No machine learning.
+ * Properties:
+ * - Deterministic
+ * - No randomness
+ * - No machine learning
  */
 
 
@@ -34,216 +34,116 @@ import {
 
 /**
  * ============================================================
- * VALIDATE BHR SCENARIO EXECUTION
+ * VALIDATE BHR SCENARIO
  * ============================================================
  */
 
 export function validateBHRScenario(
-
     scenarioId,
-
     state = {}
-
 ) {
 
-
-    const result =
-
-        runBHRRuleEngine(
-
-            scenarioId,
-
-            state
-
-        );
+    const result = runBHRRuleEngine(
+        scenarioId,
+        state
+    );
 
 
-
-    if (
-
-        !result ||
-
-        result.status === "ERROR"
-
-    ) {
-
+    if (!result || result.status === "ERROR") {
 
         return {
 
+            domain: "BHR",
 
-            domain:
+            validationStatus: "FAILED",
 
-                "BHR",
-
-
-            validationStatus:
-
-                "FAILED",
-
-
-            reason:
-
-                "BHR scenario execution failed"
-
+            reason: "BHR scenario execution failed"
 
         };
-
 
     }
 
 
-
     const validationChecks = {
 
-
         scenarioLoaded:
-
-            Boolean(
-
-                result.scenario
-
-            ),
+            Boolean(result.scenario),
 
 
-
-        domainAssessmentComplete:
-
-            result.status ===
-
-            "COMPLETE",
-
+        assessmentComplete:
+            result.status === "COMPLETE",
 
 
         riskScoreGenerated:
-
-            typeof result.riskScore ===
-
-            "number",
-
+            typeof result.riskScore === "number",
 
 
         ruleTraceAvailable:
-
-            typeof result.ruleApplied ===
-
-            "string",
-
+            typeof result.ruleApplied === "string",
 
 
         goldenRuleAuthority:
-
             true
-
 
     };
 
 
-
     const passed =
-
-        Object.values(
-
-            validationChecks
-
-        )
-
-        .every(
-
-            check => check === true
-
-        );
+        Object.values(validationChecks)
+        .every(check => check === true);
 
 
 
     return {
 
-
-        domain:
-
-            "BHR",
-
-
+        domain: "BHR",
 
         scenario:
-
             result.scenario,
 
 
-
         validationStatus:
-
             passed
-
-            ?
-
-            "PASSED"
-
-            :
-
-            "FAILED",
-
+                ? "PASSED"
+                : "FAILED",
 
 
         checks:
-
             validationChecks,
 
 
-
         assessment:
-
             result.assessment,
 
 
-
         riskScore:
-
             result.riskScore,
 
 
-
         ruleApplied:
-
             result.ruleApplied,
 
 
-
         authority:
-
             "Golden Rule Engine",
 
 
-
         deterministic:
-
             true,
 
 
-
         machineLearning:
-
             false,
-
 
 
         randomness:
-
             false,
 
 
-
         message:
-
             passed
-
-            ?
-
-            "BHR VALIDATION COMPLETE"
-
-            :
-
-            "BHR VALIDATION FAILED"
-
+                ? "BHR VALIDATION COMPLETE"
+                : "BHR VALIDATION FAILED"
 
     };
 
@@ -251,41 +151,28 @@ export function validateBHRScenario(
 
 
 
-
-
 /**
  * ============================================================
- * VALIDATION ENGINE STATUS
+ * BHR VALIDATION ENGINE STATUS
  * ============================================================
  */
 
 export const BHR_VALIDATION_STATUS = {
 
-
     module:
-
         "BHR",
 
-
     engine:
-
         "BHR VALIDATION ENGINE",
 
-
     status:
-
         "ACTIVE",
 
-
     goldenRuleAuthority:
-
         true,
 
-
     deterministic:
-
         true
-
 
 };
 
@@ -293,11 +180,8 @@ export const BHR_VALIDATION_STATUS = {
 
 export default {
 
-
     validateBHRScenario,
 
-
     BHR_VALIDATION_STATUS
-
 
 };
