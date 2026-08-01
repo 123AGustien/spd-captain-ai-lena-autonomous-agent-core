@@ -11,11 +11,13 @@
 SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
 </title>
 
+
 <style>
 
 * {
 box-sizing:border-box;
 }
+
 
 body {
 
@@ -27,12 +29,14 @@ margin:0;
 
 }
 
+
 h1 {
 
 color:#ffffff;
 margin-bottom:5px;
 
 }
+
 
 .subtitle {
 
@@ -41,6 +45,7 @@ margin-bottom:20px;
 line-height:1.6;
 
 }
+
 
 .panel {
 
@@ -52,6 +57,7 @@ background:#10161d;
 
 }
 
+
 .title {
 
 font-size:18px;
@@ -60,6 +66,7 @@ color:#ffffff;
 font-weight:bold;
 
 }
+
 
 .status {
 
@@ -73,6 +80,7 @@ background:#080d11;
 
 }
 
+
 .control-buttons,
 .scenario-controls,
 .fin-controls {
@@ -83,10 +91,11 @@ gap:10px;
 
 }
 
+
 button {
 
 background:#00ff88;
-color:#000;
+color:#000000;
 border:2px solid #00ff88;
 padding:14px 20px;
 border-radius:6px;
@@ -96,11 +105,36 @@ cursor:pointer;
 
 }
 
+
 button:hover {
 
 opacity:0.85;
 
 }
+
+
+.self-test-button {
+
+background:#1b2730;
+color:#00ff88;
+
+}
+
+
+.corrective-button {
+
+background:#ffb000;
+
+}
+
+
+.danger {
+
+background:#ff5555;
+color:#ffffff;
+
+}
+
 
 .scenario-button {
 
@@ -108,6 +142,7 @@ background:#1b2730;
 color:#00ff88;
 
 }
+
 
 .fin-button {
 
@@ -117,12 +152,16 @@ border:1px solid #00bfff;
 
 }
 
-.danger {
 
-background:#ff5555;
-color:#ffffff;
+.fin-label {
+
+width:100%;
+color:#00bfff;
+font-weight:bold;
+margin-top:10px;
 
 }
+
 
 .monitor {
 
@@ -132,6 +171,7 @@ repeat(auto-fit,minmax(140px,1fr));
 gap:10px;
 
 }
+
 
 .domain {
 
@@ -143,12 +183,14 @@ text-align:center;
 
 }
 
+
 .domain-name {
 
 color:#aaaaaa;
 font-size:13px;
 
 }
+
 
 .domain-value {
 
@@ -157,6 +199,7 @@ font-size:24px;
 font-weight:bold;
 
 }
+
 
 .pipeline {
 
@@ -168,6 +211,7 @@ border-radius:6px;
 
 }
 
+
 .stage {
 
 display:inline-block;
@@ -178,12 +222,14 @@ border-radius:4px;
 
 }
 
+
 .stage.active {
 
 background:#00ff88;
-color:#000;
+color:#000000;
 
 }
+
 
 pre {
 
@@ -194,6 +240,7 @@ line-height:1.5;
 
 }
 
+
 .solution {
 
 border-left:3px solid #00ff88;
@@ -202,6 +249,7 @@ background:#080d11;
 
 }
 
+
 @media(max-width:600px){
 
 button {
@@ -209,6 +257,7 @@ button {
 width:100%;
 
 }
+
 
 body {
 
@@ -259,23 +308,32 @@ SYSTEM STATUS: INITIALIZING...
 🎛️ SYSTEM CONTROLS
 </div>
 
+
 <div class="control-buttons">
+
 
 <button onclick="runLiveSystem()">
 ▶ RUN SYSTEM
 </button>
 
-<button class="self-test-button" onclick="runAuthoritativeSelfTest()">
+
+<button class="self-test-button"
+onclick="runAuthoritativeSelfTest()">
 🧪 SELF TEST
 </button>
 
-<button class="corrective-button" onclick="runCorrectiveAction()">
+
+<button class="corrective-button"
+onclick="runCorrectiveAction()">
 🛠️ CORRECTIVE ACTION
 </button>
 
+
 </div>
 
 </div>
+
+
 
 
 <!-- SYSTEM DOMAIN MONITOR -->
@@ -332,6 +390,8 @@ SYSTEM STATUS: INITIALIZING...
 
 
 
+
+
 <!-- SCENARIO CONTROL -->
 
 <div class="panel">
@@ -346,195 +406,30 @@ SYSTEM STATUS: INITIALIZING...
 
 <button class="scenario-button"
 onclick="activateScenario('FX_SHOCK')">
-
 FX STRESS
-
 </button>
 
 
 <button class="scenario-button"
 onclick="activateScenario('DC_LOAD')">
-
 DC LOAD
-
 </button>
 
 
 <button class="scenario-button"
 onclick="activateScenario('CYBER_EVENT')">
-
 CYBER EVENT
-
 </button>
 
 
 <button class="scenario-button"
 onclick="activateScenario('INFRASTRUCTURE_STRESS')">
-
 INFRA STRAIN
-
 </button>
 
 
 <button class="scenario-button"
-onclick="activateScenario('BIODIESEL_SHORTAGE')">
-
-BIODIESEL SHORTAGE
-
-</button>
-
-
-
-<div class="fin-label">
-💰 FINANCIAL RESILIENCE SCENARIOS
-</div>
-
-
-<div class="fin-controls">
-
-
-<button class="fin-button"
-onclick="activateScenario('FIN_STRESS')">
-FIN STRESS
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('BANKING_STRESS')">
-BANKING STRESS
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('LIQUIDITY_CRISIS')">
-LIQUIDITY CRISIS
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('CREDIT_STRESS')">
-CREDIT STRESS
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('SOVEREIGN_DEBT')">
-SOVEREIGN DEBT
-</button>
-
-
-</div>
-
-
-<div class="fin-label">
-💼 BUSINESS & HUMAN RIGHTS SCENARIOS
-</div>
-
-
-<div class="fin-controls">
-
-
-<button class="fin-button"
-onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
-HUMAN RIGHTS DUE DILIGENCE
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('FORCED_LABOUR')">
-FORCED LABOUR
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('CHILD_LABOUR')">
-CHILD LABOUR
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('DISCRIMINATION')">
-DISCRIMINATION
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
-OCCUPATIONAL HEALTH & SAFETY
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('MODERN_SLAVERY')">
-MODERN SLAVERY
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('COMMUNITY_IMPACT')">
-COMMUNITY IMPACT
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('INDIGENOUS_RIGHTS')">
-INDIGENOUS RIGHTS
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('SUPPLY_CHAIN_RISK')">
-SUPPLY CHAIN RISK
-</button>
-
-
-<button class="fin-button"
-onclick="activateScenario('GRIEVANCE_MECHANISM')">
-GRIEVANCE MECHANISM
-</button>
-
-
-</div>
-
-
-<button class="danger"
-onclick="resetScenario()">
-
-RESET
-
-</button>
-
-
-</div>
-
-</div>
-<!-- SCENARIO INTENSITY -->
-
-<div class="panel">
-
-<div class="title">
-🎚️ SCENARIO INTENSITY CONTROL
-</div>
-
-<input
-id="scenarioIntensity"
-type="range"
-min="0"
-max="100"
-step="10"
-value="50"
-oninput="updateIntensity()"
-/>
-
-<div>
-Intensity:
-<span id="intensityValue">50%</span>
-</div>
-
-</div>
-
-
-
+onclick="activateScenario('BIODIESEL
 <!-- SCENARIO PANEL -->
 
 <div class="panel">
@@ -573,6 +468,7 @@ Waiting...
 
 
 
+
 <!-- GOLDEN RULE ENGINE -->
 
 <div class="panel">
@@ -583,6 +479,7 @@ Waiting...
 
 
 <div class="pipeline">
+
 
 <span class="stage" id="stageOBSERVE">
 OBSERVE
@@ -618,6 +515,7 @@ ACT
 UPDATE
 </span>
 
+
 </div>
 
 
@@ -626,6 +524,7 @@ UPDATE
 Waiting...
 
 </pre>
+
 
 </div>
 
@@ -641,11 +540,13 @@ Waiting...
 ⚠️ SYSTEM ASSESSMENT
 </div>
 
+
 <pre id="assessment">
 
 Waiting...
 
 </pre>
+
 
 </div>
 
@@ -661,6 +562,7 @@ Waiting...
 🚨 RISK PANEL
 </div>
 
+
 <pre id="riskPanel">
 
 {
@@ -670,6 +572,7 @@ Waiting...
 }
 
 </pre>
+
 
 </div>
 
@@ -685,11 +588,13 @@ Waiting...
 ⚙️ CAPTAIN AI LENA DECISION
 </div>
 
+
 <pre id="decision">
 
 Waiting...
 
 </pre>
+
 
 </div>
 
@@ -705,11 +610,13 @@ Waiting...
 💡 SOLUTION OPTIONS
 </div>
 
+
 <div class="solution" id="solutionOptions">
 
 Waiting for system assessment...
 
 </div>
+
 
 </div>
 
@@ -725,11 +632,13 @@ Waiting for system assessment...
 🚨 ACTION SEQUENCE PROMPT
 </div>
 
+
 <pre id="actions">
 
 Waiting...
 
 </pre>
+
 
 </div>
 
@@ -745,11 +654,13 @@ Waiting...
 🧠 MEMORY CORE
 </div>
 
+
 <pre id="memoryCore">
 
 Memory Core Waiting...
 
 </pre>
+
 
 </div>
 
@@ -765,11 +676,13 @@ Memory Core Waiting...
 🧾 SPD v13.1 AUDIT RECORD
 </div>
 
+
 <pre id="audit">
 
 Waiting...
 
 </pre>
+
 
 </div>
 
@@ -785,11 +698,13 @@ Waiting...
 📜 PIPELINE LOG
 </div>
 
+
 <pre id="pipelineLog">
 
 PIPELINE LOG ACTIVE
 
 </pre>
+
 
 </div>
 
@@ -805,11 +720,13 @@ PIPELINE LOG ACTIVE
 🧪 SPD v13.1 SELF-TEST
 </div>
 
+
 <pre id="selfTest">
 
 Self-test not executed.
 
 </pre>
+
 
 </div>
 
@@ -825,11 +742,13 @@ Self-test not executed.
 ⚠️ FAULT IDENTIFICATION
 </div>
 
+
 <pre id="faultIdentification">
 
 No fault assessment available.
 
 </pre>
+
 
 </div>
 
@@ -845,13 +764,16 @@ No fault assessment available.
 🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
 </div>
 
+
 <pre id="correctiveAction">
 
 No corrective action available.
 
 </pre>
 
+
 </div>
+
 
 
 
@@ -873,7 +795,33 @@ Re-test not executed.
 
 
 </div>
-...
+
+
+
+
+
+<!-- CONSTANTS -->
+
+<div class="panel">
+
+<div class="title">
+📐 SYSTEM CONSTANTS
+</div>
+
+
+<pre id="constants">
+
+Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+
+
 <!-- AGENT LOOP -->
 
 <div class="panel">
@@ -882,19 +830,12 @@ Re-test not executed.
 🔄 AGENT LOOP MONITOR
 </div>
 
+
 <pre id="trace">
+
 OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
 </pre>
 
+
 </div>
-
-
-<script type="module">
-
-// JavaScript engine connection goes here
-
-</script>
-
-
-</body>
-</html>
