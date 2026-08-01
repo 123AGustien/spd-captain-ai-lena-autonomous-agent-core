@@ -4,9 +4,13 @@
  *
  * FINAL HARDENED VERSION
  *
- * Purpose:
+ * File:
+ * domainDecisionBridge.js
  *
- * Connect FIN and BHR domain advisory engines
+ *
+ * PURPOSE:
+ *
+ * Connect FIN and BHR domain advisory outputs
  * into Captain AI Lena Decision Core.
  *
  *
@@ -14,6 +18,8 @@
  *
  * FIN RULE ENGINE
  * BHR RULE ENGINE
+ *          ↓
+ * DOMAIN VALIDATION
  *          ↓
  * DOMAIN DECISION BRIDGE
  *          ↓
@@ -40,6 +46,7 @@
  *
  * Captain AI Lena decides.
  *
+ *
  * Deterministic.
  * No machine learning.
  * No randomness.
@@ -59,6 +66,11 @@ export function domainDecisionBridge(
     domainResult = {}
 
 ){
+
+
+// ============================================================
+// VERIFY INPUT
+// ============================================================
 
 
 const domain =
@@ -99,9 +111,52 @@ const domainStress =
 
         ??
 
+        domainResult.financialStress
+
+        ??
+
         0
 
     );
+
+
+
+
+// ============================================================
+// PRESERVE VERIFIED DOMAIN DECISION
+//
+// FIN/BHR Decision Bridge output
+//
+// ============================================================
+
+
+const verifiedDecision =
+
+
+    domainResult.domainDecision?.decision
+
+    ??
+
+    domainResult.decision
+
+    ??
+
+    null;
+
+
+
+const verifiedAction =
+
+
+    domainResult.domainDecision?.action
+
+    ??
+
+    domainResult.action
+
+    ??
+
+    null;
 
 
 
@@ -114,11 +169,54 @@ let action;
 
 
 // ============================================================
-// FINANCIAL RESILIENCE DOMAIN
+// PRIORITY 1
+//
+// VERIFIED DOMAIN DECISION
+//
+// Domain advises.
+// Golden Rule validates.
+//
 // ============================================================
 
 
-if(domain === "FIN")
+if(
+
+    verifiedDecision
+
+    &&
+
+    domainResult.goldenRuleAuthority === true
+
+)
+
+{
+
+
+    decision = verifiedDecision;
+
+
+    action = verifiedAction;
+
+
+}
+
+
+
+
+
+// ============================================================
+// PRIORITY 2
+//
+// FIN FALLBACK
+//
+// ============================================================
+
+
+else if(
+
+    domain === "FIN"
+
+)
 
 {
 
@@ -147,13 +245,19 @@ if(domain === "FIN")
 
 
 
-
 // ============================================================
-// BUSINESS & HUMAN RIGHTS DOMAIN
+// PRIORITY 3
+//
+// BHR FALLBACK
+//
 // ============================================================
 
 
-else if(domain === "BHR")
+else if(
+
+    domain === "BHR"
+
+)
 
 {
 
@@ -167,6 +271,7 @@ else if(domain === "BHR")
             scenario
 
         );
+
 
 
     action =
@@ -184,9 +289,9 @@ else if(domain === "BHR")
 
 
 
-
 // ============================================================
-// UNKNOWN DOMAIN PROTECTION
+// UNKNOWN DOMAIN
+//
 // ============================================================
 
 
@@ -198,6 +303,7 @@ else
     decision =
 
         "SYSTEM STABLE";
+
 
 
     action =
@@ -213,8 +319,13 @@ else
 
 
 
+
+
 // ============================================================
-// RETURN STANDARDIZED OUTPUT
+// STANDARDIZED OUTPUT
+//
+// Captain AI Lena Interface
+//
 // ============================================================
 
 
@@ -234,7 +345,13 @@ return {
 
 
 
-    // Captain AI Lena consumes this
+    // Preserve original domain intelligence
+
+    sourceDomainResult:
+
+        domainResult,
+
+
 
     decision,
 
@@ -243,11 +360,20 @@ return {
 
 
 
-    // Compatibility field
+    // Captain AI Lena consumes this
 
     domainDecision:
 
+    {
+
+
         decision,
+
+
+        action
+
+
+    },
 
 
 
@@ -281,9 +407,21 @@ return {
 
 
 
+    randomness:
+
+        false,
+
+
+
+    auditReady:
+
+        true,
+
+
+
     status:
 
-        `${domain} DECISION BRIDGE COMPLETE`
+        `${domain} DOMAIN DECISION BRIDGE COMPLETE`
 
 
 };
@@ -311,40 +449,44 @@ function mapFINDecision(
 ){
 
 
-if(risk === "CRITICAL")
+switch(risk)
 
 {
+
+
+case "CRITICAL":
+
 
 return "ACTIVATE FINANCIAL EMERGENCY STABILIZATION";
 
-}
 
 
+case "HIGH":
 
-if(risk === "HIGH")
-
-{
 
 return "ACTIVATE FINANCIAL STABILIZATION MODE";
 
-}
 
 
+case "MEDIUM":
 
-if(risk === "MEDIUM")
-
-{
 
 return "PREVENTIVE FINANCIAL RESILIENCE MODE";
 
-}
 
+
+default:
 
 
 return "FINANCIAL MONITORING";
 
 
 }
+
+
+}
+
+
 
 
 
@@ -371,25 +513,45 @@ switch(decision)
 
 case "ACTIVATE FINANCIAL EMERGENCY STABILIZATION":
 
-return "PROTECT LIQUIDITY, CONTROL CASCADE RISK AND STABILIZE FINANCIAL SYSTEM";
+
+return (
+
+"PROTECT LIQUIDITY, CONTROL CASCADE RISK AND STABILIZE FINANCIAL SYSTEM"
+
+);
 
 
 
 case "ACTIVATE FINANCIAL STABILIZATION MODE":
 
-return "REDUCE FINANCIAL EXPOSURE AND APPLY LIQUIDITY CONTROLS";
+
+return (
+
+"REDUCE FINANCIAL EXPOSURE AND APPLY LIQUIDITY CONTROLS"
+
+);
 
 
 
 case "PREVENTIVE FINANCIAL RESILIENCE MODE":
 
-return "MONITOR FINANCIAL STRESS AND PREPARE MITIGATION";
+
+return (
+
+"MONITOR FINANCIAL STRESS AND PREPARE MITIGATION"
+
+);
 
 
 
 default:
 
-return "CONTINUE FINANCIAL MONITORING";
+
+return (
+
+"CONTINUE FINANCIAL MONITORING"
+
+);
 
 
 }
@@ -436,7 +598,9 @@ scenario === "MODERN_SLAVERY"
 
 {
 
+
 return "ACTIVATE BHR REMEDIATION MODE";
+
 
 }
 
@@ -444,11 +608,21 @@ return "ACTIVATE BHR REMEDIATION MODE";
 
 
 
-if(risk === "CRITICAL")
+if(
+
+risk === "CRITICAL"
+
+||
+
+risk === "HIGH"
+
+)
 
 {
 
+
 return "ACTIVATE BHR REMEDIATION MODE";
+
 
 }
 
@@ -456,23 +630,17 @@ return "ACTIVATE BHR REMEDIATION MODE";
 
 
 
-if(risk === "HIGH")
+if(
+
+risk === "MEDIUM"
+
+)
 
 {
 
-return "ACTIVATE BHR REMEDIATION MODE";
-
-}
-
-
-
-
-
-if(risk === "MEDIUM")
-
-{
 
 return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+
 
 }
 
@@ -512,19 +680,34 @@ switch(decision)
 
 case "ACTIVATE BHR REMEDIATION MODE":
 
-return "IMMEDIATE HUMAN RIGHTS REMEDIATION, SUPPLY CHAIN CONTROL AND ESCALATION";
+
+return (
+
+"IMMEDIATE HUMAN RIGHTS REMEDIATION, SUPPLY CHAIN CONTROL AND ESCALATION"
+
+);
 
 
 
 case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
 
-return "APPLY HUMAN RIGHTS CONTROLS, DUE DILIGENCE AND MONITORING";
+
+return (
+
+"APPLY HUMAN RIGHTS CONTROLS, DUE DILIGENCE AND MONITORING"
+
+);
 
 
 
 default:
 
-return "CONTINUE HUMAN RIGHTS MONITORING";
+
+return (
+
+"CONTINUE HUMAN RIGHTS MONITORING"
+
+);
 
 
 }
@@ -578,6 +761,11 @@ case "MEDIUM":
 return "MEDIUM";
 
 
+case "LOW":
+
+return "LOW";
+
+
 default:
 
 return "LOW";
@@ -603,45 +791,98 @@ return "LOW";
 
 export function validateDomainDecision(
 
-bridgeResult = {}
+    bridgeResult = {}
 
 )
 
 {
 
 
-return {
+const valid =
 
-
-valid:
 
 bridgeResult.goldenRuleAuthority === true
 
 &&
 
-bridgeResult.captainAILenaAuthority === true,
+bridgeResult.captainAILenaAuthority === true
+
+&&
+
+Boolean(
+
+    bridgeResult.decision
+
+)
+
+&&
+
+Boolean(
+
+    bridgeResult.action
+
+);
 
 
 
-decision:
-
-bridgeResult.decision
-
-??
-
-"NONE",
 
 
-
-authority:
-
-"CAPTAIN AI LENA DECISION CORE",
+return {
 
 
+    status:
 
-deterministic:
+        valid
 
-true
+        ?
+
+        "PASS"
+
+        :
+
+        "FAIL",
+
+
+
+    valid,
+
+
+
+    decision:
+
+        bridgeResult.decision
+
+        ??
+
+        "NONE",
+
+
+
+    action:
+
+        bridgeResult.action
+
+        ??
+
+        "NONE",
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    goldenRuleAuthority:
+
+        bridgeResult.goldenRuleAuthority,
+
+
+
+    deterministic:
+
+        true
 
 
 };
@@ -695,6 +936,8 @@ flow:
 
 "DOMAIN_RULE_ENGINE",
 
+"DOMAIN_VALIDATION_ENGINE",
+
 "DOMAIN_DECISION_BRIDGE",
 
 "GOLDEN_RULE_ENGINE",
@@ -743,6 +986,18 @@ false,
 
 
 
+auditReady:
+
+true,
+
+
+
+clientDemoReady:
+
+true,
+
+
+
 status:
 
 "READY"
@@ -756,6 +1011,11 @@ status:
 
 
 
+
+
+// ============================================================
+// DEFAULT EXPORT
+// ============================================================
 
 
 export default domainDecisionBridge;
