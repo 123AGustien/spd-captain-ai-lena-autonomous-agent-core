@@ -9,21 +9,20 @@
  * Verify that corrective action restored
  * expected system behaviour.
  *
+ * FLOW:
  *
- * Workflow:
- *
- * FAULT IDENTIFICATION
- *        ↓
  * CORRECTIVE ACTION
  *        ↓
- * RE-TEST VALIDATION
+ * RE-TEST
+ *        ↓
+ * EXPECTED VS ACTUAL
  *        ↓
  * RECOVERY VERIFIED
  *
  *
- * Golden Rule Authority:
+ * Authority:
  *
- * Captain AI Lena Decision Core
+ * CAPTAIN AI LENA DECISION CORE
  *
  * Deterministic.
  * No machine learning.
@@ -35,7 +34,7 @@
 
 
 // ============================================================
-// RE-TEST VALIDATION
+// EXECUTE RE-TEST VALIDATION
 // ============================================================
 
 
@@ -46,116 +45,133 @@ export function executeRetestValidation(
 ){
 
 
+const results = [];
 
-const failures = [];
+
+
+
+// ============================================================
+// RISK VALIDATION
+// ============================================================
+
+
+const riskPassed =
+
+    input.expectedRisk ===
+
+    input.retestRisk;
+
+
+
+results.push({
+
+
+    test:
+
+        "RISK_RESTORATION",
+
+
+    expected:
+
+        input.expectedRisk,
+
+
+    actual:
+
+        input.retestRisk,
+
+
+    status:
+
+        riskPassed
+
+        ?
+
+        "PASS"
+
+        :
+
+        "FAIL"
+
+
+});
+
 
 
 
 
 
 // ============================================================
-// VERIFY RISK RESTORATION
+// DECISION VALIDATION
 // ============================================================
 
 
-if(
+const decisionPassed =
 
-    input.expectedRisk
+    input.expectedDecision ===
+
+    input.retestDecision;
+
+
+
+results.push({
+
+
+    test:
+
+        "DECISION_AUTHORITY_RESTORATION",
+
+
+    expected:
+
+        input.expectedDecision,
+
+
+    actual:
+
+        input.retestDecision,
+
+
+    status:
+
+        decisionPassed
+
+        ?
+
+        "PASS"
+
+        :
+
+        "FAIL"
+
+
+});
+
+
+
+
+
+
+
+
+// ============================================================
+// FINAL RESULT
+// ============================================================
+
+
+const recoveryVerified =
+
+
+    riskPassed
 
     &&
 
-    input.retestRisk
-
-    &&
-
-    input.expectedRisk !== input.retestRisk
-
-)
-
-{
-
-
-    failures.push({
-
-        type:
-
-            "RISK_RETEST_FAILED",
-
-
-        expected:
-
-            input.expectedRisk,
-
-
-        actual:
-
-            input.retestRisk
-
-
-    });
-
-
-}
+    decisionPassed;
 
 
 
 
 
-
-
-// ============================================================
-// VERIFY DECISION RESTORATION
-// ============================================================
-
-
-if(
-
-    input.expectedDecision
-
-    &&
-
-    input.retestDecision
-
-    &&
-
-    input.expectedDecision !== input.retestDecision
-
-)
-
-{
-
-
-    failures.push({
-
-        type:
-
-            "DECISION_RETEST_FAILED",
-
-
-        expected:
-
-            input.expectedDecision,
-
-
-        actual:
-
-            input.retestDecision
-
-
-    });
-
-
-}
-
-
-
-
-
-
-
-// ============================================================
-// FINAL VALIDATION RESULT
-// ============================================================
 
 
 return {
@@ -167,41 +183,25 @@ return {
 
 
 
-    validationStatus:
-
-        failures.length === 0
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
+    results,
 
 
 
-    failures,
+    recoveryVerified,
 
 
 
-    recoveryVerified:
+    status:
 
-        failures.length === 0,
-
-
-
-    nextAction:
-
-        failures.length === 0
+        recoveryVerified
 
         ?
 
-        "SYSTEM RESTORED"
+        "RE-TEST PASS"
 
         :
 
-        "FURTHER CORRECTIVE ACTION REQUIRED",
+        "RE-TEST FAILED",
 
 
 
@@ -225,7 +225,9 @@ return {
 };
 
 
+
 }
+
 
 
 
@@ -244,7 +246,7 @@ export const RETEST_ENGINE_STATUS = {
 
     module:
 
-        "SPD v13.1 RE-TEST VALIDATION ENGINE",
+        "RE-TEST VALIDATION ENGINE",
 
 
 
@@ -254,17 +256,21 @@ export const RETEST_ENGINE_STATUS = {
 
 
 
-    workflow:
+    authority:
 
-    [
+        "CAPTAIN AI LENA DECISION CORE",
 
-        "FAULT_IDENTIFICATION",
 
-        "CORRECTIVE_ACTION",
 
-        "RE_TEST_VALIDATION"
+    goldenRuleAuthority:
 
-    ],
+        true,
+
+
+
+    deterministic:
+
+        true,
 
 
 
@@ -274,7 +280,6 @@ export const RETEST_ENGINE_STATUS = {
 
 
 };
-
 
 
 
