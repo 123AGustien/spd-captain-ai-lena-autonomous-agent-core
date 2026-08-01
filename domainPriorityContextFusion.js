@@ -4,15 +4,18 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * Purpose:
- *
- * Translate domain intelligence into
- * priority-aware decision context.
+ * DOMAIN RESULT
+ *        ↓
+ * DOMAIN SEVERITY
+ *        ↓
+ * SYSTEM CONDITION
+ *        ↓
+ * GOLDEN RULE ENGINE
+ *        ↓
+ * CAPTAIN AI LENA DECISION
  *
  * Domain engines advise.
- *
  * Golden Rule Engine remains authoritative.
- *
  * Captain AI Lena remains final authority.
  *
  * Deterministic.
@@ -23,25 +26,13 @@
  */
 
 
-export function evaluateDomainSeverity(
-
-    domainResult = {}
-
-){
+export function evaluateDomainSeverity(domainResult = {}) {
 
 
-const stress =
+const stress = Number(
 
-Number(
-
-    domainResult.domainStress
-
-    ??
-
-    domainResult.financialStress
-
-    ??
-
+    domainResult.domainStress ??
+    domainResult.financialStress ??
     0
 
 );
@@ -53,18 +44,37 @@ let severity = "LOW";
 
 
 if(stress >= 70)
-
 {
-
     severity = "HIGH";
-
+}
+else if(stress >= 40)
+{
+    severity = "MEDIUM";
 }
 
-else if(stress >= 40)
 
-{
 
-    severity = "MEDIUM";
+/*
+ Critical BHR scenarios
+ Human rights priority override
+*/
+
+if(
+
+domainResult.domain === "BHR"
+
+&&
+
+[
+"CHILD_LABOUR",
+"FORCED_LABOUR",
+"MODERN_SLAVERY"
+
+].includes(domainResult.scenario)
+
+){
+
+    severity = "HIGH";
 
 }
 
@@ -73,39 +83,35 @@ else if(stress >= 40)
 return {
 
 
-    domain:
+domain:
 
-        domainResult.domain
-        ??
-        "UNKNOWN",
-
-
-    scenario:
-
-        domainResult.scenario
-        ??
-        "UNKNOWN",
+domainResult.domain ??
+"UNKNOWN",
 
 
-    severity,
+scenario:
+
+domainResult.scenario ??
+"UNKNOWN",
 
 
-    stress,
+level:
+
+severity,
 
 
-    status:
+stress,
 
-        "DOMAIN SEVERITY ASSESSED"
+
+status:
+
+"DOMAIN SEVERITY ASSESSED"
 
 
 };
 
 
 }
-
-
-
-
 
 
 
@@ -118,9 +124,9 @@ return {
 
 export function buildDomainPriorityContext(
 
-    domainResult = {},
+domainResult = {},
 
-    systemCondition = {}
+systemCondition = {}
 
 ){
 
@@ -130,19 +136,18 @@ const severity =
 
 evaluateDomainSeverity(
 
-    domainResult
+domainResult
 
 );
 
 
 
+let priority =
+"SYSTEM_MONITORING";
 
 
-let priority = "SYSTEM_MONITORING";
-
-let recommendedFocus = "NORMAL OPERATIONS";
-
-
+let recommendedFocus =
+"NORMAL OPERATIONS";
 
 
 
@@ -154,150 +159,178 @@ switch(domainResult.domain)
 case "BHR":
 
 
-    if(severity.severity !== "LOW")
+if(severity.level !== "LOW")
 
-    {
+{
 
-        priority =
-            "HUMAN_RIGHTS_PROTECTION";
+priority =
+"HUMAN_RIGHTS_PROTECTION";
 
 
-        recommendedFocus =
-            "INVESTIGATION AND REMEDIATION";
+recommendedFocus =
+"INVESTIGATION AND REMEDIATION";
 
-    }
+}
 
 
 break;
-
-
 
 
 
 case "FIN":
 
 
-    if(severity.severity !== "LOW")
+if(severity.level !== "LOW")
 
-    {
+{
 
-        priority =
-            "FINANCIAL_RESILIENCE";
+priority =
+"FINANCIAL_RESILIENCE";
 
 
-        recommendedFocus =
-            "LIQUIDITY AND CAPITAL PROTECTION";
+recommendedFocus =
+"LIQUIDITY AND CAPITAL PROTECTION";
 
-    }
+}
 
 
 break;
-
-
 
 
 
 case "CYB":
 
 
-    priority =
-        "CYBER_PROTECTION";
+priority =
+"CYBER_PROTECTION";
 
+
+recommendedFocus =
+"THREAT CONTAINMENT";
 
 break;
-
-
 
 
 
 case "INF":
 
 
-    priority =
-        "INFRASTRUCTURE_STABILITY";
+priority =
+"INFRASTRUCTURE_STABILITY";
 
+
+recommendedFocus =
+"SYSTEM CONTINUITY";
 
 break;
-
-
 
 
 
 default:
 
 
-    priority =
-        "GENERAL_RESILIENCE";
-
+priority =
+"GENERAL_RESILIENCE";
 
 }
 
 
 
+let finalRisk =
 
+systemCondition.risk ??
+"LOW";
+
+
+
+if(severity.level === "HIGH")
+{
+
+finalRisk = "HIGH";
+
+}
+
+else if(
+
+severity.level === "MEDIUM"
+&&
+finalRisk === "LOW"
+
+)
+
+{
+
+finalRisk = "MEDIUM";
+
+}
 
 
 
 return {
 
 
-    domainSeverity:
+domainSeverity:
 
-        severity,
-
-
-    systemCondition,
+severity,
 
 
-    priority,
+systemCondition,
 
 
-    recommendedFocus,
+finalRisk,
 
 
+priority,
 
-    advisoryOnly:
 
-        true,
+recommendedFocus,
 
 
 
-    goldenRuleAuthority:
+advisoryOnly:
 
-        true,
-
-
-
-    captainAILenaAuthority:
-
-        true,
+true,
 
 
 
-    deterministic:
+goldenRuleAuthority:
 
-        true
+true,
+
+
+
+captainAILenaAuthority:
+
+true,
+
+
+
+deterministic:
+
+true
 
 
 
 };
 
 
-
 }
 
 
 
-
-
+/**
+ * ============================================================
+ * EXPORT
+ * ============================================================
+ */
 
 
 export default {
 
 
-    evaluateDomainSeverity,
+evaluateDomainSeverity,
 
-    buildDomainPriorityContext
+buildDomainPriorityContext
 
 
 };
