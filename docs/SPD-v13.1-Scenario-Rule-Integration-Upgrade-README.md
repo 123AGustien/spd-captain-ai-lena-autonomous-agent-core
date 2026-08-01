@@ -1,32 +1,3 @@
-Captain Don, I simplified the README to focus only on the next upgrade step: connect the scenario rules file so the cockpit displays the rules applied and action to be taken.
-Writing
-SPD v13.1 — Scenario Rule Connection Upgrade README
-Purpose
-Upgrade SPD v13.1 so each scenario button connects to its own rule engine.
-The goal:
-Scenario Selected
-↓
-Scenario Rule File Activated
-↓
-Rules Applied Displayed
-↓
-Domain Assessment Generated
-↓
-Captain AI Lena Decision
-↓
-Action Displayed
-↓
-Audit Record Updated
-Current System Status
-SPD v13.1 core is already validated.
-Protected systems:
-✅ Golden Rule Engine
-✅ Captain AI Lena Decision Core
-✅ Self-Test Engine
-✅ Memory Core
-✅ Audit Record
-✅ Deterministic Logic
-Do not change the validated core.
 Next Upgrade
 Connect Scenario Rules
 Example:
@@ -154,7 +125,3 @@ AUDIT
 Final Status:
 SPD v13.1 Scenario Rule Integration
 READY FOR VALIDATION
-
-This README can be saved as:
-SPD_v13.1_Scenario_Rule_Integration_Upgrade_README.md
-The next technical step is exactly what you identified: connect the existing FIN/BHR rule files so the selected scenario displays the rules and the action on the cockpit screen.
