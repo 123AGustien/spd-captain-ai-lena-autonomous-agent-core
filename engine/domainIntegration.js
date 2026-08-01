@@ -43,6 +43,7 @@
  */
 
 
+
 import {
 
     domainDecisionBridge
@@ -50,6 +51,27 @@ import {
 }
 
 from "./domainDecisionBridge.js";
+
+
+
+import {
+
+    evaluateFINScenario
+
+}
+
+from "./FIN/fin-rule-engine.js";
+
+
+
+import {
+
+    evaluateBHRScenario
+
+}
+
+from "./BHR/bhr-rule-engine.js";
+
 
 
 
@@ -99,6 +121,7 @@ export const DOMAIN_REGISTRY = {
 
 
 
+
 // ============================================================
 // SCENARIO REGISTRY
 // ============================================================
@@ -129,20 +152,31 @@ export const DOMAIN_SCENARIO_REGISTRY = {
 
     [
 
-        "OCCUPATIONAL_HEALTH_AND_SAFETY",
+        "HUMAN_RIGHTS_DUE_DILIGENCE",
 
         "FORCED_LABOUR",
 
         "CHILD_LABOUR",
 
+        "DISCRIMINATION",
+
+        "OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+        "MODERN_SLAVERY",
+
+        "COMMUNITY_IMPACT",
+
+        "INDIGENOUS_RIGHTS",
+
         "SUPPLY_CHAIN_RISK",
 
-        "COMMUNITY_IMPACT"
+        "GRIEVANCE_MECHANISM"
 
     ]
 
 
 };
+
 
 
 
@@ -163,11 +197,7 @@ function detectDomain(
 {
 
 
-    if(
-
-        state.domain
-
-    )
+    if(state.domain)
 
     {
 
@@ -177,9 +207,7 @@ function detectDomain(
 
 
 
-    const scenario =
-
-        state.scenario;
+    const scenario = state.scenario;
 
 
 
@@ -198,7 +226,6 @@ function detectDomain(
         return "FIN";
 
     }
-
 
 
 
@@ -231,10 +258,11 @@ function detectDomain(
 
 
 
+
 // ============================================================
 // DOMAIN RULE EXECUTION
 //
-// Domain engines provide assessment only.
+// REAL ENGINE CONNECTION
 // ============================================================
 
 
@@ -249,43 +277,72 @@ function executeDomainRule(
 {
 
 
+    if(domain === "FIN")
+
+    {
+
+
+        return evaluateFINScenario(
+
+            state
+
+        );
+
+
+    }
+
+
+
+    if(domain === "BHR")
+
+    {
+
+
+        return evaluateBHRScenario(
+
+            state
+
+        );
+
+
+    }
+
+
+
+
+
     return {
 
 
-        domain,
+        domain:
+
+        "UNKNOWN",
+
 
 
         scenario:
 
-            state.scenario
+        state.scenario ??
 
-            ??
-
-            "NORMAL",
+        "NORMAL",
 
 
 
         domainStress:
 
-            Number(
-
-                state.intensity
-
-                ??
-
-                0
-
-            ),
+        0,
 
 
 
         risk:
 
-            state.risk
+        "LOW",
 
-            ??
 
-            "LOW"
+
+        ruleStatus:
+
+        "NO DOMAIN ENGINE"
 
 
 
@@ -342,6 +399,7 @@ export function executeDomainIntegration(
 
 
 
+
     const bridgeResult =
 
 
@@ -356,6 +414,7 @@ export function executeDomainIntegration(
 
 
 
+
     return {
 
 
@@ -363,51 +422,63 @@ export function executeDomainIntegration(
 
 
 
+        domainResult,
+
+
+
         integrationLayer:
 
-            "SPD v13.1 DOMAIN INTEGRATION LAYER",
+        "SPD v13.1 DOMAIN INTEGRATION LAYER",
 
 
 
         domainRegistry:
 
-            DOMAIN_REGISTRY,
+        DOMAIN_REGISTRY,
 
 
 
         scenarioRegistry:
 
-            DOMAIN_SCENARIO_REGISTRY,
+        DOMAIN_SCENARIO_REGISTRY,
 
 
 
         authority:
 
-            "CAPTAIN AI LENA DECISION CORE",
+        "CAPTAIN AI LENA DECISION CORE",
 
 
 
         goldenRuleAuthority:
 
-            true,
+        true,
 
 
 
         captainAILenaAuthority:
 
-            true,
+        true,
 
 
 
         deterministic:
 
-            true
+        true,
+
+
+
+        machineLearning:
+
+        false
+
 
 
     };
 
 
 }
+
 
 
 
@@ -435,37 +506,35 @@ export function verifyDomainInput(
 
         valid:
 
-            typeof state === "object"
+        typeof state === "object"
 
-            &&
+        &&
 
-            state !== null,
+        state !== null,
 
 
 
         scenario:
 
-            state.scenario
+        state.scenario ??
 
-            ??
-
-            "UNKNOWN",
+        "UNKNOWN",
 
 
 
         domain:
 
-            detectDomain(
+        detectDomain(
 
-                state
+            state
 
-            ),
+        ),
 
 
 
         authority:
 
-            "CAPTAIN AI LENA DECISION CORE"
+        "CAPTAIN AI LENA DECISION CORE"
 
 
 
@@ -496,7 +565,7 @@ export function getDomainStatus()
 
         module:
 
-            "SPD v13.1 DOMAIN INTEGRATION LAYER",
+        "SPD v13.1 DOMAIN INTEGRATION LAYER",
 
 
 
@@ -512,45 +581,57 @@ export function getDomainStatus()
 
 
 
+        connectedEngines:
+
+        [
+
+            "FIN RULE ENGINE",
+
+            "BHR RULE ENGINE"
+
+        ],
+
+
+
         bridge:
 
-            "domainDecisionBridge.js",
+        "domainDecisionBridge.js",
 
 
 
         authority:
 
-            "CAPTAIN AI LENA DECISION CORE",
+        "CAPTAIN AI LENA DECISION CORE",
 
 
 
         goldenRuleAuthority:
 
-            true,
+        true,
 
 
 
         deterministic:
 
-            true,
+        true,
 
 
 
         machineLearning:
 
-            false,
+        false,
 
 
 
         randomness:
 
-            false,
+        false,
 
 
 
         status:
 
-            "READY"
+        "READY"
 
 
 
@@ -576,13 +657,13 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
     module:
 
-        "SPD v13.1 DOMAIN INTEGRATION LAYER",
+    "SPD v13.1 DOMAIN INTEGRATION LAYER",
 
 
 
     version:
 
-        "FINAL HARDENED",
+    "FINAL HARDENED",
 
 
 
@@ -598,9 +679,21 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
+    connectedEngines:
+
+    [
+
+        "FIN",
+
+        "BHR"
+
+    ],
+
+
+
     connectedBridge:
 
-        "domainDecisionBridge.js",
+    "domainDecisionBridge.js",
 
 
 
@@ -632,31 +725,31 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
     goldenRuleAuthority:
 
-        true,
+    true,
 
 
 
     deterministic:
 
-        true,
+    true,
 
 
 
     machineLearning:
 
-        false,
+    false,
 
 
 
     randomness:
 
-        false,
+    false,
 
 
 
     status:
 
-        "READY"
+    "READY"
 
 
 };
@@ -666,6 +759,11 @@ export const DOMAIN_INTEGRATION_STATUS = {
 
 
 
+
+
+// ============================================================
+// DEFAULT EXPORT
+// ============================================================
 
 
 export default {
@@ -679,7 +777,9 @@ export default {
 
     DOMAIN_REGISTRY,
 
-    DOMAIN_SCENARIO_REGISTRY
+    DOMAIN_SCENARIO_REGISTRY,
+
+    DOMAIN_INTEGRATION_STATUS
 
 
 };
