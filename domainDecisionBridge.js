@@ -1,14 +1,14 @@
 /**
  * ============================================================
  * SPD v13.1 — DOMAIN DECISION BRIDGE
- * ============================================================
  *
  * Captain AI Lena Autonomous Agent Core
  *
  * Purpose:
  *
- * Convert validated domain decisions into
- * unified decision structure.
+ * Convert validated domain intelligence,
+ * domain severity, and priority context
+ * into unified decision structure.
  *
  *
  * Supports:
@@ -21,6 +21,8 @@
  * Architecture:
  *
  * DOMAIN RULE ENGINE
+ *        ↓
+ * DOMAIN PRIORITY CONTEXT FUSION
  *        ↓
  * DOMAIN DECISION BRIDGE
  *        ↓
@@ -45,7 +47,6 @@
  */
 
 
-
 /**
  * ============================================================
  * BUILD DOMAIN DECISION OBJECT
@@ -55,7 +56,9 @@
 
 export function buildDomainDecisionBridge(
 
-    domainResult
+    domainResult,
+
+    domainPriorityContext = null
 
 ){
 
@@ -181,6 +184,46 @@ export function buildDomainDecisionBridge(
 
 
 
+    const priority =
+
+
+        domainPriorityContext?.priority
+
+        ||
+
+        "SYSTEM_MONITORING";
+
+
+
+
+
+    const recommendedFocus =
+
+
+        domainPriorityContext?.recommendedFocus
+
+        ||
+
+        "NORMAL OPERATIONS";
+
+
+
+
+
+    const finalRisk =
+
+
+        domainPriorityContext?.domainSeverity?.severity
+
+        ||
+
+        risk;
+
+
+
+
+
+
     return {
 
 
@@ -194,6 +237,9 @@ export function buildDomainDecisionBridge(
         risk,
 
 
+        finalRisk,
+
+
 
         decision,
 
@@ -204,6 +250,18 @@ export function buildDomainDecisionBridge(
 
 
         solution,
+
+
+
+        domainPriorityContext,
+
+
+
+        priority,
+
+
+
+        recommendedFocus,
 
 
 
@@ -224,6 +282,12 @@ export function buildDomainDecisionBridge(
 
 
         goldenRuleAuthority:
+
+            true,
+
+
+
+        captainAILenaAuthority:
 
             true,
 
@@ -295,14 +359,41 @@ return {
     domainDecision,
 
 
+
+    domainPriority:
+
+        domainDecision.priority,
+
+
+
+    recommendedFocus:
+
+        domainDecision.recommendedFocus,
+
+
+
+    finalRisk:
+
+        domainDecision.finalRisk,
+
+
+
     finalAuthority:
 
         "CAPTAIN_AI_LENA_DECISION_CORE",
 
 
+
     goldenRuleAuthority:
 
         true,
+
+
+
+    deterministic:
+
+        true,
+
 
 
     timestamp:
@@ -323,7 +414,7 @@ return {
 
 /**
  * ============================================================
- * VALIDATE DOMAIN DECISION
+ * VALIDATE DOMAIN DECISION BRIDGE
  * ============================================================
  */
 
@@ -369,9 +460,26 @@ const checks = {
 
 
 
+    priorityExists:
+
+        Boolean(
+
+            decision.priority
+
+        ),
+
+
+
     goldenRuleAuthority:
 
         decision.goldenRuleAuthority === true,
+
+
+
+    captainAILenaAuthority:
+
+        decision.captainAILenaAuthority === true,
+
 
 
     deterministic:
@@ -429,6 +537,12 @@ return {
     authority:
 
         "GOLDEN_RULE_ENGINE",
+
+
+
+    finalDecisionAuthority:
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
 
 
 
@@ -502,9 +616,33 @@ return {
 
 
 
+    finalRisk:
+
+        decision.finalRisk,
+
+
+
+    priority:
+
+        decision.priority,
+
+
+
+    recommendedFocus:
+
+        decision.recommendedFocus,
+
+
+
     solution:
 
         decision.solution,
+
+
+
+    domainPriorityContext:
+
+        decision.domainPriorityContext,
 
 
 
@@ -515,6 +653,12 @@ return {
 
 
     goldenRuleAuthority:
+
+        true,
+
+
+
+    deterministic:
 
         true,
 
@@ -570,10 +714,22 @@ return {
         "BHR",
 
 
+        "CYB",
+
+
+        "INF",
+
+
         "FUTURE_EXTENSIONS"
 
 
     ],
+
+
+
+    priorityContextFusion:
+
+        true,
 
 
 
@@ -586,6 +742,13 @@ return {
     goldenRuleAuthority:
 
         true,
+
+
+
+    captainAILenaAuthority:
+
+        true,
+
 
 
     timestamp:
@@ -622,5 +785,4 @@ export default {
     getDomainDecisionBridgeStatus
 
 
-    
 };
