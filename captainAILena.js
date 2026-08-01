@@ -376,7 +376,7 @@ return {
 
 
 }
- // ============================================================
+// ============================================================
 // PRIORITY 3
 // VERIFIED DOMAIN DECISION BRIDGE
 //
@@ -779,7 +779,36 @@ return {
 
     status:
 
-        "VALIDATED
+        "VALIDATED",
+
+
+
+    verifiedState,
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+
+    deterministic:
+
+        true
+
+
+
+};
+
+
+}
 
 // ============================================================
 // SPD CORE STATUS
