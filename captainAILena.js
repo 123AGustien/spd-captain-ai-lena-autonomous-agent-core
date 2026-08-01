@@ -2,7 +2,7 @@
  * ============================================================
  * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE
  *
- * HARDENED CLIENT DEMONSTRATION VERSION
+ * HARDENED DECISION AUTHORITY VERSION
  *
  * PART 1/4
  *
@@ -71,14 +71,6 @@ import {
 
 // ============================================================
 // RECOVERY MODULES
-//
-// Client validation workflow
-//
-// SELF TEST
-// FAULT IDENTIFICATION
-// CORRECTIVE ACTION
-// RE-TEST
-//
 // ============================================================
 
 
@@ -139,10 +131,11 @@ export const GOLDEN_RULE_STAGES =
 
 
 
+
 // ============================================================
 // CAPTAIN AI LENA CORE
 //
-// PRIMARY DECISION AUTHORITY
+// FINAL DECISION AUTHORITY
 //
 // ============================================================
 
@@ -152,7 +145,6 @@ export function captainAILena(
     state = {}
 
 ){
-
 
 
 // ============================================================
@@ -193,8 +185,7 @@ const verifiedState =
 // ============================================================
 // ASSESS
 //
-// Modules provide analysis only.
-//
+// Modules provide advisory intelligence only.
 // ============================================================
 
 
@@ -268,8 +259,9 @@ const domainDecision =
 
 
 
+
 // ============================================================
-// CAPTAIN AI LENA DECISION
+// CAPTAIN AI LENA FINAL DECISION
 // ============================================================
 
 
@@ -305,6 +297,8 @@ const decision =
 
 
 
+
+
 // ============================================================
 // ACTION
 // ============================================================
@@ -322,110 +316,34 @@ const action =
 
 
 
+
+
 // ============================================================
-// CORE OUTPUT
-// ============================================================
-
-
-return {
-
-
-    agent:
-
-        "CAPTAIN AI LENA",
-
-
-
-    authority:
-
-        "CAPTAIN AI LENA DECISION CORE",
-
-
-
-    decision,
-
-
-
-    action,
-
-
-
-    fx,
-
-
-
-    energy,
-
-
-
-    risk,
-
-
-
-    scenario,
-
-
-
-    domainDecision,
-
-
-
-    verifiedState,
-
-
-
-    pipeline:
-
-        GOLDEN_RULE_STAGES,
-
-
-
-    goldenRuleAuthority:
-
-        true,
-
-
-
-    deterministic:
-
-        true,
-
-
-
-    machineLearning:
-
-        false,
-
-
-
-    status:
-
-        "EXECUTED"
-
-
-};
-
-
-}
+//
 /**
  * ============================================================
  * PART 2/4
  *
  * CAPTAIN AI LENA DECISION AUTHORITY LAYER
  *
- * Priority:
+ * PRIORITY ORDER:
  *
  * 1. CRITICAL SAFETY OVERRIDE
- * 2. VERIFIED DOMAIN DECISION
- * 3. HIGH RISK STABILIZATION
- * 4. BHR HUMAN RIGHTS PROTECTION
+ * 2. BHR HUMAN RIGHTS PROTECTION
+ * 3. VERIFIED DOMAIN DECISION
+ * 4. HIGH RISK STABILIZATION
  * 5. ENERGY PROTECTION
  * 6. FX CONTROL
  * 7. SCENARIO RESPONSE
  * 8. NORMAL OPERATION
  *
+ * Domain engines advise.
+ * Captain AI Lena decides.
+ *
  * ============================================================
  */
+
+
 
 
 
@@ -460,7 +378,7 @@ function decide(
 
 // ============================================================
 // PRIORITY 1
-// CRITICAL OVERRIDE
+// CRITICAL SAFETY OVERRIDE
 // ============================================================
 
 
@@ -472,7 +390,23 @@ if(
 
 {
 
-    return "ACTIVATE STABILIZATION MODE";
+
+return {
+
+
+    decision:
+
+        "ACTIVATE STABILIZATION MODE",
+
+
+
+    action:
+
+        "IMMEDIATE SYSTEM STABILIZATION AND RISK CONTAINMENT"
+
+
+};
+
 
 }
 
@@ -480,13 +414,96 @@ if(
 
 
 
+
 // ============================================================
 // PRIORITY 2
+// BHR HUMAN RIGHTS PROTECTION
+//
+// Human rights scenarios have priority.
+// ============================================================
+
+
+if(
+
+    domain === "BHR"
+
+)
+
+{
+
+
+if(
+
+    state.scenario === "FORCED_LABOUR"
+
+    ||
+
+    state.scenario === "CHILD_LABOUR"
+
+    ||
+
+    state.scenario === "MODERN_SLAVERY"
+
+)
+
+{
+
+
+return {
+
+
+    decision:
+
+        "ACTIVATE BHR REMEDIATION MODE",
+
+
+
+    action:
+
+        "IMMEDIATE HUMAN RIGHTS REMEDIATION, SUPPLY CHAIN CONTROL AND ESCALATION"
+
+
+};
+
+
+}
+
+
+
+
+
+return {
+
+
+    decision:
+
+        "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE",
+
+
+
+    action:
+
+        "MONITOR HUMAN RIGHTS COMPLIANCE AND APPLY PREVENTIVE CONTROLS"
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+// ============================================================
+// PRIORITY 3
 // VERIFIED DOMAIN BRIDGE
 //
-// Domain engines advise.
-// Golden Rule remains authority.
+// FIN / other domains
 //
+// Advisory only.
 // ============================================================
 
 
@@ -503,19 +520,29 @@ if(
 {
 
 
-    return (
+return {
+
+
+    decision:
 
         domainDecision.decision
 
         ??
 
-        domainDecision.domainDecision
+        "SYSTEM STABLE",
+
+
+
+    action:
+
+        domainDecision.action
 
         ??
 
-        "SYSTEM STABLE"
+        "MONITOR DOMAIN CONDITIONS"
 
-    );
+
+};
 
 
 }
@@ -524,9 +551,12 @@ if(
 
 
 
+
+
+
 // ============================================================
-// PRIORITY 3
-// HIGH RISK
+// PRIORITY 4
+// HIGH RISK STABILIZATION
 // ============================================================
 
 
@@ -542,219 +572,17 @@ if(
 
 {
 
-    return "ACTIVATE STABILIZATION MODE";
 
-}
+return {
 
 
+    decision:
 
+        "ACTIVATE STABILIZATION MODE",
 
 
-// ============================================================
-// PRIORITY 4
-// BHR HUMAN RIGHTS PROTECTION
-//
-// Client demonstration path
-//
-// ============================================================
 
-
-if(
-
-    domain === "BHR"
-
-)
-
-{
-
-
-    if(
-
-        state.scenario === "FORCED_LABOUR"
-
-        ||
-
-        state.scenario === "CHILD_LABOUR"
-
-        ||
-
-        state.scenario === "MODERN_SLAVERY"
-
-    )
-
-    {
-
-        return "ACTIVATE BHR REMEDIATION MODE";
-
-    }
-
-
-
-    return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
-
-
-}
-
-
-
-
-
-// ============================================================
-// PRIORITY 5
-// ENERGY PROTECTION
-// ============================================================
-
-
-if(
-
-    energy?.status === "LOW ENERGY MODE"
-
-    ||
-
-    energy?.level === "LOW"
-
-    ||
-
-    energy?.value < 30
-
-    ||
-
-    state.energy < 30
-
-)
-
-{
-
-    return "ENERGY PROTECTION MODE";
-
-}
-
-
-
-
-
-// ============================================================
-// PRIORITY 6
-// FX CONTROL
-// ============================================================
-
-
-if(
-
-    fx?.status === "UNSTABLE"
-
-)
-
-{
-
-    return "FX CORRECTION ACTIVE";
-
-}
-
-
-
-
-
-// ============================================================
-// PRIORITY 7
-// SCENARIO RESPONSE
-// ============================================================
-
-
-switch(
-
-    scenario?.type
-
-)
-
-{
-
-
-case "FX_SHOCK":
-
-return "FX SHOCK RESPONSE ACTIVE";
-
-
-
-case "ENERGY_CRISIS":
-
-return "ENERGY RESERVE MODE ACTIVE";
-
-
-
-case "CYBER_ATTACK":
-
-return "CYBER DEFENSE MODE ACTIVE";
-
-
-
-case "INFRA_FAILURE":
-
-return "INFRASTRUCTURE RECOVERY MODE";
-
-
-
-default:
-
-break;
-
-
-}
-
-
-
-
-
-// ============================================================
-// PRIORITY 8
-// NORMAL OPERATION
-// ============================================================
-
-
-return "SYSTEM STABLE";
-
-
-}
-
-
-
-
-
-
-
-
-// ============================================================
-// ACTION ENGINE
-// ============================================================
-
-
-function buildAction(
-
-decision
-
-){
-
-
-switch(decision)
-
-{
-
-
-case "ACTIVATE BHR REMEDIATION MODE":
-
-
-return (
-
-"IMMEDIATE HUMAN RIGHTS REMEDIATION, SUPPLY CHAIN CONTROL AND ESCALATION"
-
-);
-
-
-
-
-
-case "PREVENTIVE HUMAN RIGHTS
-/**
+   /**
  * ============================================================
  * PART 3/4
  *
@@ -947,7 +775,6 @@ return {
 
 
 
-
 // ============================================================
 // VERIFY STATE
 //
@@ -967,6 +794,7 @@ return {
 
 
     ...state,
+
 
 
     fx:
@@ -1067,8 +895,10 @@ return {
 // ============================================================
 // CLIENT RECOVERY WORKFLOW
 //
-// Demonstrates:
-// Fault → Diagnosis → Correction → Recovery
+// SELF TEST
+// FAULT IDENTIFICATION
+// CORRECTIVE ACTION
+// RE-TEST
 //
 // ============================================================
 
@@ -1093,6 +923,8 @@ const initialDecision =
 
 
 
+
+
 // ============================================================
 // FAULT IDENTIFICATION
 // ============================================================
@@ -1100,235 +932,7 @@ const initialDecision =
 
 const faultReport =
 
-    identifyFaults(
-
-    {
-
-
-        expectedRisk:
-
-            state.expectedRisk,
-
-
-
-        expectedDecision:
-
-            state.expectedDecision,
-
-
-
-        actualRisk:
-
-            initialDecision.risk,
-
-
-
-        actualDecision:
-
-            initialDecision.decision,
-
-
-        pipeline:
-
-            initialDecision.pipeline
-
-
-    }
-
-    );
-
-
-
-
-
-
-
-// ============================================================
-// CORRECTIVE ACTION
-// ============================================================
-
-
-const correctiveAction =
-
-    executeCorrectiveAction(
-
-    {
-
-        faultReport,
-
-
-        authority:
-
-            "CAPTAIN AI LENA"
-
-
-    }
-
-    );
-
-
-
-
-
-
-
-
-// ============================================================
-// RE-TEST VALIDATION
-// ============================================================
-
-
-const retest =
-
-    executeRetestValidation(
-
-    {
-
-        originalState:
-
-            state,
-
-
-
-        correctiveAction,
-
-
-        expectedRisk:
-
-            state.expectedRisk,
-
-
-
-        expectedDecision:
-
-            state.expectedDecision
-
-
-    }
-
-    );
-
-
-
-
-
-
-
-
-
-return {
-
-
-    workflow:
-
-        "SPD v13.1 AUTONOMOUS RECOVERY LOOP",
-
-
-
-    initialDecision,
-
-
-
-    faultIdentification:
-
-        faultReport,
-
-
-
-    correctiveAction,
-
-
-
-    retest,
-
-
-
-    recoveryVerified:
-
-        retest?.status === "PASS",
-
-
-
-    authority:
-
-        "CAPTAIN AI LENA DECISION CORE",
-
-
-
-    goldenRuleAuthority:
-
-        true
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-// ============================================================
-// VALIDATION HELPER
-// ============================================================
-
-
-export function validateCaptainAILenaState(
-
-    state = {}
-
-){
-
-
-const verified =
-
-    verifyState(
-
-        normalizeState(
-
-            state
-
-        )
-
-    );
-
-
-
-return {
-
-
-    status:
-
-        "VALIDATED",
-
-
-
-    verifiedState:
-
-        verified,
-
-
-
-    authority:
-
-        "CAPTAIN AI LENA DECISION CORE",
-
-
-
-    deterministic:
-
-        true
-
-
-};
-
-
-}
-/**
+   /**
  * ============================================================
  * PART 4/4 FINAL
  *
@@ -1448,7 +1052,6 @@ export const SPD_CORE_STATUS = {
 
 
 
-
     goldenRule:
 
     [
@@ -1480,146 +1083,4 @@ export const SPD_CORE_STATUS = {
 
         "FAULT_IDENTIFICATION",
 
-        "CAPTAIN_AI_LENA_CORRECTIVE_ACTION",
-
-        "RE_TEST_VALIDATION",
-
-        "RECOVERY_VERIFIED"
-
-    ],
-
-
-
-
-
-
-    phi:
-
-        1.618033988749895,
-
-
-
-
-
-
-    deterministic:
-
-        true,
-
-
-
-    machineLearning:
-
-        false,
-
-
-
-    randomness:
-
-        false,
-
-
-
-
-
-    goldenRuleAuthority:
-
-        true,
-
-
-
-
-
-    captainAILenaAuthority:
-
-        true,
-
-
-
-
-
-    validationReady:
-
-        true,
-
-
-
-
-
-    auditReady:
-
-        true,
-
-
-
-
-
-    clientDemoReady:
-
-        true,
-
-
-
-
-
-    status:
-
-        "READY"
-
-
-};
-
-
-
-
-
-
-
-
-
-// ============================================================
-// EXPORT HELPERS
-//
-// Exposed for testing
-//
-// ============================================================
-
-
-export {
-
-
-    normalizeState,
-
-    verifyState,
-
-    decide,
-
-    buildAction
-
-
-};
-
-
-
-
-
-
-
-
-
-// ============================================================
-// FINAL DEFAULT EXPORT
-//
-// Captain AI Lena:
-// FINAL DECISION AUTHORITY
-//
-// Domain Engines:
-// ADVISORY ONLY
-//
-// Golden Rule Engine:
-// AUTHORITATIVE
-//
-// ============================================================
-
-
-export default captainAILena;
+        "
