@@ -5,10 +5,7 @@
  * File:
  * FIN/fin-decision-bridge.js
  *
- * Purpose:
- *
- * Connect FIN Rule Engine output into
- * Captain AI Lena Decision Core.
+ * FINAL HARDENED VERSION
  *
  *
  * ARCHITECTURE:
@@ -25,7 +22,10 @@
  *        ↓
  * CAPTAIN AI LENA DECISION CORE
  *        ↓
- * ACTION / MEMORY / AUDIT / RE-TEST
+ * ACTION
+ * MEMORY
+ * AUDIT
+ * RE-TEST
  *
  *
  * PRINCIPLE:
@@ -59,11 +59,6 @@ export function buildFINDecisionBridge(
 
 ){
 
-
-
-// ============================================================
-// VERIFY FIN INPUT
-// ============================================================
 
 
 const verifiedFIN = {
@@ -164,10 +159,8 @@ const verifiedFIN = {
 
 
 
-
-
 // ============================================================
-// FIN DOMAIN DECISION
+// FIN DOMAIN ADVISORY DECISION
 // ============================================================
 
 
@@ -188,12 +181,13 @@ const domainDecision =
 
 
 // ============================================================
-// STANDARDIZED OUTPUT
+// STANDARD DOMAIN INTEGRATION OUTPUT
 //
-// This is the interface consumed by:
-// - Domain Integration
+// Consumed by:
+// - domainIntegration.js
 // - Captain AI Lena
 // - Golden Rule Engine
+// - Audit Logger
 //
 // ============================================================
 
@@ -219,6 +213,12 @@ return {
 
 
 
+    ruleId:
+
+        verifiedFIN.ruleId,
+
+
+
     risk:
 
         verifiedFIN.risk,
@@ -231,11 +231,17 @@ return {
 
 
 
+    recommendation:
+
+        verifiedFIN.recommendation,
+
+
+
     domainDecision,
 
 
 
-    // Direct decision access
+    // Direct Captain AI Lena bridge
 
     decision:
 
@@ -285,6 +291,12 @@ return {
 
 
 
+    randomness:
+
+        false,
+
+
+
     status:
 
         "FIN DECISION BRIDGE COMPLETE"
@@ -320,13 +332,13 @@ function mapFINDecision(
 
 
 
-if(
-
-    fin.risk === "CRITICAL"
-
-)
+switch(fin.risk)
 
 {
+
+
+case "CRITICAL":
+
 
 return {
 
@@ -342,22 +354,14 @@ return {
         "PROTECT LIQUIDITY, CONTAIN CASCADE RISK AND STABILIZE FINANCIAL SYSTEM"
 
 
-
 };
 
-}
 
 
 
 
+case "HIGH":
 
-if(
-
-    fin.risk === "HIGH"
-
-)
-
-{
 
 return {
 
@@ -373,22 +377,14 @@ return {
         "PROTECT LIQUIDITY AND REDUCE FINANCIAL SYSTEM EXPOSURE"
 
 
-
 };
 
-}
 
 
 
 
+case "MEDIUM":
 
-if(
-
-    fin.risk === "MEDIUM"
-
-)
-
-{
 
 return {
 
@@ -404,13 +400,13 @@ return {
         "MONITOR FINANCIAL PRESSURE AND PRESERVE SYSTEM RESILIENCE"
 
 
-
 };
 
-}
 
 
 
+
+default:
 
 
 return {
@@ -433,6 +429,9 @@ return {
 }
 
 
+}
+
+
 
 
 
@@ -450,7 +449,6 @@ function normalizeRisk(
     risk
 
 ){
-
 
 
 switch(
@@ -518,7 +516,6 @@ export function validateFINDecisionBridge(
 ){
 
 
-
 const bridge =
 
 
@@ -532,12 +529,18 @@ const bridge =
 
 
 
-
-
 const valid =
 
 
 bridge.domain === "FIN"
+
+&&
+
+Boolean(
+
+    bridge.domainDecision
+
+)
 
 &&
 
@@ -593,6 +596,18 @@ return {
     domain:
 
         bridge.domain,
+
+
+
+    scenario:
+
+        bridge.scenario,
+
+
+
+    risk:
+
+        bridge.risk,
 
 
 
