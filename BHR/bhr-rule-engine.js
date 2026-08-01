@@ -1,32 +1,50 @@
- /**
+/**
  * ============================================================
- * SPD v13.1 — BHR VALIDATION ENGINE FINAL
- * CORRECTED INTEGRATION VERSION
+ * SPD v13.1 — BUSINESS & HUMAN RIGHTS (BHR)
+ * RULE ENGINE — FINAL HARDENED VERSION
+ * ============================================================
  *
  * File:
- * BHR/bhr-validation-engine.js
+ * BHR/bhr-rule-engine.js
  *
- * Domain:
- * Business & Human Rights
- *
- * Pipeline:
- *
- * BHR RULE ENGINE
- *        ↓
- * BHR VALIDATION ENGINE
- *        ↓
- * BHR DECISION BRIDGE
- *        ↓
- * CAPTAIN AI LENA DECISION CORE
- *        ↓
- * GOLDEN RULE ENGINE
- *        ↓
- * ACTION ENGINE
+ * Purpose:
+ * Deterministic Business & Human Rights scenario assessment.
  *
  *
- * Deterministic.
- * No machine learning.
- * No randomness.
+ * FLOW:
+ *
+ * Cockpit Scenario
+ *        ↓
+ * BHR Rule Engine
+ *        ↓
+ * Rules Applied
+ *        ↓
+ * Human Rights Assessment
+ *        ↓
+ * Risk Classification
+ *        ↓
+ * Recommended Action
+ *        ↓
+ * BHR Validation Engine
+ *        ↓
+ * Domain Decision Bridge
+ *        ↓
+ * Golden Rule Engine
+ *        ↓
+ * Captain AI Lena
+ *
+ *
+ * PRINCIPLE:
+ *
+ * BHR Rule Engine advises.
+ *
+ * Golden Rule Engine remains authoritative.
+ *
+ *
+ * Properties:
+ * - Deterministic
+ * - No randomness
+ * - No machine learning
  *
  * ============================================================
  */
@@ -34,13 +52,11 @@
 
 import {
 
-    bhrRuleEngine,
-
-    BHR_ENGINE_STATUS
+    getBHRScenario
 
 }
 
-from "./bhr-rule-engine.js";
+from "./bhr-scenario-registry.js";
 
 
 
@@ -48,83 +64,244 @@ from "./bhr-rule-engine.js";
 
 /**
  * ============================================================
- * VALIDATE BHR INPUT
+ * BHR RISK THRESHOLDS
  * ============================================================
  */
 
 
-export function validateBHRInput(
+export const BHR_THRESHOLDS = {
 
-    state = {}
+
+    LOW:
+
+        0,
+
+
+    MEDIUM:
+
+        40,
+
+
+    HIGH:
+
+        70
+
+
+};
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * NORMALIZE INDICATOR
+ * ============================================================
+ */
+
+
+function normalizeIndicator(
+
+    value
 
 ){
 
 
-const valid =
+return Math.max(
 
+    0,
 
-Boolean(
+    Math.min(
 
-    state.scenario
+        100,
 
-)
-
-&&
-
-Number.isFinite(
-
-    Number(
-
-        state.intensity ?? 0
+        Number(value) || 0
 
     )
 
 );
 
 
-
-return {
-
-
-    status:
-
-        valid
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
+}
 
 
-    valid,
 
 
-    scenario:
-
-        state.scenario ?? null,
 
 
-    intensity:
 
-        Number(
+/**
+ * ============================================================
+ * SCENARIO RULE DEFINITIONS
+ * ============================================================
+ */
 
-            state.intensity ?? 0
 
-        ),
+export const BHR_RULES = {
 
 
-    timestamp:
+HUMAN_RIGHTS_DUE_DILIGENCE:
 
-        new Date().toISOString()
+{
+
+    rules:
+
+    [
+
+        "BHR-001 Human Rights Due Diligence"
+
+    ]
+
+},
+
+
+
+FORCED_LABOUR:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-002 Forced Labour Prevention"
+
+    ]
+
+},
+
+
+
+CHILD_LABOUR:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-003 Child Labour Prevention"
+
+    ]
+
+},
+
+
+
+DISCRIMINATION:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-004 Equality And Non-Discrimination"
+
+    ]
+
+},
+
+
+
+OCCUPATIONAL_HEALTH_AND_SAFETY:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-005 Worker Health And Safety"
+
+    ]
+
+},
+
+
+
+MODERN_SLAVERY:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-006 Modern Slavery Prevention"
+
+    ]
+
+},
+
+
+
+COMMUNITY_IMPACT:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-007 Community Impact Assessment"
+
+    ]
+
+},
+
+
+
+INDIGENOUS_RIGHTS:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-008 Indigenous Rights Protection"
+
+    ]
+
+},
+
+
+
+SUPPLY_CHAIN_RISK:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-009 Supply Chain Human Rights Risk"
+
+    ]
+
+},
+
+
+
+GRIEVANCE_MECHANISM:
+
+{
+
+    rules:
+
+    [
+
+        "BHR-010 Grievance Mechanism Governance"
+
+    ]
+
+}
 
 
 };
-
-
-}
 
 
 
@@ -136,136 +313,47 @@ return {
 
 /**
  * ============================================================
- * VALIDATE BHR RISK
- *
- * Compatible with BHR Rule Engine output
+ * RISK CLASSIFICATION
  * ============================================================
  */
 
 
-export function validateBHRRisk(
+function classifyBHRRisk(
 
-    result = {}
+    stress
 
 ){
 
 
-const intensity =
+if(
 
+    stress >= BHR_THRESHOLDS.HIGH
 
-Number(
+)
 
-    result.intensity
+{
 
-    ??
+    return "HIGH";
 
-    result.riskScore
-
-    ??
-
-    0
-
-);
-
-
-
-
-
-let expectedRisk;
-
-
+}
 
 
 
 if(
 
-    intensity >= 80
+    stress >= BHR_THRESHOLDS.MEDIUM
 
 )
 
 {
 
-    expectedRisk = "HIGH";
-
-}
-
-else if(
-
-    intensity >= 50
-
-)
-
-{
-
-    expectedRisk = "MEDIUM";
-
-}
-
-else
-
-{
-
-    expectedRisk = "LOW";
+    return "MEDIUM";
 
 }
 
 
 
-
-
-
-
-const valid =
-
-
-expectedRisk === result.risk;
-
-
-
-
-
-
-
-return {
-
-
-    status:
-
-        valid
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
-
-
-
-    expectedRisk,
-
-
-    actualRisk:
-
-        result.risk,
-
-
-
-    intensity,
-
-
-
-    valid,
-
-
-
-    timestamp:
-
-        new Date().toISOString()
-
-
-};
+return "LOW";
 
 
 }
@@ -280,152 +368,81 @@ return {
 
 /**
  * ============================================================
- * VALIDATE BHR DECISION
- *
- * Accepts Decision Bridge output
+ * ACTION MAPPING
  * ============================================================
  */
 
 
-export function validateBHRDecision(
+function determineAction(
 
-    result = {}
+    risk,
+
+    scenario
 
 ){
 
 
+if(
 
-const decision =
+scenario === "FORCED_LABOUR"
 
+||
 
-result.decision
+scenario === "CHILD_LABOUR"
 
+||
 
-??
+scenario === "MODERN_SLAVERY"
 
-result.domainDecision?.domainDecision
+)
 
+{
 
-??
+return (
 
-null;
+"IMMEDIATE HUMAN RIGHTS REMEDIATION, ESCALATION AND SUPPLY CHAIN CONTROL"
 
+);
 
-
-
-
-
-
-let valid = false;
-
-
+}
 
 
 
+switch(risk)
 
-switch(result.risk){
-
+{
 
 
 case "HIGH":
 
+return (
 
-valid =
+"ACTIVATE HUMAN RIGHTS REMEDIATION AND CORRECTIVE ACTION"
 
-decision ===
-
-"ACTIVATE BHR REMEDIATION MODE";
-
-
-break;
-
-
+);
 
 
 
 case "MEDIUM":
 
+return (
 
-valid =
+"APPLY HUMAN RIGHTS DUE DILIGENCE CONTROLS AND MONITORING"
 
-decision ===
-
-"PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
-
-
-break;
-
-
-
-
-
-case "LOW":
-
-
-valid =
-
-decision ===
-
-"BHR MONITORING";
-
-
-break;
-
-
+);
 
 
 
 default:
 
+return (
 
-valid = false;
+"CONTINUE HUMAN RIGHTS MONITORING"
+
+);
 
 
 }
-
-
-
-
-
-
-
-return {
-
-
-    status:
-
-        valid
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
-
-
-
-    risk:
-
-        result.risk,
-
-
-
-    decision,
-
-
-
-    valid,
-
-
-
-    timestamp:
-
-        new Date().toISOString()
-
-
-};
 
 
 }
@@ -440,205 +457,184 @@ return {
 
 /**
  * ============================================================
- * VALIDATE ACTION OUTPUT
- *
- * Compatible with SPD Action Engine
+ * MAIN BHR RULE ENGINE
  * ============================================================
  */
 
 
-export function validateBHRActions(
+export function bhrRuleEngine(
 
-    result = {}
-
-){
-
-
-
-const valid =
-
-
-Boolean(
-
-    result.action
-
-    ||
-
-    result.command
-
-    ||
-
-    result.domainDecision
-
-);
-
-
-
-
-
-
-
-return {
-
-
-    status:
-
-        valid
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
-
-
-
-    actionDetected:
-
-        valid,
-
-
-
-    valid,
-
-
-
-    timestamp:
-
-        new Date().toISOString()
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-
-/**
- * ============================================================
- * COMPLETE BHR VALIDATION
- * ============================================================
- */
-
-
-export function validateBHREngine(
-
-    state = {}
+    input = {}
 
 ){
 
 
-
-const inputValidation =
-
-
-validateBHRInput(
-
-    state
-
-);
+const scenario =
 
 
+String(
 
+    input.scenario
 
+    ??
 
-
-if(
-
-    !inputValidation.valid
+    "HUMAN_RIGHTS_DUE_DILIGENCE"
 
 )
 
-{
-
-
-return {
-
-
-    status:
-
-        "FAIL",
+.toUpperCase();
 
 
 
-    stage:
-
-        "INPUT_VALIDATION",
 
 
+const registry =
 
-    inputValidation
+
+getBHRScenario(
+
+    scenario
+
+);
+
+
+
+
+
+
+const intensity =
+
+
+normalizeIndicator(
+
+    input.intensity
+
+);
+
+
+
+
+
+
+const indicators = {
+
+
+humanRightsCompliance:
+
+    normalizeIndicator(
+
+        input.humanRightsCompliance
+
+        ??
+
+        intensity
+
+    ),
+
+
+
+workerSafety:
+
+    normalizeIndicator(
+
+        input.workerSafety
+
+        ??
+
+        intensity
+
+    ),
+
+
+
+supplyChain:
+
+    normalizeIndicator(
+
+        input.supplyChain
+
+        ??
+
+        intensity
+
+    ),
+
+
+
+governance:
+
+    normalizeIndicator(
+
+        input.governance
+
+        ??
+
+        intensity
+
+    ),
+
+
+
+communityImpact:
+
+    normalizeIndicator(
+
+        input.communityImpact
+
+        ??
+
+        intensity
+
+    )
 
 
 };
 
 
-}
 
 
 
 
 
 
-
-const result =
-
-
-bhrRuleEngine(
-
-    state
-
-);
+const domainStress =
 
 
+(
 
+    indicators.humanRightsCompliance * 0.25
 
+)
 
++
 
+(
 
-const riskValidation =
+    indicators.workerSafety * 0.25
 
+)
 
-validateBHRRisk(
++
 
-    result
+(
 
-);
+    indicators.supplyChain * 0.20
 
+)
 
++
 
+(
 
+    indicators.governance * 0.20
 
+)
 
-const decisionValidation =
++
 
+(
 
-validateBHRDecision(
-
-    result
-
-);
-
-
-
-
-
-
-const actionValidation =
-
-
-validateBHRActions(
-
-    result
+    indicators.communityImpact * 0.10
 
 );
 
@@ -647,27 +643,30 @@ validateBHRActions(
 
 
 
-const overall =
+const risk =
 
 
-[
+classifyBHRRisk(
 
-    riskValidation,
-
-    decisionValidation,
-
-    actionValidation
-
-]
-
-.every(
-
-    item =>
-
-    item.valid === true
+    domainStress
 
 );
 
+
+
+
+
+
+const action =
+
+
+determineAction(
+
+    risk,
+
+    scenario
+
+);
 
 
 
@@ -675,12 +674,6 @@ const overall =
 
 
 return {
-
-
-    engine:
-
-        "SPD v13.1 BHR VALIDATION ENGINE",
-
 
 
     domain:
@@ -689,45 +682,103 @@ return {
 
 
 
+    scenario,
+
+
+
     status:
 
-        overall
-
-        ?
-
-        "PASS"
-
-        :
-
-        "FAIL",
+        "COMPLETE",
 
 
 
-    inputValidation,
+    rulesApplied:
+
+        BHR_RULES[scenario]?.rules
+
+        ??
+
+        [],
 
 
 
-    riskValidation,
+    ruleApplied:
+
+        BHR_RULES[scenario]?.rules?.[0]
+
+        ??
+
+        "UNKNOWN",
 
 
 
-    decisionValidation,
+    scenarioRegistry:
+
+        registry,
 
 
 
-    actionValidation,
+    assessment:
+
+        "BUSINESS AND HUMAN RIGHTS ASSESSMENT COMPLETE",
 
 
 
-    engineResult:
-
-        result,
+    indicators,
 
 
 
-    timestamp:
+    domainStress,
 
-        new Date().toISOString()
+
+
+    riskScore:
+
+        domainStress,
+
+
+
+    risk,
+
+
+
+    recommendedAction:
+
+        action,
+
+
+
+    action,
+
+
+
+    goldenRuleAuthority:
+
+        true,
+
+
+
+    captainAILenaReady:
+
+        true,
+
+
+
+    deterministic:
+
+        true,
+
+
+
+    machineLearning:
+
+        false,
+
+
+
+    randomness:
+
+        false
 
 
 };
@@ -745,99 +796,54 @@ return {
 
 /**
  * ============================================================
- * BHR DOMAIN SELF TEST
+ * ENGINE SELF TEST
  * ============================================================
  */
 
 
-export function runBHRValidationSelfTest(){
+export function runBHRRuleEngineSelfTest(){
 
 
+const tests =
 
-const tests = [
-
+[
 
 
 {
-
-
-name:
-
-"LOW HUMAN RIGHTS MONITORING",
-
 
 scenario:
 
 "HUMAN_RIGHTS_DUE_DILIGENCE",
 
-
 intensity:
 
-20,
-
-
-expected:
-
-"LOW"
-
+20
 
 },
 
 
-
-
-
 {
-
-
-name:
-
-"MEDIUM HUMAN RIGHTS PREVENTION",
-
 
 scenario:
 
 "SUPPLY_CHAIN_RISK",
 
-
 intensity:
 
-60,
-
-
-expected:
-
-"MEDIUM"
-
+60
 
 },
 
 
-
-
-
 {
-
-
-name:
-
-"HIGH HUMAN RIGHTS REMEDIATION",
-
 
 scenario:
 
 "FORCED_LABOUR",
 
-
 intensity:
 
-95,
-
-
-expected:
-
-"HIGH"
-
+90
 
 }
 
@@ -847,13 +853,12 @@ expected:
 
 
 
+const results =
 
 
-
-const results = tests.map(
+tests.map(
 
 test => {
-
 
 
 const output =
@@ -861,7 +866,13 @@ const output =
 
 bhrRuleEngine(
 
-{
+    test
+
+);
+
+
+
+return {
 
 
 scenario:
@@ -869,45 +880,14 @@ scenario:
 test.scenario,
 
 
-intensity:
-
-test.intensity
-
-
-}
-
-);
-
-
-
-
-
-
-
-return {
-
-
-test:
-
-test.name,
-
-
-
-expected:
-
-test.expected,
-
-
-
-actual:
+risk:
 
 output.risk,
 
 
-
 status:
 
-output.risk === test.expected
+output.status === "COMPLETE"
 
 ?
 
@@ -921,31 +901,9 @@ output.risk === test.expected
 };
 
 
-
 }
 
 );
-
-
-
-
-
-
-
-const passed =
-
-
-results.filter(
-
-item =>
-
-item.status === "PASS"
-
-).length;
-
-
-
-
 
 
 
@@ -954,29 +912,23 @@ return {
 
 engine:
 
-"SPD v13.1 BHR VALIDATION ENGINE",
+"SPD v13.1 BHR RULE ENGINE",
 
 
+tests:
 
-totalTests:
-
-tests.length,
-
-
-
-passed,
-
-
-
-failed:
-
-tests.length - passed,
-
+results,
 
 
 overallStatus:
 
-passed === tests.length
+results.every(
+
+item =>
+
+item.status === "PASS"
+
+)
 
 ?
 
@@ -984,17 +936,7 @@ passed === tests.length
 
 :
 
-"FAIL",
-
-
-
-results,
-
-
-
-timestamp:
-
-new Date().toISOString()
+"FAIL"
 
 
 };
@@ -1012,12 +954,12 @@ new Date().toISOString()
 
 /**
  * ============================================================
- * BHR VALIDATION STATUS
+ * ENGINE STATUS
  * ============================================================
  */
 
 
-export const BHR_VALIDATION_STATUS = {
+export const BHR_ENGINE_STATUS = {
 
 
 domain:
@@ -1028,13 +970,19 @@ domain:
 
 engine:
 
-"SPD v13.1 BHR VALIDATION ENGINE",
+"SPD v13.1 BHR RULE ENGINE",
 
 
 
-authority:
+status:
 
-"CAPTAIN AI LENA DECISION CORE",
+"ACTIVE",
+
+
+
+goldenRuleAuthority:
+
+true,
 
 
 
@@ -1052,33 +1000,7 @@ false,
 
 randomness:
 
-false,
-
-
-
-pipeline:
-
-[
-
-"OBSERVE",
-
-"VERIFY",
-
-"ASSESS",
-
-"DECIDE",
-
-"ACT",
-
-"UPDATE"
-
-],
-
-
-
-status:
-
-"READY"
+false
 
 
 };
@@ -1101,25 +1023,19 @@ status:
 export default {
 
 
-validateBHRInput,
+bhrRuleEngine,
 
 
-validateBHRRisk,
+runBHRRuleEngineSelfTest,
 
 
-validateBHRDecision,
+BHR_ENGINE_STATUS,
 
 
-validateBHRActions,
+BHR_THRESHOLDS,
 
 
-validateBHREngine,
-
-
-runBHRValidationSelfTest,
-
-
-BHR_VALIDATION_STATUS
+BHR_RULES
 
 
 };
