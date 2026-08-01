@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE FINAL
+ * SPD v13.1 — CAPTAIN AI LENA AUTONOMOUS AGENT CORE
  *
  * HARDENED CLIENT DEMONSTRATION VERSION
  *
@@ -17,30 +17,6 @@
  * ACT
  * UPDATE
  *
- * ARCHITECTURE:
- *
- * COCKPIT
- *      ↓
- * DOMAIN INTEGRATION
- *      ↓
- * DOMAIN RULE ENGINE
- *      ↓
- * DOMAIN DECISION BRIDGE
- *      ↓
- * CAPTAIN AI LENA DECISION CORE
- *      ↓
- * GOLDEN RULE ENGINE
- *      ↓
- * FAULT IDENTIFICATION
- *      ↓
- * CORRECTIVE ACTION
- *      ↓
- * RE-TEST VALIDATION
- *      ↓
- * MEMORY CORE
- *      ↓
- * AUDIT RECORD
- *
  *
  * PRINCIPLE:
  *
@@ -55,6 +31,7 @@
  *
  * ============================================================
  */
+
 
 
 // ============================================================
@@ -93,9 +70,14 @@ import {
 
 
 // ============================================================
-// OPTIONAL VALIDATION MODULES
+// RECOVERY MODULES
 //
-// Used for client demonstration recovery workflow
+// Client validation workflow
+//
+// SELF TEST
+// FAULT IDENTIFICATION
+// CORRECTIVE ACTION
+// RE-TEST
 //
 // ============================================================
 
@@ -134,7 +116,6 @@ export const GOLDEN_RATIO =
 
 
 
-
 export const GOLDEN_RULE_STAGES =
 
 [
@@ -157,6 +138,7 @@ export const GOLDEN_RULE_STAGES =
 
 
 
+
 // ============================================================
 // CAPTAIN AI LENA CORE
 //
@@ -172,8 +154,9 @@ export function captainAILena(
 ){
 
 
+
 // ============================================================
-// 1. OBSERVE
+// OBSERVE
 // ============================================================
 
 
@@ -188,8 +171,9 @@ const observedState =
 
 
 
+
 // ============================================================
-// 2. VERIFY
+// VERIFY
 // ============================================================
 
 
@@ -205,12 +189,11 @@ const verifiedState =
 
 
 
+
 // ============================================================
-// 3. ASSESS
+// ASSESS
 //
-// Modules provide assessment only.
-//
-// They do not decide.
+// Modules provide analysis only.
 //
 // ============================================================
 
@@ -225,7 +208,6 @@ const fx =
 
 
 
-
 const energy =
 
     energyModule(
@@ -233,7 +215,6 @@ const energy =
         verifiedState.energy
 
     );
-
 
 
 
@@ -251,7 +232,6 @@ const risk =
 
 
 
-
 const scenario =
 
     scenarioEngine(
@@ -263,10 +243,11 @@ const scenario =
 
 
 
+
 // ============================================================
-// DOMAIN DECISION INPUT
+// DOMAIN ADVISORY INPUT
 //
-// FIN / BHR advisory output
+// FIN / BHR
 //
 // ============================================================
 
@@ -285,16 +266,14 @@ const domainDecision =
 
 
 
+
+
 // ============================================================
-// DECISION AUTHORITY
-//
-// Captain AI Lena decides.
-//
+// CAPTAIN AI LENA DECISION
 // ============================================================
 
 
 const decision =
-
 
     decide(
 
@@ -325,6 +304,7 @@ const decision =
 
 
 
+
 // ============================================================
 // ACTION
 // ============================================================
@@ -341,8 +321,9 @@ const action =
 
 
 
+
 // ============================================================
-// RETURN CORE DECISION
+// CORE OUTPUT
 // ============================================================
 
 
@@ -393,15 +374,15 @@ return {
 
 
 
-    goldenRuleAuthority:
-
-        true,
-
-
-
     pipeline:
 
         GOLDEN_RULE_STAGES,
+
+
+
+    goldenRuleAuthority:
+
+        true,
 
 
 
@@ -432,11 +413,16 @@ return {
  *
  * CAPTAIN AI LENA DECISION AUTHORITY LAYER
  *
- * Domain Engines:
- * Advisory Only
+ * Priority:
  *
- * Captain AI Lena:
- * Final Decision Authority
+ * 1. CRITICAL SAFETY OVERRIDE
+ * 2. VERIFIED DOMAIN DECISION
+ * 3. HIGH RISK STABILIZATION
+ * 4. BHR HUMAN RIGHTS PROTECTION
+ * 5. ENERGY PROTECTION
+ * 6. FX CONTROL
+ * 7. SCENARIO RESPONSE
+ * 8. NORMAL OPERATION
  *
  * ============================================================
  */
@@ -445,18 +431,6 @@ return {
 
 // ============================================================
 // DECISION ENGINE
-//
-// PRIORITY:
-//
-// 1. CRITICAL SAFETY OVERRIDE
-// 2. VERIFIED DOMAIN DECISION
-// 3. HIGH RISK STABILIZATION
-// 4. BHR HUMAN RIGHTS PROTECTION
-// 5. ENERGY PROTECTION
-// 6. FX CONTROL
-// 7. SCENARIO RESPONSE
-// 8. NORMAL OPERATION
-//
 // ============================================================
 
 
@@ -486,9 +460,7 @@ function decide(
 
 // ============================================================
 // PRIORITY 1
-//
-// CRITICAL SAFETY OVERRIDE
-//
+// CRITICAL OVERRIDE
 // ============================================================
 
 
@@ -507,12 +479,13 @@ if(
 
 
 
+
 // ============================================================
 // PRIORITY 2
+// VERIFIED DOMAIN BRIDGE
 //
-// VERIFIED DOMAIN DECISION BRIDGE
-//
-// FIN / BHR advisory output
+// Domain engines advise.
+// Golden Rule remains authority.
 //
 // ============================================================
 
@@ -528,6 +501,7 @@ if(
 )
 
 {
+
 
     return (
 
@@ -552,9 +526,7 @@ if(
 
 // ============================================================
 // PRIORITY 3
-//
-// HIGH RISK STABILIZATION
-//
+// HIGH RISK
 // ============================================================
 
 
@@ -580,8 +552,9 @@ if(
 
 // ============================================================
 // PRIORITY 4
-//
 // BHR HUMAN RIGHTS PROTECTION
+//
+// Client demonstration path
 //
 // ============================================================
 
@@ -594,7 +567,31 @@ if(
 
 {
 
-    return "ACTIVATE BHR REMEDIATION MODE";
+
+    if(
+
+        state.scenario === "FORCED_LABOUR"
+
+        ||
+
+        state.scenario === "CHILD_LABOUR"
+
+        ||
+
+        state.scenario === "MODERN_SLAVERY"
+
+    )
+
+    {
+
+        return "ACTIVATE BHR REMEDIATION MODE";
+
+    }
+
+
+
+    return "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE";
+
 
 }
 
@@ -604,9 +601,7 @@ if(
 
 // ============================================================
 // PRIORITY 5
-//
 // ENERGY PROTECTION
-//
 // ============================================================
 
 
@@ -640,9 +635,7 @@ if(
 
 // ============================================================
 // PRIORITY 6
-//
-// FX STABILITY
-//
+// FX CONTROL
 // ============================================================
 
 
@@ -664,9 +657,7 @@ if(
 
 // ============================================================
 // PRIORITY 7
-//
 // SCENARIO RESPONSE
-//
 // ============================================================
 
 
@@ -681,31 +672,31 @@ switch(
 
 case "FX_SHOCK":
 
-    return "FX SHOCK RESPONSE ACTIVE";
+return "FX SHOCK RESPONSE ACTIVE";
 
 
 
 case "ENERGY_CRISIS":
 
-    return "ENERGY RESERVE MODE ACTIVE";
+return "ENERGY RESERVE MODE ACTIVE";
 
 
 
 case "CYBER_ATTACK":
 
-    return "CYBER DEFENSE MODE ACTIVE";
+return "CYBER DEFENSE MODE ACTIVE";
 
 
 
 case "INFRA_FAILURE":
 
-    return "INFRASTRUCTURE RECOVERY MODE";
+return "INFRASTRUCTURE RECOVERY MODE";
 
 
 
 default:
 
-    break;
+break;
 
 
 }
@@ -716,9 +707,7 @@ default:
 
 // ============================================================
 // PRIORITY 8
-//
 // NORMAL OPERATION
-//
 // ============================================================
 
 
@@ -732,18 +721,18 @@ return "SYSTEM STABLE";
 
 
 
+
+
 // ============================================================
-// ACTION ENGINE MAPPING
+// ACTION ENGINE
 // ============================================================
 
 
 function buildAction(
 
-    decision
+decision
 
-)
-
-{
+){
 
 
 switch(decision)
@@ -753,112 +742,30 @@ switch(decision)
 
 case "ACTIVATE BHR REMEDIATION MODE":
 
+
 return (
 
-"IMMEDIATE HUMAN RIGHTS REMEDIATION AND SUPPLY CHAIN CONTROL"
+"IMMEDIATE HUMAN RIGHTS REMEDIATION, SUPPLY CHAIN CONTROL AND ESCALATION"
 
 );
 
 
 
-case "PREVENTIVE HUMAN RIGHTS RESILIENCE MODE":
-
-return (
-
-"APPLY PREVENTIVE HUMAN RIGHTS CONTROLS AND MONITORING"
-
-);
 
 
-
-case "ENERGY PROTECTION MODE":
-
-return (
-
-"REDUCE SYSTEM LOAD AND PRESERVE ENERGY RESERVES"
-
-);
-
-
-
-case "FX CORRECTION ACTIVE":
-
-return (
-
-"APPLY FINANCIAL STABILITY CORRECTION"
-
-);
-
-
-
-case "ACTIVATE STABILIZATION MODE":
-
-return (
-
-"ACTIVATE SYSTEM STABILIZATION PROCEDURE"
-
-);
-
-
-
-case "CYBER DEFENSE MODE ACTIVE":
-
-return (
-
-"ACTIVATE CYBER DEFENSE CONTROLS"
-
-);
-
-
-
-case "INFRASTRUCTURE RECOVERY MODE":
-
-return (
-
-"EXECUTE INFRASTRUCTURE RECOVERY ACTIONS"
-
-);
-
-
-
-default:
-
-return (
-
-"MONITOR SYSTEM NORMAL OPERATIONS"
-
-);
-
-
-}
-
-
-}
-
-
-
-
-
-// ============================================================
-// CLIENT DEMONSTRATION RECOVERY WORKFLOW
-//
-// SELF TEST
-// ↓
-// FAULT IDENTIFICATION
-// ↓
-// CORRECTIVE ACTION
-// ↓
-// RE-
+case "PREVENTIVE HUMAN RIGHTS
 /**
  * ============================================================
  * PART 3/4
  *
- * INPUT NORMALIZATION
+ * NORMALIZATION
  * VALIDATION BARRIER
- * RECOVERY COMPATIBILITY LAYER
+ * CLIENT RECOVERY WORKFLOW
  *
  * ============================================================
  */
+
+
 
 
 
@@ -866,9 +773,6 @@ return (
 // INPUT NORMALIZATION
 //
 // OBSERVE PROTECTION LAYER
-//
-// Converts cockpit, scenario and domain
-// inputs into deterministic format.
 //
 // ============================================================
 
@@ -883,8 +787,6 @@ function normalizeState(
 return {
 
 
-    // FINANCIAL DOMAIN
-
     fx:
 
         Number(
@@ -894,9 +796,6 @@ return {
         ),
 
 
-
-
-    // ENERGY DOMAIN
 
     energy:
 
@@ -908,9 +807,6 @@ return {
 
 
 
-
-    // CYBER DOMAIN
-
     cyb:
 
         Number(
@@ -920,9 +816,6 @@ return {
         ),
 
 
-
-
-    // INFRASTRUCTURE DOMAIN
 
     inf:
 
@@ -934,9 +827,6 @@ return {
 
 
 
-
-    // DATA CENTRE DOMAIN
-
     dc:
 
         Number(
@@ -946,9 +836,6 @@ return {
         ),
 
 
-
-
-    // EVENT
 
     event:
 
@@ -960,9 +847,6 @@ return {
 
 
 
-
-    // SCENARIO
-
     scenario:
 
         state.scenario
@@ -972,9 +856,6 @@ return {
         null,
 
 
-
-
-    // DOMAIN
 
     domain:
 
@@ -986,9 +867,6 @@ return {
 
 
 
-
-    // DOMAIN ENGINE RESULT
-
     domainResult:
 
         state.domainResult
@@ -998,9 +876,6 @@ return {
         null,
 
 
-
-
-    // DOMAIN DECISION BRIDGE
 
     domainDecision:
 
@@ -1012,10 +887,15 @@ return {
 
 
 
+    intensity:
 
-    // TEST EXPECTED VALUES
-    //
-    // Used by fault identification
+        Number(
+
+            state.intensity ?? 0
+
+        ),
+
+
 
     expectedRisk:
 
@@ -1037,39 +917,6 @@ return {
 
 
 
-    actualRisk:
-
-        state.actualRisk
-
-        ??
-
-        null,
-
-
-
-    actualDecision:
-
-        state.actualDecision
-
-        ??
-
-        null,
-
-
-
-    pipelineValid:
-
-        state.pipelineValid
-
-        ??
-
-        true,
-
-
-
-
-    // OPERATING MODE
-
     mode:
 
         state.mode
@@ -1079,22 +926,6 @@ return {
         "AUTONOMOUS",
 
 
-
-
-    // INTENSITY
-
-    intensity:
-
-        Number(
-
-            state.intensity ?? 0
-
-        ),
-
-
-
-
-    // TIME
 
     time:
 
@@ -1120,10 +951,7 @@ return {
 // ============================================================
 // VERIFY STATE
 //
-// Validation barrier before decision core.
-//
-// Prevents invalid values entering
-// Captain AI Lena.
+// Validation barrier
 //
 // ============================================================
 
@@ -1141,7 +969,6 @@ return {
     ...state,
 
 
-
     fx:
 
         Number.isFinite(state.fx)
@@ -1153,7 +980,6 @@ return {
         :
 
         0,
-
 
 
 
@@ -1171,7 +997,6 @@ return {
 
 
 
-
     cyb:
 
         Number.isFinite(state.cyb)
@@ -1183,7 +1008,6 @@ return {
         :
 
         50,
-
 
 
 
@@ -1201,7 +1025,6 @@ return {
 
 
 
-
     dc:
 
         Number.isFinite(state.dc)
@@ -1213,7 +1036,6 @@ return {
         :
 
         0,
-
 
 
 
@@ -1243,10 +1065,215 @@ return {
 
 
 // ============================================================
-// VALIDATION BRIDGE
+// CLIENT RECOVERY WORKFLOW
 //
-// Used by client demonstration
+// Demonstrates:
+// Fault → Diagnosis → Correction → Recovery
 //
+// ============================================================
+
+
+export function executeRecoveryWorkflow(
+
+    state = {}
+
+){
+
+
+
+const initialDecision =
+
+    captainAILena(
+
+        state
+
+    );
+
+
+
+
+
+// ============================================================
+// FAULT IDENTIFICATION
+// ============================================================
+
+
+const faultReport =
+
+    identifyFaults(
+
+    {
+
+
+        expectedRisk:
+
+            state.expectedRisk,
+
+
+
+        expectedDecision:
+
+            state.expectedDecision,
+
+
+
+        actualRisk:
+
+            initialDecision.risk,
+
+
+
+        actualDecision:
+
+            initialDecision.decision,
+
+
+        pipeline:
+
+            initialDecision.pipeline
+
+
+    }
+
+    );
+
+
+
+
+
+
+
+// ============================================================
+// CORRECTIVE ACTION
+// ============================================================
+
+
+const correctiveAction =
+
+    executeCorrectiveAction(
+
+    {
+
+        faultReport,
+
+
+        authority:
+
+            "CAPTAIN AI LENA"
+
+
+    }
+
+    );
+
+
+
+
+
+
+
+
+// ============================================================
+// RE-TEST VALIDATION
+// ============================================================
+
+
+const retest =
+
+    executeRetestValidation(
+
+    {
+
+        originalState:
+
+            state,
+
+
+
+        correctiveAction,
+
+
+        expectedRisk:
+
+            state.expectedRisk,
+
+
+
+        expectedDecision:
+
+            state.expectedDecision
+
+
+    }
+
+    );
+
+
+
+
+
+
+
+
+
+return {
+
+
+    workflow:
+
+        "SPD v13.1 AUTONOMOUS RECOVERY LOOP",
+
+
+
+    initialDecision,
+
+
+
+    faultIdentification:
+
+        faultReport,
+
+
+
+    correctiveAction,
+
+
+
+    retest,
+
+
+
+    recoveryVerified:
+
+        retest?.status === "PASS",
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    goldenRuleAuthority:
+
+        true
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+// ============================================================
+// VALIDATION HELPER
 // ============================================================
 
 
@@ -1303,10 +1330,10 @@ return {
 }
 /**
  * ============================================================
- * PART 4/4
+ * PART 4/4 FINAL
  *
  * SPD CORE STATUS
- * VALIDATION REGISTRY
+ * RECOVERY REGISTRY
  * FINAL EXPORT
  *
  * ============================================================
@@ -1317,21 +1344,19 @@ return {
 
 
 
-/**
- * ============================================================
- * SPD v13.1 CORE STATUS
- *
- * Used by:
- *
- * SELF TEST ENGINE
- * FAULT IDENTIFICATION
- * CORRECTIVE ACTION
- * RE-TEST VALIDATION
- * MEMORY CORE
- * AUDIT RECORD
- *
- * ============================================================
- */
+// ============================================================
+// SPD v13.1 CORE STATUS
+//
+// Used by:
+//
+// SELF TEST ENGINE
+// FAULT IDENTIFICATION
+// CORRECTIVE ACTION
+// RE-TEST VALIDATION
+// MEMORY CORE
+// AUDIT RECORD
+//
+// ============================================================
 
 
 export const SPD_CORE_STATUS = {
@@ -1357,7 +1382,6 @@ export const SPD_CORE_STATUS = {
 
     architecture:
 
-
     [
 
         "COCKPIT",
@@ -1374,7 +1398,11 @@ export const SPD_CORE_STATUS = {
 
         "GOLDEN_RULE_ENGINE",
 
-        "ACTION_ENGINE",
+        "FAULT_IDENTIFICATION",
+
+        "CORRECTIVE_ACTION",
+
+        "RE_TEST_VALIDATION",
 
         "MEMORY_CORE",
 
@@ -1385,8 +1413,8 @@ export const SPD_CORE_STATUS = {
 
 
 
-    activeDomains:
 
+    activeDomains:
 
     [
 
@@ -1399,8 +1427,8 @@ export const SPD_CORE_STATUS = {
 
 
 
-    futureDomains:
 
+    futureDomains:
 
     [
 
@@ -1419,8 +1447,9 @@ export const SPD_CORE_STATUS = {
 
 
 
-    goldenRule:
 
+
+    goldenRule:
 
     [
 
@@ -1441,8 +1470,9 @@ export const SPD_CORE_STATUS = {
 
 
 
-    recoveryWorkflow:
 
+
+    recoveryWorkflow:
 
     [
 
@@ -1461,9 +1491,13 @@ export const SPD_CORE_STATUS = {
 
 
 
+
+
     phi:
 
         1.618033988749895,
+
+
 
 
 
@@ -1486,9 +1520,13 @@ export const SPD_CORE_STATUS = {
 
 
 
+
+
     goldenRuleAuthority:
 
         true,
+
+
 
 
 
@@ -1498,9 +1536,13 @@ export const SPD_CORE_STATUS = {
 
 
 
+
+
     validationReady:
 
         true,
+
+
 
 
 
@@ -1510,9 +1552,13 @@ export const SPD_CORE_STATUS = {
 
 
 
+
+
     clientDemoReady:
 
         true,
+
+
 
 
 
@@ -1530,14 +1576,13 @@ export const SPD_CORE_STATUS = {
 
 
 
-/**
- * ============================================================
- * EXPORT HELPERS
- *
- * Exposed for testing
- *
- * ============================================================
- */
+
+// ============================================================
+// EXPORT HELPERS
+//
+// Exposed for testing
+//
+// ============================================================
 
 
 export {
@@ -1561,25 +1606,20 @@ export {
 
 
 
-/**
- * ============================================================
- * SPD v13.1 FINAL DEFAULT EXPORT
- *
- * Captain AI Lena:
- *
- * FINAL DECISION AUTHORITY
- *
- * Domain Engines:
- *
- * ADVISORY ONLY
- *
- * Golden Rule Engine:
- *
- * AUTHORITATIVE
- *
- * ============================================================
- */
 
+// ============================================================
+// FINAL DEFAULT EXPORT
+//
+// Captain AI Lena:
+// FINAL DECISION AUTHORITY
+//
+// Domain Engines:
+// ADVISORY ONLY
+//
+// Golden Rule Engine:
+// AUTHORITATIVE
+//
+// ============================================================
 
 
 export default captainAILena;
