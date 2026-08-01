@@ -1,6 +1,6 @@
 // ============================================================
 // SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-// runEngine.js
+// engine.js (ROOT)
 //
 // CAPTAIN AI LENA AUTONOMOUS AGENT CORE
 //
@@ -10,19 +10,22 @@
 //
 // OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 //
-// Backend decision authority:
+// Backend Decision Authority:
 // CAPTAIN AI LENA DECISION CORE
 //
-// Domain engines:
+// Domain Engines:
 // FIN
 // BHR
 //
-// Domain engines provide advisory assessment only.
+// Domain engines provide advisory intelligence only.
 //
 // Golden Rule Engine remains authoritative.
 //
+// Deterministic.
+// No randomness.
+// No machine learning.
+//
 // ============================================================
-
 
 
 import {
@@ -112,6 +115,8 @@ export const GOLDEN_RULE_STAGES = [
 
 
 
+
+
 // ============================================================
 // INPUT VALIDATION
 // ============================================================
@@ -147,8 +152,11 @@ function validateInput(state){
 
 
 
+
+
+
 // ============================================================
-// NORMALIZE SYSTEM STATE
+// NORMALIZE STATE
 // ============================================================
 
 
@@ -160,87 +168,60 @@ return {
 
 fx:
 
-Number(
+Number(state.fx ?? 0),
 
-state.fx ?? 0
-
-),
 
 
 energy:
 
-Number(
+Number(state.energy ?? 50),
 
-state.energy ?? 50
-
-),
 
 
 cyb:
 
-Number(
+Number(state.cyb ?? 50),
 
-state.cyb ?? 50
-
-),
 
 
 inf:
 
-Number(
+Number(state.inf ?? 0),
 
-state.inf ?? 0
-
-),
 
 
 dc:
 
-Number(
+Number(state.dc ?? 0),
 
-state.dc ?? 0
-
-),
 
 
 
 event:
 
-state.event
+state.event ?? "NORMAL",
 
-??
-
-"NORMAL",
 
 
 
 scenario:
 
-state.scenario
+state.scenario ?? "NORMAL",
 
-??
-
-"NORMAL",
 
 
 
 mode:
 
-state.mode
+state.mode ?? "AUTONOMOUS",
 
-??
-
-"AUTONOMOUS",
 
 
 
 intensity:
 
-Number(
+Number(state.intensity ?? 0),
 
-state.intensity ?? 0
-
-),
 
 
 
@@ -261,8 +242,9 @@ new Date().toISOString()
 
 
 
+
 // ============================================================
-// SPD v13.1 EXECUTION ENGINE
+// MAIN EXECUTION ENGINE
 // ============================================================
 
 
@@ -274,16 +256,14 @@ state = {}
 
 
 
+
+
 // ============================================================
 // OBSERVE
 // ============================================================
 
 
-validateInput(
-
-state
-
-);
+validateInput(state);
 
 
 
@@ -294,6 +274,7 @@ const inputState = {
 
 
 };
+
 
 
 
@@ -318,16 +299,21 @@ state
 
 
 
+
+
+
 // ============================================================
 // DOMAIN INTEGRATION
 //
-// FIN / BHR routing
+// FIN / BHR
 //
-// Domain engines are advisory.
+// Domain engines advisory only.
+//
+// Priority Context Fusion active.
 // ============================================================
 
 
-const domainDecision =
+const domainIntegrationResult =
 
 
 executeDomainIntegration(
@@ -341,12 +327,71 @@ verifiedState
 
 
 
+const domainDecision = {
+
+
+    ...(
+
+        domainIntegrationResult.domainDecision
+
+        ??
+
+        {}
+
+    ),
+
+
+
+    priorityContext:
+
+
+        domainIntegrationResult.priorityContext
+
+        ??
+
+        null
+
+
+
+};
+
+
+
+
+
+
+
+
+
+// ============================================================
+// DOMAIN CONTEXT CHECK
+// ============================================================
+
+
+if(domainDecision.priorityContext){
+
+
+console.log(
+
+"SPD v13.1 DOMAIN PRIORITY:",
+
+domainDecision.priorityContext.priority
+
+);
+
+
+}
+
+
+
+
+
+
+
+
 
 // ============================================================
 // ASSESS
-//
-// Analytics receives verified state
-// and domain assessment.
 // ============================================================
 
 
@@ -357,9 +402,19 @@ runAnalytics(
 
 {
 
+
     ...verifiedState,
 
-    domainDecision
+
+
+    domainDecision,
+
+
+
+    priorityContext:
+
+    domainDecision.priorityContext
+
 
 
 }
@@ -373,10 +428,11 @@ runAnalytics(
 
 
 
+
 // ============================================================
 // DECIDE
 //
-// CAPTAIN AI LENA AUTHORITY
+// CAPTAIN AI LENA FINAL AUTHORITY
 // ============================================================
 
 
@@ -391,7 +447,15 @@ captainAILena(
     ...verifiedState,
 
 
+
     domainDecision,
+
+
+
+    priorityContext:
+
+    domainDecision.priorityContext,
+
 
 
     analytics,
@@ -409,9 +473,12 @@ captainAILena(
     true
 
 
+
 }
 
 );
+
+
 
 
 
@@ -431,7 +498,7 @@ decision:
 
 decision.decision
 
-||
+??
 
 decision,
 
@@ -441,7 +508,7 @@ action:
 
 decision.action
 
-||
+??
 
 "MONITOR SYSTEM",
 
@@ -452,8 +519,8 @@ status:
 "ACTIVE"
 
 
-
 };
+
 
 
 
@@ -470,9 +537,9 @@ status:
 const memory =
 
 
-executeMemoryCore({
+executeMemoryCore(
 
-
+{
 
 
 scenario:
@@ -485,9 +552,15 @@ domain:
 
 domainDecision.domain
 
-||
+??
 
 "NONE",
+
+
+
+priorityContext:
+
+domainDecision.priorityContext,
 
 
 
@@ -504,8 +577,10 @@ timestamp:
 new Date().toISOString()
 
 
+}
 
-});
+);
+
 
 
 
@@ -522,9 +597,9 @@ new Date().toISOString()
 const audit =
 
 
-createAuditRecord({
+createAuditRecord(
 
-
+{
 
 
 inputState,
@@ -536,6 +611,12 @@ verifiedState,
 
 
 domainDecision,
+
+
+
+priorityContext:
+
+domainDecision.priorityContext,
 
 
 
@@ -562,8 +643,9 @@ authority:
 "CAPTAIN AI LENA DECISION CORE"
 
 
+}
 
-});
+);
 
 
 
@@ -574,20 +656,16 @@ authority:
 
 
 // ============================================================
-// FINAL SPD OUTPUT
+// FINAL OUTPUT
 // ============================================================
 
 
 return {
 
 
-
-
 timestamp:
 
 new Date().toISOString(),
-
-
 
 
 
@@ -597,13 +675,9 @@ engine:
 
 
 
-
-
 agent:
 
 "CAPTAIN AI LENA",
-
-
 
 
 
@@ -613,17 +687,9 @@ GOLDEN_RULE_STAGES,
 
 
 
-
-
-
-
 input:
 
 inputState,
-
-
-
-
 
 
 
@@ -631,7 +697,9 @@ verifiedState,
 
 
 
+domainIntegration:
 
+domainIntegrationResult,
 
 
 
@@ -639,7 +707,9 @@ domainDecision,
 
 
 
+priorityContext:
 
+domainDecision.priorityContext,
 
 
 
@@ -647,15 +717,7 @@ analytics,
 
 
 
-
-
-
-
 decision,
-
-
-
-
 
 
 
@@ -663,15 +725,7 @@ action,
 
 
 
-
-
-
-
 memory,
-
-
-
-
 
 
 
@@ -679,13 +733,7 @@ audit,
 
 
 
-
-
-
-
-
 constants:{
-
 
 
 PHI:
@@ -693,17 +741,10 @@ PHI:
 GOLDEN_RATIO,
 
 
-
 GOLDEN_RULE_STAGES
 
 
-
 },
-
-
-
-
-
 
 
 
@@ -716,16 +757,6 @@ engine:
 
 
 
-domainIntegration:
-
-domainDecision.status
-
-??
-
-"NOT APPLICABLE",
-
-
-
 decisionAuthority:
 
 "CAPTAIN AI LENA DECISION CORE",
@@ -735,6 +766,16 @@ decisionAuthority:
 goldenRuleAuthority:
 
 true,
+
+
+
+domainPriorityFusion:
+
+Boolean(
+
+domainDecision.priorityContext
+
+),
 
 
 
@@ -755,24 +796,15 @@ false
 
 
 
-
-
-
 authority:
 
 "CAPTAIN AI LENA DECISION CORE",
 
 
 
-
-
-
-
 status:
 
 "EXECUTED"
-
-
 
 
 
@@ -787,12 +819,14 @@ status:
 
 
 
+
+
 // ============================================================
-// MODULE STATUS
+// ENGINE STATUS
 // ============================================================
 
 
-export const RUN_ENGINE_STATUS = {
+export const ENGINE_STATUS = {
 
 
 module:
@@ -800,7 +834,9 @@ module:
 "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
 
 
+
 pipeline:
+
 
 [
 
@@ -819,6 +855,7 @@ pipeline:
 ],
 
 
+
 domains:
 
 
@@ -827,6 +864,17 @@ domains:
 "FIN",
 
 "BHR"
+
+],
+
+
+
+features:
+
+
+[
+
+"DOMAIN_PRIORITY_CONTEXT_FUSION"
 
 ],
 
@@ -861,8 +909,12 @@ status:
 "READY"
 
 
-
 };
+
+
+
+
+
 
 
 
@@ -877,9 +929,11 @@ export default {
 
 runEngine,
 
+
 GOLDEN_RULE_STAGES,
 
-RUN_ENGINE_STATUS
+
+ENGINE_STATUS
 
 
 };
