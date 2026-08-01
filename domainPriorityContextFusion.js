@@ -4,18 +4,15 @@
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * DOMAIN RESULT
- *        ↓
- * DOMAIN SEVERITY
- *        ↓
- * SYSTEM CONDITION
- *        ↓
- * GOLDEN RULE ENGINE
- *        ↓
- * CAPTAIN AI LENA DECISION
+ * Purpose:
+ *
+ * Translate domain intelligence into
+ * priority-aware decision context.
  *
  * Domain engines advise.
+ *
  * Golden Rule Engine remains authoritative.
+ *
  * Captain AI Lena remains final authority.
  *
  * Deterministic.
@@ -26,90 +23,76 @@
  */
 
 
-export function evaluateDomainSeverity(domainResult = {}) {
+/**
+ * ============================================================
+ * EVALUATE DOMAIN SEVERITY
+ * ============================================================
+ */
 
-
-const stress = Number(
-
-    domainResult.domainStress ??
-    domainResult.financialStress ??
-    0
-
-);
-
-
-
-let severity = "LOW";
-
-
-
-if(stress >= 70)
-{
-    severity = "HIGH";
-}
-else if(stress >= 40)
-{
-    severity = "MEDIUM";
-}
-
-
-
-/*
- Critical BHR scenarios
- Human rights priority override
-*/
-
-if(
-
-domainResult.domain === "BHR"
-
-&&
-
-[
-"CHILD_LABOUR",
-"FORCED_LABOUR",
-"MODERN_SLAVERY"
-
-].includes(domainResult.scenario)
-
+export function evaluateDomainSeverity(
+    domainResult = {}
 ){
 
-    severity = "HIGH";
+    const stress = Number(
 
-}
+        domainResult.domainStress
 
+        ??
 
+        domainResult.financialStress
 
-return {
+        ??
 
+        domainResult.bhrStress
 
-domain:
+        ??
 
-domainResult.domain ??
-"UNKNOWN",
+        domainResult.assessment?.domainStress
 
+        ??
 
-scenario:
+        0
 
-domainResult.scenario ??
-"UNKNOWN",
-
-
-level:
-
-severity,
+    );
 
 
-stress,
+    let severity = "LOW";
 
 
-status:
+    if(stress >= 70)
+    {
+        severity = "HIGH";
+    }
+    else if(stress >= 40)
+    {
+        severity = "MEDIUM";
+    }
 
-"DOMAIN SEVERITY ASSESSED"
+
+    return {
+
+        domain:
+            domainResult.domain
+            ??
+            "UNKNOWN",
 
 
-};
+        scenario:
+            domainResult.scenario
+            ??
+            "UNKNOWN",
 
+
+        severity,
+
+
+        stress,
+
+
+        status:
+            "DOMAIN SEVERITY ASSESSED"
+
+    };
 
 }
 
@@ -117,201 +100,175 @@ status:
 
 /**
  * ============================================================
- * DOMAIN PRIORITY FUSION
+ * BUILD DOMAIN PRIORITY CONTEXT FUSION
  * ============================================================
  */
-
 
 export function buildDomainPriorityContext(
 
-domainResult = {},
+    domainResult = {},
 
-systemCondition = {}
+    systemCondition = {}
 
 ){
 
 
+    const severity =
 
-const severity =
+        evaluateDomainSeverity(
+            domainResult
+        );
 
-evaluateDomainSeverity(
 
-domainResult
 
-);
+    let priority =
+        "SYSTEM_MONITORING";
 
 
+    let recommendedFocus =
+        "NORMAL OPERATIONS";
 
-let priority =
-"SYSTEM_MONITORING";
 
 
-let recommendedFocus =
-"NORMAL OPERATIONS";
+    switch(domainResult.domain)
 
+    {
 
 
-switch(domainResult.domain)
+        case "BHR":
 
-{
 
+            if(
+                severity.severity === "MEDIUM"
+                ||
+                severity.severity === "HIGH"
+            )
+            {
 
-case "BHR":
+                priority =
+                    "HUMAN_RIGHTS_PROTECTION";
 
 
-if(severity.level !== "LOW")
+                recommendedFocus =
+                    "INVESTIGATION REMEDIATION AND SUPPLY CHAIN CONTROL";
 
-{
+            }
 
-priority =
-"HUMAN_RIGHTS_PROTECTION";
 
+        break;
 
-recommendedFocus =
-"INVESTIGATION AND REMEDIATION";
 
-}
 
+        case "FIN":
 
-break;
 
+            if(
+                severity.severity !== "LOW"
+            )
+            {
 
+                priority =
+                    "FINANCIAL_RESILIENCE";
 
-case "FIN":
 
+                recommendedFocus =
+                    "LIQUIDITY AND CAPITAL PROTECTION";
 
-if(severity.level !== "LOW")
+            }
 
-{
 
-priority =
-"FINANCIAL_RESILIENCE";
+        break;
 
 
-recommendedFocus =
-"LIQUIDITY AND CAPITAL PROTECTION";
 
-}
+        case "CYB":
 
 
-break;
+            priority =
+                "CYBER_PROTECTION";
 
 
+            recommendedFocus =
+                "CYBER INCIDENT RESPONSE";
 
-case "CYB":
 
+        break;
 
-priority =
-"CYBER_PROTECTION";
 
 
-recommendedFocus =
-"THREAT CONTAINMENT";
+        case "INF":
 
-break;
 
+            priority =
+                "INFRASTRUCTURE_STABILITY";
 
 
-case "INF":
+            recommendedFocus =
+                "INFRASTRUCTURE RECOVERY";
 
 
-priority =
-"INFRASTRUCTURE_STABILITY";
+        break;
 
 
-recommendedFocus =
-"SYSTEM CONTINUITY";
 
-break;
+        default:
 
 
+            priority =
+                "GENERAL_RESILIENCE";
 
-default:
 
+    }
 
-priority =
-"GENERAL_RESILIENCE";
 
-}
 
 
+    return {
 
-let finalRisk =
 
-systemCondition.risk ??
-"LOW";
+        domainSeverity:
 
 
+            severity,
 
-if(severity.level === "HIGH")
-{
 
-finalRisk = "HIGH";
+        systemCondition,
 
-}
 
-else if(
 
-severity.level === "MEDIUM"
-&&
-finalRisk === "LOW"
+        priority,
 
-)
 
-{
 
-finalRisk = "MEDIUM";
+        recommendedFocus,
 
-}
 
 
+        advisoryOnly:
 
-return {
+            true,
 
 
-domainSeverity:
 
-severity,
+        goldenRuleAuthority:
 
+            true,
 
-systemCondition,
 
 
-finalRisk,
+        captainAILenaAuthority:
 
+            true,
 
-priority,
 
 
-recommendedFocus,
+        deterministic:
 
+            true
 
 
-advisoryOnly:
 
-true,
-
-
-
-goldenRuleAuthority:
-
-true,
-
-
-
-captainAILenaAuthority:
-
-true,
-
-
-
-deterministic:
-
-true
-
-
-
-};
+    };
 
 
 }
@@ -320,17 +277,174 @@ true
 
 /**
  * ============================================================
- * EXPORT
+ * FUSION VALIDATION
  * ============================================================
  */
+
+export function validateDomainPriorityContext(
+
+    context = {}
+
+){
+
+
+    const checks = {
+
+
+        hasDomainSeverity:
+
+            Boolean(
+                context.domainSeverity
+            ),
+
+
+        hasPriority:
+
+            Boolean(
+                context.priority
+            ),
+
+
+        goldenRuleAuthority:
+
+            context.goldenRuleAuthority === true,
+
+
+        captainAILenaAuthority:
+
+            context.captainAILenaAuthority === true,
+
+
+        deterministic:
+
+            context.deterministic === true
+
+    };
+
+
+
+    const passed =
+
+        Object.values(checks)
+
+        .every(
+            value => value === true
+        );
+
+
+
+    return {
+
+
+        module:
+
+            "SPD v13.1 Domain Priority Context Fusion",
+
+
+        validationStatus:
+
+            passed
+            ?
+            "PASS"
+            :
+            "FAIL",
+
+
+        checks,
+
+
+        authority:
+
+            "GOLDEN_RULE_ENGINE",
+
+
+        timestamp:
+
+            new Date().toISOString()
+
+    };
+
+
+}
+
+
+
+/**
+ * ============================================================
+ * STATUS
+ * ============================================================
+ */
+
+export function getDomainPriorityContextStatus(){
+
+
+    return {
+
+
+        module:
+
+            "SPD v13.1 Domain Priority Context Fusion",
+
+
+        status:
+
+            "ACTIVE",
+
+
+        supportedDomains:
+
+        [
+
+            "FIN",
+
+            "BHR",
+
+            "CYB",
+
+            "INF",
+
+            "FUTURE_EXTENSIONS"
+
+        ],
+
+
+        deterministic:
+
+            true,
+
+
+        goldenRuleAuthority:
+
+            true,
+
+
+        captainAILenaAuthority:
+
+            true,
+
+
+        timestamp:
+
+            new Date().toISOString()
+
+
+    };
+
+}
+
+
 
 
 export default {
 
 
-evaluateDomainSeverity,
+    evaluateDomainSeverity,
 
-buildDomainPriorityContext
+    buildDomainPriorityContext,
+
+    validateDomainPriorityContext,
+
+    getDomainPriorityContextStatus
 
 
 };
