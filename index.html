@@ -11,13 +11,11 @@
 SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
 </title>
 
-
 <style>
 
 * {
 box-sizing:border-box;
 }
-
 
 body {
 
@@ -29,14 +27,12 @@ margin:0;
 
 }
 
-
 h1 {
 
 color:#ffffff;
 margin-bottom:5px;
 
 }
-
 
 .subtitle {
 
@@ -45,8 +41,6 @@ margin-bottom:20px;
 line-height:1.6;
 
 }
-
-
 
 .panel {
 
@@ -58,8 +52,6 @@ background:#10161d;
 
 }
 
-
-
 .title {
 
 font-size:18px;
@@ -68,8 +60,6 @@ color:#ffffff;
 font-weight:bold;
 
 }
-
-
 
 .status {
 
@@ -83,8 +73,6 @@ background:#080d11;
 
 }
 
-
-
 .control-buttons,
 .scenario-controls,
 .fin-controls {
@@ -92,27 +80,21 @@ background:#080d11;
 display:flex;
 flex-wrap:wrap;
 gap:10px;
-width:100%;
 
 }
-
-
 
 button {
 
 background:#00ff88;
-color:#000000;
+color:#000;
 border:2px solid #00ff88;
 padding:14px 20px;
 border-radius:6px;
 font-weight:bold;
 font-size:15px;
 cursor:pointer;
-min-height:48px;
 
 }
-
-
 
 button:hover {
 
@@ -120,42 +102,12 @@ opacity:0.85;
 
 }
 
-
-
-.self-test-button {
-
-background:#1b2730;
-color:#00ff88;
-
-}
-
-
-
-.corrective-button {
-
-background:#ffb000;
-
-}
-
-
-
-.danger {
-
-background:#ff5555;
-color:#ffffff;
-
-}
-
-
-
 .scenario-button {
 
 background:#1b2730;
 color:#00ff88;
 
 }
-
-
 
 .fin-button {
 
@@ -165,18 +117,12 @@ border:1px solid #00bfff;
 
 }
 
+.danger {
 
-
-.fin-label {
-
-width:100%;
-color:#00bfff;
-font-weight:bold;
-margin-top:10px;
+background:#ff5555;
+color:#ffffff;
 
 }
-
-
 
 .monitor {
 
@@ -186,8 +132,6 @@ repeat(auto-fit,minmax(140px,1fr));
 gap:10px;
 
 }
-
-
 
 .domain {
 
@@ -199,16 +143,12 @@ text-align:center;
 
 }
 
-
-
 .domain-name {
 
 color:#aaaaaa;
 font-size:13px;
 
 }
-
-
 
 .domain-value {
 
@@ -217,8 +157,6 @@ font-size:24px;
 font-weight:bold;
 
 }
-
-
 
 .pipeline {
 
@@ -230,8 +168,6 @@ border-radius:6px;
 
 }
 
-
-
 .stage {
 
 display:inline-block;
@@ -242,24 +178,12 @@ border-radius:4px;
 
 }
 
-
-
 .stage.active {
 
 background:#00ff88;
-color:#000000;
+color:#000;
 
 }
-
-
-
-input[type="range"] {
-
-width:100%;
-
-}
-
-
 
 pre {
 
@@ -270,8 +194,6 @@ line-height:1.5;
 
 }
 
-
-
 .solution {
 
 border-left:3px solid #00ff88;
@@ -280,23 +202,21 @@ background:#080d11;
 
 }
 
-
-
 @media(max-width:600px){
 
-body{
-padding:10px;
-}
-
-
-button{
+button {
 
 width:100%;
 
 }
 
+body {
+
+padding:10px;
+
 }
 
+}
 
 </style>
 
@@ -331,8 +251,6 @@ SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE A
 SYSTEM STATUS: INITIALIZING...
 
 </div>
-
-
 <!-- SYSTEM CONTROLS -->
 
 <div class="panel">
@@ -341,17 +259,25 @@ SYSTEM STATUS: INITIALIZING...
 🎛️ SYSTEM CONTROLS
 </div>
 
-
 <div class="control-buttons">
-
 
 <button onclick="runLiveSystem()">
 ▶ RUN SYSTEM
 </button>
 
+<button class="self-test-button" onclick="runAuthoritativeSelfTest()">
+🧪 SELF TEST
+</button>
 
-<button class="self-test-button"
-onclick="runAuthor
+<button class="corrective-button" onclick="runCorrectiveAction()">
+🛠️ CORRECTIVE ACTION
+</button>
+
+</div>
+
+</div>
+
+
 <!-- SYSTEM DOMAIN MONITOR -->
 
 <div class="panel">
@@ -420,7 +346,41 @@ onclick="runAuthor
 
 <button class="scenario-button"
 onclick="activateScenario('FX_SHOCK')">
+
 FX STRESS
+
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('DC_LOAD')">
+
+DC LOAD
+
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('CYBER_EVENT')">
+
+CYBER EVENT
+
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('INFRASTRUCTURE_STRESS')">
+
+INFRA STRAIN
+
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('BIODIESEL_SHORTAGE')">
+
+BIODIESEL SHORTAGE
+
 </button>
 
 
@@ -466,8 +426,6 @@ SOVEREIGN DEBT
 </div>
 
 
-
-
 <div class="fin-label">
 💼 BUSINESS & HUMAN RIGHTS SCENARIOS
 </div>
@@ -478,134 +436,65 @@ SOVEREIGN DEBT
 
 <button class="fin-button"
 onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
-
 HUMAN RIGHTS DUE DILIGENCE
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('FORCED_LABOUR')">
-
 FORCED LABOUR
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('CHILD_LABOUR')">
-
 CHILD LABOUR
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('DISCRIMINATION')">
-
 DISCRIMINATION
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
-
 OCCUPATIONAL HEALTH & SAFETY
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('MODERN_SLAVERY')">
-
 MODERN SLAVERY
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('COMMUNITY_IMPACT')">
-
 COMMUNITY IMPACT
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('INDIGENOUS_RIGHTS')">
-
 INDIGENOUS RIGHTS
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('SUPPLY_CHAIN_RISK')">
-
 SUPPLY CHAIN RISK
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('GRIEVANCE_MECHANISM')">
-
 GRIEVANCE MECHANISM
-
 </button>
-
 
 
 </div>
-
-
-
-
-
-<button class="scenario-button"
-onclick="activateScenario('DC_LOAD')">
-
-DC LOAD
-
-</button>
-
-
-
-<button class="scenario-button"
-onclick="activateScenario('CYBER_EVENT')">
-
-CYBER EVENT
-
-</button>
-
-
-
-<button class="scenario-button"
-onclick="activateScenario('INFRASTRUCTURE_STRESS')">
-
-INFRA STRAIN
-
-</button>
-
-
-
-<button class="scenario-button"
-onclick="activateScenario('BIODIESEL_SHORTAGE')">
-
-BIODIESEL SHORTAGE
-
-</button>
-
 
 
 <button class="danger"
@@ -616,16 +505,9 @@ RESET
 </button>
 
 
-
 </div>
 
 </div>
-
-
-
-
-
-
 <!-- SCENARIO INTENSITY -->
 
 <div class="panel">
@@ -633,7 +515,6 @@ RESET
 <div class="title">
 🎚️ SCENARIO INTENSITY CONTROL
 </div>
-
 
 <input
 id="scenarioIntensity"
@@ -645,22 +526,12 @@ value="50"
 oninput="updateIntensity()"
 />
 
-
 <div>
-
 Intensity:
-
-<span id="intensityValue">
-
-50%
-
-</span>
-
+<span id="intensityValue">50%</span>
 </div>
 
 </div>
-
-
 
 
 
@@ -671,7 +542,6 @@ Intensity:
 <div class="title">
 🧪 SCENARIO PANEL
 </div>
-
 
 <pre id="scenarioPanel">
 
@@ -692,7 +562,6 @@ Waiting...
 📊 RAW SYSTEM STATE
 </div>
 
-
 <pre id="state">
 
 Waiting...
@@ -700,7 +569,6 @@ Waiting...
 </pre>
 
 </div>
-
 
 
 
@@ -715,7 +583,6 @@ Waiting...
 
 
 <div class="pipeline">
-
 
 <span class="stage" id="stageOBSERVE">
 OBSERVE
@@ -751,7 +618,6 @@ ACT
 UPDATE
 </span>
 
-
 </div>
 
 
@@ -761,8 +627,12 @@ Waiting...
 
 </pre>
 
-
 </div>
+
+
+
+
+
 <!-- SYSTEM ASSESSMENT -->
 
 <div class="panel">
@@ -772,10 +642,13 @@ Waiting...
 </div>
 
 <pre id="assessment">
+
 Waiting...
+
 </pre>
 
 </div>
+
 
 
 
@@ -787,7 +660,6 @@ Waiting...
 <div class="title">
 🚨 RISK PANEL
 </div>
-
 
 <pre id="riskPanel">
 
@@ -813,7 +685,6 @@ Waiting...
 ⚙️ CAPTAIN AI LENA DECISION
 </div>
 
-
 <pre id="decision">
 
 Waiting...
@@ -833,7 +704,6 @@ Waiting...
 <div class="title">
 💡 SOLUTION OPTIONS
 </div>
-
 
 <div class="solution" id="solutionOptions">
 
@@ -855,7 +725,6 @@ Waiting for system assessment...
 🚨 ACTION SEQUENCE PROMPT
 </div>
 
-
 <pre id="actions">
 
 Waiting...
@@ -875,7 +744,6 @@ Waiting...
 <div class="title">
 🧠 MEMORY CORE
 </div>
-
 
 <pre id="memoryCore">
 
@@ -897,7 +765,6 @@ Memory Core Waiting...
 🧾 SPD v13.1 AUDIT RECORD
 </div>
 
-
 <pre id="audit">
 
 Waiting...
@@ -917,7 +784,6 @@ Waiting...
 <div class="title">
 📜 PIPELINE LOG
 </div>
-
 
 <pre id="pipelineLog">
 
@@ -939,7 +805,6 @@ PIPELINE LOG ACTIVE
 🧪 SPD v13.1 SELF-TEST
 </div>
 
-
 <pre id="selfTest">
 
 Self-test not executed.
@@ -959,7 +824,6 @@ Self-test not executed.
 <div class="title">
 ⚠️ FAULT IDENTIFICATION
 </div>
-
 
 <pre id="faultIdentification">
 
@@ -981,7 +845,6 @@ No fault assessment available.
 🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
 </div>
 
-
 <pre id="correctiveAction">
 
 No corrective action available.
@@ -1002,680 +865,4 @@ No corrective action available.
 🔁 RE-TEST VALIDATION
 </div>
 
-
-<pre id="retest">
-
-Re-test not executed.
-
-</pre>
-
-</div>
-
-
-
-
-
-<!-- CONSTANTS -->
-
-<div class="panel">
-
-<div class="title">
-📐 SYSTEM CONSTANTS
-</div>
-
-
-<pre id="constants">
-
-Waiting...
-
-</pre>
-
-</div>
-
-
-
-
-
-<!-- AGENT LOOP -->
-
-<div class="panel">
-
-<div class="title">
-🔄 AGENT LOOP MONITOR
-</div>
-
-
-<pre id="trace">
-
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-
-</pre>
-
-</div>
-
-
-
-
-
-
-
-<script type="module">
-
-
-import {
-
-runGoldenRule,
-
-PHI,
-
-GOLDEN_RULE_STAGES
-
-}
-
-from "./goldenRuleEngine.js";
-
-
-
-import {
-
-runSelfTest,
-
-runValidationLoop
-
-}
-
-from "./selfTestValidationEngine.js";
-
-
-
-
-
-/* ============================================================
-   BASE STATE
-============================================================ */
-
-
-const baseState = {
-
-
-fx:12,
-
-energy:25,
-
-cyb:40,
-
-inf:10,
-
-dc:20,
-
-
-};
-
-
-
-
-let currentScenario =
-"FX_SHOCK";
-
-
-let scenarioIntensity =
-50;
-
-
-
-
-/* ============================================================
-   HELPERS
-============================================================ */
-
-
-function setText(id,value){
-
-const el=document.getElementById(id);
-
-if(!el)return;
-
-
-el.innerText =
-typeof value==="string"
-?
-value
-:
-JSON.stringify(value,null,2);
-
-}
-
-
-
-
-
-function safeValue(value,fallback="N/A"){
-
-return value ??
-fallback;
-
-}
-
-
-
-
-
-
-/* ============================================================
-  
-/* ============================================================
-   BUILD SYSTEM STATE
-============================================================ */
-
-function buildSystemState(){
-
-const factor =
-scenarioIntensity / 100;
-
-
-const state = {
-
-...baseState,
-
-scenario:
-currentScenario,
-
-event:
-currentScenario,
-
-intensity:
-scenarioIntensity,
-
-mode:
-"AUTONOMOUS",
-
-time:
-new Date().toISOString()
-
-};
-
-
-
-
-/* ============================================================
-   FIN SCENARIOS
-============================================================ */
-
-
-if(currentScenario==="FIN_STRESS"){
-
-state.fx =
-Math.min(
-100,
-baseState.fx + 60 * factor
-);
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 40 * factor
-);
-
-}
-
-
-
-
-if(currentScenario==="BANKING_STRESS"){
-
-state.fx =
-Math.min(
-100,
-baseState.fx + 50 * factor
-);
-
-
-state.dc =
-Math.min(
-100,
-baseState.dc + 30 * factor
-);
-
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 50 * factor
-);
-
-}
-
-
-
-
-
-if(currentScenario==="LIQUIDITY_CRISIS"){
-
-state.fx =
-Math.min(
-100,
-baseState.fx + 40 * factor
-);
-
-
-state.energy =
-Math.max(
-0,
-baseState.energy - 50 * factor
-);
-
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 40 * factor
-);
-
-}
-
-
-
-
-
-if(currentScenario==="CREDIT_STRESS"){
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 60 * factor
-);
-
-
-state.dc =
-Math.min(
-100,
-baseState.dc + 40 * factor
-);
-
-}
-
-
-
-
-
-if(currentScenario==="SOVEREIGN_DEBT"){
-
-state.fx =
-Math.min(
-100,
-baseState.fx + 70 * factor
-);
-
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 60 * factor
-);
-
-
-state.energy =
-Math.max(
-0,
-baseState.energy - 30 * factor
-);
-
-}
-
-
-
-
-
-/* ============================================================
-   BHR SCENARIOS
-============================================================ */
-
-
-if(
-
-[
-"HUMAN_RIGHTS_DUE_DILIGENCE",
-"FORCED_LABOUR",
-"CHILD_LABOUR",
-"DISCRIMINATION",
-"OCCUPATIONAL_HEALTH_AND_SAFETY",
-"MODERN_SLAVERY",
-"COMMUNITY_IMPACT",
-"INDIGENOUS_RIGHTS",
-"SUPPLY_CHAIN_RISK",
-"GRIEVANCE_MECHANISM"
-
-].includes(currentScenario)
-
-){
-
-
-state.bhr =
-scenarioIntensity;
-
-
-state.humanRightsCompliance =
-scenarioIntensity;
-
-
-state.workerSafety =
-scenarioIntensity;
-
-
-state.supplyChain =
-scenarioIntensity;
-
-
-state.governance =
-scenarioIntensity;
-
-
-state.communityImpact =
-scenarioIntensity;
-
-
-}
-
-
-
-
-
-/* ============================================================
-   OTHER DOMAINS
-============================================================ */
-
-
-if(currentScenario==="DC_LOAD"){
-
-state.dc =
-Math.min(
-100,
-baseState.dc + 80 * factor
-);
-
-}
-
-
-
-if(currentScenario==="CYBER_EVENT"){
-
-state.cyb =
-Math.min(
-100,
-baseState.cyb + 80 * factor
-);
-
-}
-
-
-
-if(currentScenario==="INFRASTRUCTURE_STRESS"){
-
-state.inf =
-Math.min(
-100,
-baseState.inf + 80 * factor
-);
-
-}
-
-
-
-if(currentScenario==="BIODIESEL_SHORTAGE"){
-
-state.energy =
-Math.max(
-0,
-baseState.energy - 80 * factor
-);
-
-}
-
-
-
-return state;
-
-}
-
-
-
-
-
-
-/* ============================================================
-   DOMAIN MONITOR
-============================================================ */
-
-
-function updateDomainMonitor(state){
-
-setText(
-"domainFX",
-state.fx ?? 0
-);
-
-
-setText(
-"domainDC",
-state.dc ?? 0
-);
-
-
-setText(
-"domainCYB",
-state.cyb ?? 0
-);
-
-
-setText(
-"domainINF",
-state.inf ?? 0
-);
-
-
-setText(
-"domainEN",
-state.energy ?? 0
-);
-
-
-setText(
-"domainBHR",
-state.bhr ?? 0
-);
-
-}
-
-
-
-
-
-
-
-/* ============================================================
-   GOLDEN RULE STAGE DISPLAY
-============================================================ */
-
-
-function updateStages(stage){
-
-GOLDEN_RULE_STAGES.forEach(
-
-item=>{
-
-const el =
-document.getElementById(
-"stage"+item
-);
-
-
-if(el)
-el.classList.remove(
-"active"
-);
-
-}
-
-);
-
-
-const active =
-document.getElementById(
-"stage"+stage
-);
-
-
-if(active)
-active.classList.add(
-"active"
-);
-
-}
-
-
-
-
-
-
-
-
-/* ============================================================
-   LIVE AUTONOMOUS SYSTEM
-============================================================ */
-
-
-window.runLiveSystem=function(){
-
-
-try{
-
-
-setText(
-"systemStatus",
-"SYSTEM STATUS: AUTONOMOUS ENGINE RUNNING"
-);
-
-
-updateStages(
-"OBSERVE"
-);
-
-
-
-const state =
-buildSystemState();
-
-
-
-updateDomainMonitor(
-state
-);
-
-
-
-setText(
-"state",
-state
-);
-
-
-
-updateStages(
-"VERIFY"
-);
-
-
-
-const result =
-runGoldenRule(
-state
-);
-
-
-
-updateStages(
-"ASSESS"
-);
-
-
-
-setText(
-"assessment",
-result?.assessment ??
-result
-);
-
-
-
-setText(
-"riskPanel",
-{
-
-risk:
-result?.assessment?.risk ??
-"UNKNOWN",
-
-
-resilienceScore:
-result?.assessment?.resilienceScore ??
-"N/A",
-
-
-goldenScore:
-result?.assessment?.goldenScore ??
-"N/A"
-
-}
-
-);
-
-
-
-updateStages(
-"DECIDE"
-);
-
-
-
-setText(
-"decision",
-result?.decision ??
-"Captain AI Lena Decision Generated"
-);
-
-
-
-setText(
-"solutionOptions",
-result?.action ??
-"Monitoring and resilience actions generated"
-);
-
-
-
-updateStages(
-"ACT"
-);
-
-
-
-setText(
-"actions",
-result?.actions ??
-result?.action ??
-"Action sequence generated"
-);
-
-
-
-updateStages(
-"UPDATE"
-);
-
-
-
-setText(
-"memoryCore",
-{
-
-scenario
+<pre id="re
