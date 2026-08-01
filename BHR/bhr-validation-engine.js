@@ -1,34 +1,68 @@
 /**
- * SPD v13.1 — Business & Human Rights (BHR)
- * Validation Engine
+ * ============================================================
+ * SPD v13.1 — BUSINESS & HUMAN RIGHTS (BHR)
+ * VALIDATION ENGINE — FINAL HARDENED VERSION
+ * ============================================================
+ *
+ * File:
+ * BHR/bhr-validation-engine.js
  *
  * Purpose:
  * Validates BHR domain scenario execution.
  *
- * Flow:
+ *
+ * FLOW:
  *
  * BHR Scenario
+ *      ↓
+ * BHR Scenario Registry
  *      ↓
  * BHR Rule Engine
  *      ↓
  * BHR Validation Engine
  *      ↓
+ * Domain Decision Bridge
+ *      ↓
  * Golden Rule Engine
  *      ↓
  * Captain AI Lena Decision Core
+ *      ↓
+ * Action Engine
+ *      ↓
+ * Memory Core
+ *      ↓
+ * Audit Record
+ *
+ *
+ * PRINCIPLE:
+ *
+ * BHR Engine advises.
+ *
+ * Validation Engine verifies.
  *
  * Golden Rule Engine remains authoritative.
+ *
+ * Captain AI Lena decides.
+ *
  *
  * Properties:
  * - Deterministic
  * - No randomness
  * - No machine learning
+ *
+ * ============================================================
  */
 
 
 import {
+
     runBHRRuleEngine
-} from "./bhr-rule-engine.js";
+
+}
+
+from "./bhr-rule-engine.js";
+
+
 
 
 
@@ -38,150 +72,714 @@ import {
  * ============================================================
  */
 
-export function validateBHRScenario(
-    scenarioId,
-    state = {}
-) {
 
-    const result = runBHRRuleEngine(
+export function validateBHRScenario(
+
+    scenarioId,
+
+    state = {}
+
+){
+
+
+const result =
+
+
+    runBHRRuleEngine(
+
         scenarioId,
+
         state
+
     );
 
 
-    if (!result || result.status === "ERROR") {
-
-        return {
-
-            domain: "BHR",
-
-            validationStatus: "FAILED",
-
-            reason: "BHR scenario execution failed"
-
-        };
-
-    }
-
-
-    const validationChecks = {
-
-        scenarioLoaded:
-            Boolean(result.scenario),
-
-
-        assessmentComplete:
-            result.status === "COMPLETE",
-
-
-        riskScoreGenerated:
-            typeof result.riskScore === "number",
-
-
-        ruleTraceAvailable:
-            typeof result.ruleApplied === "string",
-
-
-        goldenRuleAuthority:
-            true
-
-    };
-
-
-    const passed =
-        Object.values(validationChecks)
-        .every(check => check === true);
 
 
 
-    return {
+if(
 
-        domain: "BHR",
+    !result
 
-        scenario:
-            result.scenario,
+    ||
 
+    result.status === "ERROR"
 
-        validationStatus:
-            passed
-                ? "PASSED"
-                : "FAILED",
+)
 
-
-        checks:
-            validationChecks,
+{
 
 
-        assessment:
-            result.assessment,
+return {
 
 
-        riskScore:
-            result.riskScore,
+    domain:
+
+        "BHR",
 
 
-        ruleApplied:
-            result.ruleApplied,
+
+    scenario:
+
+        scenarioId,
 
 
-        authority:
-            "Golden Rule Engine",
+
+    validationStatus:
+
+        "FAILED",
 
 
-        deterministic:
-            true,
+
+    reason:
+
+        "BHR scenario execution failed",
 
 
-        machineLearning:
-            false,
+
+    authority:
+
+        "Golden Rule Engine"
 
 
-        randomness:
-            false,
+};
 
-
-        message:
-            passed
-                ? "BHR VALIDATION COMPLETE"
-                : "BHR VALIDATION FAILED"
-
-    };
 
 }
 
 
 
-/**
- * ============================================================
- * BHR VALIDATION ENGINE STATUS
- * ============================================================
- */
 
-export const BHR_VALIDATION_STATUS = {
 
-    module:
-        "BHR",
+const validationChecks = {
 
-    engine:
-        "BHR VALIDATION ENGINE",
 
-    status:
-        "ACTIVE",
+scenarioLoaded:
 
-    goldenRuleAuthority:
-        true,
+    Boolean(
 
-    deterministic:
-        true
+        result.scenario
+
+    ),
+
+
+
+assessmentComplete:
+
+    result.status === "COMPLETE",
+
+
+
+riskGenerated:
+
+    typeof result.riskScore === "number"
+
+    ||
+
+    typeof result.risk === "string",
+
+
+
+ruleTraceAvailable:
+
+    Boolean(
+
+        result.ruleApplied
+
+        ||
+
+        result.rulesApplied
+
+    ),
+
+
+
+recommendedActionAvailable:
+
+    Boolean(
+
+        result.recommendedAction
+
+        ||
+
+        result.action
+
+    ),
+
+
+
+goldenRuleAuthority:
+
+    true
+
 
 };
 
 
 
+
+
+
+const passed =
+
+
+Object.values(
+
+    validationChecks
+
+)
+
+.every(
+
+    check =>
+
+        check === true
+
+);
+
+
+
+
+
+
+return {
+
+
+domain:
+
+    "BHR",
+
+
+
+scenario:
+
+    result.scenario,
+
+
+
+validationStatus:
+
+    passed
+
+    ?
+
+    "PASSED"
+
+    :
+
+    "FAILED",
+
+
+
+checks:
+
+    validationChecks,
+
+
+
+/*
+ Domain intelligence
+*/
+
+
+assessment:
+
+    result.assessment
+
+    ??
+
+    "BHR ASSESSMENT COMPLETE",
+
+
+
+riskScore:
+
+    result.riskScore
+
+    ??
+
+    null,
+
+
+
+risk:
+
+    result.risk
+
+    ??
+
+    "UNKNOWN",
+
+
+
+/*
+ Rule transparency
+*/
+
+
+rulesApplied:
+
+    result.rulesApplied
+
+    ??
+
+    result.ruleApplied
+
+    ??
+
+    [],
+
+
+
+
+/*
+ Action transparency
+*/
+
+
+recommendedAction:
+
+    result.recommendedAction
+
+    ??
+
+    result.action
+
+    ??
+
+    "MONITOR SYSTEM",
+
+
+
+
+/*
+ Captain AI Lena interface
+*/
+
+
+domainDecisionReady:
+
+    true,
+
+
+
+authority:
+
+    "Golden Rule Engine",
+
+
+
+captainAILenaAuthority:
+
+    true,
+
+
+
+deterministic:
+
+    true,
+
+
+
+machineLearning:
+
+    false,
+
+
+
+randomness:
+
+    false,
+
+
+
+auditReady:
+
+    true,
+
+
+
+message:
+
+    passed
+
+    ?
+
+    "BHR VALIDATION COMPLETE"
+
+    :
+
+    "BHR VALIDATION FAILED",
+
+
+
+timestamp:
+
+    new Date()
+
+    .toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * BHR VALIDATION SELF TEST
+ * ============================================================
+ */
+
+
+export function runBHRValidationSelfTest(){
+
+
+
+const scenarios = [
+
+
+{
+
+scenario:
+
+"HUMAN_RIGHTS_DUE_DILIGENCE",
+
+expected:
+
+"LOW"
+
+
+},
+
+
+{
+
+scenario:
+
+"SUPPLY_CHAIN_RISK",
+
+expected:
+
+"MEDIUM"
+
+
+},
+
+
+{
+
+scenario:
+
+"FORCED_LABOUR",
+
+expected:
+
+"HIGH"
+
+
+}
+
+
+];
+
+
+
+
+
+
+const results =
+
+
+scenarios.map(
+
+test => {
+
+
+
+const output =
+
+
+runBHRRuleEngine(
+
+    test.scenario,
+
+    {
+
+        intensity:
+
+            test.expected === "HIGH"
+
+            ?
+
+            90
+
+            :
+
+            test.expected === "MEDIUM"
+
+            ?
+
+            60
+
+            :
+
+            20
+
+    }
+
+);
+
+
+
+
+
+return {
+
+
+scenario:
+
+    test.scenario,
+
+
+
+expectedRisk:
+
+    test.expected,
+
+
+
+actualRisk:
+
+    output.risk,
+
+
+
+status:
+
+    output.risk === test.expected
+
+    ?
+
+    "PASS"
+
+    :
+
+    "FAIL"
+
+
+};
+
+
+}
+
+);
+
+
+
+
+
+
+
+const passed =
+
+
+results.filter(
+
+item =>
+
+item.status === "PASS"
+
+)
+
+.length;
+
+
+
+
+
+
+return {
+
+
+engine:
+
+    "SPD v13.1 BHR VALIDATION ENGINE",
+
+
+
+totalTests:
+
+    results.length,
+
+
+
+passed,
+
+
+
+failed:
+
+    results.length - passed,
+
+
+
+overallStatus:
+
+    passed === results.length
+
+    ?
+
+    "PASS"
+
+    :
+
+    "FAIL",
+
+
+
+results,
+
+
+
+timestamp:
+
+    new Date()
+
+    .toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VALIDATION ENGINE STATUS
+ * ============================================================
+ */
+
+
+export const BHR_VALIDATION_STATUS = {
+
+
+domain:
+
+    "BUSINESS & HUMAN RIGHTS",
+
+
+
+module:
+
+    "SPD v13.1 BHR VALIDATION ENGINE",
+
+
+
+status:
+
+    "ACTIVE",
+
+
+
+authority:
+
+    "Golden Rule Engine",
+
+
+
+captainAILena:
+
+    "CONNECTED",
+
+
+
+pipeline:
+
+[
+
+"OBSERVE",
+
+"VERIFY",
+
+"ASSESS",
+
+"DECIDE",
+
+"ACT",
+
+"UPDATE"
+
+],
+
+
+
+deterministic:
+
+    true,
+
+
+
+machineLearning:
+
+    false,
+
+
+
+randomness:
+
+    false,
+
+
+
+auditReady:
+
+    true
+
+
+};
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
 export default {
 
-    validateBHRScenario,
 
-    BHR_VALIDATION_STATUS
+validateBHRScenario,
+
+
+runBHRValidationSelfTest,
+
+
+BHR_VALIDATION_STATUS
+
 
 };
