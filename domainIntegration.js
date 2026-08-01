@@ -2,49 +2,136 @@
  * ============================================================
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
- * FINAL HARDENED RELEASE
+ * FINAL HARDENED BHR + FIN WIRING VERSION
+ *
+ * File:
+ * domainIntegration.js
+ *
  *
  * Captain AI Lena Autonomous Agent Core
  *
- * Authority:
+ *
+ * AUTHORITY MODEL:
  *
  * Domain Engines → Advisory
+ * Domain Validation → Verification
  * Domain Bridge → Translation
  * Golden Rule Engine → Authority
  * Captain AI Lena → Final Decision
  *
- * Deterministic.
- * No randomness.
- * No machine learning.
+ *
+ * FLOW:
+ *
+ * COCKPIT SCENARIO BUTTON
+ *          ↓
+ * SCENARIO ENGINE
+ *          ↓
+ * SCENARIO AUTHENTICITY CHECK
+ *          ↓
+ * DOMAIN RULE ENGINE
+ *          ↓
+ * DOMAIN VALIDATION ENGINE
+ *          ↓
+ * DOMAIN DECISION BRIDGE
+ *          ↓
+ * GOLDEN RULE ENGINE
+ *          ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *          ↓
+ * ACTION ENGINE
+ *          ↓
+ * MEMORY CORE
+ *          ↓
+ * AUDIT RECORD
+ *
+ *
+ * Properties:
+ *
+ * Deterministic
+ * No randomness
+ * No machine learning
  *
  * ============================================================
  */
 
 
+
+/**
+ * ============================================================
+ * CORE IMPORTS
+ * ============================================================
+ */
+
+
 import {
+
     scenarioEngine
-} from "./scenarioEngine.js";
+
+}
+
+from "./scenarioEngine.js";
+
 
 
 import {
+
     validateScenarioAuthenticity,
+
     getScenarioAuthenticity
-} from "./scenarioAuthenticity.js";
+
+}
+
+from "./scenarioAuthenticity.js";
+
 
 
 import {
+
     domainDecisionBridge
-} from "./domainDecisionBridge.js";
+
+}
+
+from "./domainDecisionBridge.js";
+
+
+
+
+
+/**
+ * ============================================================
+ * FIN DOMAIN ENGINE
+ * ============================================================
+ */
 
 
 import {
+
     evaluateFINScenario
-} from "./FIN/fin-rule-engine.js";
+
+}
+
+from "./FIN/fin-rule-engine.js";
+
+
+
+
+
+/**
+ * ============================================================
+ * BHR DOMAIN ENGINE
+ *
+ * SPD v13.1 BHR Rule Engine
+ * ============================================================
+ */
 
 
 import {
-    evaluateBHRScenario
-} from "./BHR/bhr-rule-engine.js";
+
+    bhrRuleEngine
+
+}
+
+from "./BHR/bhr-rule-engine.js";
 
 
 
@@ -61,84 +148,230 @@ export const DOMAIN_REGISTRY = {
 
 
 FIN:
+
 {
 
-name:
-"Financial Resilience",
+    name:
 
-engine:
-"FIN/fin-rule-engine.js",
+    "Financial Resilience",
 
-active:true
+
+    engine:
+
+    "FIN/fin-rule-engine.js",
+
+
+    active:
+
+    true
 
 },
+
 
 
 
 BHR:
+
 {
 
-name:
-"Business & Human Rights",
+    name:
 
-engine:
-"BHR/bhr-rule-engine.js",
+    "Business & Human Rights",
 
-active:true
+
+    engine:
+
+    "BHR/bhr-rule-engine.js",
+
+
+    active:
+
+    true
 
 },
+
 
 
 
 DC:
+
 {
 
-name:
-"Data Centre",
+    name:
 
-active:false
+    "Data Centre",
+
+
+    active:
+
+    false
 
 },
+
 
 
 
 CYB:
+
 {
 
-name:
-"Cyber",
+    name:
 
-active:false
+    "Cyber Resilience",
+
+
+    active:
+
+    false
 
 },
+
 
 
 
 INF:
+
 {
 
-name:
-"Infrastructure",
+    name:
 
-active:false
+    "Infrastructure",
+
+
+    active:
+
+    false
 
 },
 
 
 
+
 ENG:
+
 {
 
-name:
-"Energy",
+    name:
 
-active:false
+    "Energy",
+
+
+    active:
+
+    false
 
 }
 
 
 };
 
+
+
+
+
+
+/**
+ * ============================================================
+ * DOMAIN ROUTER
+ * ============================================================
+ */
+
+
+function executeDomainEngine(
+
+    scenarioData,
+
+    state
+
+){
+
+
+let result;
+
+
+
+
+switch(
+
+    scenarioData.domain
+
+)
+
+{
+
+
+case "FIN":
+
+
+result =
+
+evaluateFINScenario(
+
+{
+
+    scenario:
+
+    scenarioData.type,
+
+
+    state
+
+}
+
+);
+
+
+break;
+
+
+
+
+
+case "BHR":
+
+
+result =
+
+bhrRuleEngine(
+
+{
+
+
+    scenario:
+
+    scenarioData.type,
+
+
+    ...state
+
+
+}
+
+);
+
+
+break;
+
+
+
+
+
+default:
+
+
+return null;
+
+
+}
+
+
+
+
+
+return result;
+
+
+}
 
 
 
@@ -154,15 +387,13 @@ active:false
 
 export function buildDecisionContext(
 
-domainResult = {},
+    domainResult = {},
 
-bridgeResult = {},
+    bridgeResult = {},
 
-scenarioData = {}
+    scenarioData = {}
 
-)
-
-{
+){
 
 
 return {
@@ -182,6 +413,7 @@ domainResult.domain
 
 
 
+
 scenario:
 
 scenarioData.type
@@ -196,7 +428,30 @@ domainResult.scenario
 
 
 
-domainRisk:
+
+rulesApplied:
+
+domainResult.rulesApplied
+
+??
+
+[],
+
+
+
+
+assessment:
+
+domainResult.assessment
+
+??
+
+"UNKNOWN",
+
+
+
+
+risk:
 
 domainResult.risk
 
@@ -206,15 +461,16 @@ domainResult.risk
 
 
 
-domainStress:
+
+riskScore:
 
 Number(
 
-domainResult.domainStress
+domainResult.riskScore
 
 ??
 
-domainResult.financialStress
+domainResult.domainStress
 
 ??
 
@@ -224,13 +480,10 @@ domainResult.financialStress
 
 
 
-domainDecision:
+
+decision:
 
 bridgeResult.decision
-
-??
-
-bridgeResult.domainDecision
 
 ??
 
@@ -238,7 +491,8 @@ bridgeResult.domainDecision
 
 
 
-domainAction:
+
+action:
 
 bridgeResult.action
 
@@ -248,65 +502,87 @@ bridgeResult.action
 
 
 
-advisory:true,
+
+advisory:
+
+true,
 
 
-goldenRuleAuthority:true,
 
 
-captainAILenaAuthority:true,
+goldenRuleAuthority:
+
+true,
 
 
-deterministic:true,
 
 
-machineLearning:false,
+captainAILenaAuthority:
+
+true,
 
 
-randomness:false,
+
+
+deterministic:
+
+true,
+
+
+
+
+machineLearning:
+
+false,
+
+
+
+
+randomness:
+
+false,
+
+
 
 
 timestamp:
 
-new Date().toISOString()
+new Date()
+
+.toISOString()
 
 
 };
 
 
 }
-
-
-
-
-
-
-
+ 
 /**
  * ============================================================
- * DOMAIN EXECUTION ROUTER
+ * EXECUTE DOMAIN RULE
  * ============================================================
  */
 
 
 export function executeDomainRule(
 
-scenario,
+    scenario,
 
-state={}
+    state = {}
 
-)
-
-{
+){
 
 
 const scenarioData =
 
+
 scenarioEngine(
 
-scenario
+    scenario
 
 );
+
+
 
 
 
@@ -314,14 +590,20 @@ if(!scenarioData)
 
 {
 
+
 return {
 
-status:
-"INVALID_SCENARIO"
+
+    status:
+
+    "INVALID_SCENARIO"
+
 
 };
 
+
 }
+
 
 
 
@@ -329,9 +611,10 @@ status:
 
 const authenticity =
 
+
 validateScenarioAuthenticity(
 
-scenarioData.type
+    scenarioData.type
 
 );
 
@@ -339,98 +622,49 @@ scenarioData.type
 
 
 
-if(authenticity.registered !== true)
+if(
 
-{
+authenticity.registered !== true
 
-return {
-
-status:
-"SCENARIO AUTHENTICITY FAILED",
-
-scenario:
-scenarioData.type
-
-};
-
-}
-
-
-
-
-
-let domainResult;
-
-
-
-
-
-if(scenarioData.domain === "FIN")
-
-{
-
-
-domainResult =
-
-evaluateFINScenario(
-
-{
-
-scenario:
-scenarioData.type,
-
-state
-
-}
-
-);
-
-
-}
-
-
-
-else if(scenarioData.domain === "BHR")
-
-{
-
-
-domainResult =
-
-evaluateBHRScenario(
-
-{
-
-scenario:
-scenarioData.type,
-
-state
-
-}
-
-);
-
-
-}
-
-
-
-else
+)
 
 {
 
 
 return {
 
-status:
-"DOMAIN ENGINE NOT ACTIVE",
 
-domain:
-scenarioData.domain
+    status:
+
+    "SCENARIO AUTHENTICITY FAILED",
+
+
+
+    scenario:
+
+    scenarioData.type
+
 
 };
 
+
 }
+
+
+
+
+
+
+const domainResult =
+
+
+executeDomainEngine(
+
+    scenarioData,
+
+    state
+
+);
 
 
 
@@ -440,12 +674,23 @@ if(!domainResult)
 
 {
 
+
 return {
 
-status:
-"DOMAIN RESULT INVALID"
+
+    status:
+
+    "DOMAIN ENGINE NOT AVAILABLE",
+
+
+
+    domain:
+
+    scenarioData.domain
+
 
 };
+
 
 }
 
@@ -453,11 +698,34 @@ status:
 
 
 
+
 const bridgeResult =
+
 
 domainDecisionBridge(
 
-domainResult
+    {
+
+
+        ...domainResult,
+
+
+        domain:
+
+        scenarioData.domain,
+
+
+        scenario:
+
+        scenarioData.type,
+
+
+        goldenRuleAuthority:
+
+        true
+
+
+    }
 
 );
 
@@ -478,12 +746,17 @@ bridgeResult.captainAILenaAuthority !== true
 
 {
 
+
 return {
 
-status:
-"BRIDGE AUTHORITY FAILURE"
+
+    status:
+
+    "BRIDGE AUTHORITY FAILURE"
+
 
 };
+
 
 }
 
@@ -491,15 +764,18 @@ status:
 
 
 
+
+
 const decisionContext =
+
 
 buildDecisionContext(
 
-domainResult,
+    domainResult,
 
-bridgeResult,
+    bridgeResult,
 
-scenarioData
+    scenarioData
 
 );
 
@@ -508,56 +784,173 @@ scenarioData
 
 
 
+
 return {
 
 
-authenticity,
+    scenarioProfile:
 
+    getScenarioAuthenticity(
 
-scenarioProfile:
+        scenarioData.type
 
-getScenarioAuthenticity(
-
-scenarioData.type
-
-),
+    ),
 
 
 
-domainResult,
 
+    scenario:
 
-bridgeResult,
-
-
-decisionContext,
+    scenarioData.type,
 
 
 
-nextStage:
 
-"GOLDEN_RULE_ENGINE",
+    domain:
 
-
-
-goldenRuleAuthority:true,
+    scenarioData.domain,
 
 
-captainAILenaAuthority:true,
 
 
-deterministic:true,
+    rulesApplied:
+
+    domainResult.rulesApplied
+
+    ??
+
+    [],
 
 
-machineLearning:false,
 
 
-randomness:false,
+    assessment:
+
+    domainResult.assessment
+
+    ??
+
+    "ASSESSMENT COMPLETE",
 
 
-status:
 
-"DOMAIN INTEGRATION COMPLETE"
+
+    risk:
+
+    domainResult.risk
+
+    ??
+
+    "LOW",
+
+
+
+
+    domainResult,
+
+
+
+
+    bridgeResult,
+
+
+
+
+    decisionContext,
+
+
+
+
+    goldenRule:
+
+    {
+
+
+        authority:
+
+        true,
+
+
+        pipeline:
+
+        [
+
+            "OBSERVE",
+
+            "VERIFY",
+
+            "ASSESS",
+
+            "DECIDE",
+
+            "ACT",
+
+            "UPDATE"
+
+        ]
+
+
+    },
+
+
+
+
+    captainAILena:
+
+    {
+
+
+        authority:
+
+        true,
+
+
+        decision:
+
+        bridgeResult.decision,
+
+
+        action:
+
+        bridgeResult.action
+
+
+    },
+
+
+
+
+    auditReady:
+
+    true,
+
+
+
+
+    deterministic:
+
+    true,
+
+
+
+
+    machineLearning:
+
+    false,
+
+
+
+
+    randomness:
+
+    false,
+
+
+
+
+    status:
+
+    "DOMAIN INTEGRATION COMPLETE"
 
 
 };
@@ -580,7 +973,7 @@ status:
 
 export function validateDecisionContext(
 
-context={}
+    context = {}
 
 )
 
@@ -590,11 +983,27 @@ context={}
 const valid =
 
 
-Boolean(context.domain)
+Boolean(
+
+    context.domain
+
+)
 
 &&
 
-Boolean(context.scenario)
+Boolean(
+
+    context.scenario
+
+)
+
+&&
+
+Boolean(
+
+    context.assessment
+
+)
 
 &&
 
@@ -606,29 +1015,40 @@ context.captainAILenaAuthority === true;
 
 
 
+
+
+
 return {
 
 
-valid,
-
-
-status:
-
-valid
-
-?
-
-"DOMAIN CONTEXT VERIFIED"
-
-:
-
-"DOMAIN CONTEXT INVALID",
+    valid,
 
 
 
-authority:
+    status:
 
-"CAPTAIN AI LENA DECISION CORE"
+    valid
+
+    ?
+
+    "DOMAIN CONTEXT VERIFIED"
+
+    :
+
+    "DOMAIN CONTEXT INVALID",
+
+
+
+    authority:
+
+    "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    goldenRuleAuthority:
+
+    true
+
 
 };
 
@@ -641,9 +1061,10 @@ authority:
 
 
 
+
 /**
  * ============================================================
- * STATUS
+ * DOMAIN STATUS
  * ============================================================
  */
 
@@ -662,9 +1083,11 @@ module:
 
 
 
+
 version:
 
-"FINAL HARDENED",
+"FINAL HARDENED BHR + FIN",
+
 
 
 
@@ -672,11 +1095,12 @@ activeDomains:
 
 [
 
-"FIN",
+    "FIN",
 
-"BHR"
+    "BHR"
 
 ],
+
 
 
 
@@ -684,15 +1108,16 @@ futureDomains:
 
 [
 
-"DC",
+    "DC",
 
-"CYB",
+    "CYB",
 
-"INF",
+    "INF",
 
-"ENG"
+    "ENG"
 
 ],
+
 
 
 
@@ -700,29 +1125,30 @@ pipeline:
 
 [
 
-"SCENARIO_ENGINE",
+    "SCENARIO_ENGINE",
 
-"AUTHENTICITY_VALIDATION",
+    "AUTHENTICITY_VALIDATION",
 
-"DOMAIN_RULE_ENGINE",
+    "DOMAIN_RULE_ENGINE",
 
-"DOMAIN_DECISION_BRIDGE",
+    "DOMAIN_VALIDATION",
 
-"DECISION_CONTEXT_FUSION",
+    "DOMAIN_DECISION_BRIDGE",
 
-"GOLDEN_RULE_ENGINE",
+    "GOLDEN_RULE_ENGINE",
 
-"CAPTAIN_AI_LENA",
+    "CAPTAIN_AI_LENA",
 
-"ACTION_ENGINE",
+    "ACTION_ENGINE",
 
-"MEMORY_CORE",
+    "MEMORY_CORE",
 
-"AUDIT_RECORD",
+    "AUDIT_RECORD",
 
-"RE_TEST_VALIDATION"
+    "RE_TEST_VALIDATION"
 
 ],
+
 
 
 
@@ -732,19 +1158,61 @@ authority:
 
 
 
+
 finalDecision:
 
 "CAPTAIN AI LENA DECISION CORE",
 
 
 
-deterministic:true,
+
+PHI:
+
+1.618033988749895,
 
 
-machineLearning:false,
 
 
-randomness:false,
+goldenRule:
+
+[
+
+    "OBSERVE",
+
+    "VERIFY",
+
+    "ASSESS",
+
+    "DECIDE",
+
+    "ACT",
+
+    "UPDATE"
+
+],
+
+
+
+
+deterministic:
+
+true,
+
+
+
+
+machineLearning:
+
+false,
+
+
+
+
+randomness:
+
+false,
+
+
 
 
 status:
@@ -762,16 +1230,30 @@ status:
 
 
 
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
 export default {
 
 
 executeDomainRule,
 
+
 buildDecisionContext,
+
 
 validateDecisionContext,
 
-getDomainStatus
+
+getDomainStatus,
+
+
+DOMAIN_REGISTRY
 
 
 };
