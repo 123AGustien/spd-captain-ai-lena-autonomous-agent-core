@@ -2,7 +2,7 @@
  * ============================================================
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
- * FINAL HARDENED VERSION
+ * FINAL HARDENED RELEASE VERSION
  *
  * Captain AI Lena Autonomous Agent Core
  *
@@ -24,6 +24,14 @@
  * Golden Rule Engine
  *        ↓
  * Captain AI Lena Decision Core
+ *        ↓
+ * Action Engine
+ *        ↓
+ * Memory Core
+ *        ↓
+ * Audit Record
+ *        ↓
+ * Re-Test Validation
  *
  *
  * Active Domains:
@@ -32,15 +40,15 @@
  * BHR — Business & Human Rights
  *
  *
- * Principle:
+ * Authority Chain:
  *
- * Domain engines advise.
+ * Domain Engines advise.
  *
- * Domain bridge translates.
+ * Domain Bridge translates.
  *
- * Golden Rule Engine remains authoritative.
+ * Golden Rule Engine verifies.
  *
- * Captain AI Lena remains final decision authority.
+ * Captain AI Lena decides.
  *
  *
  * Deterministic.
@@ -67,14 +75,12 @@ import {
 } from "./domainDecisionBridge.js";
 
 
-// FIN RULE ENGINE
 
 import {
     evaluateFINScenario
 } from "./FIN/fin-rule-engine.js";
 
 
-// BHR RULE ENGINE
 
 import {
     evaluateBHRScenario
@@ -94,74 +100,108 @@ import {
 export const DOMAIN_REGISTRY = {
 
 
-    FIN: {
+    FIN:
+    {
 
         name:
-            "Financial Resilience",
+        "Financial Resilience",
+
+        engine:
+        "FIN/fin-rule-engine.js",
 
         active:
-            true
+        true,
+
+        bridge:
+        true
 
     },
 
 
-    BHR: {
+
+    BHR:
+    {
 
         name:
-            "Business & Human Rights",
+        "Business & Human Rights",
+
+        engine:
+        "BHR/bhr-rule-engine.js",
 
         active:
-            true
+        true,
+
+        bridge:
+        true
 
     },
 
 
-    DC: {
+
+    DC:
+    {
 
         name:
-            "Data Centre",
+        "Data Centre Resilience",
 
         active:
-            false
+        false,
+
+        planned:
+        true
 
     },
 
 
-    CYB: {
+
+    CYB:
+    {
 
         name:
-            "Cyber",
+        "Cyber Resilience",
 
         active:
-            false
+        false,
+
+        planned:
+        true
 
     },
 
 
-    INF: {
+
+    INF:
+    {
 
         name:
-            "Infrastructure",
+        "Infrastructure Resilience",
 
         active:
-            false
+        false,
+
+        planned:
+        true
 
     },
 
 
-    ENG: {
+
+    ENG:
+    {
 
         name:
-            "Energy",
+        "Energy Resilience",
 
         active:
-            false
+        false,
+
+        planned:
+        true
 
     }
 
 
 };
-
 
 
 
@@ -180,7 +220,9 @@ export function verifyDomainInput(
 
     scenario
 
-){
+)
+
+{
 
 
 const scenarioData =
@@ -190,6 +232,7 @@ const scenarioData =
         scenario
 
     );
+
 
 
 
@@ -203,11 +246,13 @@ return {
         ),
 
 
+
     scenario:
 
         scenarioData?.type
         ??
         "UNKNOWN",
+
 
 
     domain:
@@ -217,9 +262,28 @@ return {
         "UNKNOWN",
 
 
+
+    registered:
+
+        scenarioData
+        ?
+        true
+        :
+        false,
+
+
+
     status:
 
+        scenarioData
+
+        ?
+
         "DOMAIN INPUT VERIFIED"
+
+        :
+
+        "DOMAIN INPUT INVALID"
 
 
 };
@@ -233,14 +297,11 @@ return {
 
 
 
-
-
 /**
  * ============================================================
- * DECISION CONTEXT FUSION
+ * BUILD DECISION CONTEXT
  *
- * Converts domain intelligence into
- * Golden Rule Engine input.
+ * Domain intelligence → Golden Rule Engine
  *
  * ============================================================
  */
@@ -254,7 +315,9 @@ export function buildDecisionContext(
 
     scenarioData = {}
 
-){
+)
+
+{
 
 
 return {
@@ -264,8 +327,10 @@ return {
 
         scenarioData.domain
         ??
+
         domainResult.domain
         ??
+
         "UNKNOWN",
 
 
@@ -274,8 +339,10 @@ return {
 
         scenarioData.type
         ??
+
         domainResult.scenario
         ??
+
         "UNKNOWN",
 
 
@@ -284,6 +351,7 @@ return {
 
         domainResult.risk
         ??
+
         "LOW",
 
 
@@ -309,11 +377,9 @@ return {
     domainDecision:
 
         bridgeResult.decision
-
         ??
 
         bridgeResult.domainDecision
-
         ??
 
         "MONITOR",
@@ -323,7 +389,6 @@ return {
     domainAction:
 
         bridgeResult.action
-
         ??
 
         "CONTINUE MONITORING",
@@ -335,9 +400,11 @@ return {
         true,
 
 
+
     goldenRuleAuthority:
 
         true,
+
 
 
     captainAILenaAuthority:
@@ -345,32 +412,21 @@ return {
         true,
 
 
+
     deterministic:
 
         true,
 
 
+
     machineLearning:
 
-        false
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-
-/**
+        /**
  * ============================================================
  * DOMAIN EXECUTION ROUTER
+ *
+ * Scenario → Domain Engine → Bridge → Decision Context
+ *
  * ============================================================
  */
 
@@ -381,8 +437,9 @@ export function executeDomainRule(
 
     state = {}
 
-){
+)
 
+{
 
 
 const scenarioData =
@@ -397,6 +454,11 @@ const scenarioData =
 
 
 
+// ============================================================
+// SCENARIO VALIDATION
+// ============================================================
+
+
 if(!scenarioData)
 
 {
@@ -407,7 +469,13 @@ return {
 
     status:
 
-        "INVALID_SCENARIO"
+        "INVALID_SCENARIO",
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE"
 
 
 };
@@ -420,6 +488,11 @@ return {
 
 
 
+// ============================================================
+// AUTHENTICITY VALIDATION
+// ============================================================
+
+
 const authenticity =
 
     validateScenarioAuthenticity(
@@ -427,7 +500,6 @@ const authenticity =
         scenarioData.type
 
     );
-
 
 
 
@@ -454,7 +526,13 @@ return {
 
     scenario:
 
-        scenarioData.type
+        scenarioData.type,
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE"
 
 
 };
@@ -474,9 +552,8 @@ let domainResult;
 
 
 
-
 // ============================================================
-// FIN DOMAIN
+// FINANCIAL RESILIENCE DOMAIN
 // ============================================================
 
 
@@ -493,18 +570,19 @@ domainResult =
 
     evaluateFINScenario(
 
-        {
+    {
 
 
-            scenario:
+        scenario:
 
-                scenarioData.type,
-
-
-            state
+            scenarioData.type,
 
 
-        }
+
+        state
+
+
+    }
 
     );
 
@@ -517,10 +595,8 @@ domainResult =
 
 
 
-
-
 // ============================================================
-// BHR DOMAIN
+// BUSINESS & HUMAN RIGHTS DOMAIN
 // ============================================================
 
 
@@ -537,18 +613,19 @@ domainResult =
 
     evaluateBHRScenario(
 
-        {
+    {
 
 
-            scenario:
+        scenario:
 
-                scenarioData.type,
-
-
-            state
+            scenarioData.type,
 
 
-        }
+
+        state
+
+
+    }
 
     );
 
@@ -561,6 +638,9 @@ domainResult =
 
 
 
+// ============================================================
+// UNKNOWN / INACTIVE DOMAIN PROTECTION
+// ============================================================
 
 
 else
@@ -582,9 +662,11 @@ return {
         scenarioData.domain,
 
 
+
     scenario:
 
         scenarioData.type
+
 
 
 };
@@ -592,6 +674,48 @@ return {
 
 }
 
+
+
+
+
+
+
+
+
+// ============================================================
+// DOMAIN RESULT VALIDATION
+// ============================================================
+
+
+if(!domainResult)
+
+{
+
+
+return {
+
+
+    status:
+
+        "DOMAIN RESULT INVALID",
+
+
+
+    domain:
+
+        scenarioData.domain,
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE"
+
+
+};
+
+
+}
 
 
 
@@ -622,7 +746,51 @@ const bridgeResult =
 
 
 // ============================================================
-// GOLDEN RULE DECISION CONTEXT
+// BRIDGE AUTHORITY VALIDATION
+// ============================================================
+
+
+if(
+
+bridgeResult.goldenRuleAuthority !== true
+
+||
+
+bridgeResult.captainAILenaAuthority !== true
+
+)
+
+{
+
+
+return {
+
+
+    status:
+
+        "DOMAIN BRIDGE AUTHORITY FAILURE",
+
+
+
+    authority:
+
+        "CAPTAIN AI LENA DECISION CORE"
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+// ============================================================
+// DECISION CONTEXT FUSION
 // ============================================================
 
 
@@ -645,6 +813,28 @@ const decisionContext =
 
 
 
+
+// ============================================================
+// CONTEXT VALIDATION
+// ============================================================
+
+
+const contextValidation =
+
+
+    validateDecisionContext(
+
+        decisionContext
+
+    );
+
+
+
+
+
+
+
+
 return {
 
 
@@ -654,277 +844,4 @@ return {
 
     scenarioProfile:
 
-
-        getScenarioAuthenticity(
-
-            scenarioData.type
-
-        ),
-
-
-
-    domainResult,
-
-
-
-    bridgeResult,
-
-
-
-    decisionContext,
-
-
-
-    nextStage:
-
-        "GOLDEN_RULE_ENGINE",
-
-
-
-    goldenRuleAuthority:
-
-        true,
-
-
-
-    captainAILenaAuthority:
-
-        true,
-
-
-
-    deterministic:
-
-        true,
-
-
-
-    machineLearning:
-
-        false,
-
-
-
-    status:
-
-        "DOMAIN INTEGRATION COMPLETE"
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/**
- * ============================================================
- * VALIDATE DECISION CONTEXT
- * ============================================================
- */
-
-
-export function validateDecisionContext(
-
-    context = {}
-
-){
-
-
-const valid =
-
-
-Boolean(context.domain)
-
-&&
-
-Boolean(context.scenario)
-
-&&
-
-context.goldenRuleAuthority === true
-
-&&
-
-context.captainAILenaAuthority === true;
-
-
-
-
-
-
-return {
-
-
-    valid,
-
-
-    status:
-
-        valid
-
-        ?
-
-        "DOMAIN CONTEXT VERIFIED"
-
-        :
-
-        "DOMAIN CONTEXT INVALID",
-
-
-
-    authority:
-
-        "CAPTAIN AI LENA DECISION CORE"
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-
-/**
- * ============================================================
- * DOMAIN STATUS
- * ============================================================
- */
-
-
-export function getDomainStatus(){
-
-
-return {
-
-
-    module:
-
-        "SPD v13.1 DOMAIN INTEGRATION LAYER",
-
-
-
-    activeDomains:
-
-    [
-
-        "FIN",
-
-        "BHR"
-
-    ],
-
-
-
-    futureDomains:
-
-    [
-
-        "DC",
-
-        "CYB",
-
-        "INF",
-
-        "ENG"
-
-    ],
-
-
-
-    pipeline:
-
-    [
-
-        "SCENARIO_ENGINE",
-
-        "DOMAIN_RULE_ENGINE",
-
-        "DOMAIN_DECISION_BRIDGE",
-
-        "DECISION_CONTEXT_FUSION",
-
-        "GOLDEN_RULE_ENGINE",
-
-        "CAPTAIN_AI_LENA",
-
-        "ACTION_ENGINE",
-
-        "MEMORY_CORE",
-
-        "AUDIT_RECORD",
-
-        "RE_TEST_VALIDATION"
-
-    ],
-
-
-
-    authority:
-
-        "GOLDEN RULE ENGINE",
-
-
-
-    finalDecision:
-
-        "CAPTAIN AI LENA DECISION CORE",
-
-
-
-    deterministic:
-
-        true,
-
-
-
-    machineLearning:
-
-        false,
-
-
-
-    status:
-
-        "READY"
-
-
-};
-
-}
-
-
-
-
-
-
-
-
-export default {
-
-
-    executeDomainRule,
-
-    verifyDomainInput,
-
-    buildDecisionContext,
-
-    validateDecisionContext,
-
-    getDomainStatus
-
-
-};
+        getScenarioAuthent
