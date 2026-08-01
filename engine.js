@@ -37,7 +37,6 @@ import {
 from "./captainAILena.js";
 
 
-
 import {
 
     GOLDEN_RATIO
@@ -45,7 +44,6 @@ import {
 }
 
 from "./constants/math.constants.js";
-
 
 
 import {
@@ -57,7 +55,6 @@ import {
 from "./analytics/index.js";
 
 
-
 import {
 
     executeMemoryCore
@@ -65,7 +62,6 @@ import {
 }
 
 from "./memoryCore.js";
-
 
 
 import {
@@ -77,7 +73,6 @@ import {
 from "./auditRecord.js";
 
 
-
 import {
 
     executeDomainIntegration
@@ -85,7 +80,6 @@ import {
 }
 
 from "./domainIntegration.js";
-
 
 
 
@@ -110,9 +104,6 @@ export const GOLDEN_RULE_STAGES = [
     "UPDATE"
 
 ];
-
-
-
 
 
 
@@ -151,10 +142,6 @@ function validateInput(state){
 
 
 
-
-
-
-
 // ============================================================
 // NORMALIZE STATE
 // ============================================================
@@ -166,78 +153,65 @@ function normalizeState(state){
 return {
 
 
-fx:
+    fx:
 
-Number(state.fx ?? 0),
-
-
-
-energy:
-
-Number(state.energy ?? 50),
+    Number(state.fx ?? 0),
 
 
+    energy:
 
-cyb:
-
-Number(state.cyb ?? 50),
-
+    Number(state.energy ?? 50),
 
 
-inf:
+    cyb:
 
-Number(state.inf ?? 0),
+    Number(state.cyb ?? 50),
 
 
+    inf:
 
-dc:
+    Number(state.inf ?? 0),
 
-Number(state.dc ?? 0),
+
+    dc:
+
+    Number(state.dc ?? 0),
 
 
 
+    event:
 
-event:
-
-state.event ?? "NORMAL",
-
+    state.event ?? "NORMAL",
 
 
 
-scenario:
+    scenario:
 
-state.scenario ?? "NORMAL",
-
-
-
-
-mode:
-
-state.mode ?? "AUTONOMOUS",
+    state.scenario ?? "NORMAL",
 
 
 
+    mode:
 
-intensity:
-
-Number(state.intensity ?? 0),
-
+    state.mode ?? "AUTONOMOUS",
 
 
 
-time:
+    intensity:
 
-new Date().toISOString()
+    Number(state.intensity ?? 0),
+
+
+
+    time:
+
+    new Date().toISOString()
 
 
 };
 
 
 }
-
-
-
-
 
 
 
@@ -256,8 +230,6 @@ state = {}
 
 
 
-
-
 // ============================================================
 // OBSERVE
 // ============================================================
@@ -269,13 +241,9 @@ validateInput(state);
 
 const inputState = {
 
-
-...state
-
+    ...state
 
 };
-
-
 
 
 
@@ -290,13 +258,9 @@ const verifiedState =
 
 normalizeState(
 
-state
+    state
 
 );
-
-
-
-
 
 
 
@@ -318,10 +282,9 @@ const domainIntegrationResult =
 
 executeDomainIntegration(
 
-verifiedState
+    verifiedState
 
 );
-
 
 
 
@@ -344,19 +307,14 @@ const domainDecision = {
 
     priorityContext:
 
+    domainIntegrationResult.priorityContext
 
-        domainIntegrationResult.priorityContext
+    ??
 
-        ??
-
-        null
-
+    null
 
 
 };
-
-
-
 
 
 
@@ -387,9 +345,6 @@ domainDecision.priorityContext.priority
 
 
 
-
-
-
 // ============================================================
 // ASSESS
 // ============================================================
@@ -406,9 +361,7 @@ runAnalytics(
     ...verifiedState,
 
 
-
     domainDecision,
-
 
 
     priorityContext:
@@ -416,13 +369,9 @@ runAnalytics(
     domainDecision.priorityContext
 
 
-
 }
 
 );
-
-
-
 
 
 
@@ -447,9 +396,7 @@ captainAILena(
     ...verifiedState,
 
 
-
     domainDecision,
-
 
 
     priorityContext:
@@ -457,9 +404,7 @@ captainAILena(
     domainDecision.priorityContext,
 
 
-
     analytics,
-
 
 
     authority:
@@ -467,19 +412,14 @@ captainAILena(
     "CAPTAIN AI LENA DECISION CORE",
 
 
-
     goldenRuleAuthority:
 
     true
 
 
-
 }
 
 );
-
-
-
 
 
 
@@ -494,35 +434,32 @@ captainAILena(
 const action = {
 
 
-decision:
+    decision:
 
-decision.decision
+    decision.decision
 
-??
+    ||
 
-decision,
-
-
-
-action:
-
-decision.action
-
-??
-
-"MONITOR SYSTEM",
+    "SYSTEM MONITORING",
 
 
 
-status:
+    action:
 
-"ACTIVE"
+    decision.action
+
+    ||
+
+    "MONITOR SYSTEM",
+
+
+
+    status:
+
+    "ACTIVE"
 
 
 };
-
-
-
 
 
 
@@ -542,46 +479,44 @@ executeMemoryCore(
 {
 
 
-scenario:
+    scenario:
 
-verifiedState.scenario,
-
-
-
-domain:
-
-domainDecision.domain
-
-??
-
-"NONE",
+    verifiedState.scenario,
 
 
 
-priorityContext:
+    domain:
 
-domainDecision.priorityContext,
+    domainDecision.domain
 
+    ??
 
-
-decision,
-
-
-
-action,
+    "NONE",
 
 
 
-timestamp:
+    priorityContext:
 
-new Date().toISOString()
+    domainDecision.priorityContext,
+
+
+
+    decision,
+
+
+
+    action,
+
+
+
+    timestamp:
+
+    new Date().toISOString()
 
 
 }
 
 );
-
-
 
 
 
@@ -602,52 +537,42 @@ createAuditRecord(
 {
 
 
-inputState,
+    inputState,
 
 
-
-verifiedState,
-
+    verifiedState,
 
 
-domainDecision,
+    domainDecision,
 
 
+    priorityContext:
 
-priorityContext:
-
-domainDecision.priorityContext,
-
+    domainDecision.priorityContext,
 
 
-decision,
+    decision,
 
 
-
-action,
-
+    action,
 
 
-memory,
+    memory,
 
 
+    pipeline:
 
-pipeline:
-
-GOLDEN_RULE_STAGES,
-
+    GOLDEN_RULE_STAGES,
 
 
-authority:
+    authority:
 
-"CAPTAIN AI LENA DECISION CORE"
+    "CAPTAIN AI LENA DECISION CORE"
 
 
 }
 
 );
-
-
 
 
 
@@ -663,156 +588,154 @@ authority:
 return {
 
 
-timestamp:
+    timestamp:
 
-new Date().toISOString(),
+    new Date().toISOString(),
 
 
 
-engine:
+    engine:
 
-"SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
+    "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
 
 
 
-agent:
+    agent:
 
-"CAPTAIN AI LENA",
+    "CAPTAIN AI LENA",
 
 
 
-pipeline:
+    pipeline:
 
-GOLDEN_RULE_STAGES,
+    GOLDEN_RULE_STAGES,
 
 
 
-input:
+    input:
 
-inputState,
+    inputState,
 
 
 
-verifiedState,
+    verifiedState,
 
 
 
-domainIntegration:
+    domainIntegration:
 
-domainIntegrationResult,
+    domainIntegrationResult,
 
 
 
-domainDecision,
+    domainDecision,
 
 
 
-priorityContext:
+    priorityContext:
 
-domainDecision.priorityContext,
+    domainDecision.priorityContext,
 
 
 
-analytics,
+    analytics,
 
 
 
-decision,
+    decision,
 
 
 
-action,
+    action,
 
 
 
-memory,
+    memory,
 
 
 
-audit,
+    audit,
 
 
 
-constants:{
+    constants:{
 
 
-PHI:
+        PHI:
 
-GOLDEN_RATIO,
+        GOLDEN_RATIO,
 
 
-GOLDEN_RULE_STAGES
+        GOLDEN_RULE_STAGES
 
 
-},
+    },
 
 
 
-validation:{
+    validation:{
 
 
-engine:
+        engine:
 
-"SPD v13.1 VALIDATION READY",
+        "SPD v13.1 VALIDATION READY",
 
 
 
-decisionAuthority:
+        decisionAuthority:
 
-"CAPTAIN AI LENA DECISION CORE",
+        "CAPTAIN AI LENA DECISION CORE",
 
 
 
-goldenRuleAuthority:
+        goldenRuleAuthority:
 
-true,
+        true,
 
 
 
-domainPriorityFusion:
+        domainPriorityFusion:
 
-Boolean(
+        Boolean(
 
-domainDecision.priorityContext
+            domainDecision.priorityContext
 
-),
+        ),
 
 
 
-deterministic:
+        deterministic:
 
-true,
+        true,
 
 
 
-machineLearning:
+        machineLearning:
 
-false
+        false
 
 
+    },
 
-},
 
 
 
 
-authority:
+    authority:
 
-"CAPTAIN AI LENA DECISION CORE",
+    "CAPTAIN AI LENA DECISION CORE",
 
 
 
-status:
+    status:
 
-"EXECUTED"
-
+    "EXECUTED"
 
 
 };
 
 
 }
-
 
 
 
@@ -829,89 +752,87 @@ status:
 export const ENGINE_STATUS = {
 
 
-module:
+    module:
 
-"SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
-
-
-
-pipeline:
-
-
-[
-
-"OBSERVE",
-
-"VERIFY",
-
-"ASSESS",
-
-"DECIDE",
-
-"ACT",
-
-"UPDATE"
-
-],
+    "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
 
 
 
-domains:
+    pipeline:
 
 
-[
+    [
 
-"FIN",
+        "OBSERVE",
 
-"BHR"
+        "VERIFY",
 
-],
+        "ASSESS",
 
+        "DECIDE",
 
+        "ACT",
 
-features:
+        "UPDATE"
 
-
-[
-
-"DOMAIN_PRIORITY_CONTEXT_FUSION"
-
-],
+    ],
 
 
 
-authority:
-
-"CAPTAIN AI LENA DECISION CORE",
+    domains:
 
 
+    [
 
-goldenRuleAuthority:
+        "FIN",
 
-true,
+        "BHR"
 
-
-
-deterministic:
-
-true,
+    ],
 
 
 
-machineLearning:
-
-false,
+    features:
 
 
+    [
 
-status:
+        "DOMAIN_PRIORITY_CONTEXT_FUSION"
 
-"READY"
+    ],
+
+
+
+    authority:
+
+    "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    goldenRuleAuthority:
+
+    true,
+
+
+
+    deterministic:
+
+    true,
+
+
+
+    machineLearning:
+
+    false,
+
+
+
+    status:
+
+    "READY"
 
 
 };
-
-
 
 
 
@@ -927,13 +848,13 @@ status:
 export default {
 
 
-runEngine,
+    runEngine,
 
 
-GOLDEN_RULE_STAGES,
+    GOLDEN_RULE_STAGES,
 
 
-ENGINE_STATUS
+    ENGINE_STATUS
 
 
 };
