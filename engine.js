@@ -636,3 +636,248 @@ return {
     scenario:
 
     verifiedState.sc
+
+    constants:
+
+    {
+
+
+        PHI:
+
+        GOLDEN_RATIO,
+
+
+
+        GOLDEN_RULE_STAGES
+
+
+    },
+
+
+
+
+
+
+    validation:
+
+    {
+
+
+        engine:
+
+        "SPD v13.1 VALIDATION READY",
+
+
+
+        decisionAuthority:
+
+        "CAPTAIN AI LENA DECISION CORE",
+
+
+
+        goldenRuleAuthority:
+
+        true,
+
+
+
+        intensityBridge:
+
+        true,
+
+
+
+        deterministic:
+
+        true,
+
+
+
+        machineLearning:
+
+        false,
+
+
+        randomness:
+
+        false
+
+
+    },
+
+
+
+
+
+
+    authority:
+
+    "CAPTAIN AI LENA DECISION CORE",
+
+
+
+    status:
+
+    "EXECUTED"
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
+// ENGINE STATUS
+// ============================================================
+
+
+export const ENGINE_STATUS = {
+
+
+    module:
+
+    "SPD v13.1 SEXTANT RESILIENCE EXECUTION ENGINE",
+
+
+
+
+
+    pipeline:
+
+    [
+
+        "OBSERVE",
+
+        "VERIFY",
+
+        "ASSESS",
+
+        "DECIDE",
+
+        "ACT",
+
+        "UPDATE"
+
+    ],
+
+
+
+
+
+
+    domains:
+
+    [
+
+        "FIN",
+
+        "BHR"
+
+    ],
+
+
+
+
+
+
+    features:
+
+    [
+
+        "INTENSITY_BRIDGE",
+
+        "DOMAIN_INTEGRATION",
+
+        "GOLDEN_RULE_VALIDATION",
+
+        "CAPTAIN_AI_LENA_DECISION_CORE"
+
+    ],
+
+
+
+
+
+
+    authority:
+
+    "CAPTAIN AI LENA DECISION CORE",
+
+
+
+
+
+
+    goldenRuleAuthority:
+
+    true,
+
+
+
+
+
+    deterministic:
+
+    true,
+
+
+
+
+
+    machineLearning:
+
+    false,
+
+
+
+
+
+    randomness:
+
+    false,
+
+
+
+
+
+    status:
+
+    "READY"
+
+
+};
+
+
+
+
+
+
+
+
+
+// ============================================================
+// DEFAULT EXPORT
+// ============================================================
+
+
+export default {
+
+
+    runEngine,
+
+
+    GOLDEN_RULE_STAGES,
+
+
+    ENGINE_STATUS
+
+
+};
