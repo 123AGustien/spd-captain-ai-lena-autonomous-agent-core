@@ -330,3 +330,510 @@ export function buildDomainDecisionBridge(
 
 
 }
+/**
+ * ============================================================
+ * MERGE DOMAIN DECISION WITH CAPTAIN AI DECISION
+ * ============================================================
+ */
+
+
+export function mergeDomainDecision(
+
+    domainDecision,
+
+    captainDecision = {}
+
+){
+
+
+    if(!domainDecision)
+    {
+
+        return {
+
+
+            status:
+
+            "INVALID_DOMAIN_DECISION",
+
+
+
+            goldenRuleAuthority:
+
+            true,
+
+
+
+            deterministic:
+
+            true,
+
+
+
+            machineLearning:
+
+            false,
+
+
+
+            randomness:
+
+            false
+
+
+        };
+
+    }
+
+
+
+
+
+    return {
+
+
+        ...captainDecision,
+
+
+        domainDecision,
+
+
+
+        domainPriority:
+
+            domainDecision.priority,
+
+
+
+        recommendedFocus:
+
+            domainDecision.recommendedFocus,
+
+
+
+        finalRisk:
+
+            domainDecision.finalRisk,
+
+
+
+        finalAuthority:
+
+            "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+        goldenRuleAuthority:
+
+            true,
+
+
+
+        deterministic:
+
+            true,
+
+
+
+        machineLearning:
+
+            false,
+
+
+
+        randomness:
+
+            false,
+
+
+
+        timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VALIDATE DOMAIN DECISION BRIDGE
+ * ============================================================
+ */
+
+
+export function validateDomainDecisionBridge(
+
+    decision
+
+){
+
+
+    if(!decision)
+    {
+
+        return {
+
+
+            module:
+
+            "SPD v13.1 Domain Decision Bridge",
+
+
+
+            validationStatus:
+
+            "FAIL",
+
+
+
+            reason:
+
+            "EMPTY_DECISION_OBJECT",
+
+
+
+            authority:
+
+            "GOLDEN_RULE_ENGINE",
+
+
+
+            finalDecisionAuthority:
+
+            "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+            timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+        };
+
+    }
+
+
+
+
+
+
+
+    const checks = {
+
+
+        domainExists:
+
+            Boolean(
+
+                decision.domain
+
+            ),
+
+
+
+        scenarioExists:
+
+            Boolean(
+
+                decision.scenario
+
+            ),
+
+
+
+        decisionExists:
+
+            Boolean(
+
+                decision.decision
+
+            ),
+
+
+
+        priorityExists:
+
+            Boolean(
+
+                decision.priority
+
+            ),
+
+
+
+        goldenRuleAuthority:
+
+            decision.goldenRuleAuthority === true,
+
+
+
+        captainAILenaAuthority:
+
+            decision.captainAILenaAuthority === true,
+
+
+
+        deterministic:
+
+            decision.deterministic === true
+
+
+    };
+
+
+
+
+
+
+
+    const passed =
+
+
+    Object.values(checks)
+
+    .every(
+
+        value => value === true
+
+    );
+
+
+
+
+
+
+
+    return {
+
+
+        module:
+
+        "SPD v13.1 Domain Decision Bridge",
+
+
+
+        validationStatus:
+
+            passed
+
+            ?
+
+            "PASS"
+
+            :
+
+            "FAIL",
+
+
+
+        checks,
+
+
+
+        authority:
+
+            "GOLDEN_RULE_ENGINE",
+
+
+
+        finalDecisionAuthority:
+
+            "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+        timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+    };
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * CREATE AUDIT PAYLOAD
+ * ============================================================
+ */
+
+
+export function createDomainAuditRecord(
+
+    decision
+
+){
+
+
+    if(!decision)
+    {
+
+        return {
+
+
+            status:
+
+            "INVALID_AUDIT_INPUT",
+
+
+
+            timestamp:
+
+            new Date()
+
+            .toISOString()
+
+
+        };
+
+    }
+
+
+
+
+
+
+
+    return {
+
+
+        system:
+
+        "SPD v13.1",
+
+
+
+        module:
+
+        "Domain Decision Bridge",
+
+
+
+        domain:
+
+        decision.domain,
+
+
+
+        scenario:
+
+        decision.scenario,
+
+
+
+        decision:
+
+        decision.decision,
+
+
+
+        risk:
+
+        decision.risk,
+
+
+
+        finalRisk:
+
+        decision.finalRisk,
+
+
+
+        priority:
+
+        decision.priority,
+
+
+
+        recommendedFocus:
+
+        decision.recommendedFocus,
+
+
+
+        solution:
+
+        decision.solution,
+
+
+
+        domainPriorityContext:
+
+        decision.domainPriorityContext,
+
+
+
+        authority:
+
+        "CAPTAIN_AI_LENA_DECISION_CORE",
+
+
+
+        goldenRuleAuthority:
+
+        true,
+
+
+
+        deterministic:
+
+        true,
+
+
+
+        machineLearning:
+
+        false,
+
+
+
+        randomness:
+
+        false,
+
+
+
+        auditStatus:
+
+        "READY",
+
+
+
+        timestamp:
+
+        new Date()
+
+        .toISOString()
+
+
+    };
+
+
+}
