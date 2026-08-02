@@ -1045,3 +1045,368 @@ simulationObjective:
 "Evaluate human rights due diligence and resilience response."
 
 },
+/**
+ * ============================================================
+ * DISCRIMINATION
+ * ============================================================
+ */
+
+
+DISCRIMINATION:
+
+{
+
+scenario:
+
+"DISCRIMINATION",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Equal Treatment and Inclusion",
+
+
+operationalContext:
+
+"Workplace discrimination pressure",
+
+
+description:
+
+"Simulation of discrimination risks affecting workforce resilience, organisational responsibility, and human rights compliance.",
+
+
+riskIndicators:
+
+[
+
+"Equal opportunity concerns",
+
+"Workplace complaints",
+
+"Policy enforcement gaps",
+
+"Unequal treatment indicators"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate fair treatment controls and corrective response."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * SUPPLY CHAIN RISK
+ * ============================================================
+ */
+
+
+SUPPLY_CHAIN_RISK:
+
+{
+
+scenario:
+
+"SUPPLY_CHAIN_RISK",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Responsible Supply Chain",
+
+
+operationalContext:
+
+"Supplier compliance and resilience pressure",
+
+
+description:
+
+"Simulation of supply chain human rights exposure, third-party risks, and responsible sourcing challenges.",
+
+
+riskIndicators:
+
+[
+
+"Supplier compliance gaps",
+
+"Third-party exposure",
+
+"Ethical sourcing concerns",
+
+"Audit weaknesses"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"FIN",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate responsible supply chain resilience."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * COMMUNITY IMPACT
+ * ============================================================
+ */
+
+
+COMMUNITY_IMPACT:
+
+{
+
+scenario:
+
+"COMMUNITY_IMPACT",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Social Responsibility",
+
+
+operationalContext:
+
+"Community relationship pressure",
+
+
+description:
+
+"Simulation of community impact concerns affecting social responsibility and operational resilience.",
+
+
+riskIndicators:
+
+[
+
+"Stakeholder concerns",
+
+"Social licence pressure",
+
+"Community complaints",
+
+"Operational impact concerns"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"INF"
+
+],
+
+
+simulationObjective:
+
+"Evaluate responsible community engagement response."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * INDIGENOUS RIGHTS
+ * ============================================================
+ */
+
+
+INDIGENOUS_RIGHTS:
+
+{
+
+scenario:
+
+"INDIGENOUS_RIGHTS",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Indigenous Rights Protection",
+
+
+operationalContext:
+
+"Indigenous stakeholder rights pressure",
+
+
+description:
+
+"Simulation of indigenous rights considerations affecting responsible operations and stakeholder relationships.",
+
+
+riskIndicators:
+
+[
+
+"Consultation gaps",
+
+"Land rights concerns",
+
+"Stakeholder engagement failures"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"COMMUNITY"
+
+],
+
+
+simulationObjective:
+
+"Evaluate indigenous rights protection and engagement pathways."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * GRIEVANCE MECHANISM
+ * ============================================================
+ */
+
+
+GRIEVANCE_MECHANISM:
+
+{
+
+scenario:
+
+"GRIEVANCE_MECHANISM",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Human Rights Remedy",
+
+
+operationalContext:
+
+"Worker and stakeholder grievance pressure",
+
+
+description:
+
+"Simulation of grievance handling weaknesses affecting human rights accountability and organisational resilience.",
+
+
+riskIndicators:
+
+[
+
+"Complaint handling delays",
+
+"Lack of reporting channels",
+
+"Remedy process weakness"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate grievance response and remedy mechanisms."
+
+}
