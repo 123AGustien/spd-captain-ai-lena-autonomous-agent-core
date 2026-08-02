@@ -1008,3 +1008,40 @@ simulationObjective:
 "Evaluate responsible supply chain resilience."
 
 },
+id="48392"
+of potential forced labour indicators within operational or supplier environments.",
+
+
+riskIndicators:
+
+[
+
+"Worker freedom concerns",
+
+"Recruitment fee risks",
+
+"Restricted movement indicators",
+
+"Supplier compliance failures"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"SUPPLY_CHAIN",
+
+"GOVERNANCE"
+
+],
+
+
+simulationObjective:
+
+"Evaluate human rights due diligence and resilience response."
+
+},
