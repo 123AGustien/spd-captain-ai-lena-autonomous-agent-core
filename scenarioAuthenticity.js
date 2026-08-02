@@ -519,3 +519,235 @@ simulationObjective:
 "Evaluate sovereign financial resilience."
 
 },
+/**
+ * ============================================================
+ * BUSINESS & HUMAN RIGHTS (BHR)
+ * ============================================================
+ */
+
+
+BHR_COMPLIANCE_STRESS:
+
+{
+
+scenario:
+
+"BHR_COMPLIANCE_STRESS",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Business & Human Rights Compliance",
+
+
+operationalContext:
+
+"Human rights compliance pressure",
+
+
+description:
+
+"Simulation of business and human rights compliance stress affecting operational resilience.",
+
+
+riskIndicators:
+
+[
+
+"Due diligence gaps",
+
+"Policy compliance failures",
+
+"Human rights exposure"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate human rights compliance resilience."
+
+},
+
+
+
+
+
+
+BHR_WORKER_SAFETY_EVENT:
+
+{
+
+scenario:
+
+"BHR_WORKER_SAFETY_EVENT",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Worker Safety Resilience",
+
+
+operationalContext:
+
+"Workplace safety incident pressure",
+
+
+description:
+
+"Simulation of occupational safety stress affecting workers, operations and compliance obligations.",
+
+
+riskIndicators:
+
+[
+
+"Workplace incidents",
+
+"Safety procedure failures",
+
+"PPE compliance issues",
+
+"Contractor safety concerns"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"OPS",
+
+"INF"
+
+],
+
+
+simulationObjective:
+
+"Evaluate worker safety response pathways."
+
+},
+
+
+
+
+
+
+OCCUPATIONAL_HEALTH_AND_SAFETY:
+
+{
+
+scenario:
+
+"OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Occupational Health and Safety",
+
+
+operationalContext:
+
+"Industrial workplace safety degradation",
+
+
+description:
+
+"Simulation of increasing occupational health and safety pressure.",
+
+
+riskIndicators:
+
+[
+
+"Incident increase",
+
+"Safety control weakness",
+
+"Regulatory exposure"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate safety resilience."
+
+},
+
+
+
+
+
+
+FORCED_LABOUR:
+
+{
+
+scenario:
+
+"FORCED_LABOUR",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Human Rights Protection",
+
+
+operationalContext:
+
+"Labour rights vulnerability",
+
+
+description:
+
+"Simulation
