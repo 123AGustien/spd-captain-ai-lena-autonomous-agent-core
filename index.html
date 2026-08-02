@@ -1352,3 +1352,24 @@ READY
 </pre>
 
 </div>
+<!-- SPD v13.1 JAVASCRIPT ENGINE CONNECTION -->
+
+<script type="module">
+
+import {
+    executeDomainRule,
+    getDomainStatus
+}
+from "./domainIntegration.js";
+
+
+console.log(
+    "SPD v13.1 DOMAIN INTEGRATION READY",
+    getDomainStatus()
+);
+
+</script>
+
+</body>
+
+</html>
