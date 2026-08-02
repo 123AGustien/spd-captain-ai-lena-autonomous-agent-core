@@ -1411,3 +1411,96 @@ simulationObjective:
 
 }
 };
+/**
+ * ============================================================
+ * GET SCENARIO AUTHENTICITY PROFILE
+ * ============================================================
+ */
+
+export function getScenarioAuthenticity(
+    scenario
+){
+
+    return (
+
+        SCENARIO_AUTHENTICITY_REGISTRY[scenario]
+
+        ||
+
+        {
+
+            scenario,
+
+            status:
+            "AUTHENTICITY PROFILE NOT REGISTERED"
+
+        }
+
+    );
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VALIDATE SCENARIO AUTHENTICITY
+ * ============================================================
+ */
+
+export function validateScenarioAuthenticity(
+    scenario
+){
+
+    return {
+
+        scenario,
+
+
+        registered:
+
+        Boolean(
+
+            SCENARIO_AUTHENTICITY_REGISTRY[scenario]
+
+        ),
+
+
+        authority:
+
+        SCENARIO_AUTHORITY,
+
+
+        goldenRuleAuthority:
+
+        "GOLDEN RULE ENGINE REMAINS AUTHORITATIVE"
+
+    };
+
+}
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * LIST AVAILABLE SCENARIO AUTHENTICITY PROFILES
+ * ============================================================
+ */
+
+export function listScenarioAuthenticity(){
+
+    return Object.keys(
+
+        SCENARIO_AUTHENTICITY_REGISTRY
+
+    );
+
+}
