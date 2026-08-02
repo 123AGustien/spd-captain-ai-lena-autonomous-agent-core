@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+background:#0b0f14;
+color:#00ff88;
+font-family:Arial,sans-serif;
+padding:20px;
+margin:0;
+
+}
+
+h1{
+color:white;
+}
+
+.panel{
+
+border:1px solid #00ff88;
+background:#10161d;
+padding:15px;
+margin-bottom:15px;
+border-radius:8px;
+
+}
+
+.title{
+
+font-size:18px;
+font-weight:bold;
+color:white;
+margin-bottom:10px;
+
+}
+
+.status{
+
+border:1px solid #00ff88;
+background:#080d11;
+padding:15px;
+font-size:20px;
+font-weight:bold;
+margin-bottom:15px;
+
+}
+
+
+button{
+
+background:#00ff88;
+color:black;
+border:2px solid #00ff88;
+padding:14px 18px;
+margin:5px;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+opacity:0.8;
+
+}
+
+
+.scenario-button{
+
+background:#1b2730;
+color:#00ff88;
+
+}
+
+
+.control-buttons,
+.scenario-controls{
+
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+
+}
+
+
+.monitor{
+
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(120px,1fr));
+
+gap:10px;
+
+}
+
+
+.domain{
+
+border:1px solid #00ff88;
+background:#080d11;
+padding:12px;
+text-align:center;
+border-radius:6px;
+
+}
+
+
+.domain-value{
+
+font-size:24px;
+font-weight:bold;
+color:white;
+
+}
+
+
+pre{
+
+white-space:pre-wrap;
+word-break:break-word;
+color:#00ff88;
+
+}
+
+
+.pipeline{
+
+border:1px solid #00ff88;
+padding:10px;
+
+}
+
+
+.stage{
+
+display:inline-block;
+padding:8px;
+margin:3px;
+border:1px solid #00ff88;
+border-radius:4px;
+
+}
+
+
+.stage.active{
+
+background:#00ff88;
+color:black;
+
+}
+
+
+input[type="range"]{
+
+width:100%;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>
+🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</h1>
+
+
+<div class="status" id="systemStatus">
+SYSTEM STATUS: INITIALIZING...
+</div>
+
+
+<div class="panel">
+
+<div class="title">
+🎛️ SYSTEM CONTROLS
+</div>
+
+
+<button onclick="runLiveSystem()">
+▶ RUN SYSTEM
+</button>
+
+
+<button onclick="runAuthoritativeSelfTest()">
+🧪 SELF TEST
+</button>
+
+
+<button onclick="runCorrectiveAction()">
+🛠️ CORRECTIVE ACTION
+</button>
+
+
+</div>
+
+
+<div class="panel">
+
+<div class="title">
+📊 SYSTEM DOMAIN MONITOR
+</div>
+
+
+<div class="monitor">
+
+
+<div class="domain">
+FX
+<div class="domain-value" id="domainFX">
+0
+</div>
+</div>
+
+
+<div class="domain">
+DC
+<div class="domain-value" id="domainDC">
+0
+</div>
+</div>
+
+
+<div class="domain">
+CYB
+<div class="domain-value" id="domainCYB">
+0
+</div>
+</div>
+
+
+<div class="domain">
+INF
+<div class="domain-value" id="domainINF">
+0
+</div>
+</div>
+
+
+<div class="domain">
+ENERGY
+<div class="domain-value" id="domainEN">
+0
+</div>
+</div>
+
+
+</div>
+
+</div>
+<!-- SCENARIO CONTROL -->
+
+<div class="panel">
+
+<div class="title">
+🎛️ SCENARIO CONTROL
+</div>
+
+
+<div class="scenario-controls">
+
+
+<button class="scenario-button"
+onclick="activateScenario('FX_SHOCK')">
+FX STRESS
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('FIN_STRESS')">
+FIN STRESS
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('BANKING_STRESS')">
+BANKING STRESS
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('LIQUIDITY_CRISIS')">
+LIQUIDITY CRISIS
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('BHR_WORKER_SAFETY_EVENT')">
+BHR SAFETY
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('SUPPLY_CHAIN_RISK')">
+SUPPLY CHAIN RISK
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('CYBER_ATTACK')">
+CYBER ATTACK
+</button>
+
+
+<button class="scenario-button"
+onclick="activateScenario('INFRA_FAILURE')">
+INFRA FAILURE
+</button>
+
+
+<button onclick="resetScenario()">
+RESET
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- INTENSITY CONTROL -->
+
+<div class="panel">
+
+<div class="title">
+🎚️ SCENARIO INTENSITY
+</div>
+
+
+<input
+id="scenarioIntensity"
+type="range"
+min="0"
+max="100"
+value="50"
+oninput="updateIntensity()"
+>
+
+
+<div>
+
+Intensity:
+
+<span id="intensityValue">
+50%
+</span>
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- SCENARIO PANEL -->
+
+<div class="panel">
+
+<div class="title">
+🧪 SCENARIO PANEL
+</div>
+
+
+<pre id="scenarioPanel">
+
+{
+"scenario":"NORMAL",
+"status":"READY"
+}
+
+</pre>
+
+</div>
+
+
+
+
+<!-- RAW STATE -->
+
+<div class="panel">
+
+<div class="title">
+📊 RAW SYSTEM STATE
+</div>
+
+
+<pre id="state">
+
+Waiting...
+
+</pre>
+
+</div>
+
+
+
+
+<!-- GOLDEN RULE ENGINE -->
+
+<div class="panel">
+
+
+<div class="title">
+🛰️ GOLDEN RULE ENGINE
+</div>
+
+
+<div class="pipeline">
+
+
+<span class="stage" id="stageOBSERVE">
+OBSERVE
+</span>
+
+
+→
+
+
+<span class="stage" id="stageVERIFY">
+VERIFY
+</span>
+
+
+→
+
+
+<span class="stage" id="stageASSESS">
+ASSESS
+</span>
+
+
+→
+
+
+<span class="stage" id="stageDECIDE">
+DECIDE
+</span>
+
+
+→
+
+
+<span class="stage" id="stageACT">
+ACT
+</span>
+
+
+→
+
+
+<span class="stage" id="stageUPDATE">
+UPDATE
+</span>
+
+
+</div>
+
+
+<pre id="pipeline">
+
+SPD v13.1 GOLDEN RULE ENGINE
+
+AUTHORITATIVE VALIDATION LAYER
+
+
+OBSERVE
+↓
+VERIFY
+↓
+ASSESS
+↓
+DECIDE
+↓
+ACT
+↓
+UPDATE
+
+
+Golden Rule Engine remains authoritative.
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- SYSTEM ASSESSMENT -->
+
+<div class="panel">
+
+<div class="title">
+⚠️ SYSTEM ASSESSMENT
+</div>
+
+
+<pre id="assessment">
+
+Waiting...
+
+</pre>
+
+</div>
+
+
+
+
+<!-- RISK -->
+
+<div class="panel">
+
+<div class="title">
+🚨 RISK PANEL
+</div>
+
+
+<pre id="riskPanel">
+
+Risk: LOW
+
+</pre>
+
+</div>
+
+
+
+
+<!-- CAPTAIN AI LENA DECISION -->
+
+<div class="panel">
+
+<div class="title">
+⚙️ CAPTAIN AI LENA DECISION
+</div>
+
+
+<pre id="decision">
+
+Waiting...
+
+</pre>
+
+</div>
+
+
+
+
+<!-- MEMORY CORE -->
+
+<div class="panel">
+
+<div class="title">
+🧠 MEMORY CORE
+</div>
+
+
+<pre id="memoryCore">
+
+Memory Core Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- AUDIT RECORD -->
+
+<div class="panel">
+
+<div class="title">
+🧾 AUDIT RECORD
+</div>
+
+
+<pre id="audit">
+
+Waiting...
+
+</pre>
+
+</div>
+
+
+
+
+<!-- PIPELINE LOG -->
+
+<div class="panel">
+
+<div class="title">
+📜 PIPELINE LOG
+</div>
+
+
+<pre id="pipelineLog">
+
+PIPELINE LOG ACTIVE
+
+</pre>
+
+</div>
+<script type="module">
+
+
+import {
+
+    executeDomainRule,
+
+    getDomainStatus,
+
+    buildDecisionContext,
+
+    validateDecisionContext
+
+}
+
+from "./domainIntegration.js";
+
+
+
+/*
+============================================================
+SPD v13.1 COCKPIT CONNECTION LAYER
+
+COCKPIT
+   ↓
+SCENARIO INPUT
+   ↓
+DOMAIN INTEGRATION
+   ↓
+DOMAIN RULE ENGINE
+   ↓
+GOLDEN RULE ENGINE
+   ↓
+CAPTAIN AI LENA DECISION CORE
+   ↓
+MEMORY CORE
+   ↓
+AUDIT RECORD
+
+============================================================
+*/
+
+
+let currentScenario = "NORMAL";
+
+let scenarioIntensity = 50;
+
+
+
+function setText(id,value){
+
+    const element =
+    document.getElementById(id);
+
+
+    if(!element)
+    return;
+
+
+    element.innerText =
+
+    typeof value === "string"
+
+    ?
+
+    value
+
+    :
+
+    JSON.stringify(
+        value,
+        null,
+        2
+    );
+
+}
+
+
+
+
+window.activateScenario=function(name){
+
+    currentScenario = name;
+
+
+    setText(
+
+        "scenarioPanel",
+
+        {
+
+            scenario:name,
+
+            intensity:
+            scenarioIntensity+"%",
+
+            status:
+            "ACTIVE"
+
+        }
+
+    );
+
+
+};
+
+
+
+
+
+window.updateIntensity=function(){
+
+
+const slider =
+document.getElementById(
+"scenarioIntensity"
+);
+
+
+
+if(slider){
+
+scenarioIntensity =
+Number(slider.value);
+
+
+
+setText(
+
+"intensityValue",
+
+scenarioIntensity+"%"
+
+);
+
+}
+
+
+};
+
+
+
+
+
+
+
+function buildSystemState(){
+
+
+return {
+
+
+scenario:
+currentScenario,
+
+
+event:
+currentScenario,
+
+
+intensity:
+scenarioIntensity,
+
+
+
+humanRightsCompliance:
+scenarioIntensity,
+
+
+workerSafety:
+scenarioIntensity,
+
+
+supplyChain:
+scenarioIntensity,
+
+
+governance:
+scenarioIntensity,
+
+
+communityImpact:
+scenarioIntensity,
+
+
+fx:
+scenarioIntensity,
+
+
+energy:
+100-scenarioIntensity,
+
+
+cyb:
+scenarioIntensity,
+
+
+inf:
+scenarioIntensity,
+
+
+dc:
+scenarioIntensity,
+
+
+mode:
+"AUTONOMOUS",
+
+
+
+time:
+new Date()
+.toISOString()
+
+
+};
+
+
+}
+
+
+
+
+
+
+window.runLiveSystem=function(){
+
+
+try{
+
+
+const state =
+buildSystemState();
+
+
+
+
+setText(
+"state",
+state
+);
+
+
+
+
+const result =
+
+
+executeDomainRule(
+
+currentScenario,
+
+state
+
+);
+
+
+
+
+
+setText(
+
+"assessment",
+
+result.assessment ??
+result
+
+);
+
+
+
+
+setText(
+
+"riskPanel",
+
+{
+
+risk:
+result.risk ??
+"UNKNOWN",
+
+
+domain:
+result.domain ??
+"UNKNOWN",
+
+
+status:
+result.status ??
+"COMPLETE"
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"decision",
+
+result.captainAILena ??
+result.decisionContext ??
+result
+
+);
+
+
+
+
+
+setText(
+
+"audit",
+
+{
+
+scenario:
+currentScenario,
+
+
+domain:
+result.domain,
+
+
+authority:
+"GOLDEN RULE ENGINE",
+
+
+decisionCore:
+"CAPTAIN AI LENA",
+
+
+status:
+"VALIDATED"
+
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"memoryCore",
+
+"MEMORY CORE SYNCHRONISED"
+
+);
+
+
+
+
+
+setText(
+
+"pipelineLog",
+
+"DOMAIN → VALIDATION → GOLDEN RULE → LENA DECISION → AUDIT COMPLETE"
+
+);
+
+
+
+
+
+setText(
+
+"systemStatus",
+
+"SYSTEM STATUS: DOMAIN INTEGRATION ACTIVE"
+
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"SPD v13.1 ERROR",
+error
+);
+
+
+setText(
+
+"systemStatus",
+
+"SYSTEM ERROR"
+
+);
+
+
+setText(
+
+"audit",
+
+error.message
+
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+window.runAuthoritativeSelfTest=function(){
+
+
+setText(
+
+"selfTest",
+
+{
+
+engine:
+"SPD v13.1 DOMAIN INTEGRATION",
+
+
+status:
+"SELF TEST READY",
+
+
+authority:
+"GOLDEN RULE ENGINE"
+
+
+}
+
+);
+
+
+};
+
+
+
+
+
+window.runCorrectiveAction=function(){
+
+
+setText(
+
+"correctiveAction",
+
+"Captain AI Lena Corrective Action Framework Activated"
+
+);
+
+
+};
+
+
+
+
+
+window.resetScenario=function(){
+
+
+currentScenario="NORMAL";
+
+scenarioIntensity=0;
+
+
+setText(
+
+"scenarioPanel",
+
+{
+
+scenario:
+"NORMAL",
+
+status:
+"RESET"
+
+}
+
+);
+
+
+};
+
+
+
+
+
+console.log(
+
+"SPD v13.1 DOMAIN INTEGRATION READY",
+
+getDomainStatus()
+
+);
+
+
+</script>
+
+<!-- SELF TEST -->
+
+<div class="panel">
+
+<div class="title">
+🧪 SPD v13.1 SELF TEST
+</div>
+
+
+<pre id="selfTest">
+
+Self-test not executed.
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- SELF TEST INTERPRETATION -->
+
+<div class="panel">
+
+<div class="title">
+🔎 SELF TEST INTERPRETATION
+</div>
+
+
+<pre id="selfTestInterpretation">
+
+Waiting for self-test execution...
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- FAULT IDENTIFICATION -->
+
+<div class="panel">
+
+<div class="title">
+⚠️ FAULT IDENTIFICATION
+</div>
+
+
+<pre id="faultIdentification">
+
+No fault assessment available.
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- CAPTAIN AI LENA CORRECTIVE ACTION -->
+
+<div class="panel">
+
+<div class="title">
+🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
+</div>
+
+
+<pre id="correctiveAction">
+
+No corrective action available.
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- RE-TEST VALIDATION -->
+
+<div class="panel">
+
+<div class="title">
+🔁 RE-TEST VALIDATION
+</div>
+
+
+<pre id="retest">
+
+Re-test not executed.
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- SYSTEM CONSTANTS -->
+
+<div class="panel">
+
+<div class="title">
+📐 SYSTEM CONSTANTS
+</div>
+
+
+<pre id="constants">
+
+Waiting...
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- AGENT LOOP -->
+
+<div class="panel">
+
+<div class="title">
+🔄 AGENT LOOP MONITOR
+</div>
+
+
+<pre id="trace">
+
+SPD v13.1 AUTONOMOUS AGENT LOOP
+
+
+OBSERVE
+↓
+VERIFY
+↓
+ASSESS
+↓
+DECIDE
+↓
+ACT
+↓
+UPDATE
+↓
+MEMORY CORE
+↓
+AUDIT RECORD
+↓
+RE-TEST VALIDATION
+
+
+AUTHORITY:
+
+GOLDEN RULE ENGINE
+
+FINAL DECISION:
+
+CAPTAIN AI LENA DECISION CORE
+
+
+STATUS:
+
+READY
+
+</pre>
+
+
+</div>
+
+
+
+
+<!-- GOLDEN RULE AUTHORITY -->
+
+<div class="panel">
+
+<div class="title">
+🛰️ GOLDEN RULE ENGINE AUTHORITY
+</div>
+
+
+<pre id="goldenAuthority">
+
+
+SPD v13.1 GOLDEN RULE ENGINE
+
+
+AUTHORITY:
+
+The Golden Rule Engine remains the
+authoritative validation layer.
+
+
+AUTHORITY FLOW:
+
+
+DOMAIN RULE ENGINE
+
+↓
+
+DOMAIN VALIDATION
+
+↓
+
+DOMAIN DECISION BRIDGE
+
+↓
+
+GOLDEN RULE ENGINE
+
+↓
+
+CAPTAIN AI LENA DECISION CORE
+
+
+
+SUPPORTED DOMAINS:
+
+
+✓ FIN — Financial Resilience
+
+✓ BHR — Business & Human Rights
+
+✓ CYB — Cyber Resilience
+
+✓ DC — Data Centre Resilience
+
+✓ INF — Infrastructure Resilience
+
+✓ ENG — Energy Resilience
+
+
+
+PRINCIPLES:
+
+
+✓ Deterministic Architecture
+
+✓ Auditable Decision Path
+
+✓ Traceable Validation
+
+✓ No Randomness
+
+✓ No Machine Learning Dependency
+
+
+
+VALIDATION STATE:
+
+READY
+
+
+</pre>
+
+
+</div>
+<script type="module">
+
+import {
+
+    executeDomainRule,
+    getDomainStatus,
+    buildDecisionContext,
+    validateDecisionContext
+
+}
+
+from "./domainIntegration.js";
+
+
+
+let currentScenario = "NORMAL";
+
+let scenarioIntensity = 50;
+
+
+
+function setText(id,value){
+
+    const element =
+    document.getElementById(id);
+
+
+    if(!element) return;
+
+
+    element.innerText =
+
+    typeof value === "string"
+
+    ?
+
+    value
+
+    :
+
+    JSON.stringify(
+        value,
+        null,
+        2
+    );
+
+}
+
+
+
+
+window.activateScenario=function(name){
+
+    currentScenario = name;
+
+
+    setText(
+        "scenarioPanel",
+        {
+
+            scenario:name,
+
+            intensity:
+            scenarioIntensity + "%",
+
+            status:
+            "ACTIVE"
+
+        }
+    );
+
+
+};
+
+
+
+
+
+window.updateIntensity=function(){
+
+    const slider =
+    document.getElementById(
+        "scenarioIntensity"
+    );
+
+
+    if(slider){
+
+        scenarioIntensity =
+        Number(slider.value);
+
+
+        setText(
+            "intensityValue",
+            scenarioIntensity + "%"
+        );
+
+    }
+
+};
+
+
+
+
+
+function buildSystemState(){
+
+return {
+
+
+scenario:
+currentScenario,
+
+
+event:
+currentScenario,
+
+
+intensity:
+scenarioIntensity,
+
+
+fx:
+scenarioIntensity,
+
+
+dc:
+scenarioIntensity,
+
+
+cyb:
+scenarioIntensity,
+
+
+inf:
+scenarioIntensity,
+
+
+energy:
+100 - scenarioIntensity,
+
+
+
+humanRightsCompliance:
+scenarioIntensity,
+
+
+workerSafety:
+scenarioIntensity,
+
+
+supplyChain:
+scenarioIntensity,
+
+
+governance:
+scenarioIntensity,
+
+
+communityImpact:
+scenarioIntensity,
+
+
+mode:
+"AUTONOMOUS",
+
+
+
+time:
+new Date()
+.toISOString()
+
+
+};
+
+}
+
+
+
+
+
+
+
+window.runLiveSystem=function(){
+
+try{
+
+
+const state =
+buildSystemState();
+
+
+
+setText(
+"state",
+state
+);
+
+
+
+
+const result =
+
+executeDomainRule(
+
+currentScenario,
+
+state
+
+);
+
+
+
+
+const context =
+
+buildDecisionContext(
+
+result.domainResult ?? result,
+
+result.bridgeResult ?? {},
+
+{
+
+domain:
+result.domain,
+
+type:
+currentScenario
+
+}
+
+);
+
+
+
+
+const validation =
+
+validateDecisionContext(
+context
+);
+
+
+
+
+
+setText(
+
+"assessment",
+
+result.assessment ??
+result
+
+);
+
+
+
+
+
+setText(
+
+"decision",
+
+{
+
+captainAILena:
+
+result.captainAILena ??
+
+result.decision ??
+
+"DECISION GENERATED",
+
+
+context
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"riskPanel",
+
+{
+
+risk:
+result.risk ?? "UNKNOWN",
+
+validation:
+validation.status
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"audit",
+
+{
+
+system:
+"SPD v13.1",
+
+scenario:
+currentScenario,
+
+domain:
+result.domain,
+
+authority:
+"GOLDEN RULE ENGINE",
+
+decisionCore:
+"CAPTAIN AI LENA",
+
+timestamp:
+new Date()
+.toISOString()
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"memoryCore",
+
+{
+
+status:
+"MEMORY CORE UPDATED",
+
+scenario:
+currentScenario
+
+}
+
+);
+
+
+
+
+
+setText(
+
+"pipelineLog",
+
+`
+
+SCENARIO ENGINE
+
+↓
+
+DOMAIN INTEGRATION
+
+↓
+
+DOMAIN RULE ENGINE
+
+↓
+
+GOLDEN RULE ENGINE
+
+↓
+
+CAPTAIN AI LENA
+
+↓
+
+AUDIT RECORD
+
+
+STATUS:
+COMPLETE
+
+`
+
+);
+
+
+
+
+
+setText(
+
+"systemStatus",
+
+"SYSTEM STATUS: AUTONOMOUS ENGINE RUNNING"
+
+);
+
+
+}
+
+catch(error){
+
+
+setText(
+
+"systemStatus",
+
+"SYSTEM ERROR"
+
+);
+
+
+setText(
+
+"audit",
+
+error.message
+
+);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+window.runAuthoritativeSelfTest=function(){
+
+
+setText(
+
+"selfTest",
+
+{
+
+engine:
+"SPD v13.1",
+
+status:
+"SELF TEST READY",
+
+authority:
+"GOLDEN RULE ENGINE"
+
+}
+
+);
+
+
+};
+
+
+
+
+
+
+
+window.runCorrectiveAction=function(){
+
+
+setText(
+
+"correctiveAction",
+
+"Captain AI Lena Corrective Action Framework Activated"
+
+);
+
+
+};
+
+
+
+
+
+
+
+window.resetScenario=function(){
+
+
+currentScenario="NORMAL";
+
+scenarioIntensity=0;
+
+
+setText(
+
+"scenarioPanel",
+
+{
+
+scenario:
+"NORMAL",
+
+status:
+"RESET"
+
+}
+
+);
+
+
+};
+
+
+
+
+
+
+setText(
+
+"constants",
+
+{
+
+version:
+"SPD v13.1",
+
+phi:
+1.618033988749895,
+
+architecture:
+"DETERMINISTIC",
+
+machineLearning:
+false,
+
+randomness:
+false
+
+}
+
+);
+
+
+
+
+
+console.log(
+
+"SPD v13.1 DOMAIN INTEGRATION READY",
+
+getDomainStatus()
+
+);
+
+
+
+</script>
+
+
+</body>
+
+</html>
