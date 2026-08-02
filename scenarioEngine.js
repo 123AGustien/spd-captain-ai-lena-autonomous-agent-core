@@ -1215,3 +1215,38 @@ status:
 
 
 };
+}
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DEFAULT EXPORT
+ * ============================================================
+ */
+
+
+export default {
+
+
+scenarioEngine,
+
+
+scenarios,
+
+
+getScenarioResponse,
+
+
+validateScenario,
+
+
+getScenarioStatus
+
+
+};
