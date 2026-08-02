@@ -1147,6 +1147,7 @@ const testInput = {
 scenario:
 
 "FIN_STRESS",
+ 
 
 
 
@@ -1160,3 +1161,75 @@ state:{
 
 
 fx:
+ /**
+ * ============================================================
+ * DOMAIN INTEGRATION COMPATIBILITY EXPORT
+ * ============================================================
+ */
+
+export function evaluateFINScenario(input = {})
+{
+
+    return finRuleEngine(
+        input
+    );
+
+}
+
+
+
+
+/**
+ * ============================================================
+ * FIN ENGINE TEST
+ * ============================================================
+ */
+
+export function testFINRuleEngine()
+{
+
+    const testInput = {
+
+        scenario:
+        "FIN_STRESS",
+
+        intensity:
+        100,
+
+        state:
+        {
+
+            fx:80,
+
+            energy:50,
+
+            cyb:40,
+
+            inf:50,
+
+            dc:30
+
+        }
+
+    };
+
+
+    return finRuleEngine(
+        testInput
+    );
+
+}
+
+
+
+
+
+export default {
+
+    finRuleEngine,
+
+    evaluateFINScenario,
+
+    testFINRuleEngine
+
+};
