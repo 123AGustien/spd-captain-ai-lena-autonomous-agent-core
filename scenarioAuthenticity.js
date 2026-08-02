@@ -947,3 +947,269 @@ simulationObjective:
 "Evaluate responsible community engagement response."
 
 },
+/**
+ * ============================================================
+ * INDIGENOUS RIGHTS
+ * ============================================================
+ */
+
+
+INDIGENOUS_RIGHTS:
+
+{
+
+scenario:
+
+"INDIGENOUS_RIGHTS",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Indigenous Rights Protection",
+
+
+operationalContext:
+
+"Indigenous stakeholder rights pressure",
+
+
+description:
+
+"Simulation of indigenous rights considerations affecting responsible operations and stakeholder relationships.",
+
+
+riskIndicators:
+
+[
+"Consultation gaps",
+"Land rights concerns",
+"Stakeholder engagement failures"
+],
+
+
+affectedDomains:
+
+[
+"BHR",
+"GOVERNANCE",
+"COMMUNITY"
+],
+
+
+simulationObjective:
+
+"Evaluate indigenous rights protection and engagement pathways."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * GRIEVANCE MECHANISM
+ * ============================================================
+ */
+
+
+GRIEVANCE_MECHANISM:
+
+{
+
+scenario:
+
+"GRIEVANCE_MECHANISM",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Human Rights Remedy",
+
+
+operationalContext:
+
+"Worker and stakeholder grievance pressure",
+
+
+description:
+
+"Simulation of grievance handling weaknesses affecting human rights accountability and organisational resilience.",
+
+
+riskIndicators:
+
+[
+"Complaint handling delays",
+"Lack of reporting channels",
+"Remedy process weakness"
+],
+
+
+affectedDomains:
+
+[
+"BHR",
+"GOVERNANCE",
+"OPS"
+],
+
+
+simulationObjective:
+
+"Evaluate grievance response and remedy mechanisms."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * END OF REGISTRY
+ * ============================================================
+ */
+
+
+};
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * GET SCENARIO AUTHENTICITY PROFILE
+ * ============================================================
+ */
+
+
+export function getScenarioAuthenticity(
+
+    scenario
+
+)
+
+{
+
+
+return (
+
+    SCENARIO_AUTHENTICITY_REGISTRY[scenario]
+
+    ||
+
+    {
+
+        scenario,
+
+
+        status:
+
+        "AUTHENTICITY PROFILE NOT REGISTERED"
+
+    }
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * VALIDATE SCENARIO AUTHENTICITY
+ * ============================================================
+ */
+
+
+export function validateScenarioAuthenticity(
+
+    scenario
+
+)
+
+{
+
+
+return {
+
+
+scenario,
+
+
+
+registered:
+
+Boolean(
+
+SCENARIO_AUTHENTICITY_REGISTRY[scenario]
+
+),
+
+
+
+authority:
+
+SCENARIO_AUTHORITY,
+
+
+
+goldenRuleAuthority:
+
+"GOLDEN RULE ENGINE REMAINS AUTHORITATIVE"
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+/**
+ * ============================================================
+ * LIST AVAILABLE SCENARIO AUTHENTICITY PROFILES
+ * ============================================================
+ */
+
+
+export function listScenarioAuthenticity()
+
+{
+
+
+return Object.keys(
+
+SCENARIO_AUTHENTICITY_REGISTRY
+
+);
+
+
+}
