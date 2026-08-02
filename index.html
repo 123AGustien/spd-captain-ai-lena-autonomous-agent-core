@@ -83,7 +83,8 @@ background:#080d11;
 
 .control-buttons,
 .scenario-controls,
-.fin-controls {
+.fin-controls,
+.bhr-controls {
 
 display:flex;
 flex-wrap:wrap;
@@ -95,7 +96,7 @@ gap:10px;
 button {
 
 background:#00ff88;
-color:#000000;
+color:#000;
 border:2px solid #00ff88;
 padding:14px 20px;
 border-radius:6px;
@@ -128,14 +129,6 @@ background:#ffb000;
 }
 
 
-.danger {
-
-background:#ff5555;
-color:#ffffff;
-
-}
-
-
 .scenario-button {
 
 background:#1b2730;
@@ -153,12 +146,19 @@ border:1px solid #00bfff;
 }
 
 
-.fin-label {
+.bhr-button {
 
-width:100%;
-color:#00bfff;
-font-weight:bold;
-margin-top:10px;
+background:#24172c;
+color:#ffffff;
+border:1px solid #ff66ff;
+
+}
+
+
+.danger {
+
+background:#ff5555;
+color:#ffffff;
 
 }
 
@@ -226,7 +226,7 @@ border-radius:4px;
 .stage.active {
 
 background:#00ff88;
-color:#000000;
+color:#000;
 
 }
 
@@ -268,7 +268,6 @@ width:100%;
 
 }
 
-
 body {
 
 padding:10px;
@@ -276,6 +275,7 @@ padding:10px;
 }
 
 }
+
 
 </style>
 
@@ -286,9 +286,7 @@ padding:10px;
 
 
 <h1>
-
 🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
-
 </h1>
 
 
@@ -298,15 +296,26 @@ Captain AI Lena Autonomous Agent Core
 
 <br>
 
-DATA →
+DATA → ALGORITHMS → COMPUTE
+
+<br>
+
+SELF-TEST → FAULT IDENTIFICATION → CAPTAIN AI LENA DECISION → CORRECTIVE ACTION → RE-TEST
+
+</div>
+
+
+<div class="status" id="systemStatus">
+
+SYSTEM STATUS: INITIALIZING...
+
+</div>
 <!-- SYSTEM CONTROLS -->
 
 <div class="panel">
 
 <div class="title">
-
 🎛️ SYSTEM CONTROLS
-
 </div>
 
 
@@ -314,33 +323,25 @@ DATA →
 
 
 <button onclick="runLiveSystem()">
-
 ▶ RUN SYSTEM
-
 </button>
 
 
 <button class="self-test-button"
 onclick="runAuthoritativeSelfTest()">
-
 🧪 SELF TEST
-
 </button>
 
 
 <button class="corrective-button"
 onclick="runCorrectiveAction()">
-
 🛠️ CORRECTIVE ACTION
-
 </button>
 
 
 </div>
 
 </div>
-
-
 
 
 
@@ -349,9 +350,7 @@ onclick="runCorrectiveAction()">
 <div class="panel">
 
 <div class="title">
-
 📊 SYSTEM DOMAIN MONITOR
-
 </div>
 
 
@@ -401,69 +400,53 @@ onclick="runCorrectiveAction()">
 
 
 
-
-
 <!-- SCENARIO CONTROL -->
 
 <div class="panel">
 
 <div class="title">
-
 🎛️ SCENARIO CONTROL
-
 </div>
 
 
 <div class="scenario-controls">
 
 
-
 <button class="scenario-button"
-onclick="activateScenario('FX_SHOCK')">
-
+onclick="activateScenario('FX_STRESS')">
 FX STRESS
-
 </button>
-
 
 
 <button class="scenario-button"
 onclick="activateScenario('DC_LOAD')">
-
 DC LOAD
-
 </button>
-
 
 
 <button class="scenario-button"
 onclick="activateScenario('CYBER_EVENT')">
-
 CYBER EVENT
-
 </button>
-
 
 
 <button class="scenario-button"
-onclick="activateScenario('INFRASTRUCTURE_STRESS')">
-
+onclick="activateScenario('INFRA_STRAIN')">
 INFRA STRAIN
-
 </button>
-
 
 
 <button class="scenario-button"
 onclick="activateScenario('BIODIESEL_SHORTAGE')">
-
 BIODIESEL SHORTAGE
-
 </button>
 
 
+</div>
 
 
+
+<!-- FIN DOMAIN -->
 
 <div class="fin-label">
 
@@ -472,54 +455,45 @@ BIODIESEL SHORTAGE
 </div>
 
 
+<div class="fin-controls">
+
 
 <button class="fin-button"
 onclick="activateScenario('FIN_STRESS')">
-
 FIN STRESS
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('BANKING_STRESS')">
-
 BANKING STRESS
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('LIQUIDITY_CRISIS')">
-
 LIQUIDITY CRISIS
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('CREDIT_STRESS')">
-
 CREDIT STRESS
-
 </button>
-
 
 
 <button class="fin-button"
 onclick="activateScenario('SOVEREIGN_DEBT')">
-
 SOVEREIGN DEBT
-
 </button>
 
 
+</div>
 
 
 
+
+<!-- BHR DOMAIN -->
 
 <div class="fin-label">
 
@@ -528,118 +502,88 @@ SOVEREIGN DEBT
 </div>
 
 
+<div class="bhr-controls">
 
 
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
-
 HUMAN RIGHTS DUE DILIGENCE
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('FORCED_LABOUR')">
-
 FORCED LABOUR
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('CHILD_LABOUR')">
-
 CHILD LABOUR
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('DISCRIMINATION')">
-
 DISCRIMINATION
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
-
 OCCUPATIONAL HEALTH & SAFETY
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('MODERN_SLAVERY')">
-
 MODERN SLAVERY
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('COMMUNITY_IMPACT')">
-
 COMMUNITY IMPACT
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('INDIGENOUS_RIGHTS')">
-
 INDIGENOUS RIGHTS
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('SUPPLY_CHAIN_RISK')">
-
 SUPPLY CHAIN RISK
-
 </button>
 
 
-
-<button class="fin-button"
+<button class="bhr-button"
 onclick="activateScenario('GRIEVANCE_MECHANISM')">
-
 GRIEVANCE MECHANISM
-
 </button>
 
+
+</div>
+
+
+<br>
 
 
 <button class="danger"
 onclick="resetScenario()">
-
 RESET
-
 </button>
 
 
-
 </div>
-
-</div>
-<!-- SCENARIO INTENSITY -->
+<!-- SCENARIO INTENSITY CONTROL -->
 
 <div class="panel">
 
 <div class="title">
-
 🎚️ SCENARIO INTENSITY CONTROL
-
 </div>
 
 
@@ -659,9 +603,7 @@ oninput="updateIntensity()"
 Intensity:
 
 <span id="intensityValue">
-
 50%
-
 </span>
 
 </div>
@@ -672,15 +614,12 @@ Intensity:
 
 
 
-
 <!-- SCENARIO PANEL -->
 
 <div class="panel">
 
 <div class="title">
-
 🧪 SCENARIO PANEL
-
 </div>
 
 
@@ -697,15 +636,12 @@ Waiting...
 
 
 
-
 <!-- RAW SYSTEM STATE -->
 
 <div class="panel">
 
 <div class="title">
-
 📊 RAW SYSTEM STATE
-
 </div>
 
 
@@ -723,15 +659,12 @@ Waiting...
 
 
 
-
 <!-- GOLDEN RULE ENGINE -->
 
 <div class="panel">
 
 <div class="title">
-
 🛰️ GOLDEN RULE ENGINE
-
 </div>
 
 
@@ -808,21 +741,12 @@ Waiting...
 
 
 </div>
-
-
-
-
-
-
-
 <!-- SYSTEM ASSESSMENT -->
 
 <div class="panel">
 
 <div class="title">
-
 ⚠️ SYSTEM ASSESSMENT
-
 </div>
 
 
@@ -839,18 +763,13 @@ Waiting...
 
 
 
-
-
 <!-- RISK PANEL -->
 
 <div class="panel">
 
 <div class="title">
-
 🚨 RISK PANEL
-
 </div>
-
 
 
 <pre id="riskPanel">
@@ -872,14 +791,12 @@ Waiting...
 
 
 
-<!-- CAPTAIN AI LENA DECISION -->
+<!-- CAPTAIN AI LENA DECISION CORE -->
 
 <div class="panel">
 
 <div class="title">
-
 ⚙️ CAPTAIN AI LENA DECISION CORE
-
 </div>
 
 
@@ -903,9 +820,7 @@ Waiting...
 <div class="panel">
 
 <div class="title">
-
 💡 SOLUTION OPTIONS
-
 </div>
 
 
@@ -924,14 +839,12 @@ Waiting for system assessment...
 
 
 
-<!-- ACTION SEQUENCE -->
+<!-- ACTION SEQUENCE PROMPT -->
 
 <div class="panel">
 
 <div class="title">
-
 🚨 ACTION SEQUENCE PROMPT
-
 </div>
 
 
@@ -943,21 +856,12 @@ Waiting...
 
 
 </div>
-
-
-
-
-
-
-
 <!-- MEMORY CORE -->
 
 <div class="panel">
 
 <div class="title">
-
 🧠 MEMORY CORE
-
 </div>
 
 
@@ -981,9 +885,7 @@ Memory Core Waiting...
 <div class="panel">
 
 <div class="title">
-
 🧾 SPD v13.1 AUDIT RECORD
-
 </div>
 
 
@@ -1007,9 +909,7 @@ Waiting...
 <div class="panel">
 
 <div class="title">
-
 📜 PIPELINE LOG
-
 </div>
 
 
@@ -1021,14 +921,19 @@ PIPELINE LOG ACTIVE
 
 
 </div>
+
+
+
+
+
+
+
 <!-- SELF TEST -->
 
 <div class="panel">
 
 <div class="title">
-
 🧪 SPD v13.1 SELF-TEST
-
 </div>
 
 
@@ -1052,9 +957,7 @@ Self-test not executed.
 <div class="panel">
 
 <div class="title">
-
 ⚠️ FAULT IDENTIFICATION
-
 </div>
 
 
@@ -1078,9 +981,7 @@ No fault assessment available.
 <div class="panel">
 
 <div class="title">
-
 🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
-
 </div>
 
 
@@ -1104,9 +1005,7 @@ No corrective action available.
 <div class="panel">
 
 <div class="title">
-
 🔁 RE-TEST VALIDATION
-
 </div>
 
 
@@ -1130,9 +1029,7 @@ Re-test not executed.
 <div class="panel">
 
 <div class="title">
-
 📐 SYSTEM CONSTANTS
-
 </div>
 
 
@@ -1156,9 +1053,7 @@ Waiting...
 <div class="panel">
 
 <div class="title">
-
 🔄 AGENT LOOP MONITOR
-
 </div>
 
 
@@ -1170,500 +1065,3 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 
 
 </div>
-
-
-
-
-
-
-
-<!-- JAVASCRIPT ENGINE CONNECTION -->
-
-<script type="module">
-
-
-/*
-
-SPD v13.1 MODULE CONNECTION LAYER
-
-
-COCKPIT
-
-↓
-
-domainIntegration.js
-
-↓
-
-Domain Rule Engines
-
-↓
-
-Golden Rule Engine
-
-↓
-
-Captain AI Lena Decision Core
-
-
-*/
-
-
-import {
-
-runGoldenRule,
-
-PHI,
-
-GOLDEN_RULE_STAGES
-
-}
-
-from "./goldenRuleEngine.js";
-
-
-
-import {
-
-runSelfTest,
-
-runValidationLoop
-
-}
-
-from "./selfTestValidationEngine.js";
-
-
-
-/*
-
-BASE STATE
-
-*/
-
-
-const baseState = {
-
-
-fx:12,
-
-energy:25,
-
-cyb:40,
-
-inf:10,
-
-dc:20,
-
-bhr:0
-
-};
-
-
-
-let currentScenario = "FX_SHOCK";
-
-
-let scenarioIntensity = 50;
-
-
-
-
-
-function setText(id,value){
-
-
-const element=document.getElementById(id);
-
-
-if(!element)return;
-
-
-element.innerText =
-
-typeof value === "string"
-
-?
-
-value
-
-:
-
-JSON.stringify(value,null,2);
-
-
-}
-
-
-
-
-
-
-function updateIntensity(){
-
-
-scenarioIntensity =
-
-Number(
-
-document.getElementById(
-"scenarioIntensity"
-).value
-
-);
-
-
-setText(
-
-"intensityValue",
-
-scenarioIntensity+"%"
-
-);
-
-
-}
-
-
-window.updateIntensity = updateIntensity;
-
-
-
-
-
-
-
-function buildSystemState(){
-
-
-const factor =
-scenarioIntensity / 100;
-
-
-
-let state = {
-
-
-...baseState,
-
-
-scenario:currentScenario,
-
-
-event:currentScenario,
-
-
-intensity:scenarioIntensity,
-
-
-mode:"AUTONOMOUS",
-
-
-time:new Date().toISOString()
-
-
-};
-
-
-
-
-if(currentScenario.includes("HUMAN") ||
-
-currentScenario.includes("LABOUR") ||
-
-currentScenario.includes("BHR") ||
-
-currentScenario.includes("SUPPLY") ||
-
-currentScenario.includes("COMMUNITY"))
-
-{
-
-
-state.bhr=scenarioIntensity;
-
-
-state.humanRightsCompliance=scenarioIntensity;
-
-state.workerSafety=scenarioIntensity;
-
-state.supplyChain=scenarioIntensity;
-
-state.governance=scenarioIntensity;
-
-state.communityImpact=scenarioIntensity;
-
-
-}
-
-
-
-return state;
-
-
-}
-
-
-
-
-
-
-
-function updateDomainMonitor(state){
-
-
-setText("domainFX",state.fx);
-
-setText("domainDC",state.dc);
-
-setText("domainCYB",state.cyb);
-
-setText("domainINF",state.inf);
-
-setText("domainEN",state.energy);
-
-setText("domainBHR",state.bhr ?? 0);
-
-
-}
-
-
-
-
-
-
-
-window.activateScenario=function(name){
-
-
-currentScenario=name;
-
-
-setText(
-
-"scenarioPanel",
-
-{
-
-activeScenario:name,
-
-intensity:scenarioIntensity
-
-}
-
-);
-
-
-};
-
-
-
-
-
-
-
-
-window.runLiveSystem=function(){
-
-
-const state =
-buildSystemState();
-
-
-updateDomainMonitor(state);
-
-
-setText("state",state);
-
-
-setText(
-
-"systemStatus",
-
-"SYSTEM STATUS: AUTONOMOUS ENGINE RUNNING"
-
-);
-
-
-
-try{
-
-
-const result =
-runGoldenRule(state);
-
-
-
-setText(
-
-"assessment",
-
-result.assessment ?? result
-
-);
-
-
-
-setText(
-
-"decision",
-
-result.decision ??
-
-"Captain AI Lena Decision Generated"
-
-);
-
-
-
-setText(
-
-"audit",
-
-{
-
-scenario:currentScenario,
-
-timestamp:new Date().toISOString(),
-
-status:"VALIDATED"
-
-}
-
-);
-
-
-
-}
-
-catch(error){
-
-
-setText(
-
-"faultIdentification",
-
-error.message
-
-);
-
-
-}
-
-
-
-};
-
-
-
-
-
-
-
-window.runAuthoritativeSelfTest=function(){
-
-
-try{
-
-
-const result =
-runSelfTest();
-
-
-setText(
-
-"selfTest",
-
-result
-
-);
-
-
-}
-
-
-catch(error){
-
-
-setText(
-
-"selfTest",
-
-error.message
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-
-
-window.runCorrectiveAction=function(){
-
-
-setText(
-
-"correctiveAction",
-
-"Captain AI Lena Corrective Action Framework Activated"
-
-);
-
-
-};
-
-
-
-
-
-
-
-window.resetScenario=function(){
-
-
-currentScenario="FX_SHOCK";
-
-
-scenarioIntensity=50;
-
-
-setText(
-
-"scenarioPanel",
-
-"Scenario reset"
-
-);
-
-
-};
-
-
-setText(
-
-"constants",
-
-{
-
-PHI:PHI,
-
-GoldenRule:"OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE"
-
-}
-
-);
-
-
-</script>
-
-
-</body>
-
-</html>
