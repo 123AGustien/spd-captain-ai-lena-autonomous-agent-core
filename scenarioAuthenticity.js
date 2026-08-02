@@ -751,3 +751,260 @@ operationalContext:
 description:
 
 "Simulation
+description:
+
+"Simulation of potential forced labour indicators within operational or supplier environments.",
+
+
+riskIndicators:
+
+[
+
+"Worker freedom concerns",
+
+"Recruitment fee risks",
+
+"Restricted movement indicators",
+
+"Supplier compliance failures"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"SUPPLY_CHAIN",
+
+"GOVERNANCE"
+
+],
+
+
+simulationObjective:
+
+"Evaluate human rights due diligence and resilience response."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * CHILD LABOUR
+ * ============================================================
+ */
+
+
+CHILD_LABOUR:
+
+{
+
+scenario:
+
+"CHILD_LABOUR",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Human Rights Protection",
+
+
+operationalContext:
+
+"Child labour risk exposure",
+
+
+description:
+
+"Simulation of child labour indicators affecting supply chain responsibility and human rights obligations.",
+
+
+riskIndicators:
+
+[
+
+"Age verification weakness",
+
+"Supplier audit failures",
+
+"Labour protection concerns"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"SUPPLY_CHAIN"
+
+],
+
+
+simulationObjective:
+
+"Evaluate protective controls and escalation pathways."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * DISCRIMINATION
+ * ============================================================
+ */
+
+
+DISCRIMINATION:
+
+{
+
+scenario:
+
+"DISCRIMINATION",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Equal Treatment and Inclusion",
+
+
+operationalContext:
+
+"Workplace discrimination pressure",
+
+
+description:
+
+"Simulation of discrimination risks affecting workforce resilience and organisational responsibility.",
+
+
+riskIndicators:
+
+[
+
+"Equal opportunity concerns",
+
+"Workplace complaints",
+
+"Policy enforcement gaps"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"GOVERNANCE",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate fair treatment controls and corrective response."
+
+},
+
+
+
+
+
+
+/**
+ * ============================================================
+ * SUPPLY CHAIN RISK
+ * ============================================================
+ */
+
+
+SUPPLY_CHAIN_RISK:
+
+{
+
+scenario:
+
+"SUPPLY_CHAIN_RISK",
+
+
+domain:
+
+"BHR",
+
+
+category:
+
+"Responsible Supply Chain",
+
+
+operationalContext:
+
+"Supplier compliance and resilience pressure",
+
+
+description:
+
+"Simulation of supply chain human rights and operational exposure.",
+
+
+riskIndicators:
+
+[
+
+"Supplier compliance gaps",
+
+"Third-party exposure",
+
+"Ethical sourcing concerns",
+
+"Audit weaknesses"
+
+],
+
+
+affectedDomains:
+
+[
+
+"BHR",
+
+"FIN",
+
+"OPS"
+
+],
+
+
+simulationObjective:
+
+"Evaluate responsible supply chain resilience."
+
+},
