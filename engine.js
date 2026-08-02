@@ -18,6 +18,7 @@
 // Captain AI Lena Decision Core remains final decision authority.
 //
 // DOMAIN ENGINES:
+//
 // FIN
 // BHR
 //
@@ -35,61 +36,38 @@
 
 
 import {
-
     captainAILena
-
 }
-
 from "./captainAILena.js";
 
 
-
 import {
-
     GOLDEN_RATIO
-
 }
-
 from "./constants/math.constants.js";
 
 
-
 import {
-
     runAnalytics
-
 }
-
 from "./analytics/index.js";
 
 
-
 import {
-
     executeMemoryCore
-
 }
-
 from "./memoryCore.js";
 
 
-
 import {
-
     createAuditRecord
-
 }
-
 from "./auditRecord.js";
 
 
-
 import {
-
     executeDomainRule
-
 }
-
 from "./domainIntegration.js";
 
 
@@ -156,7 +134,6 @@ function validateInput(state){
 
 
 
-
 // ============================================================
 // NORMALIZE STATE
 //
@@ -172,65 +149,33 @@ return {
 
     fx:
 
-    Number(
-
-        state.fx ?? 0
-
-    ),
-
+    Number(state.fx ?? 0),
 
 
     energy:
 
-    Number(
-
-        state.energy ?? 50
-
-    ),
-
+    Number(state.energy ?? 50),
 
 
     cyb:
 
-    Number(
-
-        state.cyb ?? 50
-
-    ),
-
+    Number(state.cyb ?? 50),
 
 
     inf:
 
-    Number(
-
-        state.inf ?? 0
-
-    ),
-
+    Number(state.inf ?? 0),
 
 
     dc:
 
-    Number(
-
-        state.dc ?? 0
-
-    ),
-
-
+    Number(state.dc ?? 0),
 
 
 
     event:
 
-    state.event
-
-    ??
-
-    "NORMAL",
-
-
+    state.event ?? "NORMAL",
 
 
 
@@ -248,8 +193,6 @@ return {
 
 
 
-
-
     mode:
 
     state.mode
@@ -260,19 +203,9 @@ return {
 
 
 
-
-
-    // FIX 4 INTENSITY BRIDGE
-
     intensity:
 
-    Number(
-
-        state.intensity ?? 50
-
-    ),
-
-
+    Number(state.intensity ?? 50),
 
 
 
@@ -285,6 +218,11 @@ return {
 
 
 }
+
+
+
+
+
 // ============================================================
 // MAIN EXECUTION ENGINE
 // ============================================================
@@ -315,6 +253,7 @@ const inputState = {
 
 
 
+
 // ============================================================
 // VERIFY
 // ============================================================
@@ -331,13 +270,13 @@ normalizeState(
 
 
 
+
 // ============================================================
 // DOMAIN INTEGRATION
 //
 // FIN + BHR
 //
-// Intensity is passed through
-// Domain engines remain advisory
+// Intensity passed through
 //
 // ============================================================
 
@@ -357,10 +296,10 @@ executeDomainRule(
 
 
 
+
+
 // ============================================================
 // ASSESS
-//
-// ANALYTICS + DOMAIN CONTEXT
 // ============================================================
 
 
@@ -378,9 +317,11 @@ runAnalytics(
 
     domainIntegrationResult
 
+
 }
 
 );
+
 
 
 
@@ -412,16 +353,15 @@ captainAILena(
     analytics,
 
 
-
     authority:
 
     "CAPTAIN AI LENA DECISION CORE",
 
 
-
     goldenRuleAuthority:
 
     true
+
 
 }
 
@@ -491,7 +431,6 @@ executeMemoryCore(
     verifiedState.scenario,
 
 
-
     domain:
 
     domainIntegrationResult?.domain
@@ -507,13 +446,10 @@ executeMemoryCore(
     verifiedState.intensity,
 
 
-
     decision,
 
 
-
     action,
-
 
 
     timestamp:
@@ -547,9 +483,7 @@ createAuditRecord(
     inputState,
 
 
-
     verifiedState,
-
 
 
     domainIntegration:
@@ -557,23 +491,18 @@ createAuditRecord(
     domainIntegrationResult,
 
 
-
     decision,
-
 
 
     action,
 
 
-
     memory,
-
 
 
     pipeline:
 
     GOLDEN_RULE_STAGES,
-
 
 
     authority:
@@ -635,7 +564,35 @@ return {
 
     scenario:
 
-    verifiedState.sc
+    verifiedState.scenario,
+
+
+
+    domainIntegration:
+
+    domainIntegrationResult,
+
+
+
+    analytics,
+
+
+
+    decision,
+
+
+
+    action,
+
+
+
+    memory,
+
+
+
+    audit,
+
+
 
     constants:
 
@@ -647,12 +604,10 @@ return {
         GOLDEN_RATIO,
 
 
-
         GOLDEN_RULE_STAGES
 
 
     },
-
 
 
 
@@ -698,13 +653,13 @@ return {
         false,
 
 
+
         randomness:
 
         false
 
 
     },
-
 
 
 
@@ -748,8 +703,6 @@ export const ENGINE_STATUS = {
 
 
 
-
-
     pipeline:
 
     [
@@ -770,9 +723,6 @@ export const ENGINE_STATUS = {
 
 
 
-
-
-
     domains:
 
     [
@@ -782,9 +732,6 @@ export const ENGINE_STATUS = {
         "BHR"
 
     ],
-
-
-
 
 
 
@@ -804,15 +751,9 @@ export const ENGINE_STATUS = {
 
 
 
-
-
-
     authority:
 
     "CAPTAIN AI LENA DECISION CORE",
-
-
-
 
 
 
@@ -822,13 +763,9 @@ export const ENGINE_STATUS = {
 
 
 
-
-
     deterministic:
 
     true,
-
-
 
 
 
@@ -838,13 +775,9 @@ export const ENGINE_STATUS = {
 
 
 
-
-
     randomness:
 
     false,
-
-
 
 
 
