@@ -3,20 +3,27 @@
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  * Captain AI Lena Autonomous Agent Core
  *
- * Purpose:
- * UI Scenario Button
- *        ↓
- * Domain Integration
- *        ↓
- * Domain Rule Engine
- *        ↓
- * Golden Rule Engine
- *        ↓
- * Captain AI Lena Decision Core
+ * UI
+ *  ↓
+ * DOMAIN INTEGRATION
+ *  ↓
+ * DOMAIN RULE ENGINE
+ *  ↓
+ * GOLDEN RULE ENGINE
+ *  ↓
+ * CAPTAIN AI LENA DECISION CORE
  *
  * Golden Rule Engine remains authoritative.
  * ============================================================
  */
+
+
+import {
+
+  runGoldenRule
+
+} from "./goldenRuleEngine.js";
+
 
 
 /* ============================================================
@@ -25,37 +32,38 @@
 
 export const DOMAIN_REGISTRY = {
 
-  CORE: {
-    id: "CORE",
-    status: "ACTIVE"
+  CORE:{
+    id:"CORE",
+    status:"ACTIVE"
   },
 
-  FIN: {
-    id: "FIN",
-    status: "ACTIVE"
+  FIN:{
+    id:"FIN",
+    status:"ACTIVE"
   },
 
-  BHR: {
-    id: "BHR",
-    status: "ACTIVE"
+  BHR:{
+    id:"BHR",
+    status:"ACTIVE"
   },
 
-  DC: {
-    id: "DC",
-    status: "PLANNED"
+  DC:{
+    id:"DC",
+    status:"PLANNED"
   },
 
-  CYB: {
-    id: "CYB",
-    status: "PLANNED"
+  CYB:{
+    id:"CYB",
+    status:"PLANNED"
   },
 
-  INF: {
-    id: "INF",
-    status: "PLANNED"
+  INF:{
+    id:"INF",
+    status:"PLANNED"
   }
 
 };
+
 
 
 /* ============================================================
@@ -65,8 +73,9 @@ export const DOMAIN_REGISTRY = {
 const DOMAIN_ENGINES = {};
 
 
+
 /* ============================================================
-   REGISTER DOMAIN ENGINE
+   REGISTER ENGINE
 ============================================================ */
 
 export function registerDomainEngine(
@@ -74,18 +83,21 @@ export function registerDomainEngine(
   engine
 ){
 
-  DOMAIN_ENGINES[domain] = engine;
+  if(typeof engine === "function"){
+
+    DOMAIN_ENGINES[domain]=engine;
+
+  }
 
 }
 
 
+
 /* ============================================================
-   VERIFY DOMAIN INPUT
+   INPUT VALIDATION
 ============================================================ */
 
-export function verifyDomainInput(
-  state
-){
+export function verifyDomainInput(state){
 
   return (
 
@@ -98,38 +110,40 @@ export function verifyDomainInput(
 }
 
 
+
 /* ============================================================
    LOAD FIN ENGINE
 ============================================================ */
 
 async function loadFINEngine(){
 
-  try {
+try{
 
-    const module =
-      await import(
-        "./FIN/fin-rule-engine.js"
-      );
-
-
-    registerDomainEngine(
-      "FIN",
-      module.finRuleEngine
-    );
+const module =
+await import(
+"./FIN/fin-rule-engine.js"
+);
 
 
-  }
+registerDomainEngine(
+"FIN",
+module.finRuleEngine
+);
 
-  catch(error){
-
-    console.warn(
-      "FIN engine unavailable",
-      error.message
-    );
-
-  }
 
 }
+
+catch(error){
+
+console.warn(
+"FIN ENGINE UNAVAILABLE",
+error.message
+);
+
+}
+
+}
+
 
 
 /* ============================================================
@@ -138,32 +152,33 @@ async function loadFINEngine(){
 
 async function loadBHREngine(){
 
-  try {
+try{
 
-    const module =
-      await import(
-        "./BHR/bhr-rule-engine.js"
-      );
-
-
-    registerDomainEngine(
-      "BHR",
-      module.bhrRuleEngine
-    );
+const module =
+await import(
+"./BHR/bhr-rule-engine.js"
+);
 
 
-  }
+registerDomainEngine(
+"BHR",
+module.bhrRuleEngine
+);
 
-  catch(error){
-
-    console.warn(
-      "BHR engine unavailable",
-      error.message
-    );
-
-  }
 
 }
+
+catch(error){
+
+console.warn(
+"BHR ENGINE UNAVAILABLE",
+error.message
+);
+
+}
+
+}
+
 
 
 /* ============================================================
@@ -173,81 +188,144 @@ async function loadBHREngine(){
 const SCENARIO_DOMAIN_MAP = {
 
 
-  FIN_STRESS:
-    "FIN",
+FIN_STRESS:"FIN",
 
-  BANKING_STRESS:
-    "FIN",
+BANKING_STRESS:"FIN",
 
-  LIQUIDITY_CRISIS:
-    "FIN",
+LIQUIDITY_CRISIS:"FIN",
 
-  CREDIT_STRESS:
-    "FIN",
+CREDIT_STRESS:"FIN",
 
-  SOVEREIGN_DEBT:
-    "FIN",
+SOVEREIGN_DEBT:"FIN",
 
 
-  BHR_COMPLIANCE_STRESS:
-    "BHR",
 
-  BHR_WORKER_SAFETY_EVENT:
-    "BHR",
+BHR_COMPLIANCE_STRESS:"BHR",
 
-  BHR_SUPPLY_CHAIN_RISK:
-    "BHR",
+BHR_WORKER_SAFETY_EVENT:"BHR",
 
-  BHR_COMMUNITY_IMPACT:
-    "BHR",
+BHR_SUPPLY_CHAIN_RISK:"BHR",
 
-  BHR_GOVERNANCE:
-    "BHR"
+BHR_COMMUNITY_IMPACT:"BHR",
+
+BHR_GOVERNANCE:"BHR"
 
 
 };
 
 
+
 /* ============================================================
-   GET DOMAIN FROM SCENARIO
+   GET DOMAIN
 ============================================================ */
 
 export function getScenarioDomain(
-  scenario
+scenario
 ){
 
-  return (
+return (
 
-    SCENARIO_DOMAIN_MAP[scenario]
+SCENARIO_DOMAIN_MAP[scenario]
 
-    ||
+||
 
-    "CORE"
+"CORE"
 
-  );
+);
 
 }
 
 
+
 /* ============================================================
-   GET DOMAIN STATUS
+   DECISION CONTEXT BUILDER
+============================================================ */
+
+export function buildDecisionContext(
+
+domainResult,
+
+metadata={}
+
+){
+
+return {
+
+domainResult,
+
+metadata,
+
+authority:
+
+"GOLDEN RULE ENGINE",
+
+decisionCore:
+
+"CAPTAIN AI LENA"
+
+};
+
+}
+
+
+
+/* ============================================================
+   DECISION VALIDATION
+============================================================ */
+
+export function validateDecisionContext(
+context
+){
+
+return {
+
+status:
+
+context && context.authority ===
+
+"GOLDEN RULE ENGINE"
+
+?
+
+"VALID"
+
+:
+
+"INVALID",
+
+checked:
+
+true
+
+};
+
+}
+
+
+
+/* ============================================================
+   DOMAIN STATUS
 ============================================================ */
 
 export function getDomainStatus(){
 
-  return {
+return {
 
-    registry:
-      DOMAIN_REGISTRY,
+registry:
 
-    engines:
-      Object.keys(
-        DOMAIN_ENGINES
-      )
+DOMAIN_REGISTRY,
 
-  };
+
+loadedEngines:
+
+Object.keys(
+DOMAIN_ENGINES
+)
+
+};
 
 }
+
 
 
 /* ============================================================
@@ -256,123 +334,145 @@ export function getDomainStatus(){
 
 export async function executeDomainRule(
 
-  scenario,
+scenario,
 
-  state
+state
 
 ){
 
 
-  if(
-    !verifyDomainInput(state)
-  ){
+if(!verifyDomainInput(state)){
 
-    return {
+return {
 
-      status:
-        "INVALID_DOMAIN_INPUT"
+status:
+"INVALID_DOMAIN_INPUT"
 
-    };
+};
 
-  }
+}
 
 
-  await loadFINEngine();
 
-  await loadBHREngine();
+await loadFINEngine();
 
-
-  const domain =
-    getScenarioDomain(
-      scenario
-    );
+await loadBHREngine();
 
 
-  const engine =
-    DOMAIN_ENGINES[domain];
+
+const domain =
+getScenarioDomain(
+scenario
+);
 
 
-  if(
-    typeof engine !== "function"
-  ){
 
-    return {
-
-      domain,
-
-      status:
-        "NO_DOMAIN_ENGINE",
-
-      message:
-        "Scenario routed to domain but engine unavailable."
-
-    };
-
-  }
+const engine =
+DOMAIN_ENGINES[domain];
 
 
-  try {
+
+let domainResult;
 
 
-    const result =
-      engine({
 
-        scenario,
-
-        state,
-
-        intensity:
-          state.intensity,
-
-        mode:
-          state.mode,
-
-        time:
-          state.time
-
-      });
+if(typeof engine === "function"){
 
 
-    return {
+domainResult =
 
-      domain,
+engine({
 
-      status:
-        "DOMAIN_EXECUTION_COMPLETE",
+scenario,
 
-      result
+state,
 
-    };
+intensity:
+state.intensity,
 
+mode:
+state.mode,
 
-  }
+time:
+state.time
 
-  catch(error){
-
-
-    return {
-
-      domain,
-
-      status:
-        "DOMAIN_EXECUTION_ERROR",
-
-      message:
-        error.message
-
-    };
+});
 
 
-  }
+}
+else{
+
+
+domainResult={
+
+status:
+"NO_DOMAIN_ENGINE",
+
+domain
+
+};
+
+}
+
+
+
+/* ============================================================
+   GOLDEN RULE AUTHORITY
+============================================================ */
+
+
+const goldenResult =
+
+runGoldenRule(
+
+state
+
+);
+
+
+
+return {
+
+
+domain,
+
+
+status:
+
+"DOMAIN_EXECUTION_COMPLETE",
+
+
+
+domainResult,
+
+
+goldenResult,
+
+
+captainAILena:{
+
+decision:
+
+goldenResult.decision,
+
+action:
+
+goldenResult.actionSequence
+
+}
+
+
+};
 
 
 }
 
 
+
 /* ============================================================
-   INITIAL STATUS
+   READY
 ============================================================ */
 
 console.log(
-  "SPD v13.1 Domain Integration Layer Loaded"
+"SPD v13.1 DOMAIN INTEGRATION LAYER READY"
 );
