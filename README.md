@@ -1,4 +1,6 @@
-
+Yes, the orchestration engine is a possible future backbone for FIN/BHR integration.
+No, we are not replacing the current SPD workflow yet.
+First we complete Orbital module validation.
 🧭 ACTION RULE 1 — FX_SHOCK OPERATIONAL TEST
 
 Action Rule 1 is tested through the SPD v13.1 scenario engine using the FX_SHOCK scenario.
