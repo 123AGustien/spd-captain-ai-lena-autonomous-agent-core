@@ -1,385 +1,620 @@
- /**
-  * SPD v13.1 — BHR DOMAIN RULE ENGINE
-  *
-  * Business & Human Rights Resilience
-  *
-  * Domain Integration
-  *      ↓
-  * BHR Rule Engine
-  *      ↓
-  * Assessment
-  *      ↓
-  * Risk / Resilience
-  *      ↓
-  * Decision Support
-  *      ↓
-  * Audit
-  *
-  * BHR = Business & Human Rights Resilience
-  *
-  * Principle:
-  * The engine provides deterministic decision support.
-  * It does not replace human authority.
-  */
-
-
- /* =========================================================
-    BHR CONSTANTS
- ========================================================= */
-
- const BHR_CONSTANTS = {
-
-   MEDIUM_THRESHOLD: 40,
-
-   HIGH_THRESHOLD: 70,
-
-   MAX_SCORE: 100,
-
-   MIN_SCORE: 0
-
- };
-
-
- /* =========================================================
-    CLAMP VALUE
- ========================================================= */
-
- function clamp(
-   value,
-   min = BHR_CONSTANTS.MIN_SCORE,
-   max = BHR_CONSTANTS.MAX_SCORE
- ) {
-
-   const numeric =
-     Number(value);
-
-   if (
-     Number.isNaN(numeric)
-   ) {
-
-     return min;
-
-   }
-
-   return Math.min(
-     max,
-     Math.max(
-       min,
-       numeric
-     )
-   );
-
- }
-
-
- /* =========================================================
-    NORMALIZE INPUT
- ========================================================= */
-
- function normalizeInput(
-   state = {}
- ) {
-
-   return {
-
-     labour:
-       clamp(
-         state.labour ??
-         state.labor ??
-         0
-       ),
-
-     humanRights:
-       clamp(
-         state.humanRights ??
-         state.human_rights ??
-         0
-       ),
-
-     supplyChain:
-       clamp(
-         state.supplyChain ??
-         state.supply_chain ??
-         0
-       ),
-
-     community:
-       clamp(
-         state.community ??
-         0
-       ),
-
-     governance:
-       clamp(
-         state.governance ??
-         0
-       ),
-
-     environment:
-       clamp(
-         state.environment ??
-         0
-       ),
+/**
+ * SPD v13.1 — BHR DOMAIN RULE ENGINE
+ *
+ * Business & Human Rights Resilience
+ *
+ * Domain Integration
+ *      ↓
+ * BHR Rule Engine
+ *      ↓
+ * Assessment
+ *      ↓
+ * Risk / Resilience
+ *      ↓
+ * Decision Support
+ *      ↓
+ * Audit
+ *
+ * Principle:
+ * The engine provides deterministic decision support.
+ * It does not replace human authority.
+ */
+
+
+/* =========================================================
+   BHR CONSTANTS
+========================================================= */
+
+const BHR_CONSTANTS = {
+
+  MEDIUM_THRESHOLD: 40,
+
+  HIGH_THRESHOLD: 70,
+
+  MAX_SCORE: 100,
+
+  MIN_SCORE: 0
+
+};
+
+
+/* =========================================================
+   CLAMP VALUE
+========================================================= */
+
+function clamp(
+  value,
+  min = BHR_CONSTANTS.MIN_SCORE,
+  max = BHR_CONSTANTS.MAX_SCORE
+) {
+
+  const numeric = Number(value);
+
+  if (!Number.isFinite(numeric)) {
+    return min;
+  }
+
+  return Math.min(
+    max,
+    Math.max(
+      min,
+      numeric
+    )
+  );
+
+}
+
+
+/* =========================================================
+   NORMALIZE INPUT
+========================================================= */
+
+function normalizeInput(
+  state = {}
+) {
+
+  return {
+
+    labour:
+      clamp(
+        state.labour ??
+        state.labor ??
+        0
+      ),
+
+    humanRights:
+      clamp(
+        state.humanRights ??
+        state.human_rights ??
+        0
+      ),
+
+    supplyChain:
+      clamp(
+        state.supplyChain ??
+        state.supply_chain ??
+        0
+      ),
+
+    community:
+      clamp(
+        state.community ??
+        0
+      ),
+
+    governance:
+      clamp(
+        state.governance ??
+        0
+      ),
 
-     intensity:
-       clamp(
-         state.intensity ??
-         0
-       )
+    environment:
+      clamp(
+        state.environment ??
+        0
+      ),
 
-   };
+    intensity:
+      clamp(
+        state.intensity ??
+        0
+      )
 
- }
+  };
 
+}
 
- /* =========================================================
-    CALCULATE BHR STRESS
- ========================================================= */
 
- function calculateBHRStress(
-   state
- ) {
+/* =========================================================
+   CALCULATE BHR STRESS
+========================================================= */
 
-   /*
-    * Deterministic weighted BHR model.
-    *
-    * Human rights and labour indicators
-    * carry the highest weighting.
-    */
+function calculateBHRStress(
+  state
+) {
 
-   const stress =
+  /*
+   * Deterministic weighted BHR model.
+   *
+   * Human rights and labour indicators
+   * carry the highest weighting.
+   */
 
-     (
-       state.labour *
-       0.20
-     ) +
+  const baseStress =
 
-     (
-       state.humanRights *
-       0.25
-     ) +
+    (
+      state.labour *
+      0.20
+    ) +
 
-     (
-       state.supplyChain *
-       0.15
-     ) +
+    (
+      state.humanRights *
+      0.25
+    ) +
 
-     (
-       state.community *
-       0.15
-     ) +
+    (
+      state.supplyChain *
+      0.15
+    ) +
 
-     (
-       state.governance *
-       0.15
-     ) +
+    (
+      state.community *
+      0.15
+    ) +
 
-     (
-       state.environment *
-       0.10
-     );
+    (
+      state.governance *
+      0.15
+    ) +
 
+    (
+      state.environment *
+      0.10
+    );
 
-   /*
-    * Scenario intensity modifier.
-    */
 
-   const intensityFactor =
-     1 +
-     (
-       state.intensity /
-       100
-     );
+  /*
+   * Scenario intensity modifier.
+   */
 
+  const intensityFactor =
+    1 +
+    (
+      state.intensity /
+      100
+    );
 
-   return clamp(
-     stress *
-     intensityFactor
-   );
 
- }
+  return {
 
+    baseStress:
+      clamp(
+        baseStress
+      ),
 
- /* =========================================================
-    CLASSIFY RISK
- ========================================================= */
+    intensityFactor,
 
- function classifyRisk(
-   stress
- ) {
+    stress:
+      clamp(
+        baseStress *
+        intensityFactor
+      )
 
-   if (
-     stress <
-     BHR_CONSTANTS.MEDIUM_THRESHOLD
-   ) {
+  };
 
-     return "LOW";
+}
 
-   }
 
+/* =========================================================
+   CLASSIFY RISK
+========================================================= */
 
-   if (
-     stress <
-     BHR_CONSTANTS.HIGH_THRESHOLD
-   ) {
+function classifyRisk(
+  stress
+) {
 
-     return "MEDIUM";
+  if (
+    stress <
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
 
-   }
+    return "LOW";
 
+  }
 
-   return "HIGH";
+  if (
+    stress <
+    BHR_CONSTANTS.HIGH_THRESHOLD
+  ) {
 
- }
+    return "MEDIUM";
 
+  }
 
- /* =========================================================
-    CALCULATE RESILIENCE
- ========================================================= */
+  return "HIGH";
 
- function calculateResilience(
-   stress
- ) {
+}
 
-   return clamp(
-     100 -
-     stress
-   );
 
- }
+/* =========================================================
+   CALCULATE RESILIENCE
+========================================================= */
 
+function calculateResilience(
+  stress
+) {
 
- /* =========================================================
-    DETERMINE DECISION
- ========================================================= */
+  return clamp(
+    100 -
+    stress
+  );
 
- function determineDecision(
-   risk
- ) {
+}
 
-   switch (
-     risk
-   ) {
 
-     case "LOW":
+/* =========================================================
+   DETERMINE DECISION
+========================================================= */
 
-       return {
+function determineDecision(
+  risk
+) {
 
-         action:
-           "MAINTAIN_MONITORING",
+  switch (risk) {
 
-         priority:
-           "NORMAL",
+    case "LOW":
 
-         humanAuthorization:
-           "NOT_REQUIRED_FOR_MONITORING"
+      return {
 
-       };
+        action:
+          "MAINTAIN_MONITORING",
 
+        priority:
+          "NORMAL",
 
-     case "MEDIUM":
+        humanAuthorization:
+          "NOT_REQUIRED_FOR_MONITORING"
 
-       return {
+      };
 
-         action:
-           "INITIATE_BHR_MITIGATION_REVIEW",
 
-         priority:
-           "ELEVATED",
+    case "MEDIUM":
 
-         humanAuthorization:
-           "REQUIRED_BEFORE_EXECUTION"
+      return {
 
-       };
+        action:
+          "INITIATE_BHR_MITIGATION_REVIEW",
 
+        priority:
+          "ELEVATED",
 
-     case "HIGH":
+        humanAuthorization:
+          "REQUIRED_BEFORE_EXECUTION"
 
-       return {
+      };
 
-         action:
-           "ESCALATE_BHR_RISK_AND_MAINTAIN_SAFE_STATE",
 
-         priority:
-           "CRITICAL",
+    case "HIGH":
 
-         humanAuthorization:
-           "REQUIRED_BEFORE_EXECUTION"
+      return {
 
-       };
+        action:
+          "ESCALATE_BHR_RISK_AND_MAINTAIN_SAFE_STATE",
 
+        priority:
+          "CRITICAL",
 
-     default:
+        humanAuthorization:
+          "REQUIRED_BEFORE_EXECUTION"
 
-       return {
+      };
 
-         action:
-           "MAINTAIN_SAFE_STATE",
 
-         priority:
-           "UNKNOWN",
+    default:
 
-         humanAuthorization:
-           "REQUIRED"
+      return {
 
-       };
+        action:
+          "MAINTAIN_SAFE_STATE",
 
-   }
+        priority:
+          "UNKNOWN",
 
- }
+        humanAuthorization:
+          "REQUIRED"
 
+      };
 
- /* =========================================================
-    BHR PRINCIPLE CHECK
- ========================================================= */
+  }
 
- function evaluateHumanRightsPrinciples(
-   state
- ) {
+}
 
-   const concerns = [];
 
+/* =========================================================
+   BHR PRINCIPLE CHECK
+========================================================= */
 
-   if (
-     state.labour >=
-     BHR_CONSTANTS.MEDIUM_THRESHOLD
-   ) {
+function evaluateHumanRightsPrinciples(
+  state
+) {
 
-     concerns.push(
-       "LABOUR_RISK"
-     );
+  const concerns = [];
 
-   }
 
+  if (
+    state.labour >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
 
-   if (
-     state.humanRights >=
-     BHR_CONSTANTS.MEDIUM_THRESHOLD
-   ) {
+    concerns.push(
+      "LABOUR_RISK"
+    );
 
-     concerns.push(
-       "HUMAN_RIGHTS_RISK"
-     );
+  }
 
-   }
 
+  if (
+    state.humanRights >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
 
-   if (
-     state.supplyChain >=
-     BHR_CONSTANTS.MEDIUM_THRESHOLD
-   ) {
+    concerns.push(
+      "HUMAN_RIGHTS_RISK"
+    );
 
-     concerns.push(
-       "SUPPLY_CHAIN_RISK"
-     );
+  }
 
-   }
 
+  if (
+    state.supplyChain >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
 
-   if (
-     state.community >=
-     BHR_CONSTANTS.MEDIUM_THRESHOLD
-   ) {
+    concerns.push(
+      "SUPPLY_CHAIN_RISK"
+    );
 
-     concerns.push(
-       "COMMUNITY_IMPACT_RISK"
+  }
+
+
+  if (
+    state.community >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
+
+    concerns.push(
+      "COMMUNITY_IMPACT_RISK"
+    );
+
+  }
+
+
+  if (
+    state.governance >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
+
+    concerns.push(
+      "GOVERNANCE_RISK"
+    );
+
+  }
+
+
+  if (
+    state.environment >=
+    BHR_CONSTANTS.MEDIUM_THRESHOLD
+  ) {
+
+    concerns.push(
+      "ENVIRONMENTAL_RISK"
+    );
+
+  }
+
+
+  return {
+
+    concerns,
+
+    concernCount:
+      concerns.length,
+
+    status:
+      concerns.length === 0
+        ? "NO_SIGNIFICANT_BHR_CONCERNS"
+        : "BHR_CONCERNS_IDENTIFIED"
+
+  };
+
+}
+
+
+/* =========================================================
+   BHR EVALUATION
+========================================================= */
+
+function evaluate(
+  state = {},
+  context = {}
+) {
+
+  const normalizedState =
+    normalizeInput(
+      state
+    );
+
+
+  const stressResult =
+    calculateBHRStress(
+      normalizedState
+    );
+
+
+  const risk =
+    classifyRisk(
+      stressResult.stress
+    );
+
+
+  const resilienceScore =
+    calculateResilience(
+      stressResult.stress
+    );
+
+
+  const principles =
+    evaluateHumanRightsPrinciples(
+      normalizedState
+    );
+
+
+  const decision =
+    determineDecision(
+      risk
+    );
+
+
+  return {
+
+    success:
+      true,
+
+    domain:
+      "BHR",
+
+    domainName:
+      "Business & Human Rights Resilience",
+
+    scenario:
+      context.scenario ??
+      "BHR_ASSESSMENT",
+
+    intensity:
+      normalizedState.intensity,
+
+    input:
+      normalizedState,
+
+    assessment: {
+
+      baseStress:
+        stressResult.baseStress,
+
+      intensityFactor:
+        stressResult.intensityFactor,
+
+      stress:
+        stressResult.stress,
+
+      resilienceScore,
+
+      risk
+
+    },
+
+    humanRightsPrinciples:
+      principles,
+
+    decision,
+
+    executionAuthority:
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      decision.humanAuthorization ===
+      "NOT_REQUIRED_FOR_MONITORING"
+        ? "MONITORING_ONLY"
+        : "HUMAN_AUTHORIZATION_REQUIRED",
+
+    context,
+
+    timestamp:
+      new Date().toISOString(),
+
+    status:
+      "BHR_EVALUATION_COMPLETE"
+
+  };
+
+}
+
+
+/* =========================================================
+   SELF-CHECK
+========================================================= */
+
+function verifyBHREngine() {
+
+  const test =
+    evaluate({
+
+      labour: 0,
+
+      humanRights: 0,
+
+      supplyChain: 0,
+
+      community: 0,
+
+      governance: 0,
+
+      environment: 0,
+
+      intensity: 0
+
+    });
+
+
+  return {
+
+    domain:
+      "BHR",
+
+    status:
+      test.success &&
+      test.assessment.risk === "LOW"
+        ? "READY"
+        : "NOT_READY",
+
+    testRisk:
+      test.assessment.risk,
+
+    testResilienceScore:
+      test.assessment.resilienceScore,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* =========================================================
+   EXPORTS
+========================================================= */
+
+export {
+
+  BHR_CONSTANTS,
+
+  clamp,
+
+  normalizeInput,
+
+  calculateBHRStress,
+
+  classifyRisk,
+
+  calculateResilience,
+
+  determineDecision,
+
+  evaluateHumanRightsPrinciples,
+
+  evaluate,
+
+  verifyBHREngine
+
+};
