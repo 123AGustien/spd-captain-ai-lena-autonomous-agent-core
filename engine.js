@@ -2,7 +2,7 @@ import { captainAILena } from "./captainAILena.js";
 import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
 export function runEngine(state) {
-  
+
   // =========================
   // SAFE NORMALIZATION LAYER
   // (Does NOT modify rules or decision logic)
