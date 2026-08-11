@@ -5,34 +5,30 @@
  *      ↓
  * Domain Integration
  *      ↓
- * FIN / BHR Rule Engines
+ * Authoritative Domain Rule Engine
  *      ↓
- * Captain AI Lena
+ * Captain AI Lena Decision Core
  *      ↓
  * Golden Rule Pipeline
  *      ↓
- * Result / Audit
+ * Result / Memory / Audit
+ *
+ * Active Domains:
+ * FIN — Financial Resilience
+ * BHR — Business & Human Rights Resilience
  *
  * Purpose:
  * Provides the authoritative gateway between the
  * existing cockpit/scenario controls and registered
  * domain rule engines.
  *
- * ACTIVE DOMAINS:
- * FIN — Financial Resilience
- * BHR — Business & Human Rights Resilience
- *
- * The existing cockpit remains the user interface.
+ * The cockpit remains the primary user interface.
  * No separate FIN or BHR screen is required.
- *
- * Execution principle:
- * AI provides deterministic decision support.
- * Human operator remains the final authority.
  */
 
 
 /* =========================================================
-   DOMAIN RULE ENGINE IMPORTS
+   DOMAIN ENGINE IMPORTS
 ========================================================= */
 
 import * as FINRuleEngine
@@ -104,8 +100,8 @@ const DOMAIN_REGISTRY = {
 ========================================================= */
 
 /*
- * Only domain engines that physically exist
- * and expose evaluate() are registered here.
+ * Only physically available domain engines
+ * exposing evaluate() are registered.
  */
 
 const DOMAIN_ENGINES = {
@@ -117,6 +113,77 @@ const DOMAIN_ENGINES = {
     BHRRuleEngine
 
 };
+
+
+/* =========================================================
+   SCENARIO → DOMAIN MAPPING
+========================================================= */
+
+const SCENARIO_DOMAIN_MAP = {
+
+  /* FINANCIAL RESILIENCE */
+
+  FIN_STRESS:
+    "FIN",
+
+  BANKING_STRESS:
+    "FIN",
+
+  LIQUIDITY_CRISIS:
+    "FIN",
+
+  CREDIT_STRESS:
+    "FIN",
+
+  SOVEREIGN_DEBT:
+    "FIN",
+
+
+  /* BUSINESS & HUMAN RIGHTS */
+
+  BHR_STRESS:
+    "BHR",
+
+  LABOUR_RIGHTS:
+    "BHR",
+
+  HUMAN_RIGHTS_EVENT:
+    "BHR",
+
+  SUPPLY_CHAIN_HUMAN_RIGHTS:
+    "BHR",
+
+  COMMUNITY_IMPACT:
+    "BHR",
+
+  GOVERNANCE_RISK:
+    "BHR"
+
+};
+
+
+/* =========================================================
+   MAP SCENARIO
+========================================================= */
+
+function mapScenario(
+  scenario
+) {
+
+  if (!scenario) {
+
+    return null;
+
+  }
+
+  return (
+    SCENARIO_DOMAIN_MAP[
+      scenario
+    ] ||
+    null
+  );
+
+}
 
 
 /* =========================================================
@@ -150,8 +217,19 @@ function registerDomainEngine(
 
   }
 
-  DOMAIN_ENGINES[domainId] =
-    engine;
+  if (
+    !DOMAIN_REGISTRY[domainId]
+  ) {
+
+    throw new Error(
+      "DOMAIN_NOT_REGISTERED"
+    );
+
+  }
+
+  DOMAIN_ENGINES[
+    domainId
+  ] = engine;
 
   return {
 
@@ -161,10 +239,11 @@ function registerDomainEngine(
     registered:
       true,
 
-    status:
-      DOMAIN_REGISTRY[domainId]
-        ? DOMAIN_REGISTRY[domainId].status
-        : "UNREGISTERED_DOMAIN"
+    engineEvaluate:
+      true,
+
+    timestamp:
+      new Date().toISOString()
 
   };
 
@@ -180,7 +259,9 @@ function getDomainStatus(
 ) {
 
   const domain =
-    DOMAIN_REGISTRY[domainId];
+    DOMAIN_REGISTRY[
+      domainId
+    ];
 
   if (!domain) {
 
@@ -199,13 +280,23 @@ function getDomainStatus(
 
   }
 
+  const engine =
+    DOMAIN_ENGINES[
+      domainId
+    ];
+
   return {
 
     ...domain,
 
     engineRegistered:
+      Boolean(engine),
+
+    evaluateAvailable:
       Boolean(
-        DOMAIN_ENGINES[domainId]
+        engine &&
+        typeof engine.evaluate ===
+        "function"
       )
 
   };
@@ -223,7 +314,9 @@ function verifyDomainInput(
 ) {
 
   if (
-    !DOMAIN_REGISTRY[domainId]
+    !DOMAIN_REGISTRY[
+      domainId
+    ]
   ) {
 
     return {
@@ -232,7 +325,10 @@ function verifyDomainInput(
         false,
 
       reason:
-        "UNKNOWN_DOMAIN"
+        "UNKNOWN_DOMAIN",
+
+      domain:
+        domainId
 
     };
 
@@ -251,7 +347,10 @@ function verifyDomainInput(
         false,
 
       reason:
-        "INVALID_STATE"
+        "INVALID_STATE",
+
+      domain:
+        domainId
 
     };
 
@@ -314,14 +413,12 @@ function executeDomainRule(
 
 
   const engine =
-    DOMAIN_ENGINES[domainId];
+    DOMAIN_ENGINES[
+      domainId
+    ];
 
 
-  if (
-    !engine ||
-    typeof engine.evaluate !==
-      "function"
-  ) {
+  if (!engine) {
 
     return {
 
@@ -333,6 +430,27 @@ function executeDomainRule(
 
       error:
         "DOMAIN_ENGINE_NOT_REGISTERED"
+
+    };
+
+  }
+
+
+  if (
+    typeof engine.evaluate !==
+    "function"
+  ) {
+
+    return {
+
+      success:
+        false,
+
+      domain:
+        domainId,
+
+      error:
+        "DOMAIN_ENGINE_EVALUATE_FUNCTION_NOT_AVAILABLE"
 
     };
 
@@ -360,23 +478,13 @@ function executeDomainRule(
 
     return {
 
-      ...result,
+      success:
+        true,
 
-      integration: {
+      domain:
+        domainId,
 
-        gateway:
-          "SPD v13.1 DOMAIN INTEGRATION",
-
-        domain:
-          domainId,
-
-        verified:
-          true,
-
-        engineRegistered:
-          true
-
-      }
+      result
 
     };
 
@@ -414,142 +522,38 @@ function listDomains() {
   return Object.values(
     DOMAIN_REGISTRY
   ).map(
-    domain => ({
+    domain => {
 
-      id:
-        domain.id,
+      const engine =
+        DOMAIN_ENGINES[
+          domain.id
+        ];
 
-      name:
-        domain.name,
+      return {
 
-      status:
-        domain.status,
+        id:
+          domain.id,
 
-      engineRegistered:
-        Boolean(
-          DOMAIN_ENGINES[
-            domain.id
-          ]
-        )
+        name:
+          domain.name,
 
-    })
+        status:
+          domain.status,
+
+        engineRegistered:
+          Boolean(engine),
+
+        evaluateAvailable:
+          Boolean(
+            engine &&
+            typeof engine.evaluate ===
+            "function"
+          )
+
+      };
+
+    }
   );
-
-}
-
-
-/* =========================================================
-   VERIFY FIN ENGINE
-========================================================= */
-
-function verifyFINIntegration() {
-
-  const status =
-    getDomainStatus(
-      "FIN"
-    );
-
-
-  let engineSelfCheck =
-    null;
-
-
-  if (
-    FINRuleEngine &&
-    typeof FINRuleEngine
-      .verifyFINEngine ===
-      "function"
-  ) {
-
-    engineSelfCheck =
-      FINRuleEngine
-        .verifyFINEngine();
-
-  }
-
-
-  return {
-
-    domain:
-      "FIN",
-
-    status:
-      status.engineRegistered &&
-      (
-        !engineSelfCheck ||
-        engineSelfCheck.status ===
-          "READY"
-      )
-        ? "READY"
-        : "NOT_READY",
-
-    domainStatus:
-      status,
-
-    engineSelfCheck,
-
-    timestamp:
-      new Date().toISOString()
-
-  };
-
-}
-
-
-/* =========================================================
-   VERIFY BHR ENGINE
-========================================================= */
-
-function verifyBHRIntegration() {
-
-  const status =
-    getDomainStatus(
-      "BHR"
-    );
-
-
-  let engineSelfCheck =
-    null;
-
-
-  if (
-    BHRRuleEngine &&
-    typeof BHRRuleEngine
-      .verifyBHREngine ===
-      "function"
-  ) {
-
-    engineSelfCheck =
-      BHRRuleEngine
-        .verifyBHREngine();
-
-  }
-
-
-  return {
-
-    domain:
-      "BHR",
-
-    status:
-      status.engineRegistered &&
-      (
-        !engineSelfCheck ||
-        engineSelfCheck.status ===
-          "READY"
-      )
-        ? "READY"
-        : "NOT_READY",
-
-    domainStatus:
-      status,
-
-    engineSelfCheck,
-
-    timestamp:
-      new Date().toISOString()
-
-  };
 
 }
 
@@ -560,54 +564,145 @@ function verifyBHRIntegration() {
 
 function verifyDomainIntegration() {
 
-  const fin =
-    verifyFINIntegration();
+  const finStatus =
+    getDomainStatus(
+      "FIN"
+    );
 
-  const bhr =
-    verifyBHRIntegration();
+  const bhrStatus =
+    getDomainStatus(
+      "BHR"
+    );
 
 
-  const ready =
-    fin.status === "READY" &&
-    bhr.status === "READY";
+  const finReady =
+    finStatus.engineRegistered &&
+    finStatus.evaluateAvailable;
+
+  const bhrReady =
+    bhrStatus.engineRegistered &&
+    bhrStatus.evaluateAvailable;
 
 
   return {
 
     status:
-      ready
+      finReady && bhrReady
         ? "READY"
-        : "NOT_READY",
+        : "PARTIAL",
 
     FIN:
-      fin,
+      finStatus,
 
     BHR:
-      bhr,
+      bhrStatus,
 
     registeredEngines:
       Object.keys(
         DOMAIN_ENGINES
       ),
 
-    activeDomains:
-      Object.values(
-        DOMAIN_REGISTRY
-      )
-      .filter(
-        domain =>
-          domain.status ===
-          "ACTIVE"
-      )
-      .map(
-        domain =>
-          domain.id
-      ),
+    scenarioMappings:
+      Object.keys(
+        SCENARIO_DOMAIN_MAP
+      ).length,
 
     timestamp:
       new Date().toISOString()
 
   };
+
+}
+
+
+/* =========================================================
+   DOMAIN RESOLUTION
+========================================================= */
+
+function resolveDomain(
+  state = {}
+) {
+
+  if (
+    state.domain &&
+    DOMAIN_REGISTRY[
+      state.domain
+    ]
+  ) {
+
+    return state.domain;
+
+  }
+
+
+  if (
+    state.scenario
+  ) {
+
+    return mapScenario(
+      state.scenario
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   DOMAIN EXECUTION FROM SCENARIO
+========================================================= */
+
+function executeScenarioDomain(
+  state = {},
+  context = {}
+) {
+
+  const domain =
+    resolveDomain(
+      state
+    );
+
+
+  if (!domain) {
+
+    return {
+
+      success:
+        false,
+
+      domain:
+        null,
+
+      error:
+        "NO_DOMAIN_MAPPED_TO_SCENARIO"
+
+    };
+
+  }
+
+
+  return executeDomainRule(
+
+    domain,
+
+    state,
+
+    {
+
+      ...context,
+
+      scenario:
+        state.scenario,
+
+      resolvedDomain:
+        domain
+
+    }
+
+  );
 
 }
 
@@ -622,7 +717,13 @@ export {
 
   DOMAIN_ENGINES,
 
+  SCENARIO_DOMAIN_MAP,
+
   registerDomainEngine,
+
+  mapScenario,
+
+  resolveDomain,
 
   getDomainStatus,
 
@@ -630,11 +731,9 @@ export {
 
   executeDomainRule,
 
+  executeScenarioDomain,
+
   listDomains,
-
-  verifyFINIntegration,
-
-  verifyBHRIntegration,
 
   verifyDomainIntegration
 
