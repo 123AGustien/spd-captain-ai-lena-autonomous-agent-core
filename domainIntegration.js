@@ -1,29 +1,35 @@
 /**
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
- * Cockpit
- *    ↓
+ * Existing Cockpit
+ *      ↓
  * Domain Integration
- *    ↓
- * FIN Rule Engine
- *    ↓
- * Golden Rule Engine
- *    ↓
+ *      ↓
+ * BHR Rule Engine
+ *      ↓
+ * Captain AI Lena
+ *      ↓
+ * Golden Rule Pipeline
+ *      ↓
  * Result / Audit
  *
  * Purpose:
  * Provides the authoritative gateway between the
- * cockpit/scenario controls and registered domain
- * rule engines.
+ * existing cockpit/scenario controls and registered
+ * domain rule engines.
  *
- * Design Principle:
- * The frontend does not contain domain decision logic.
- * Domain engines provide domain-specific interpretation.
- * The Golden Rule Engine remains the authoritative
- * deterministic decision layer.
+ * Current active domain:
+ * BHR — Business & Human Rights Resilience
+ *
+ * FIN is NOT registered because no FIN rule-engine
+ * file currently exists in the project.
+ *
+ * The existing cockpit remains the user interface.
+ * No separate BHR screen is required.
  */
 
-import * as FINRuleEngine from "./domains/FIN/finRuleEngine.js";
+import * as BHRRuleEngine
+  from "./domains/BHR/bhrRuleEngine.js";
 
 
 /* =========================================================
@@ -35,7 +41,7 @@ const DOMAIN_REGISTRY = {
   FIN: {
     id: "FIN",
     name: "Financial Resilience",
-    status: "ACTIVE"
+    status: "PLANNED"
   },
 
   BHR: {
@@ -88,20 +94,13 @@ const DOMAIN_REGISTRY = {
 ========================================================= */
 
 /*
- * Only ACTIVE domain engines are registered here.
- *
- * FIN is currently wired to:
- *
- * ./domains/FIN/finRuleEngine.js
- *
- * BHR remains registered as an ACTIVE domain in the
- * architecture but is not imported here until its
- * authoritative engine path is confirmed.
+ * Only domain engines that physically exist
+ * and expose evaluate() are registered here.
  */
 
 const DOMAIN_ENGINES = {
 
-  FIN: FINRuleEngine
+  BHR: BHRRuleEngine
 
 };
 
@@ -193,11 +192,6 @@ function verifyDomainInput(
   state = {}
 ) {
 
-  /*
-   * Verify that the requested domain
-   * exists in the authoritative registry.
-   */
-
   if (
     !DOMAIN_REGISTRY[domainId]
   ) {
@@ -214,11 +208,6 @@ function verifyDomainInput(
 
   }
 
-
-  /*
-   * Verify that system state exists
-   * and is represented as an object.
-   */
 
   if (
     !state ||
@@ -238,11 +227,6 @@ function verifyDomainInput(
 
   }
 
-
-  /*
-   * Preserve the supplied state without
-   * introducing domain decision logic.
-   */
 
   return {
 
@@ -272,11 +256,6 @@ function executeDomainRule(
   context = {}
 ) {
 
-  /*
-   * STEP 1
-   * Verify domain input.
-   */
-
   const verification =
     verifyDomainInput(
       domainId,
@@ -304,11 +283,6 @@ function executeDomainRule(
   }
 
 
-  /*
-   * STEP 2
-   * Retrieve registered domain engine.
-   */
-
   const engine =
     DOMAIN_ENGINES[domainId];
 
@@ -333,18 +307,6 @@ function executeDomainRule(
 
   }
 
-
-  /*
-   * STEP 3
-   * Execute the authoritative domain
-   * rule engine.
-   *
-   * The domain engine is responsible for
-   * selecting the applicable domain rule.
-   *
-   * The Golden Rule Engine remains the
-   * authoritative deterministic decision layer.
-   */
 
   return engine.evaluate(
 
@@ -403,20 +365,21 @@ function listDomains() {
 
 function verifyDomainIntegration() {
 
-  const finStatus =
+  const bhrStatus =
     getDomainStatus(
-      "FIN"
+      "BHR"
     );
+
 
   return {
 
     status:
-      finStatus.engineRegistered
+      bhrStatus.engineRegistered
         ? "READY"
         : "NOT_READY",
 
-    FIN:
-      finStatus,
+    BHR:
+      bhrStatus,
 
     registeredEngines:
       Object.keys(
