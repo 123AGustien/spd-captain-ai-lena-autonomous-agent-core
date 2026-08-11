@@ -5,7 +5,7 @@
  *      ↓
  * Domain Integration
  *      ↓
- * BHR Rule Engine
+ * FIN / BHR Rule Engines
  *      ↓
  * Captain AI Lena
  *      ↓
@@ -18,15 +18,25 @@
  * existing cockpit/scenario controls and registered
  * domain rule engines.
  *
- * Current active domain:
+ * ACTIVE DOMAINS:
+ * FIN — Financial Resilience
  * BHR — Business & Human Rights Resilience
  *
- * FIN is NOT registered because no FIN rule-engine
- * file currently exists in the project.
- *
  * The existing cockpit remains the user interface.
- * No separate BHR screen is required.
+ * No separate FIN or BHR screen is required.
+ *
+ * Execution principle:
+ * AI provides deterministic decision support.
+ * Human operator remains the final authority.
  */
+
+
+/* =========================================================
+   DOMAIN RULE ENGINE IMPORTS
+========================================================= */
+
+import * as FINRuleEngine
+  from "./domains/FIN/finRuleEngine.js";
 
 import * as BHRRuleEngine
   from "./domains/BHR/bhrRuleEngine.js";
@@ -41,7 +51,7 @@ const DOMAIN_REGISTRY = {
   FIN: {
     id: "FIN",
     name: "Financial Resilience",
-    status: "PLANNED"
+    status: "ACTIVE"
   },
 
   BHR: {
@@ -100,7 +110,11 @@ const DOMAIN_REGISTRY = {
 
 const DOMAIN_ENGINES = {
 
-  BHR: BHRRuleEngine
+  FIN:
+    FINRuleEngine,
+
+  BHR:
+    BHRRuleEngine
 
 };
 
@@ -125,6 +139,17 @@ function registerDomainEngine(
 
   }
 
+  if (
+    typeof engine.evaluate !==
+    "function"
+  ) {
+
+    throw new Error(
+      "DOMAIN_ENGINE_EVALUATE_FUNCTION_REQUIRED"
+    );
+
+  }
+
   DOMAIN_ENGINES[domainId] =
     engine;
 
@@ -134,7 +159,12 @@ function registerDomainEngine(
       domainId,
 
     registered:
-      true
+      true,
+
+    status:
+      DOMAIN_REGISTRY[domainId]
+        ? DOMAIN_REGISTRY[domainId].status
+        : "UNREGISTERED_DOMAIN"
 
   };
 
@@ -289,7 +319,8 @@ function executeDomainRule(
 
   if (
     !engine ||
-    typeof engine.evaluate !== "function"
+    typeof engine.evaluate !==
+      "function"
   ) {
 
     return {
@@ -308,20 +339,68 @@ function executeDomainRule(
   }
 
 
-  return engine.evaluate(
+  try {
 
-    verification.verifiedState,
+    const result =
+      engine.evaluate(
 
-    {
+        verification.verifiedState,
 
-      ...context,
+        {
+
+          ...context,
+
+          domain:
+            domainId
+
+        }
+
+      );
+
+
+    return {
+
+      ...result,
+
+      integration: {
+
+        gateway:
+          "SPD v13.1 DOMAIN INTEGRATION",
+
+        domain:
+          domainId,
+
+        verified:
+          true,
+
+        engineRegistered:
+          true
+
+      }
+
+    };
+
+  }
+
+  catch (error) {
+
+    return {
+
+      success:
+        false,
 
       domain:
-        domainId
+        domainId,
 
-    }
+      error:
+        "DOMAIN_ENGINE_EXECUTION_ERROR",
 
-  );
+      message:
+        error.message
+
+    };
+
+  }
 
 }
 
@@ -360,30 +439,169 @@ function listDomains() {
 
 
 /* =========================================================
-   DOMAIN INTEGRATION SELF-CHECK
+   VERIFY FIN ENGINE
 ========================================================= */
 
-function verifyDomainIntegration() {
+function verifyFINIntegration() {
 
-  const bhrStatus =
+  const status =
+    getDomainStatus(
+      "FIN"
+    );
+
+
+  let engineSelfCheck =
+    null;
+
+
+  if (
+    FINRuleEngine &&
+    typeof FINRuleEngine
+      .verifyFINEngine ===
+      "function"
+  ) {
+
+    engineSelfCheck =
+      FINRuleEngine
+        .verifyFINEngine();
+
+  }
+
+
+  return {
+
+    domain:
+      "FIN",
+
+    status:
+      status.engineRegistered &&
+      (
+        !engineSelfCheck ||
+        engineSelfCheck.status ===
+          "READY"
+      )
+        ? "READY"
+        : "NOT_READY",
+
+    domainStatus:
+      status,
+
+    engineSelfCheck,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* =========================================================
+   VERIFY BHR ENGINE
+========================================================= */
+
+function verifyBHRIntegration() {
+
+  const status =
     getDomainStatus(
       "BHR"
     );
 
 
+  let engineSelfCheck =
+    null;
+
+
+  if (
+    BHRRuleEngine &&
+    typeof BHRRuleEngine
+      .verifyBHREngine ===
+      "function"
+  ) {
+
+    engineSelfCheck =
+      BHRRuleEngine
+        .verifyBHREngine();
+
+  }
+
+
   return {
 
+    domain:
+      "BHR",
+
     status:
-      bhrStatus.engineRegistered
+      status.engineRegistered &&
+      (
+        !engineSelfCheck ||
+        engineSelfCheck.status ===
+          "READY"
+      )
         ? "READY"
         : "NOT_READY",
 
+    domainStatus:
+      status,
+
+    engineSelfCheck,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* =========================================================
+   DOMAIN INTEGRATION SELF-CHECK
+========================================================= */
+
+function verifyDomainIntegration() {
+
+  const fin =
+    verifyFINIntegration();
+
+  const bhr =
+    verifyBHRIntegration();
+
+
+  const ready =
+    fin.status === "READY" &&
+    bhr.status === "READY";
+
+
+  return {
+
+    status:
+      ready
+        ? "READY"
+        : "NOT_READY",
+
+    FIN:
+      fin,
+
     BHR:
-      bhrStatus,
+      bhr,
 
     registeredEngines:
       Object.keys(
         DOMAIN_ENGINES
+      ),
+
+    activeDomains:
+      Object.values(
+        DOMAIN_REGISTRY
+      )
+      .filter(
+        domain =>
+          domain.status ===
+          "ACTIVE"
+      )
+      .map(
+        domain =>
+          domain.id
       ),
 
     timestamp:
@@ -413,6 +631,10 @@ export {
   executeDomainRule,
 
   listDomains,
+
+  verifyFINIntegration,
+
+  verifyBHRIntegration,
 
   verifyDomainIntegration
 
