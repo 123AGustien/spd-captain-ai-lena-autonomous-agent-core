@@ -1,215 +1,211 @@
 /**
  * SPD v13.1 — CORE EXECUTION ENGINE
  *
- * Cockpit
+ * COCKPIT
  *    ↓
- * Engine
+ * DOMAIN INTEGRATION
  *    ↓
- * Domain Integration Layer
+ * CAPTAIN AI LENA DECISION CORE
  *    ↓
- * FIN / BHR Rule Engine
+ * GOLDEN RULE PIPELINE
  *    ↓
- * Captain AI Lena
- *    ↓
- * Golden Rule Pipeline
- *    ↓
- * Result / Audit
+ * RESULT / AUDIT
  */
 
-import { captainAILena }
-  from "./captainAILena.js";
-
+import { captainAILena } from "./captainAILena.js";
 import {
   executeDomainRule,
   getDomainStatus
 } from "./domainIntegration.js";
 
-import {
-  GOLDEN_RATIO
-} from "./constants/math.constants.js";
+import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
 
-/* =========================================================
-   RUN ENGINE
-========================================================= */
+export function runEngine(state) {
 
-export function runEngine(state = {}) {
+  // =========================================================
+  // OBSERVE
+  // =========================================================
 
-  /* =======================================================
-     SAFE INPUT NORMALIZATION
-  ======================================================= */
+  const observedState = {
+    ...state
+  };
+
+
+  // =========================================================
+  // VERIFY / NORMALIZATION
+  // =========================================================
 
   const normalizedState = {
-
-    ...state,
+    ...observedState,
 
     energy:
-      Number(state.energy ?? 0) /
+      Number(observedState.energy ?? 0) /
       GOLDEN_RATIO,
 
     fx:
-      Number(state.fx ?? 0) /
-      GOLDEN_RATIO
+      Number(observedState.fx ?? 0) /
+      GOLDEN_RATIO,
 
+    cyb:
+      Number(observedState.cyb ?? 0),
+
+    inf:
+      Number(observedState.inf ?? 0),
+
+    dc:
+      Number(observedState.dc ?? 0)
   };
 
 
-  /* =======================================================
-     DOMAIN IDENTIFICATION
-  ======================================================= */
+  // =========================================================
+  // DOMAIN IDENTIFICATION
+  // =========================================================
 
-  let domain =
-    state.domain ||
-    null;
-
-
-  /*
-   * FIN scenarios are routed to FIN.
-   */
-
-  if (
-    !domain &&
+  const domain =
+    observedState.domain ||
     (
-      state.scenario === "FIN_STRESS" ||
-      state.scenario === "BANKING_STRESS" ||
-      state.scenario === "LIQUIDITY_CRISIS" ||
-      state.scenario === "CREDIT_STRESS" ||
-      state.scenario === "SOVEREIGN_DEBT"
-    )
-  ) {
-
-    domain = "FIN";
-
-  }
-
-
-  /*
-   * BHR scenarios can be explicitly identified
-   * through domain or scenario.
-   */
-
-  if (
-    !domain &&
-    (
-      state.scenario === "BHR_STRESS" ||
-      state.scenario === "HUMAN_RIGHTS_RISK" ||
-      state.scenario === "LABOUR_RISK" ||
-      state.scenario === "SUPPLY_CHAIN_RISK"
-    )
-  ) {
-
-    domain = "BHR";
-
-  }
-
-
-  /* =======================================================
-     DOMAIN EXECUTION
-  ======================================================= */
-
-  let domainResult =
-    null;
-
-  let domainStatus =
-    null;
-
-
-  if (domain) {
-
-    domainStatus =
-      getDomainStatus(
-        domain
-      );
-
-
-    domainResult =
-      executeDomainRule(
-        domain,
-        normalizedState,
-        {
-          source:
-            "SPD_V13.1_COCKPIT",
-
-          scenario:
-            state.scenario,
-
-          intensity:
-            state.intensity
-
-        }
-      );
-
-  }
-
-
-  /* =======================================================
-     CAPTAIN AI LENA CORE
-  ======================================================= */
-
-  const lenaInput = {
-
-    ...normalizedState,
-
-    domain,
-
-    domainStatus,
-
-    domainResult
-
-  };
-
-
-  const result =
-    captainAILena(
-      lenaInput
+      observedState.scenario &&
+      [
+        "FIN_STRESS",
+        "BANKING_STRESS",
+        "LIQUIDITY_CRISIS",
+        "CREDIT_STRESS",
+        "SOVEREIGN_DEBT"
+      ].includes(observedState.scenario)
+        ? "FIN"
+        : null
     );
 
 
-  /* =======================================================
-     RESPONSE WRAPPER
-  ======================================================= */
+  // =========================================================
+  // DOMAIN EXECUTION
+  // =========================================================
+
+  let domainResult = null;
+
+  if (domain) {
+
+    const domainStatus =
+      getDomainStatus(domain);
+
+    if (domainStatus.engineRegistered) {
+
+      domainResult =
+        executeDomainRule(
+          domain,
+          normalizedState,
+          {
+            source:
+              "SPD v13.1 COCKPIT",
+
+            scenario:
+              observedState.scenario,
+
+            intensity:
+              observedState.intensity
+          }
+        );
+
+    } else {
+
+      domainResult = {
+        success: false,
+        domain,
+        error:
+          "DOMAIN_ENGINE_NOT_REGISTERED"
+      };
+
+    }
+
+  }
+
+
+  // =========================================================
+  // CAPTAIN AI LENA DECISION CORE
+  // =========================================================
+
+  const captainResult =
+    captainAILena(
+      normalizedState
+    );
+
+
+  // =========================================================
+  // GOLDEN RULE PIPELINE
+  // =========================================================
+
+  const goldenRulePipeline = [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+  ];
+
+
+  // =========================================================
+  // FINAL OUTPUT
+  // =========================================================
+
+  const output = {
+
+    status:
+      "COMPLETE",
+
+    domain:
+      domain || "CORE",
+
+    domainResult,
+
+    captainAI:
+      captainResult,
+
+    assessment:
+      captainResult.assessment,
+
+    decision:
+      captainResult.decision,
+
+    goldenRulePipeline,
+
+    executionAuthority:
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      "DECISION_GENERATED_HUMAN_AUTHORIZATION_REQUIRED"
+  };
+
+
+  // =========================================================
+  // AUDIT WRAPPER
+  // =========================================================
 
   return {
 
     timestamp:
       new Date().toISOString(),
 
-    /* Original cockpit input */
     input:
-      state,
+      observedState,
 
-    /* Normalized computational input */
     normalizedInput:
       normalizedState,
 
-    /* Domain routing */
-    domain: {
+    domain:
+      domain || "CORE",
 
-      selected:
-        domain,
+    domainResult,
 
-      status:
-        domainStatus,
+    output,
 
-      result:
-        domainResult
-
-    },
-
-    /* Captain AI Lena output */
-    output:
-      result,
-
-    /* Execution metadata */
     constants: {
-
       GOLDEN_RATIO
-
     },
 
     status:
       "EXECUTED"
-
   };
 
 }
