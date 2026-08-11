@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SPD v13.1 — ARM Screen</title>
+
+  <style>
+    body {
+      background: #05070a;
+      color: #00ff99;
+      font-family: monospace;
+      padding: 15px;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    .panel {
+      border: 1px solid #00ff99;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #00ff99;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button.test {
+      background: #00aaff;
+    }
+
+    button.disarm {
+      background: #ff4444;
+      color: white;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      color: #00ff99;
+    }
+
+    .status {
+      font-weight: bold;
+      color: #ffaa00;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🔐 SPD v13.1 — ARM SCREEN</h2>
+
+<div class="panel">
+  <h3>🧠 SYSTEM ARM STATUS</h3>
+
+  <div id="armStatus" class="status">
+    SYSTEM NOT ARMED
+  </div>
+
+  <button onclick="runSystemTest()" class="test">
+    RUN SYSTEM TEST
+  </button>
+
+  <button onclick="runTest()">
+    RUN TEST
+  </button>
+
+  <button onclick="armSystem()">
+    ARM SYSTEM
+  </button>
+
+  <button onclick="disarmSystem()" class="disarm">
+    DISARM SYSTEM
+  </button>
+</div>
+
+<div class="panel">
+  <h3>📋 SYSTEM TEST RESULT</h3>
+  <pre id="testOutput">Waiting...</pre>
+</div>
+
+<div class="panel">
+  <h3>🔐 EXECUTION GATE</h3>
+  <pre id="executionGate">
+Authorization: PENDING
+Execution: BLOCKED
+  </pre>
+</div>
+
+<div class="panel">
+  <h3>🔁 SYSTEM FLOW</h3>
+  <pre>
+OBSERVE
+   ↓
+VERIFY
+   ↓
+ASSESS
+   ↓
+DECIDE
+   ↓
+ACT
+   ↓
+UPDATE
+  </pre>
+</div>
+
+<div class="panel">
+  <button onclick="openCockpit()">
+    ◀ RETURN TO ORIGINAL COCKPIT
+  </button>
+</div>
+
+<script type="module">
+
+  import { runEngine } from "./engine.js";
+
+  let systemArmed = false;
+  let systemTestPassed = false;
+
+  window.runSystemTest = function () {
+
+    systemTestPassed = false;
+
+    document.getElementById("testOutput").innerText =
+      "SYSTEM TEST RUNNING...\n";
+
+    try {
+
+      const testState = {
+        fx: 10,
+        energy: 50,
+        cyb: 50,
+        inf: 0,
+        dc: 0,
+        event: "NORMAL",
+        mode: "TEST"
+      };
+
+      const result = runEngine(testState);
+
+      if (
+        result &&
+        result.output &&
+        result.output.assessment &&
+        result.output.decision
+      ) {
+
+        systemTestPassed = true;
+
+        document.getElementById("testOutput").innerText =
+          "SYSTEM TEST: PASS\n\n" +
+          JSON.stringify(result, null, 2);
+
+      } else {
+
+        document.getElementById("testOutput").innerText =
+          "SYSTEM TEST: FAIL\n\n" +
+          "Engine response incomplete.";
+      }
+
+    } catch (error) {
+
+      document.getElementById("testOutput").innerText =
+        "SYSTEM TEST: FAIL\n\n" +
+        error.message;
+    }
+
+    updateGate();
+  };
+
+
+  window.runTest = function () {
+
+    document.getElementById("testOutput").innerText =
+      "RUN TEST...\n\n" +
+      "Testing existing SPD engine connection...";
+
+    try {
+
+      const result = runEngine({
+        fx: 10,
+        energy: 50,
+        cyb: 50,
+        event: "NORMAL",
+        mode: "TEST"
+      });
+
+      document.getElementById("testOutput").innerText =
+        "RUN TEST: COMPLETE\n\n" +
+        JSON.stringify(result.output, null, 2);
+
+    } catch (error) {
+
+      document.getElementById("testOutput").innerText =
+        "RUN TEST: FAIL\n\n" +
+        error.message;
+    }
+  };
+
+
+  window.armSystem = function () {
+
+    if (!systemTestPassed) {
+
+      document.getElementById("testOutput").innerText +=
+        "\n\nARM BLOCKED: SYSTEM TEST MUST PASS FIRST.";
+
+      return;
+    }
+
+    systemArmed = true;
+
+    document.getElementById("armStatus").innerText =
+      "SYSTEM ARMED";
+
+    updateGate();
+  };
+
+
+  window.disarmSystem = function () {
+
+    systemArmed = false;
+
+    document.getElementById("armStatus").innerText =
+      "SYSTEM NOT ARMED";
+
+    updateGate();
+  };
+
+
+  function updateGate() {
+
+    document.getElementById("executionGate").innerText =
+      "Authorization: " +
+      (systemArmed ? "AUTHORIZED" : "PENDING") +
+      "\n" +
+      "System Test: " +
+      (systemTestPassed ? "PASS" : "NOT PASSED") +
+      "\n" +
+      "Execution: " +
+      (systemArmed ? "ARMED" : "BLOCKED");
+  }
+
+
+  window.openCockpit = function () {
+    window.location.href = "cockpit_dashboard.html";
+  };
+
+</script>
+
+</body>
+</html>
