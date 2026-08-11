@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPD Simulation Screen</title>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</title>
 
   <style>
     body {
@@ -10,10 +16,21 @@
       color: #00ff99;
       font-family: monospace;
       padding: 15px;
+      margin: 0;
     }
 
     h2 {
       color: white;
+      margin-bottom: 5px;
+    }
+
+    h3 {
+      color: white;
+    }
+
+    .subtitle {
+      color: #888;
+      margin-bottom: 15px;
     }
 
     .panel {
@@ -23,7 +40,14 @@
       border-radius: 6px;
     }
 
-    input {
+    label {
+      display: block;
+      margin-top: 8px;
+    }
+
+    input,
+    select {
+      box-sizing: border-box;
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -36,75 +60,221 @@
     button {
       width: 100%;
       padding: 10px;
+      margin-top: 8px;
       background: #00ff99;
       color: #000;
       font-weight: bold;
       border: none;
+      border-radius: 4px;
+    }
+
+    button:active {
+      opacity: 0.8;
     }
 
     pre {
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .flow {
       color: #888;
       font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .status {
+      color: white;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-<h2>🧠 SPD LIVE SIMULATION SCREEN</h2>
+  <h2>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h2>
 
-<div class="panel">
-  <label>FX</label>
-  <input id="fx" type="number" value="10">
+  <div class="subtitle">
+    Captain AI Lena Autonomous Agent Core
+  </div>
 
-  <label>ENERGY</label>
-  <input id="energy" type="number" value="50">
+  <div class="panel">
+    <h3>🎛️ SYSTEM CONTROLS</h3>
 
-  <label>CYB</label>
-  <input id="cyb" type="number" value="50">
+    <label for="fx">FX</label>
+    <input
+      id="fx"
+      type="number"
+      value="10"
+    >
 
-  <button onclick="run()">RUN SIMULATION</button>
-</div>
+    <label for="energy">ENERGY</label>
+    <input
+      id="energy"
+      type="number"
+      value="50"
+    >
 
-<div class="panel">
-  <h3>📥 INPUT</h3>
-  <pre id="input">Waiting...</pre>
-</div>
+    <label for="cyb">CYB</label>
+    <input
+      id="cyb"
+      type="number"
+      value="50"
+    >
 
-<div class="panel">
-  <h3>⚙️ OUTPUT</h3>
-  <pre id="output">Idle</pre>
-</div>
+    <label for="inf">INF</label>
+    <input
+      id="inf"
+      type="number"
+      value="10"
+    >
 
-<div class="panel">
-  <h3>🔁 FLOW</h3>
-  <div class="flow">OBSERVE → DECIDE → ACT → UPDATE</div>
-</div>
+    <label for="dc">DC</label>
+    <input
+      id="dc"
+      type="number"
+      value="20"
+    >
 
-<script type="module">
-  import { runEngine } from "./engine.js";
+    <label for="event">SCENARIO</label>
+    <select id="event">
+      <option value="NORMAL">NORMAL</option>
+      <option value="FX_SHOCK">FX_SHOCK</option>
+      <option value="ENERGY_SPIKE">ENERGY_SPIKE</option>
+      <option value="CYBER_EVENT">CYBER_EVENT</option>
+      <option value="INFRASTRUCTURE_STRESS">
+        INFRASTRUCTURE_STRESS
+      </option>
+      <option value="BIODIESEL_SHORTAGE">
+        BIODIESEL_SHORTAGE
+      </option>
+    </select>
 
-  window.run = function () {
+    <button onclick="run()">
+      ▶ RUN SYSTEM
+    </button>
+  </div>
 
-    const state = {
-      fx: Number(document.getElementById("fx").value),
-      energy: Number(document.getElementById("energy").value),
-      cyb: Number(document.getElementById("cyb").value)
+  <div class="panel">
+    <h3>📥 INPUT</h3>
+    <pre id="input">Waiting...</pre>
+  </div>
+
+  <div class="panel">
+    <h3>🧭 GOLDEN RULE PIPELINE</h3>
+
+    <div class="flow">
+      OBSERVE
+      →
+      VERIFY
+      →
+      ASSESS
+      →
+      DECIDE
+      →
+      ACT
+      →
+      UPDATE
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>📊 SYSTEM OUTPUT</h3>
+    <pre id="output">Idle</pre>
+  </div>
+
+  <div class="panel">
+    <h3>🧠 CAPTAIN AI LENA STATUS</h3>
+    <pre id="decision">Waiting...</pre>
+  </div>
+
+  <div class="panel">
+    <h3>🔁 AGENT LOOP</h3>
+
+    <div class="flow">
+      DATA → ALGORITHMS → COMPUTE
+      <br>
+      OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+    </div>
+  </div>
+
+  <script type="module">
+
+    import { runEngine } from "./engine.js";
+
+    window.run = function () {
+
+      const state = {
+
+        fx: Number(
+          document.getElementById("fx").value
+        ),
+
+        energy: Number(
+          document.getElementById("energy").value
+        ),
+
+        cyb: Number(
+          document.getElementById("cyb").value
+        ),
+
+        inf: Number(
+          document.getElementById("inf").value
+        ),
+
+        dc: Number(
+          document.getElementById("dc").value
+        ),
+
+        event:
+          document.getElementById("event").value,
+
+        mode: "AUTONOMOUS"
+      };
+
+      const result = runEngine(state);
+
+      document.getElementById("input").innerText =
+        JSON.stringify(
+          result.input,
+          null,
+          2
+        );
+
+      document.getElementById("output").innerText =
+        JSON.stringify(
+          result.output,
+          null,
+          2
+        );
+
+      if (
+        result.output &&
+        result.output.decision
+      ) {
+
+        document.getElementById(
+          "decision"
+        ).innerText =
+          JSON.stringify(
+            result.output.decision,
+            null,
+            2
+          );
+
+      } else {
+
+        document.getElementById(
+          "decision"
+        ).innerText =
+          "No decision returned.";
+
+      }
+
     };
 
-    const result = runEngine(state);
-
-    document.getElementById("input").innerText =
-      JSON.stringify(result.input, null, 2);
-
-    document.getElementById("output").innerText =
-      JSON.stringify(result.output, null, 2);
-  };
-</script>
+  </script>
 
 </body>
+
 </html>
