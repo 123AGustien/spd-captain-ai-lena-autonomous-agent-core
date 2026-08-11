@@ -1,121 +1,1165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>SPD Captain AI Lena Cockpit</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</title>
+
+  <meta
+    name="description"
+    content="SPD v13.1 — Sextant Resilience Cockpit PRO — Captain AI Lena Autonomous Agent Core"
+  >
 
   <style>
     body {
-      background: #0b0f14;
-      color: #00ff88;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      background: #05070a;
+      color: #00ff99;
+      font-family: monospace;
+      padding: 15px;
+      margin: 0;
     }
 
-    .panel {
-      border: 1px solid #00ff88;
+    h1,
+    h2,
+    h3 {
+      color: white;
+    }
+
+    .header {
+      border: 1px solid #00ff99;
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 8px;
     }
 
-    .title {
-      font-size: 18px;
+    .status {
+      color: #00ff99;
+      font-weight: bold;
+    }
+
+    .panel {
+      border: 1px solid #00ff99;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 6px;
+    }
+
+    .panel-title {
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
       margin-bottom: 10px;
-      color: #ffffff;
+    }
+
+    .controls {
+      display: grid;
+      gap: 8px;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-top: 5px;
+      background: #111;
+      color: #00ff99;
+      border: 1px solid #00ff99;
+      font-family: monospace;
+    }
+
+    button {
+      background: #00ff99;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #111;
+      color: #00ff99;
+    }
+
+    button.arm {
+      background: #00ff99;
+      color: #000;
+    }
+
+    button.disarm {
+      background: #ff4444;
+      color: white;
+      border-color: #ff4444;
     }
 
     pre {
       white-space: pre-wrap;
       word-break: break-word;
+      margin: 0;
+    }
+
+    .flow {
+      color: #00ff99;
+      font-size: 14px;
+      line-height: 1.8;
     }
 
     .muted {
-      color: #aaaaaa;
-      font-size: 13px;
+      color: #888;
+    }
+
+    .risk {
+      color: #ffaa00;
+      font-weight: bold;
+    }
+
+    .arm-status {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: #666;
+      font-size: 12px;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-<h1>🧠 Captain AI Lena Cockpit</h1>
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
 
-<!-- RAW STATE -->
-<div class="panel">
-  <div class="title">📊 Raw System State</div>
-  <pre id="state">Waiting...</pre>
+<div class="header">
+
+  <h1>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+
+  <div>
+    <strong>Captain AI Lena Autonomous Agent Core</strong>
+  </div>
+
+  <div class="flow">
+    DATA → ALGORITHMS → COMPUTE
+  </div>
+
+  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>
+
+  <p class="status">
+    SYSTEM STATUS:
+    <span id="systemStatus">READY</span>
+  </p>
+
 </div>
 
-<!-- NORMALIZED STATE -->
+
+<!-- ========================================================= -->
+<!-- SYSTEM CONTROLS -->
+<!-- ========================================================= -->
+
 <div class="panel">
-  <div class="title">⚖️ Normalized State (Golden Ratio)</div>
-  <pre id="normalized">Waiting...</pre>
+
+  <div class="panel-title">
+    🎛️ SYSTEM CONTROLS
+  </div>
+
+  <div class="controls">
+
+    <button onclick="runSystem()">
+      ▶ RUN SYSTEM
+    </button>
+
+    <button class="secondary" onclick="runSelfTest()">
+      🧪 RUN SELF-TEST
+    </button>
+
+    <button class="secondary" onclick="runSelfTestCorrective()">
+      🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+    </button>
+
+  </div>
+
 </div>
 
-<!-- DECISION -->
+
+<!-- ========================================================= -->
+<!-- DOMAIN MONITOR -->
+<!-- ========================================================= -->
+
 <div class="panel">
-  <div class="title">⚙️ Decision Output</div>
-  <pre id="decision">Idle</pre>
+
+  <div class="panel-title">
+    📊 SYSTEM DOMAIN MONITOR
+  </div>
+
+  <label>FX</label>
+  <input id="fx" type="number" value="52">
+
+  <label>DC</label>
+  <input id="dc" type="number" value="20">
+
+  <label>CYB</label>
+  <input id="cyb" type="number" value="40">
+
+  <label>INF</label>
+  <input id="inf" type="number" value="10">
+
+  <label>EN / ENERGY</label>
+  <input id="energy" type="number" value="25">
+
 </div>
 
-<!-- CONSTANTS -->
+
+<!-- ========================================================= -->
+<!-- SCENARIO CONTROL -->
+<!-- ========================================================= -->
+
 <div class="panel">
-  <div class="title">📐 System Constants</div>
-  <pre id="constants"></pre>
+
+  <div class="panel-title">
+    🎛️ SCENARIO CONTROL
+  </div>
+
+  <select id="scenario">
+
+    <option value="NORMAL">
+      NORMAL
+    </option>
+
+    <option value="FX_SHOCK">
+      FX STRESS
+    </option>
+
+    <option value="ENERGY_SPIKE">
+      ENERGY SPIKE
+    </option>
+
+    <option value="CYBER_EVENT">
+      CYBER EVENT
+    </option>
+
+    <option value="INFRASTRUCTURE_STRESS">
+      INFRA STRAIN
+    </option>
+
+    <option value="BIODIESEL_SHORTAGE">
+      BIODIESEL SHORTAGE
+    </option>
+
+  </select>
+
+  <h3>💰 FINANCIAL RESILIENCE SCENARIOS</h3>
+
+  <select id="financialScenario">
+
+    <option value="FIN_STRESS">
+      FIN STRESS
+    </option>
+
+    <option value="BANKING_STRESS">
+      BANKING STRESS
+    </option>
+
+    <option value="LIQUIDITY_CRISIS">
+      LIQUIDITY CRISIS
+    </option>
+
+    <option value="CREDIT_STRESS">
+      CREDIT STRESS
+    </option>
+
+    <option value="SOVEREIGN_DEBT">
+      SOVEREIGN DEBT
+    </option>
+
+  </select>
+
 </div>
 
-<!-- TRACE -->
+
+<!-- ========================================================= -->
+<!-- SCENARIO INTENSITY -->
+<!-- ========================================================= -->
+
 <div class="panel">
-  <div class="title">🔄 Agent Loop</div>
-  <div class="muted">OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE</div>
-  <pre id="trace"></pre>
+
+  <div class="panel-title">
+    🎚️ SCENARIO INTENSITY CONTROL
+  </div>
+
+  <input
+    id="intensity"
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    oninput="updateIntensity()"
+  >
+
+  <div>
+    Intensity:
+    <strong>
+      <span id="intensityValue">50</span>%
+    </strong>
+  </div>
+
 </div>
+
+
+<!-- ========================================================= -->
+<!-- SCENARIO PANEL -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🧪 SCENARIO PANEL
+  </div>
+
+  <pre id="scenarioPanel">{
+  "scenario": "NORMAL",
+  "intensity": "50%",
+  "status": "READY"
+}</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- RAW SYSTEM STATE -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    📊 RAW SYSTEM STATE
+  </div>
+
+  <pre id="rawState">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- GOLDEN RULE ENGINE -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🛰️ GOLDEN RULE ENGINE
+  </div>
+
+  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>
+
+  <pre id="goldenOutput">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- SYSTEM ASSESSMENT -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    ⚠️ SYSTEM ASSESSMENT
+  </div>
+
+  <pre id="assessment">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- RISK PANEL -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🚨 RISK PANEL
+  </div>
+
+  <pre id="riskPanel">{
+  "risk": "UNKNOWN"
+}</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- CAPTAIN AI LENA DECISION -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    ⚙️ CAPTAIN AI LENA DECISION
+  </div>
+
+  <pre id="decision">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- SOLUTION OPTIONS -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    💡 SOLUTION OPTIONS
+  </div>
+
+  <pre id="solution">Waiting for system assessment...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- ACTION SEQUENCE -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🚨 ACTION SEQUENCE PROMPT
+  </div>
+
+  <pre id="actionSequence">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- MEMORY CORE -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🧠 MEMORY CORE
+  </div>
+
+  <pre id="memory">Memory Core Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- AUDIT RECORD -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🧾 SPD v13.1 AUDIT RECORD
+  </div>
+
+  <pre id="audit">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- PIPELINE LOG -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    📜 PIPELINE LOG
+  </div>
+
+  <pre id="pipeline">
+PIPELINE LOG ACTIVE
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- SELF TEST -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🧪 SPD v13.1 SELF-TEST
+  </div>
+
+  <pre id="selfTest">
+Self-test not executed.
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- SELF TEST INTERPRETATION -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🔎 SELF-TEST INTERPRETATION
+  </div>
+
+  <pre id="selfTestInterpretation">
+Waiting for self-test execution...
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- FAULT IDENTIFICATION -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    ⚠️ FAULT IDENTIFICATION
+  </div>
+
+  <pre id="fault">
+No fault assessment available.
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- CORRECTIVE ACTION -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
+  </div>
+
+  <pre id="corrective">
+No corrective action available.
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- RE-TEST -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🔁 RE-TEST VALIDATION
+  </div>
+
+  <pre id="retest">
+Re-test not executed.
+  </pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- ARM CONTROL -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🛰️ ARM CONTROL & SYSTEM AUTHORITY
+  </div>
+
+  <div class="arm-status">
+    ARM STATUS:
+    <span id="armStatus">DISARMED</span>
+  </div>
+
+  <br>
+
+  <button onclick="openArmScreen()">
+    🛰️ OPEN ARM CONTROL SCREEN
+  </button>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- SYSTEM CONSTANTS -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    📐 SYSTEM CONSTANTS
+  </div>
+
+  <pre id="constants">Waiting...</pre>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- AGENT LOOP -->
+<!-- ========================================================= -->
+
+<div class="panel">
+
+  <div class="panel-title">
+    🔄 AGENT LOOP MONITOR
+  </div>
+
+  <div class="flow">
+    DATA → ALGORITHMS → COMPUTE
+  </div>
+
+  <div class="flow">
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+  </div>
+
+</div>
+
+
+<div class="footer">
+  SPD v13.1 — Sextant Resilience Cockpit PRO
+</div>
+
+
+<!-- ========================================================= -->
+<!-- ENGINE WIRING -->
+<!-- ========================================================= -->
 
 <script type="module">
-  import { captainAILena } from "./captainAILena.js";
-  import { GOLDEN_RATIO } from "./constants/math.constants.js";
 
-  // ======================
-  // SYSTEM STATE
-  // ======================
-  const state = {
-    fx: 12,
-    energy: 25,
-    cyb: 40,
-    event: "FX_SHOCK"
+import { runEngine } from "./engine.js";
+
+import {
+  runSystemTest
+} from "./armController.js";
+
+import {
+  GOLDEN_RATIO
+} from "./constants/math.constants.js";
+
+
+/* =========================================================
+   INTENSITY
+========================================================= */
+
+window.updateIntensity = function () {
+
+  const value =
+    Number(
+      document.getElementById("intensity").value
+    );
+
+  document.getElementById(
+    "intensityValue"
+  ).innerText = value;
+
+  updateScenarioPanel();
+
+};
+
+
+/* =========================================================
+   SCENARIO PANEL
+========================================================= */
+
+function updateScenarioPanel() {
+
+  const scenario =
+    document.getElementById("scenario").value;
+
+  const intensity =
+    Number(
+      document.getElementById("intensity").value
+    );
+
+  document.getElementById(
+    "scenarioPanel"
+  ).innerText =
+    JSON.stringify(
+      {
+        scenario,
+        intensity: intensity + "%",
+        intensityValue: intensity,
+        status: "READY"
+      },
+      null,
+      2
+    );
+
+}
+
+
+/* =========================================================
+   READ SYSTEM STATE
+========================================================= */
+
+function getState() {
+
+  const intensity =
+    Number(
+      document.getElementById("intensity").value
+    );
+
+  return {
+
+    fx:
+      Number(
+        document.getElementById("fx").value
+      ),
+
+    energy:
+      Number(
+        document.getElementById("energy").value
+      ),
+
+    cyb:
+      Number(
+        document.getElementById("cyb").value
+      ),
+
+    inf:
+      Number(
+        document.getElementById("inf").value
+      ),
+
+    dc:
+      Number(
+        document.getElementById("dc").value
+      ),
+
+    event:
+      document.getElementById("scenario").value,
+
+    mode:
+      "AUTONOMOUS",
+
+    scenario:
+      document.getElementById("scenario").value,
+
+    intensity,
+
+    intensityFactor:
+      intensity / 100,
+
+    time:
+      new Date().toISOString()
   };
 
-  // ======================
-  // NORMALIZATION LAYER
-  // ======================
-  const normalizedState = {
-    ...state,
-    fx: state.fx / GOLDEN_RATIO,
-    energy: state.energy / GOLDEN_RATIO
-  };
+}
 
-  // ======================
-  // ENGINE EXECUTION
-  // ======================
-  const result = captainAILena(normalizedState);
 
-  // ======================
-  // RENDER UI
-  // ======================
-  document.getElementById("state").innerText =
-    JSON.stringify(state, null, 2);
+/* =========================================================
+   RUN SYSTEM
+========================================================= */
 
-  document.getElementById("normalized").innerText =
-    JSON.stringify(normalizedState, null, 2);
+window.runSystem = function () {
 
-  document.getElementById("decision").innerText =
-    JSON.stringify(result, null, 2);
+  try {
 
-  document.getElementById("constants").innerText =
-    JSON.stringify({ GOLDEN_RATIO }, null, 2);
+    document.getElementById(
+      "systemStatus"
+    ).innerText =
+      "AUTONOMOUS ENGINE ACTIVE";
 
-  document.getElementById("trace").innerText =
-    "OBSERVE → NORMALIZE → DECIDE → ACT → UPDATE";
+    const state = getState();
+
+    const result =
+      runEngine(state);
+
+    renderResult(
+      state,
+      result
+    );
+
+  } catch (error) {
+
+    document.getElementById(
+      "systemStatus"
+    ).innerText =
+      "ENGINE ERROR";
+
+    document.getElementById(
+      "goldenOutput"
+    ).innerText =
+      error.stack || error.message;
+
+  }
+
+};
+
+
+/* =========================================================
+   RENDER RESULT
+========================================================= */
+
+function renderResult(
+  state,
+  result
+) {
+
+  const output =
+    result.output || {};
+
+  const assessment =
+    output.assessment || {};
+
+  const decision =
+    output.decision || {};
+
+  document.getElementById(
+    "rawState"
+  ).innerText =
+    JSON.stringify(
+      state,
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "goldenOutput"
+  ).innerText =
+    JSON.stringify(
+      output,
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "assessment"
+  ).innerText =
+    JSON.stringify(
+      assessment,
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "riskPanel"
+  ).innerText =
+    JSON.stringify(
+      {
+        risk:
+          assessment.risk ||
+          "UNKNOWN"
+      },
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "decision"
+  ).innerText =
+    JSON.stringify(
+      decision,
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "solution"
+  ).innerText =
+    decision.action ||
+    "Waiting for system assessment...";
+
+
+  document.getElementById(
+    "actionSequence"
+  ).innerText =
+    JSON.stringify(
+      buildActionSequence(
+        decision.action
+      ),
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "memory"
+  ).innerText =
+    JSON.stringify(
+      {
+        timestamp:
+          new Date().toISOString(),
+
+        scenario:
+          state.event,
+
+        engineStatus:
+          output.status ||
+          "COMPLETE",
+
+        status:
+          "MEMORY CORE UPDATED"
+      },
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "audit"
+  ).innerText =
+    JSON.stringify(
+      {
+        system:
+          "SPD v13.1",
+
+        engine:
+          "SPD v13 SEXTANT GOLDEN RULE ENGINE",
+
+        scenario:
+          state.event,
+
+        intensity:
+          state.intensity,
+
+        timestamp:
+          result.timestamp,
+
+        result:
+          output
+      },
+      null,
+      2
+    );
+
+
+  document.getElementById(
+    "pipeline"
+  ).innerText =
+    "PIPELINE EXECUTED\n" +
+    "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n" +
+    "STATUS: " +
+    (output.status || "COMPLETE");
+
+}
+
+
+/* =========================================================
+   ACTION SEQUENCE
+========================================================= */
+
+function buildActionSequence(action) {
+
+  if (!action) {
+
+    return [
+      "CONFIRM SYSTEM STATE",
+      "APPLY SELECTED MITIGATION",
+      "MONITOR SYSTEM RESPONSE"
+    ];
+
+  }
+
+  return [
+    "CONFIRM SYSTEM STATE",
+    "APPLY SELECTED MITIGATION",
+    action,
+    "MONITOR SYSTEM RESPONSE"
+  ];
+
+}
+
+
+/* =========================================================
+   SELF TEST
+========================================================= */
+
+window.runSelfTest = function () {
+
+  try {
+
+    const result =
+      runSystemTest();
+
+    document.getElementById(
+      "selfTest"
+    ).innerText =
+      JSON.stringify(
+        result,
+        null,
+        2
+      );
+
+    document.getElementById(
+      "selfTestInterpretation"
+    ).innerText =
+      result.status === "PASS"
+        ? "SELF-TEST PASS — SYSTEM TEST COMPLETED"
+        : "SELF-TEST RESULT REQUIRES REVIEW";
+
+    document.getElementById(
+      "fault"
+    ).innerText =
+      result.status === "PASS"
+        ? "NO FAULT REPORTED BY ARM SYSTEM TEST"
+        : "FAULT OR TEST FAILURE REPORTED";
+
+    document.getElementById(
+      "retest"
+    ).innerText =
+      "RE-TEST VALIDATION READY";
+
+  } catch (error) {
+
+    document.getElementById(
+      "selfTest"
+    ).innerText =
+      error.stack || error.message;
+
+  }
+
+};
+
+
+/* =========================================================
+   SELF TEST + CORRECTIVE ACTION
+========================================================= */
+
+window.runSelfTestCorrective = function () {
+
+  try {
+
+    const test =
+      runSystemTest();
+
+    document.getElementById(
+      "selfTest"
+    ).innerText =
+      JSON.stringify(
+        test,
+        null,
+        2
+      );
+
+    if (test.status === "PASS") {
+
+      document.getElementById(
+        "selfTestInterpretation"
+      ).innerText =
+        "SELF-TEST PASS — NO CORRECTIVE ACTION REQUIRED";
+
+      document.getElementById(
+        "fault"
+      ).innerText =
+        "NO FAULT IDENTIFIED";
+
+      document.getElementById(
+        "corrective"
+      ).innerText =
+        "NO CORRECTIVE ACTION REQUIRED";
+
+      document.getElementById(
+        "retest"
+      ).innerText =
+        "RE-TEST VALIDATION PASS — SYSTEM TEST COMPLETED";
+
+    } else {
+
+      document.getElementById(
+        "selfTestInterpretation"
+      ).innerText =
+        "SELF-TEST REQUIRES REVIEW";
+
+      document.getElementById(
+        "fault"
+      ).innerText =
+        "TEST RESULT REQUIRES FAULT ASSESSMENT";
+
+      document.getElementById(
+        "corrective"
+      ).innerText =
+        "MAINTAIN SAFE STATE AND REVIEW SYSTEM TEST";
+
+      document.getElementById(
+        "retest"
+      ).innerText =
+        "RE-TEST REQUIRED";
+
+    }
+
+  } catch (error) {
+
+    document.getElementById(
+      "corrective"
+    ).innerText =
+      error.stack || error.message;
+
+  }
+
+};
+
+
+/* =========================================================
+   ARM SCREEN CONNECTION
+========================================================= */
+
+window.openArmScreen = function () {
+
+  window.location.href =
+    "./arm_screen.html";
+
+};
+
+
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
+document.getElementById(
+  "constants"
+).innerText =
+  JSON.stringify(
+    {
+      PHI:
+        GOLDEN_RATIO,
+
+      GOLDEN_RATIO,
+
+      GOLDEN_RULE_STAGES: [
+        "OBSERVE",
+        "VERIFY",
+        "ASSESS",
+        "DECIDE",
+        "ACT",
+        "UPDATE"
+      ]
+    },
+    null,
+    2
+);
+
+
+/* =========================================================
+   INITIAL SCENARIO DISPLAY
+========================================================= */
+
+updateScenarioPanel();
+
 </script>
 
 </body>
