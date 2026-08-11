@@ -1,9 +1,11 @@
-name: Deploy SPD v13.1 to GitHub Pages
+name: SPD v13.1 — Validate and Deploy
 
 on:
   push:
     branches:
       - main
+      - command-centre
+      - feature/BHR-human-rights-compliance
 
   workflow_dispatch:
 
@@ -12,12 +14,84 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
+
+  validate:
+    name: Validate SPD v13.1
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify JavaScript files
+        run: |
+          echo "Checking SPD JavaScript modules..."
+
+          test -f engine.js
+          test -f captainAILena.js
+          test -f fx.js
+          test -f energy.js
+          test -f risk.js
+          test -f scenario.js
+          test -f armController.js
+          test -f constants/math.constants.js
+
+          echo "Core files present."
+
+      - name: Verify HTML files
+        run: |
+          echo "Checking SPD screens..."
+
+          test -f index.html
+          test -f cockpit_dashboard.html
+          test -f arm_screen.html
+
+          echo "Screen files present."
+
+      - name: Verify Golden Ratio
+        run: |
+          grep -q "GOLDEN_RATIO = 1.61803398875" \
+            constants/math.constants.js
+
+          echo "Golden Ratio verified."
+
+      - name: Verify Golden Rule pipeline
+        run: |
+          grep -q "OBSERVE" captainAILena.js
+          grep -q "VERIFY" captainAILena.js
+          grep -q "ASSESS" captainAILena.js
+          grep -q "DECIDE" captainAILena.js
+          grep -q "ACT" captainAILena.js
+          grep -q "UPDATE" captainAILena.js
+
+          echo "Golden Rule pipeline verified."
+
+      - name: Verify ARM controller
+        run: |
+          grep -q "runSystemTest" armController.js
+          grep -q "armSystem" armController.js
+          grep -q "disarmSystem" armController.js
+          grep -q "getArmStatus" armController.js
+
+          echo "ARM controller verified."
+
+      - name: Validation complete
+        run: |
+          echo "====================================="
+          echo "SPD v13.1 VALIDATION: PASS"
+          echo "====================================="
+
+
   deploy:
+    name: Deploy SPD v13.1
+    needs: validate
     runs-on: ubuntu-latest
 
     environment:
@@ -25,13 +99,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload site
+      - name: Upload SPD site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
