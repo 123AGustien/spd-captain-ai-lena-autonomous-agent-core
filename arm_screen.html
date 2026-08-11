@@ -1,21 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>SPD v13.1 — ARM Screen</title>
 
   <style>
+
     body {
       background: #05070a;
       color: #00ff99;
       font-family: monospace;
       padding: 15px;
+      margin: 0;
     }
 
     h2 {
       color: white;
+      margin-bottom: 5px;
+    }
+
+    h3 {
+      color: white;
+    }
+
+    .subtitle {
+      color: #888;
+      margin-bottom: 15px;
     }
 
     .panel {
@@ -23,6 +41,7 @@
       padding: 12px;
       margin-top: 12px;
       border-radius: 6px;
+      background: #080b0f;
     }
 
     button {
@@ -31,233 +50,389 @@
       margin-top: 10px;
       background: #00ff99;
       color: #000;
+      font-family: monospace;
       font-weight: bold;
       border: none;
       border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
     }
 
     button.test {
       background: #00aaff;
+      color: #fff;
+    }
+
+    button.arm {
+      background: #00ff99;
+      color: #000;
     }
 
     button.disarm {
       background: #ff4444;
-      color: white;
+      color: #fff;
+    }
+
+    button.return {
+      background: #888;
+      color: #fff;
     }
 
     pre {
       white-space: pre-wrap;
+      word-break: break-word;
       color: #00ff99;
+      line-height: 1.4;
     }
 
     .status {
       font-weight: bold;
+      padding: 8px;
+      border: 1px solid #444;
+      margin-top: 8px;
+    }
+
+    .flow {
+      color: #888;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .warning {
       color: #ffaa00;
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-<h2>🔐 SPD v13.1 — ARM SCREEN</h2>
 
-<div class="panel">
-  <h3>🧠 SYSTEM ARM STATUS</h3>
+  <h2>🔐 SPD v13.1 — ARM SCREEN</h2>
 
-  <div id="armStatus" class="status">
-    SYSTEM NOT ARMED
+  <div class="subtitle">
+    Captain AI Lena Autonomous Agent Core
   </div>
 
-  <button onclick="runSystemTest()" class="test">
-    RUN SYSTEM TEST
-  </button>
 
-  <button onclick="runTest()">
-    RUN TEST
-  </button>
+  <!-- =========================
+       ARM STATUS
+       ========================= -->
 
-  <button onclick="armSystem()">
-    ARM SYSTEM
-  </button>
+  <div class="panel">
 
-  <button onclick="disarmSystem()" class="disarm">
-    DISARM SYSTEM
-  </button>
-</div>
+    <h3>🧠 SYSTEM ARM STATUS</h3>
 
-<div class="panel">
-  <h3>📋 SYSTEM TEST RESULT</h3>
-  <pre id="testOutput">Waiting...</pre>
-</div>
+    <div
+      id="armStatus"
+      class="status"
+    >
+      SYSTEM NOT ARMED
+    </div>
 
-<div class="panel">
-  <h3>🔐 EXECUTION GATE</h3>
-  <pre id="executionGate">
-Authorization: PENDING
-Execution: BLOCKED
-  </pre>
-</div>
+  </div>
 
-<div class="panel">
-  <h3>🔁 SYSTEM FLOW</h3>
-  <pre>
-OBSERVE
-   ↓
-VERIFY
-   ↓
-ASSESS
-   ↓
-DECIDE
-   ↓
-ACT
-   ↓
-UPDATE
-  </pre>
-</div>
 
-<div class="panel">
-  <button onclick="openCockpit()">
-    ◀ RETURN TO ORIGINAL COCKPIT
-  </button>
-</div>
+  <!-- =========================
+       SYSTEM TEST CONTROLS
+       ========================= -->
 
-<script type="module">
+  <div class="panel">
 
-  import { runEngine } from "./engine.js";
+    <h3>🧪 SYSTEM TEST CONTROLS</h3>
 
-  let systemArmed = false;
-  let systemTestPassed = false;
+    <button
+      onclick="runSystemTest()"
+      class="test"
+    >
+      RUN SYSTEM TEST
+    </button>
 
-  window.runSystemTest = function () {
+    <button
+      onclick="runTest()"
+    >
+      RUN TEST
+    </button>
 
-    systemTestPassed = false;
+    <button
+      onclick="armSystem()"
+      class="arm"
+    >
+      ARM SYSTEM
+    </button>
 
-    document.getElementById("testOutput").innerText =
-      "SYSTEM TEST RUNNING...\n";
+    <button
+      onclick="disarmSystem()"
+      class="disarm"
+    >
+      DISARM SYSTEM
+    </button>
 
-    try {
+  </div>
 
-      const testState = {
-        fx: 10,
-        energy: 50,
-        cyb: 50,
-        inf: 0,
-        dc: 0,
-        event: "NORMAL",
-        mode: "TEST"
+
+  <!-- =========================
+       TEST RESULT
+       ========================= -->
+
+  <div class="panel">
+
+    <h3>📋 SYSTEM TEST RESULT</h3>
+
+    <pre id="testOutput">Waiting...</pre>
+
+  </div>
+
+
+  <!-- =========================
+       EXECUTION GATE
+       ========================= -->
+
+  <div class="panel">
+
+    <h3>🔐 EXECUTION GATE</h3>
+
+    <pre id="executionGate">Authorization: PENDING
+System Test: NOT PASSED
+Execution: BLOCKED</pre>
+
+  </div>
+
+
+  <!-- =========================
+       GOLDEN RULE PIPELINE
+       ========================= -->
+
+  <div class="panel">
+
+    <h3>🧭 GOLDEN RULE PIPELINE</h3>
+
+    <div class="flow">
+
+      OBSERVE
+      →
+      VERIFY
+      →
+      ASSESS
+      →
+      DECIDE
+      →
+      ACT
+      →
+      UPDATE
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ARM SAFETY NOTICE
+       ========================= -->
+
+  <div class="panel">
+
+    <h3>⚠️ ARM CONTROL</h3>
+
+    <div class="warning">
+
+      ARM authorization is blocked until the
+      system test passes.
+
+      <br><br>
+
+      ARM status does not independently alter
+      Captain AI Lena decision logic.
+
+      <br><br>
+
+      Human authorization remains the final
+      execution authority.
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       RETURN TO ORIGINAL COCKPIT
+       ========================= -->
+
+  <div class="panel">
+
+    <button
+      onclick="openCockpit()"
+      class="return"
+    >
+      ◀ RETURN TO ORIGINAL COCKPIT
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       ARM CONTROLLER CONNECTION
+       ========================= -->
+
+  <script type="module">
+
+    import {
+      runSystemTest,
+      runTest,
+      armSystem,
+      disarmSystem,
+      getArmStatus
+    } from "./armController.js";
+
+
+    /*
+     * Display controller result.
+     */
+    function displayTestResult(result) {
+
+      document.getElementById(
+        "testOutput"
+      ).innerText =
+        JSON.stringify(
+          result,
+          null,
+          2
+        );
+
+      updateGate();
+    }
+
+
+    /*
+     * Update ARM status and execution gate.
+     */
+    function updateGate() {
+
+      const status =
+        getArmStatus();
+
+
+      document.getElementById(
+        "armStatus"
+      ).innerText =
+        status.systemArmed
+          ? "SYSTEM ARMED"
+          : "SYSTEM NOT ARMED";
+
+
+      document.getElementById(
+        "executionGate"
+      ).innerText =
+        "Authorization: " +
+        (
+          status.systemArmed
+            ? "AUTHORIZED"
+            : "PENDING"
+        ) +
+        "\n" +
+        "System Test: " +
+        (
+          status.systemTestPassed
+            ? "PASS"
+            : "NOT PASSED"
+        ) +
+        "\n" +
+        "Execution: " +
+        status.execution;
+
+    }
+
+
+    /*
+     * RUN SYSTEM TEST
+     */
+    window.runSystemTest =
+      function () {
+
+        const result =
+          runSystemTest();
+
+        displayTestResult(
+          result
+        );
+
       };
 
-      const result = runEngine(testState);
 
-      if (
-        result &&
-        result.output &&
-        result.output.assessment &&
-        result.output.decision
-      ) {
+    /*
+     * RUN TEST
+     */
+    window.runTest =
+      function () {
 
-        systemTestPassed = true;
+        const result =
+          runTest();
 
-        document.getElementById("testOutput").innerText =
-          "SYSTEM TEST: PASS\n\n" +
-          JSON.stringify(result, null, 2);
+        displayTestResult(
+          result
+        );
 
-      } else {
+      };
 
-        document.getElementById("testOutput").innerText =
-          "SYSTEM TEST: FAIL\n\n" +
-          "Engine response incomplete.";
-      }
 
-    } catch (error) {
+    /*
+     * ARM SYSTEM
+     */
+    window.armSystem =
+      function () {
 
-      document.getElementById("testOutput").innerText =
-        "SYSTEM TEST: FAIL\n\n" +
-        error.message;
-    }
+        const result =
+          armSystem();
 
+        displayTestResult(
+          result
+        );
+
+      };
+
+
+    /*
+     * DISARM SYSTEM
+     */
+    window.disarmSystem =
+      function () {
+
+        const result =
+          disarmSystem();
+
+        displayTestResult(
+          result
+        );
+
+      };
+
+
+    /*
+     * Return to the original
+     * SPD v13.1 cockpit.
+     */
+    window.openCockpit =
+      function () {
+
+        window.location.href =
+          "cockpit_dashboard.html";
+
+      };
+
+
+    /*
+     * Initial state.
+     */
     updateGate();
-  };
 
+  </script>
 
-  window.runTest = function () {
-
-    document.getElementById("testOutput").innerText =
-      "RUN TEST...\n\n" +
-      "Testing existing SPD engine connection...";
-
-    try {
-
-      const result = runEngine({
-        fx: 10,
-        energy: 50,
-        cyb: 50,
-        event: "NORMAL",
-        mode: "TEST"
-      });
-
-      document.getElementById("testOutput").innerText =
-        "RUN TEST: COMPLETE\n\n" +
-        JSON.stringify(result.output, null, 2);
-
-    } catch (error) {
-
-      document.getElementById("testOutput").innerText =
-        "RUN TEST: FAIL\n\n" +
-        error.message;
-    }
-  };
-
-
-  window.armSystem = function () {
-
-    if (!systemTestPassed) {
-
-      document.getElementById("testOutput").innerText +=
-        "\n\nARM BLOCKED: SYSTEM TEST MUST PASS FIRST.";
-
-      return;
-    }
-
-    systemArmed = true;
-
-    document.getElementById("armStatus").innerText =
-      "SYSTEM ARMED";
-
-    updateGate();
-  };
-
-
-  window.disarmSystem = function () {
-
-    systemArmed = false;
-
-    document.getElementById("armStatus").innerText =
-      "SYSTEM NOT ARMED";
-
-    updateGate();
-  };
-
-
-  function updateGate() {
-
-    document.getElementById("executionGate").innerText =
-      "Authorization: " +
-      (systemArmed ? "AUTHORIZED" : "PENDING") +
-      "\n" +
-      "System Test: " +
-      (systemTestPassed ? "PASS" : "NOT PASSED") +
-      "\n" +
-      "Execution: " +
-      (systemArmed ? "ARMED" : "BLOCKED");
-  }
-
-
-  window.openCockpit = function () {
-    window.location.href = "cockpit_dashboard.html";
-  };
-
-</script>
 
 </body>
+
 </html>
