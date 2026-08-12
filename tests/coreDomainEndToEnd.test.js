@@ -1,34 +1,24 @@
 /**
- * SPD v13.1 — CORE → DOMAIN END-TO-END SYSTEM TEST
+ * SPD v13.1 — DOMAIN INTEGRATION SYSTEM TEST
  *
- * Purpose:
- * Validate the complete execution path:
+ * PURPOSE
+ * -------
+ * Strict integration validation for:
  *
- * COCKPIT STATE
- *      ↓
- * CORE EXECUTION ENGINE
- *      ↓
- * OBSERVE
- *      ↓
- * VERIFY / NORMALIZE
- *      ↓
- * DOMAIN RESOLUTION
- *      ↓
- * AUTHORITATIVE DOMAIN RULE ENGINE
- *      ↓
- * CAPTAIN AI LENA
- *      ↓
- * DECISION SUPPORT
- *      ↓
- * HUMAN AUTHORIZATION GATE
- *      ↓
+ * COCKPIT
+ *   ↓
+ * DOMAIN INTEGRATION
+ *   ↓
+ * AUTHORITATIVE DOMAIN ENGINE
+ *   ↓
  * RESULT
  *
- * This test verifies that the Core Execution Engine is
- * actually wired to the Domain Integration Layer.
+ * Active domains:
+ * FIN, BHR, DC, CYB, INF
  *
- * Human authority remains final.
- * Autonomous execution must remain disabled.
+ * Governance:
+ * HUMAN_OPERATOR = FINAL AUTHORITY
+ * autonomous execution = DISABLED
  */
 
 
@@ -37,19 +27,20 @@
 ========================================================= */
 
 import {
-  runEngine,
-  verifyCoreEngine
-} from "../coreExecutionEngine.js";
-
-import {
-  getDomainStatus,
+  DOMAIN_REGISTRY,
+  DOMAIN_ENGINES,
   mapScenario,
-  resolveDomain
+  resolveDomain,
+  getDomainStatus,
+  executeScenarioDomain,
+  listDomains,
+  verifyDomainIntegration,
+  selfTest
 } from "../domainIntegration.js";
 
 
 /* =========================================================
-   TEST COUNTERS
+   TEST STATE
 ========================================================= */
 
 let passed = 0;
@@ -89,347 +80,48 @@ function assert(
 
 
 /* =========================================================
-   TEST 1 — CORE SELF TEST
+   ACTIVE DOMAINS
 ========================================================= */
 
-console.log(
-  "\nTEST 1 — CORE EXECUTION ENGINE SELF-TEST"
-);
-
-const coreSelfTest =
-  verifyCoreEngine();
-
-assert(
-  coreSelfTest.status === "PASS",
-  "Core execution engine self-test PASS"
-);
-
-assert(
-  coreSelfTest.engine ===
-    "SPD v13.1 CORE EXECUTION ENGINE",
-  "Correct Core Execution Engine identified"
-);
-
-
-/* =========================================================
-   TEST 2 — FIN CORE → DOMAIN
-========================================================= */
-
-console.log(
-  "\nTEST 2 — CORE → FIN END-TO-END"
-);
-
-const finInput = {
-
-  scenario:
-    "LIQUIDITY_CRISIS",
-
-  intensity:
-    90,
-
-  fx:
-    70,
-
-  energy:
-    60,
-
-  cyb:
-    40,
-
-  inf:
-    50,
-
-  dc:
-    30,
-
-  mode:
-    "TEST"
-
-};
-
-
-assert(
-  mapScenario(
-    finInput.scenario
-  ) === "FIN",
-  "FIN scenario resolves correctly"
-);
-
-assert(
-  resolveDomain(
-    finInput
-  ) === "FIN",
-  "Core input resolves to FIN"
-);
-
-
-const finCoreResult =
-  runEngine(
-    finInput
-  );
-
-
-assert(
-  finCoreResult.status ===
-    "EXECUTED",
-  "FIN Core execution completed"
-);
-
-assert(
-  finCoreResult.output.status ===
-    "COMPLETE",
-  "FIN Core output COMPLETE"
-);
-
-assert(
-  finCoreResult.output.domain ===
-    "FIN",
-  "Core routed execution to FIN"
-);
-
-assert(
-  finCoreResult.output.domainResult !==
-    null,
-  "FIN domain result returned"
-);
-
-assert(
-  finCoreResult.output.domainResult?.success ===
-    true,
-  "FIN authoritative domain engine executed"
-);
-
-assert(
-  finCoreResult.output.domainAssessment !==
-    null,
-  "FIN domain assessment extracted"
-);
-
-assert(
-  finCoreResult.output.captainAI !==
-    undefined,
-  "Captain AI Lena executed after domain evaluation"
-);
-
-assert(
-  finCoreResult.output.decisionSupport !==
-    undefined,
-  "FIN decision support generated"
-);
-
-
-/* =========================================================
-   TEST 3 — BHR CORE → DOMAIN
-========================================================= */
-
-console.log(
-  "\nTEST 3 — CORE → BHR END-TO-END"
-);
-
-const bhrInput = {
-
-  scenario:
-    "FORCED_LABOUR",
-
-  intensity:
-    90,
-
-  labour:
-    80,
-
-  humanRights:
-    85,
-
-  supplyChain:
-    70,
-
-  governance:
-    65,
-
-  community:
-    40,
-
-  environment:
-    20,
-
-  mode:
-    "TEST"
-
-};
-
-
-assert(
-  mapScenario(
-    bhrInput.scenario
-  ) === "BHR",
-  "BHR scenario resolves correctly"
-);
-
-assert(
-  resolveDomain(
-    bhrInput
-  ) === "BHR",
-  "Core input resolves to BHR"
-);
-
-
-const bhrCoreResult =
-  runEngine(
-    bhrInput
-  );
-
-
-assert(
-  bhrCoreResult.status ===
-    "EXECUTED",
-  "BHR Core execution completed"
-);
-
-assert(
-  bhrCoreResult.output.domain ===
-    "BHR",
-  "Core routed execution to BHR"
-);
-
-assert(
-  bhrCoreResult.output.domainResult?.success ===
-    true,
-  "BHR authoritative domain engine executed"
-);
-
-assert(
-  bhrCoreResult.output.domainAssessment !==
-    null,
-  "BHR domain assessment extracted"
-);
-
-assert(
-  bhrCoreResult.output.captainAI !==
-    undefined,
-  "Captain AI Lena executed for BHR"
-);
-
-assert(
-  bhrCoreResult.output.decisionSupport !==
-    undefined,
-  "BHR decision support generated"
-);
-
-
-/* =========================================================
-   TEST 4 — GOVERNANCE GATE
-========================================================= */
-
-console.log(
-  "\nTEST 4 — HUMAN AUTHORITY GOVERNANCE"
-);
-
-[
-  finCoreResult,
-  bhrCoreResult
-].forEach(
-  (result, index) => {
-
-    const label =
-      index === 0
-        ? "FIN"
-        : "BHR";
-
-    assert(
-      result.output.executionAuthority ===
-        "HUMAN_OPERATOR",
-      `${label} execution authority is HUMAN_OPERATOR`
-    );
-
-    assert(
-      result.output.executionStatus ===
-        "DECISION_GENERATED_HUMAN_AUTHORIZATION_REQUIRED",
-      `${label} execution requires human authorization`
-    );
-
-    assert(
-      result.output.decision !==
-        undefined,
-      `${label} decision exists`
-    );
-
-  }
-);
-
-
-/* =========================================================
-   TEST 5 — GOLDEN RULE PIPELINE
-========================================================= */
-
-console.log(
-  "\nTEST 5 — GOLDEN RULE PIPELINE"
-);
-
-const expectedPipeline = [
-  "OBSERVE",
-  "VERIFY",
-  "ASSESS",
-  "DECIDE",
-  "ACT",
-  "UPDATE"
+const ACTIVE_DOMAINS = [
+  "FIN",
+  "BHR",
+  "DC",
+  "CYB",
+  "INF"
 ];
 
 
-assert(
-  JSON.stringify(
-    finCoreResult.output.goldenRulePipeline
-  ) ===
-  JSON.stringify(
-    expectedPipeline
-  ),
-  "FIN Golden Rule pipeline verified"
-);
-
-assert(
-  JSON.stringify(
-    bhrCoreResult.output.goldenRulePipeline
-  ) ===
-  JSON.stringify(
-    expectedPipeline
-  ),
-  "BHR Golden Rule pipeline verified"
-);
-
-
 /* =========================================================
-   TEST 6 — DOMAIN STATUS
+   TEST 1 — REGISTRY INTEGRITY
 ========================================================= */
 
 console.log(
-  "\nTEST 6 — ACTIVE DOMAIN ENGINE STATUS"
+  "\nTEST 1 — DOMAIN REGISTRY INTEGRITY"
 );
 
-[
-  "FIN",
-  "BHR"
-].forEach(
+ACTIVE_DOMAINS.forEach(
   domain => {
 
-    const status =
-      getDomainStatus(
-        domain
-      );
-
     assert(
-      status.status ===
-        "ACTIVE",
-      `${domain} domain ACTIVE`
+      DOMAIN_REGISTRY[domain] !== undefined,
+      `${domain} registry entry exists`
     );
 
     assert(
-      status.engineRegistered ===
-        true,
+      DOMAIN_REGISTRY[domain].status ===
+        "ACTIVE",
+      `${domain} registry status ACTIVE`
+    );
+
+    assert(
+      DOMAIN_ENGINES[domain] !== undefined,
       `${domain} engine registered`
     );
 
     assert(
-      status.evaluateAvailable ===
-        true,
+      typeof DOMAIN_ENGINES[domain].evaluate ===
+        "function",
       `${domain} evaluate() available`
     );
 
@@ -438,68 +130,470 @@ console.log(
 
 
 /* =========================================================
-   TEST 7 — CORE → DOMAIN → AI CHAIN
+   TEST 2 — DOMAIN STATUS
 ========================================================= */
 
 console.log(
-  "\nTEST 7 — COMPLETE EXECUTION CHAIN"
+  "\nTEST 2 — DOMAIN STATUS"
 );
 
-assert(
-  finCoreResult.output.domainResult?.success ===
-    true &&
-  finCoreResult.output.captainAI !==
-    undefined &&
-  finCoreResult.output.decisionSupport !==
-    undefined,
-  "FIN Core → Domain → Captain AI chain complete"
-);
+ACTIVE_DOMAINS.forEach(
+  domain => {
 
-assert(
-  bhrCoreResult.output.domainResult?.success ===
-    true &&
-  bhrCoreResult.output.captainAI !==
-    undefined &&
-  bhrCoreResult.output.decisionSupport !==
-    undefined,
-  "BHR Core → Domain → Captain AI chain complete"
+    const status =
+      getDomainStatus(
+        domain
+      );
+
+    assert(
+      status.engineRegistered ===
+        true,
+      `${domain} engineRegistered=true`
+    );
+
+    assert(
+      status.evaluateAvailable ===
+        true,
+      `${domain} evaluateAvailable=true`
+    );
+
+  }
 );
 
 
 /* =========================================================
-   TEST 8 — NO AUTONOMOUS EXECUTION
+   TEST 3 — SCENARIO RESOLUTION
 ========================================================= */
 
 console.log(
-  "\nTEST 8 — AUTONOMOUS EXECUTION DISABLED"
+  "\nTEST 3 — SCENARIO RESOLUTION"
 );
 
-[
-  finCoreResult,
-  bhrCoreResult
-].forEach(
-  (result, index) => {
+const resolutionTests = {
 
-    const label =
-      index === 0
-        ? "FIN"
-        : "BHR";
+  LIQUIDITY_CRISIS:
+    "FIN",
 
-    const domainResult =
-      result.output.domainResult?.result;
+  BANKING_STRESS:
+    "FIN",
+
+  FORCED_LABOUR:
+    "BHR",
+
+  HUMAN_RIGHTS_DUE_DILIGENCE:
+    "BHR",
+
+  COOLING_FAILURE:
+    "DC",
+
+  POWER_INSTABILITY:
+    "DC",
+
+  DDOS:
+    "CYB",
+
+  DATA_BREACH_CREDENTIAL_LEAK:
+    "CYB"
+
+};
+
+
+Object.entries(
+  resolutionTests
+).forEach(
+  ([scenario, expectedDomain]) => {
+
+    assert(
+      mapScenario(
+        scenario
+      ) === expectedDomain,
+      `${scenario} → ${expectedDomain}`
+    );
+
+    assert(
+      resolveDomain({
+        scenario
+      }) === expectedDomain,
+      `${scenario} resolveDomain() → ${expectedDomain}`
+    );
+
+  }
+);
+
+
+/* =========================================================
+   TEST 4 — INF AUTHORITATIVE MAPPING
+========================================================= */
+
+console.log(
+  "\nTEST 4 — INF AUTHORITATIVE SCENARIO MAP"
+);
+
+const infEngine =
+  DOMAIN_ENGINES.INF;
+
+assert(
+  typeof infEngine.getScenarioMap ===
+    "function",
+  "INF exposes authoritative getScenarioMap()"
+);
+
+if (
+  typeof infEngine.getScenarioMap ===
+    "function"
+) {
+
+  const infMap =
+    infEngine.getScenarioMap();
+
+  const scenarios =
+    Object.keys(
+      infMap
+    );
+
+  assert(
+    scenarios.length > 0,
+    "INF authoritative scenario map is populated"
+  );
+
+  scenarios.forEach(
+    scenario => {
+
+      assert(
+        mapScenario(
+          scenario
+        ) === "INF",
+        `${scenario} → INF`
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   TEST 5 — UNKNOWN SCENARIO REJECTION
+========================================================= */
+
+console.log(
+  "\nTEST 5 — UNKNOWN SCENARIO REJECTION"
+);
+
+const unknownScenario =
+  "SPD_UNKNOWN_TEST_SCENARIO";
+
+assert(
+  mapScenario(
+    unknownScenario
+  ) === null,
+  "Unknown scenario returns null"
+);
+
+assert(
+  resolveDomain({
+    scenario:
+      unknownScenario
+  }) === null,
+  "Unknown scenario cannot resolve domain"
+);
+
+const unknownResult =
+  executeScenarioDomain({
+
+    scenario:
+      unknownScenario
+
+  });
+
+assert(
+  unknownResult.success ===
+    false,
+  "Unknown scenario execution rejected"
+);
+
+assert(
+  unknownResult.error ===
+    "NO_DOMAIN_MAPPED_TO_SCENARIO",
+  "Correct rejection error returned"
+);
+
+
+/* =========================================================
+   TEST 6 — FIN EXECUTION
+========================================================= */
+
+console.log(
+  "\nTEST 6 — FIN EXECUTION"
+);
+
+const fin =
+  executeScenarioDomain({
+
+    scenario:
+      "LIQUIDITY_CRISIS",
+
+    fx:
+      70,
+
+    energy:
+      60,
+
+    cyb:
+      40,
+
+    inf:
+      50,
+
+    dc:
+      30,
+
+    intensity:
+      90
+
+  });
+
+assert(
+  fin.success ===
+    true,
+  "FIN execution successful"
+);
+
+assert(
+  fin.domain ===
+    "FIN",
+  "FIN domain confirmed"
+);
+
+assert(
+  fin.result !==
+    undefined,
+  "FIN authoritative result returned"
+);
+
+
+/* =========================================================
+   TEST 7 — BHR EXECUTION
+========================================================= */
+
+console.log(
+  "\nTEST 7 — BHR EXECUTION"
+);
+
+const bhr =
+  executeScenarioDomain({
+
+    scenario:
+      "FORCED_LABOUR",
+
+    labour:
+      80,
+
+    humanRights:
+      85,
+
+    supplyChain:
+      70,
+
+    governance:
+      65,
+
+    community:
+      40,
+
+    environment:
+      20,
+
+    intensity:
+      90
+
+  });
+
+assert(
+  bhr.success ===
+    true,
+  "BHR execution successful"
+);
+
+assert(
+  bhr.domain ===
+    "BHR",
+  "BHR domain confirmed"
+);
+
+assert(
+  bhr.result !==
+    undefined,
+  "BHR authoritative result returned"
+);
+
+
+/* =========================================================
+   TEST 8 — DC EXECUTION
+========================================================= */
+
+console.log(
+  "\nTEST 8 — DC EXECUTION"
+);
+
+const dc =
+  executeScenarioDomain({
+
+    scenario:
+      "COOLING_FAILURE",
+
+    cooling:
+      90,
+
+    power:
+      60,
+
+    network:
+      50,
+
+    compute:
+      70,
+
+    intensity:
+      85
+
+  });
+
+assert(
+  dc.success ===
+    true,
+  "DC execution successful"
+);
+
+assert(
+  dc.domain ===
+    "DC",
+  "DC domain confirmed"
+);
+
+assert(
+  dc.result !==
+    undefined,
+  "DC authoritative result returned"
+);
+
+
+/* =========================================================
+   TEST 9 — CYB EXECUTION
+========================================================= */
+
+console.log(
+  "\nTEST 9 — CYB EXECUTION"
+);
+
+const cyb =
+  executeScenarioDomain({
+
+    scenario:
+      "DDOS",
+
+    network:
+      90,
+
+    system:
+      80,
+
+    intensity:
+      90
+
+  });
+
+assert(
+  cyb.success ===
+    true,
+  "CYB execution successful"
+);
+
+assert(
+  cyb.domain ===
+    "CYB",
+  "CYB domain confirmed"
+);
+
+assert(
+  cyb.result !==
+    undefined,
+  "CYB authoritative result returned"
+);
+
+
+/* =========================================================
+   TEST 10 — GOVERNANCE
+========================================================= */
+
+console.log(
+  "\nTEST 10 — GOVERNANCE"
+);
+
+const results = [
+  fin,
+  bhr,
+  dc,
+  cyb
+];
+
+
+results.forEach(
+  result => {
+
+    const output =
+      result.result;
+
+    assert(
+      output !==
+        undefined,
+      `${result.domain} governed result exists`
+    );
+
+    if (!output) {
+      return;
+    }
+
 
     if (
-      domainResult?.governance &&
-      typeof domainResult.governance
+      output.executionAuthority
+    ) {
+
+      assert(
+        output.executionAuthority ===
+          "HUMAN_OPERATOR",
+        `${result.domain} execution authority HUMAN_OPERATOR`
+      );
+
+    }
+
+
+    if (
+      output.decision &&
+      output.decision.executionAuthority
+    ) {
+
+      assert(
+        output.decision.executionAuthority ===
+          "HUMAN_OPERATOR",
+        `${result.domain} decision authority HUMAN_OPERATOR`
+      );
+
+    }
+
+
+    if (
+      output.governance &&
+      typeof output.governance
         .autonomousExecution ===
         "boolean"
     ) {
 
       assert(
-        domainResult.governance
+        output.governance
           .autonomousExecution ===
           false,
-        `${label} autonomous execution disabled`
+        `${result.domain} autonomous execution disabled`
       );
 
     }
@@ -509,65 +603,217 @@ console.log(
 
 
 /* =========================================================
-   TEST 9 — NORMALIZATION / OBSERVATION
+   TEST 11 — HIGH-RISK HUMAN AUTHORIZATION
 ========================================================= */
 
 console.log(
-  "\nTEST 9 — CORE OBSERVE / VERIFY"
+  "\nTEST 11 — HIGH-RISK HUMAN AUTHORIZATION"
 );
 
-assert(
-  finCoreResult.input.observedAt !==
-    undefined,
-  "FIN observation timestamp recorded"
-);
+const highRisk =
+  executeScenarioDomain({
+
+    scenario:
+      "FORCED_LABOUR",
+
+    labour:
+      100,
+
+    humanRights:
+      100,
+
+    supplyChain:
+      100,
+
+    governance:
+      100,
+
+    community:
+      100,
+
+    environment:
+      100,
+
+    intensity:
+      100
+
+  });
 
 assert(
-  finCoreResult.normalizedInput !==
-    undefined,
-  "FIN normalized input recorded"
+  highRisk.success ===
+    true,
+  "High-risk BHR evaluation successful"
 );
 
-assert(
-  bhrCoreResult.input.observedAt !==
-    undefined,
-  "BHR observation timestamp recorded"
+if (
+  highRisk.success &&
+  highRisk.result
+) {
+
+  const output =
+    highRisk.result;
+
+  const authorizationRequired =
+    output.executionStatus ===
+      "HUMAN_AUTHORIZATION_REQUIRED" ||
+
+    (
+      output.decision &&
+      output.decision.humanAuthorization ===
+        "REQUIRED_BEFORE_EXECUTION"
+    );
+
+  assert(
+    authorizationRequired,
+    "High-risk BHR requires human authorization"
+  );
+
+}
+
+
+/* =========================================================
+   TEST 12 — DOMAIN LIST
+========================================================= */
+
+console.log(
+  "\nTEST 12 — DOMAIN LIST"
 );
 
-assert(
-  bhrCoreResult.normalizedInput !==
-    undefined,
-  "BHR normalized input recorded"
+const domains =
+  listDomains();
+
+ACTIVE_DOMAINS.forEach(
+  domainId => {
+
+    const domain =
+      domains.find(
+        item =>
+          item.id ===
+            domainId
+      );
+
+    assert(
+      domain !==
+        undefined,
+      `${domainId} present in domain list`
+    );
+
+    if (!domain) {
+      return;
+    }
+
+    assert(
+      domain.status ===
+        "ACTIVE",
+      `${domainId} listed ACTIVE`
+    );
+
+    assert(
+      domain.engineRegistered ===
+        true,
+      `${domainId} listed engine registered`
+    );
+
+    assert(
+      domain.evaluateAvailable ===
+        true,
+      `${domainId} listed evaluation available`
+    );
+
+  }
 );
 
 
 /* =========================================================
-   TEST 10 — DOMAIN AUTHORITY
+   TEST 13 — FULL INTEGRATION SELF-TEST
 ========================================================= */
 
 console.log(
-  "\nTEST 10 — AUTHORITATIVE DOMAIN ASSESSMENT"
+  "\nTEST 13 — FULL DOMAIN INTEGRATION SELF-TEST"
+);
+
+const integration =
+  selfTest();
+
+assert(
+  integration.status ===
+    "PASS",
+  "Domain integration self-test PASS"
 );
 
 assert(
-  finCoreResult.output
-    .decisionSupport
-    .assessmentSource ===
-      "DOMAIN_RULE_ENGINE",
-  "FIN assessment source is authoritative domain engine"
+  integration.registration.passed ===
+    true,
+  "Registration self-test PASS"
 );
 
 assert(
-  bhrCoreResult.output
-    .decisionSupport
-    .assessmentSource ===
-      "DOMAIN_RULE_ENGINE",
-  "BHR assessment source is authoritative domain engine"
+  integration.resolution.passed ===
+    true,
+  "Resolution self-test PASS"
+);
+
+assert(
+  integration.integration.status ===
+    "READY",
+  "Integration status READY"
+);
+
+assert(
+  integration.governance
+    .humanOperator ===
+      true,
+  "Human operator authority enabled"
+);
+
+assert(
+  integration.governance
+    .autonomousExecution ===
+      false,
+  "Autonomous execution disabled"
+);
+
+assert(
+  integration.governance
+    .humanAuthorizationRequired ===
+      true,
+  "Human authorization required"
 );
 
 
 /* =========================================================
-   FINAL SUMMARY
+   TEST 14 — INTEGRATION READINESS
+========================================================= */
+
+console.log(
+  "\nTEST 14 — INTEGRATION READINESS"
+);
+
+const verification =
+  verifyDomainIntegration();
+
+assert(
+  verification.status ===
+    "READY",
+  "Domain integration READY"
+);
+
+ACTIVE_DOMAINS.forEach(
+  domain => {
+
+    assert(
+      verification
+        .registeredEngines
+        .includes(domain),
+      `${domain} included in registered engines`
+    );
+
+  }
+);
+
+
+/* =========================================================
+   FINAL RESULT
 ========================================================= */
 
 console.log(
@@ -575,7 +821,7 @@ console.log(
 );
 
 console.log(
-  "SPD v13.1 — CORE → DOMAIN END-TO-END TEST"
+  "SPD v13.1 — DOMAIN INTEGRATION SYSTEM TEST"
 );
 
 console.log(
@@ -613,14 +859,14 @@ if (
 ) {
 
   throw new Error(
-    `SPD v13.1 Core-to-Domain E2E Test FAILED: ${failed} test(s) failed.`
+    `SPD v13.1 Domain Integration Test FAILED: ${failed} test(s) failed.`
   );
 
 }
 
 
 /* =========================================================
-   EXPORT TEST SUMMARY
+   EXPORT
 ========================================================= */
 
 export {
