@@ -26,8 +26,9 @@
    IMPORTS
 ========================================================= */
 
-import { captainAILena }
-  from "./captainAILena.js";
+import {
+  captainAILena
+} from "./captainAILena.js";
 
 import {
   resolveDomain,
@@ -47,15 +48,10 @@ import {
 const GOLDEN_RULE_PIPELINE = [
 
   "OBSERVE",
-
   "VERIFY",
-
   "ASSESS",
-
   "DECIDE",
-
   "ACT",
-
   "UPDATE"
 
 ];
@@ -73,11 +69,30 @@ function safeNumber(
   const numeric =
     Number(value);
 
-  return Number.isFinite(
-    numeric
-  )
+  return Number.isFinite(numeric)
     ? numeric
     : fallback;
+
+}
+
+
+/* =========================================================
+   CLAMP
+========================================================= */
+
+function clamp(
+  value,
+  min = 0,
+  max = 100
+) {
+
+  return Math.min(
+    max,
+    Math.max(
+      min,
+      value
+    )
+  );
 
 }
 
@@ -103,6 +118,40 @@ function observeState(
 
 
 /* =========================================================
+   INTENSITY
+========================================================= */
+
+function normalizeIntensity(
+  value
+) {
+
+  return clamp(
+    safeNumber(value),
+    0,
+    100
+  );
+
+}
+
+
+/* =========================================================
+   APPLY INTENSITY
+========================================================= */
+
+function applyIntensity(
+  value,
+  intensityFactor
+) {
+
+  return clamp(
+    safeNumber(value) *
+    intensityFactor
+  );
+
+}
+
+
+/* =========================================================
    VERIFY / NORMALIZATION
 ========================================================= */
 
@@ -110,35 +159,149 @@ function normalizeState(
   observedState = {}
 ) {
 
+  /*
+   * IMPORTANT:
+   *
+   * The cockpit intensity slider is a
+   * real computational input.
+   *
+   * 0%   → no scenario stress applied
+   * 50%  → half of supplied stress applied
+   * 100% → full supplied stress applied
+   */
+
+  const intensity =
+    normalizeIntensity(
+      observedState.intensity
+    );
+
+
+  const intensityFactor =
+    intensity / 100;
+
+
   return {
 
     ...observedState,
 
-    energy:
-      safeNumber(
-        observedState.energy
-      ) /
-      GOLDEN_RATIO,
+
+    /* =====================================================
+       INTENSITY
+    ===================================================== */
+
+    intensity,
+
+    intensityFactor,
+
+
+    /* =====================================================
+       CORE DOMAINS
+    ===================================================== */
 
     fx:
-      safeNumber(
-        observedState.fx
-      ) /
-      GOLDEN_RATIO,
+      applyIntensity(
+        observedState.fx,
+        intensityFactor
+      ),
+
+    energy:
+      applyIntensity(
+        observedState.energy,
+        intensityFactor
+      ),
 
     cyb:
-      safeNumber(
-        observedState.cyb
+      applyIntensity(
+        observedState.cyb,
+        intensityFactor
       ),
 
     inf:
-      safeNumber(
-        observedState.inf
+      applyIntensity(
+        observedState.inf,
+        intensityFactor
       ),
 
     dc:
-      safeNumber(
-        observedState.dc
+      applyIntensity(
+        observedState.dc,
+        intensityFactor
+      ),
+
+
+    /* =====================================================
+       BHR
+    ===================================================== */
+
+    labour:
+      applyIntensity(
+        observedState.labour,
+        intensityFactor
+      ),
+
+    humanRights:
+      applyIntensity(
+        observedState.humanRights,
+        intensityFactor
+      ),
+
+    supplyChain:
+      applyIntensity(
+        observedState.supplyChain,
+        intensityFactor
+      ),
+
+    community:
+      applyIntensity(
+        observedState.community,
+        intensityFactor
+      ),
+
+    governance:
+      applyIntensity(
+        observedState.governance,
+        intensityFactor
+      ),
+
+    environment:
+      applyIntensity(
+        observedState.environment,
+        intensityFactor
+      ),
+
+
+    /* =====================================================
+       FIN
+    ===================================================== */
+
+    liquidity:
+      applyIntensity(
+        observedState.liquidity,
+        intensityFactor
+      ),
+
+    credit:
+      applyIntensity(
+        observedState.credit,
+        intensityFactor
+      ),
+
+    banking:
+      applyIntensity(
+        observedState.banking,
+        intensityFactor
+      ),
+
+    sovereign:
+      applyIntensity(
+        observedState.sovereign,
+        intensityFactor
+      ),
+
+    financialMarket:
+      applyIntensity(
+        observedState.financialMarket,
+        intensityFactor
       )
 
   };
@@ -196,6 +359,7 @@ function executeResolvedDomain(
 
 
   if (
+    !domainStatus ||
     !domainStatus.engineRegistered
   ) {
 
@@ -255,6 +419,9 @@ function executeResolvedDomain(
       intensity:
         observedState.intensity,
 
+      intensityFactor:
+        normalizedState.intensityFactor,
+
       event:
         observedState.event
 
@@ -282,12 +449,6 @@ function extractDomainAssessment(
 
   }
 
-
-  /*
-   * The integration layer wraps the
-   * authoritative engine response inside
-   * domainResult.result.
-   */
 
   const result =
     domainResult.result;
@@ -348,7 +509,7 @@ function extractDomainAssessment(
 
 
 /* =========================================================
-   CAPTAIN AI LENA DECISION CORE
+   CAPTAIN AI LENA
 ========================================================= */
 
 function executeCaptainAI(
@@ -416,35 +577,23 @@ function buildDecisionSupport(
     {};
 
 
-  /*
-   * Domain engines are authoritative for
-   * domain-specific assessment.
-   *
-   * Captain AI remains the higher-level
-   * decision-support layer.
-   */
-
   return {
 
     domain:
-
       domainAssessment?.domain ||
       "CORE",
 
     risk:
-
       domainAssessment?.risk ??
       captainAssessment.risk ??
       "UNKNOWN",
 
     resilienceScore:
-
       domainAssessment?.resilienceScore ??
       captainAssessment.resilienceScore ??
       null,
 
     assessmentSource:
-
       domainAssessment
         ? "DOMAIN_RULE_ENGINE"
         : "CAPTAIN_AI_CORE",
@@ -534,7 +683,8 @@ export function runEngine(
         false,
 
       domain:
-        domain || "CORE",
+        domain ||
+        "CORE",
 
       error:
         "DOMAIN_EXECUTION_EXCEPTION",
@@ -596,9 +746,7 @@ export function runEngine(
 
     domainStatus:
       domain
-        ? getDomainStatus(
-            domain
-          )
+        ? getDomainStatus(domain)
         : null,
 
     domainResult,
@@ -617,6 +765,7 @@ export function runEngine(
       domainAssessment?.decision ||
       captainResult?.decision ||
       {
+
         action:
           "MAINTAIN_SAFE_STATE",
 
@@ -626,6 +775,12 @@ export function runEngine(
       },
 
     decisionSupport,
+
+    intensity:
+      normalizedState.intensity,
+
+    intensityFactor:
+      normalizedState.intensityFactor,
 
     goldenRulePipeline:
       GOLDEN_RULE_PIPELINE,
@@ -702,11 +857,36 @@ export function verifyCoreEngine() {
 
       dc: 0,
 
+      labour: 0,
+
+      humanRights: 0,
+
+      supplyChain: 0,
+
+      community: 0,
+
+      governance: 0,
+
+      environment: 0,
+
+      liquidity: 0,
+
+      credit: 0,
+
+      banking: 0,
+
+      sovereign: 0,
+
+      financialMarket: 0,
+
       scenario:
         "NORMAL",
 
+      event:
+        "NORMAL",
+
       intensity:
-        0,
+        50,
 
       mode:
         "TEST"
@@ -722,11 +902,10 @@ export function verifyCoreEngine() {
 
     const pass =
       result &&
-      result.status ===
-      "EXECUTED" &&
+      result.status === "EXECUTED" &&
       result.output &&
-      result.output.status ===
-      "COMPLETE";
+      result.output.status === "COMPLETE" &&
+      result.output.intensity === 50;
 
 
     return {
@@ -741,6 +920,12 @@ export function verifyCoreEngine() {
 
       domain:
         result.domain,
+
+      intensity:
+        result.output?.intensity,
+
+      intensityFactor:
+        result.output?.intensityFactor,
 
       pipeline:
         result.pipeline,
@@ -785,7 +970,13 @@ export {
 
   safeNumber,
 
+  clamp,
+
   observeState,
+
+  normalizeIntensity,
+
+  applyIntensity,
 
   normalizeState,
 
