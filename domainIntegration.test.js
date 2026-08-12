@@ -792,35 +792,158 @@ console.log(
   "\nTEST 19 — DETERMINISTIC REPEATABILITY"
 );
 
-const deterministicInput = {
 
-  scenario:
-    "REGIONAL_NETWORK_OUTAGE",
+/* ---------------------------------------------------------
+   Obtain an authoritative INF scenario
+--------------------------------------------------------- */
 
-  network: 65,
-  dns: 45,
-  power: 55,
-  cloud: 30,
-  loadBalancer: 35,
-  tls: 40,
-  edge: 25,
-  dci: 50,
-  system: 45,
-  intensity: 70
+const infScenarioMap =
+  DOMAIN_ENGINES.INF &&
+  typeof DOMAIN_ENGINES.INF.getScenarioMap ===
+    "function"
+    ? DOMAIN_ENGINES.INF.getScenarioMap()
+    : {};
 
-};
 
-const runA =
-  executeScenarioDomain(
-    deterministicInput
+const infScenarios =
+  Object.keys(
+    infScenarioMap
   );
 
-const runB =
-  executeScenarioDomain(
-    deterministicInput
-  );
 
 assert(
-  runA.success === true &&
-  runB.success === true,
-  "Repeated INF executions successful
+  infScenarios.length > 0,
+  "INF authoritative scenario map contains scenarios"
+);
+
+
+if (
+  infScenarios.length > 0
+) {
+
+  const deterministicScenario =
+    infScenarios[0];
+
+
+  /* -------------------------------------------------------
+     Deterministic input
+  ------------------------------------------------------- */
+
+  const deterministicInput = {
+
+    scenario:
+      deterministicScenario,
+
+    network: 65,
+
+    dns: 45,
+
+    power: 55,
+
+    cloud: 30,
+
+    loadBalancer: 35,
+
+    tls: 40,
+
+    edge: 25,
+
+    dci: 50,
+
+    system: 45,
+
+    intensity: 70
+
+  };
+
+
+  /* -------------------------------------------------------
+     Execute identical scenario twice
+  ------------------------------------------------------- */
+
+  const runA =
+    executeScenarioDomain(
+      deterministicInput
+    );
+
+
+  const runB =
+    executeScenarioDomain(
+      deterministicInput
+    );
+
+
+  /* -------------------------------------------------------
+     Execution verification
+  ------------------------------------------------------- */
+
+  assert(
+    runA.success === true &&
+    runB.success === true,
+    "Repeated INF executions successful"
+  );
+
+
+  assert(
+    runA.domain === "INF" &&
+    runB.domain === "INF",
+    "Repeated executions resolved to INF"
+  );
+
+
+  /* -------------------------------------------------------
+     Deterministic assessment verification
+  ------------------------------------------------------- */
+
+  if (
+    runA.success &&
+    runB.success &&
+    runA.result &&
+    runB.result
+  ) {
+
+    const assessmentA =
+      runA.result.assessment;
+
+
+    const assessmentB =
+      runB.result.assessment;
+
+
+    assert(
+      assessmentA !== undefined &&
+      assessmentB !== undefined,
+      "INF assessment returned on both executions"
+    );
+
+
+    if (
+      assessmentA &&
+      assessmentB
+    ) {
+
+      assert(
+        assessmentA.stress ===
+          assessmentB.stress,
+        "Repeated stress calculation deterministic"
+      );
+
+
+      assert(
+        assessmentA.resilienceScore ===
+          assessmentB.resilienceScore,
+        "Repeated resilience calculation deterministic"
+      );
+
+
+      assert(
+        assessmentA.risk ===
+          assessmentB.risk,
+        "Repeated risk classification deterministic"
+      );
+
+    }
+
+  }
+
+}
