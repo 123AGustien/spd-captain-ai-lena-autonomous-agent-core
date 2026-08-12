@@ -1,64 +1,154 @@
 /**
- * SPD v13.1 — BHR DOMAIN RULE ENGINE
+ * SPD v13.1 — BHR RULE ENGINE
  *
- * Business & Human Rights Resilience
+ * Business & Human Rights Resilience Domain
  *
- * Domain Integration
- *      ↓
- * BHR Rule Engine
- *      ↓
- * Assessment
- *      ↓
- * Risk / Resilience
- *      ↓
- * Decision Support
- *      ↓
- * Audit
+ * Rules:
+ * BHR-001 Labour Rights
+ * BHR-002 Human Rights Event
+ * BHR-003 Supply Chain Human Rights
+ * BHR-004 Community Impact
+ * BHR-005 Governance Risk
+ * BHR-006 Environmental Human Rights Impact
+ * BHR-007 Forced Labour Risk
+ * BHR-008 Child Labour Risk
+ * BHR-009 Indigenous Community Impact
+ * BHR-010 Multi-Domain Human Rights Crisis
  *
- * Principle:
- * The engine provides deterministic decision support.
- * It does not replace human authority.
+ * Governance:
+ * AI provides decision support.
+ * HUMAN_OPERATOR retains execution authority.
+ * Autonomous execution is disabled.
  */
+
+const DOMAIN = "BHR";
+const STATUS = "ACTIVE";
+const VERSION = "1.0";
+
+const MEDIUM_THRESHOLD = 40;
+const HIGH_THRESHOLD = 70;
 
 
 /* =========================================================
-   BHR CONSTANTS
+   RULE REGISTRY
 ========================================================= */
 
-const BHR_CONSTANTS = {
+const RULES = {
 
-  MEDIUM_THRESHOLD: 40,
+  "BHR-001": {
+    id: "BHR-001",
+    scenario: "LABOUR_RIGHTS",
+    name: "Labour Rights Risk"
+  },
 
-  HIGH_THRESHOLD: 70,
+  "BHR-002": {
+    id: "BHR-002",
+    scenario: "HUMAN_RIGHTS_EVENT",
+    name: "Human Rights Event"
+  },
 
-  MAX_SCORE: 100,
+  "BHR-003": {
+    id: "BHR-003",
+    scenario: "SUPPLY_CHAIN_HUMAN_RIGHTS",
+    name: "Supply Chain Human Rights Risk"
+  },
 
-  MIN_SCORE: 0
+  "BHR-004": {
+    id: "BHR-004",
+    scenario: "COMMUNITY_IMPACT",
+    name: "Community Impact"
+  },
+
+  "BHR-005": {
+    id: "BHR-005",
+    scenario: "GOVERNANCE_RISK",
+    name: "Governance Risk"
+  },
+
+  "BHR-006": {
+    id: "BHR-006",
+    scenario: "ENVIRONMENTAL_HUMAN_RIGHTS_IMPACT",
+    name: "Environmental Human Rights Impact"
+  },
+
+  "BHR-007": {
+    id: "BHR-007",
+    scenario: "FORCED_LABOUR_RISK",
+    name: "Forced Labour Risk"
+  },
+
+  "BHR-008": {
+    id: "BHR-008",
+    scenario: "CHILD_LABOUR_RISK",
+    name: "Child Labour Risk"
+  },
+
+  "BHR-009": {
+    id: "BHR-009",
+    scenario: "INDIGENOUS_COMMUNITY_IMPACT",
+    name: "Indigenous Community Impact"
+  },
+
+  "BHR-010": {
+    id: "BHR-010",
+    scenario: "MULTI_DOMAIN_HUMAN_RIGHTS_CRISIS",
+    name: "Multi-Domain Human Rights Crisis"
+  }
 
 };
 
 
 /* =========================================================
-   CLAMP VALUE
+   SCENARIO MAP
 ========================================================= */
 
-function clamp(
-  value,
-  min = BHR_CONSTANTS.MIN_SCORE,
-  max = BHR_CONSTANTS.MAX_SCORE
-) {
+const SCENARIO_MAP = {
 
-  const numeric = Number(value);
+  LABOUR_RIGHTS: "BHR-001",
 
-  if (!Number.isFinite(numeric)) {
-    return min;
+  HUMAN_RIGHTS_EVENT: "BHR-002",
+
+  SUPPLY_CHAIN_HUMAN_RIGHTS: "BHR-003",
+
+  COMMUNITY_IMPACT: "BHR-004",
+
+  GOVERNANCE_RISK: "BHR-005",
+
+  ENVIRONMENTAL_HUMAN_RIGHTS_IMPACT:
+    "BHR-006",
+
+  FORCED_LABOUR_RISK:
+    "BHR-007",
+
+  CHILD_LABOUR_RISK:
+    "BHR-008",
+
+  INDIGENOUS_COMMUNITY_IMPACT:
+    "BHR-009",
+
+  MULTI_DOMAIN_HUMAN_RIGHTS_CRISIS:
+    "BHR-010"
+
+};
+
+
+/* =========================================================
+   SAFE NUMBER
+========================================================= */
+
+function safeNumber(value) {
+
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return 0;
   }
 
-  return Math.min(
-    max,
-    Math.max(
-      min,
-      numeric
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      number
     )
   );
 
@@ -66,59 +156,37 @@ function clamp(
 
 
 /* =========================================================
-   NORMALIZE INPUT
+   RULE RESOLUTION
 ========================================================= */
 
-function normalizeInput(
-  state = {}
-) {
+function resolveRule(scenario) {
+
+  const ruleId =
+    SCENARIO_MAP[scenario];
+
+  if (!ruleId) {
+
+    return {
+
+      success: false,
+
+      error:
+        "BHR_SCENARIO_NOT_REGISTERED",
+
+      scenario
+
+    };
+
+  }
 
   return {
 
-    labour:
-      clamp(
-        state.labour ??
-        state.labor ??
-        0
-      ),
+    success: true,
 
-    humanRights:
-      clamp(
-        state.humanRights ??
-        state.human_rights ??
-        0
-      ),
+    ruleId,
 
-    supplyChain:
-      clamp(
-        state.supplyChain ??
-        state.supply_chain ??
-        0
-      ),
-
-    community:
-      clamp(
-        state.community ??
-        0
-      ),
-
-    governance:
-      clamp(
-        state.governance ??
-        0
-      ),
-
-    environment:
-      clamp(
-        state.environment ??
-        0
-      ),
-
-    intensity:
-      clamp(
-        state.intensity ??
-        0
-      )
+    rule:
+      RULES[ruleId]
 
   };
 
@@ -126,79 +194,41 @@ function normalizeInput(
 
 
 /* =========================================================
-   CALCULATE BHR STRESS
+   DOMAIN STATUS
 ========================================================= */
 
-function calculateBHRStress(
-  state
-) {
-
-  /*
-   * Deterministic weighted BHR model.
-   *
-   * Human rights and labour indicators
-   * carry the highest weighting.
-   */
-
-  const baseStress =
-
-    (
-      state.labour *
-      0.20
-    ) +
-
-    (
-      state.humanRights *
-      0.25
-    ) +
-
-    (
-      state.supplyChain *
-      0.15
-    ) +
-
-    (
-      state.community *
-      0.15
-    ) +
-
-    (
-      state.governance *
-      0.15
-    ) +
-
-    (
-      state.environment *
-      0.10
-    );
-
-
-  /*
-   * Scenario intensity modifier.
-   */
-
-  const intensityFactor =
-    1 +
-    (
-      state.intensity /
-      100
-    );
-
+function getStatus() {
 
   return {
 
-    baseStress:
-      clamp(
-        baseStress
-      ),
+    id: DOMAIN,
 
-    intensityFactor,
+    name:
+      "Business & Human Rights Resilience",
 
-    stress:
-      clamp(
-        baseStress *
-        intensityFactor
-      )
+    status: STATUS,
+
+    version: VERSION,
+
+    engineRegistered: true,
+
+    ruleCount:
+      Object.keys(RULES).length,
+
+    rules:
+      Object.keys(RULES),
+
+    scenarios:
+      Object.keys(SCENARIO_MAP),
+
+    executionAuthority:
+      "HUMAN_OPERATOR",
+
+    humanAuthorizationRequired:
+      true,
+
+    autonomousExecution:
+      false
 
   };
 
@@ -206,16 +236,181 @@ function calculateBHRStress(
 
 
 /* =========================================================
-   CLASSIFY RISK
+   STRESS CALCULATION
 ========================================================= */
 
-function classifyRisk(
-  stress
+function calculateStress(
+  scenario,
+  input = {}
 ) {
+
+  const intensity =
+    safeNumber(
+      input.intensity
+    );
+
+  let stress = intensity;
+
+  switch (scenario) {
+
+    case "LABOUR_RIGHTS":
+
+      stress = (
+        safeNumber(input.labour) +
+        safeNumber(input.governance) +
+        safeNumber(input.community) +
+        intensity
+      ) / 4;
+
+      break;
+
+
+    case "HUMAN_RIGHTS_EVENT":
+
+      stress = (
+        safeNumber(input.humanRights) +
+        safeNumber(input.labour) +
+        safeNumber(input.community) +
+        safeNumber(input.governance) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "SUPPLY_CHAIN_HUMAN_RIGHTS":
+
+      stress = (
+        safeNumber(input.supplyChain) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.labour) +
+        safeNumber(input.governance) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "COMMUNITY_IMPACT":
+
+      stress = (
+        safeNumber(input.community) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.environment) +
+        safeNumber(input.governance) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "GOVERNANCE_RISK":
+
+      stress = (
+        safeNumber(input.governance) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.labour) +
+        safeNumber(input.supplyChain) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "ENVIRONMENTAL_HUMAN_RIGHTS_IMPACT":
+
+      stress = (
+        safeNumber(input.environment) +
+        safeNumber(input.community) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.supplyChain) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "FORCED_LABOUR_RISK":
+
+      stress = (
+        safeNumber(input.forcedLabour) +
+        safeNumber(input.labour) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.supplyChain) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "CHILD_LABOUR_RISK":
+
+      stress = (
+        safeNumber(input.childLabour) +
+        safeNumber(input.labour) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.supplyChain) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "INDIGENOUS_COMMUNITY_IMPACT":
+
+      stress = (
+        safeNumber(input.indigenousRights) +
+        safeNumber(input.community) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.environment) +
+        intensity
+      ) / 5;
+
+      break;
+
+
+    case "MULTI_DOMAIN_HUMAN_RIGHTS_CRISIS":
+
+      stress = (
+        safeNumber(input.labour) +
+        safeNumber(input.humanRights) +
+        safeNumber(input.supplyChain) +
+        safeNumber(input.community) +
+        safeNumber(input.governance) +
+        safeNumber(input.environment) +
+        intensity
+      ) / 7;
+
+      break;
+
+
+    default:
+
+      stress = intensity;
+
+  }
+
+  return Number(
+    Math.max(
+      0,
+      Math.min(
+        100,
+        stress
+      )
+    ).toFixed(3)
+  );
+
+}
+
+
+/* =========================================================
+   RISK CLASSIFICATION
+========================================================= */
+
+function classifyRisk(stress) {
 
   if (
-    stress <
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    stress < MEDIUM_THRESHOLD
   ) {
 
     return "LOW";
@@ -223,8 +418,7 @@ function classifyRisk(
   }
 
   if (
-    stress <
-    BHR_CONSTANTS.HIGH_THRESHOLD
+    stress < HIGH_THRESHOLD
   ) {
 
     return "MEDIUM";
@@ -237,181 +431,311 @@ function classifyRisk(
 
 
 /* =========================================================
-   CALCULATE RESILIENCE
+   RESILIENCE SCORE
 ========================================================= */
 
-function calculateResilience(
-  stress
-) {
+function calculateResilience(stress) {
 
-  return clamp(
-    100 -
-    stress
+  return Number(
+    Math.max(
+      0,
+      Math.min(
+        100,
+        100 - stress
+      )
+    ).toFixed(3)
   );
 
 }
 
 
 /* =========================================================
-   DETERMINE DECISION
+   CASCADE GENERATION
 ========================================================= */
 
-function determineDecision(
+function generateCascade(
+  scenario,
   risk
 ) {
 
-  switch (risk) {
+  const cascades = {
 
-    case "LOW":
+    LABOUR_RIGHTS: [
+      "Labour Rights Concern",
+      "Workforce Impact",
+      "Operational Disruption",
+      "Governance Risk"
+    ],
 
-      return {
+    HUMAN_RIGHTS_EVENT: [
+      "Human Rights Impact",
+      "Affected Stakeholders",
+      "Operational Risk",
+      "Reputational Risk"
+    ],
 
-        action:
-          "MAINTAIN_MONITORING",
+    SUPPLY_CHAIN_HUMAN_RIGHTS: [
+      "Supplier Risk",
+      "Human Rights Exposure",
+      "Supply Chain Disruption",
+      "Cross-Domain Risk"
+    ],
 
-        priority:
-          "NORMAL",
+    COMMUNITY_IMPACT: [
+      "Community Impact",
+      "Stakeholder Conflict",
+      "Operational Disruption",
+      "Reputational Risk"
+    ],
 
-        humanAuthorization:
-          "NOT_REQUIRED_FOR_MONITORING"
+    GOVERNANCE_RISK: [
+      "Governance Failure",
+      "Due-Diligence Weakness",
+      "Compliance Exposure",
+      "Systemic Governance Risk"
+    ],
 
-      };
+    ENVIRONMENTAL_HUMAN_RIGHTS_IMPACT: [
+      "Environmental Impact",
+      "Community Exposure",
+      "Human Rights Risk",
+      "Cross-Domain Risk"
+    ],
 
+    FORCED_LABOUR_RISK: [
+      "Forced Labour Indicators",
+      "Worker Harm",
+      "Supply Chain Exposure",
+      "Severe Human Rights Risk"
+    ],
 
-    case "MEDIUM":
+    CHILD_LABOUR_RISK: [
+      "Child Labour Indicators",
+      "Child Rights Impact",
+      "Supply Chain Exposure",
+      "Severe Human Rights Risk"
+    ],
 
-      return {
+    INDIGENOUS_COMMUNITY_IMPACT: [
+      "Community Rights Impact",
+      "Indigenous Rights Concern",
+      "Environmental / Social Impact",
+      "Cross-Domain Risk"
+    ],
 
-        action:
-          "INITIATE_BHR_MITIGATION_REVIEW",
+    MULTI_DOMAIN_HUMAN_RIGHTS_CRISIS: [
+      "Multiple Human Rights Impacts",
+      "Stakeholder Harm",
+      "Supply Chain / Operational Disruption",
+      "Systemic BHR Crisis"
+    ]
 
-        priority:
-          "ELEVATED",
+  };
 
-        humanAuthorization:
-          "REQUIRED_BEFORE_EXECUTION"
+  return {
 
-      };
+    severity: risk,
 
+    cascade:
+      risk === "LOW"
+        ? []
+        : (
+          cascades[scenario] ||
+          []
+        ),
 
-    case "HIGH":
+    crossDomainImpact: [
+      "BHR",
+      "FIN",
+      "INF",
+      "CYB",
+      "DC"
+    ]
 
-      return {
-
-        action:
-          "ESCALATE_BHR_RISK_AND_MAINTAIN_SAFE_STATE",
-
-        priority:
-          "CRITICAL",
-
-        humanAuthorization:
-          "REQUIRED_BEFORE_EXECUTION"
-
-      };
-
-
-    default:
-
-      return {
-
-        action:
-          "MAINTAIN_SAFE_STATE",
-
-        priority:
-          "UNKNOWN",
-
-        humanAuthorization:
-          "REQUIRED"
-
-      };
-
-  }
+  };
 
 }
 
 
 /* =========================================================
-   BHR PRINCIPLE CHECK
+   CONTINGENCY ACTIONS
+========================================================= */
+
+function getContingencyActions(
+  scenario,
+  risk
+) {
+
+  if (
+    risk === "LOW"
+  ) {
+
+    return [
+      "Continue BHR monitoring",
+      "Maintain routine due diligence"
+    ];
+
+  }
+
+  const actions = {
+
+    LABOUR_RIGHTS: [
+      "Review labour conditions",
+      "Protect affected workers",
+      "Conduct enhanced due diligence",
+      "Escalate to responsible management"
+    ],
+
+    HUMAN_RIGHTS_EVENT: [
+      "Assess affected stakeholders",
+      "Protect human rights",
+      "Initiate enhanced due diligence",
+      "Escalate to appropriate authority"
+    ],
+
+    SUPPLY_CHAIN_HUMAN_RIGHTS: [
+      "Review affected suppliers",
+      "Conduct supply-chain due diligence",
+      "Protect affected stakeholders",
+      "Escalate supplier remediation"
+    ],
+
+    COMMUNITY_IMPACT: [
+      "Assess community impact",
+      "Engage affected stakeholders",
+      "Implement mitigation measures",
+      "Escalate community-risk governance"
+    ],
+
+    GOVERNANCE_RISK: [
+      "Review governance controls",
+      "Initiate enhanced due diligence",
+      "Document control deficiencies",
+      "Escalate governance risk"
+    ],
+
+    ENVIRONMENTAL_HUMAN_RIGHTS_IMPACT: [
+      "Assess environmental impact",
+      "Protect affected communities",
+      "Initiate remediation review",
+      "Escalate environmental and human-rights risk"
+    ],
+
+    FORCED_LABOUR_RISK: [
+      "Protect potentially affected workers",
+      "Suspend affected-risk activity for review",
+      "Conduct enhanced supply-chain due diligence",
+      "Escalate severe human-rights risk"
+    ],
+
+    CHILD_LABOUR_RISK: [
+      "Protect potentially affected children",
+      "Conduct immediate due diligence",
+      "Review affected supply-chain activity",
+      "Escalate child-rights risk"
+    ],
+
+    INDIGENOUS_COMMUNITY_IMPACT: [
+      "Assess community rights impact",
+      "Engage affected stakeholders",
+      "Review environmental and social impacts",
+      "Escalate community-rights governance"
+    ],
+
+    MULTI_DOMAIN_HUMAN_RIGHTS_CRISIS: [
+      "Activate enhanced BHR response",
+      "Protect affected stakeholders",
+      "Coordinate cross-domain assessment",
+      "Initiate remediation review",
+      "Escalate to highest appropriate authority"
+    ]
+
+  };
+
+  return (
+    actions[scenario] ||
+    [
+      "Increase BHR monitoring",
+      "Conduct enhanced due diligence",
+      "Escalate according to governance procedures"
+    ]
+  );
+
+}
+
+
+/* =========================================================
+   HUMAN RIGHTS PRINCIPLE CHECK
 ========================================================= */
 
 function evaluateHumanRightsPrinciples(
-  state
+  input = {}
 ) {
 
   const concerns = [];
 
-
   if (
-    state.labour >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.labour) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "LABOUR_RISK"
-    );
-
+    concerns.push("LABOUR_RISK");
   }
 
-
   if (
-    state.humanRights >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.humanRights) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "HUMAN_RIGHTS_RISK"
-    );
-
+    concerns.push("HUMAN_RIGHTS_RISK");
   }
 
-
   if (
-    state.supplyChain >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.supplyChain) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "SUPPLY_CHAIN_RISK"
-    );
-
+    concerns.push("SUPPLY_CHAIN_RISK");
   }
 
-
   if (
-    state.community >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.community) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "COMMUNITY_IMPACT_RISK"
-    );
-
+    concerns.push("COMMUNITY_IMPACT_RISK");
   }
 
-
   if (
-    state.governance >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.governance) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "GOVERNANCE_RISK"
-    );
-
+    concerns.push("GOVERNANCE_RISK");
   }
 
-
   if (
-    state.environment >=
-    BHR_CONSTANTS.MEDIUM_THRESHOLD
+    safeNumber(input.environment) >=
+    MEDIUM_THRESHOLD
   ) {
-
-    concerns.push(
-      "ENVIRONMENTAL_RISK"
-    );
-
+    concerns.push("ENVIRONMENTAL_RISK");
   }
 
+  if (
+    safeNumber(input.forcedLabour) >=
+    MEDIUM_THRESHOLD
+  ) {
+    concerns.push("FORCED_LABOUR_RISK");
+  }
+
+  if (
+    safeNumber(input.childLabour) >=
+    MEDIUM_THRESHOLD
+  ) {
+    concerns.push("CHILD_LABOUR_RISK");
+  }
+
+  if (
+    safeNumber(input.indigenousRights) >=
+    MEDIUM_THRESHOLD
+  ) {
+    concerns.push("INDIGENOUS_RIGHTS_RISK");
+  }
 
   return {
 
@@ -431,81 +755,79 @@ function evaluateHumanRightsPrinciples(
 
 
 /* =========================================================
-   BHR EVALUATION
+   MAIN EVALUATION
 ========================================================= */
 
 function evaluate(
-  state = {},
+  scenario,
+  input = {},
   context = {}
 ) {
 
-  const normalizedState =
-    normalizeInput(
-      state
+  const resolution =
+    resolveRule(scenario);
+
+  if (
+    !resolution.success
+  ) {
+
+    return resolution;
+
+  }
+
+  const stress =
+    calculateStress(
+      scenario,
+      input
     );
-
-
-  const stressResult =
-    calculateBHRStress(
-      normalizedState
-    );
-
 
   const risk =
     classifyRisk(
-      stressResult.stress
+      stress
     );
-
 
   const resilienceScore =
     calculateResilience(
-      stressResult.stress
+      stress
     );
 
-
-  const principles =
-    evaluateHumanRightsPrinciples(
-      normalizedState
-    );
-
-
-  const decision =
-    determineDecision(
+  const cascade =
+    generateCascade(
+      scenario,
       risk
     );
 
+  const contingencyActions =
+    getContingencyActions(
+      scenario,
+      risk
+    );
+
+  const principles =
+    evaluateHumanRightsPrinciples(
+      input
+    );
+
+  const timestamp =
+    new Date().toISOString();
 
   return {
 
-    success:
-      true,
+    success: true,
 
-    domain:
-      "BHR",
+    domain: DOMAIN,
 
     domainName:
       "Business & Human Rights Resilience",
 
-    scenario:
-      context.scenario ??
-      "BHR_ASSESSMENT",
+    scenario,
 
-    intensity:
-      normalizedState.intensity,
-
-    input:
-      normalizedState,
+    rule:
+      resolution.rule,
 
     assessment: {
 
-      baseStress:
-        stressResult.baseStress,
-
-      intensityFactor:
-        stressResult.intensityFactor,
-
-      stress:
-        stressResult.stress,
+      stress,
 
       resilienceScore,
 
@@ -513,27 +835,65 @@ function evaluate(
 
     },
 
+    cascade,
+
+    contingencyActions,
+
     humanRightsPrinciples:
       principles,
 
-    decision,
+    decision: {
 
-    executionAuthority:
-      "HUMAN_OPERATOR",
+      recommendation:
+        risk === "LOW"
+          ? "MAINTAIN_MONITORING"
+          : "INITIATE_BHR_RESILIENCE_RESPONSE",
 
-    executionStatus:
-      decision.humanAuthorization ===
-      "NOT_REQUIRED_FOR_MONITORING"
-        ? "MONITORING_ONLY"
-        : "HUMAN_AUTHORIZATION_REQUIRED",
+      executionAuthority:
+        "HUMAN_OPERATOR",
 
-    context,
+      executionStatus:
+        "HUMAN_AUTHORIZATION_REQUIRED"
 
-    timestamp:
-      new Date().toISOString(),
+    },
 
-    status:
-      "BHR_EVALUATION_COMPLETE"
+    governance: {
+
+      humanAuthorizationRequired:
+        true,
+
+      autonomousExecution:
+        false,
+
+      executionAuthority:
+        "HUMAN_OPERATOR"
+
+    },
+
+    audit: {
+
+      engine:
+        "BHRRuleEngine",
+
+      domain:
+        DOMAIN,
+
+      ruleId:
+        resolution.ruleId,
+
+      scenario,
+
+      risk,
+
+      stress,
+
+      resilienceScore,
+
+      timestamp
+
+    },
+
+    context
 
   };
 
@@ -541,47 +901,43 @@ function evaluate(
 
 
 /* =========================================================
-   SELF-CHECK
+   SELF CHECK
 ========================================================= */
 
 function verifyBHREngine() {
 
-  const test =
-    evaluate({
-
-      labour: 0,
-
-      humanRights: 0,
-
-      supplyChain: 0,
-
-      community: 0,
-
-      governance: 0,
-
-      environment: 0,
-
-      intensity: 0
-
-    });
-
+  const result =
+    evaluate(
+      "LABOUR_RIGHTS",
+      {
+        labour: 0,
+        humanRights: 0,
+        supplyChain: 0,
+        community: 0,
+        governance: 0,
+        environment: 0,
+        intensity: 0
+      }
+    );
 
   return {
 
-    domain:
-      "BHR",
+    domain: DOMAIN,
 
     status:
-      test.success &&
-      test.assessment.risk === "LOW"
+      result.success &&
+      result.assessment.risk === "LOW"
         ? "READY"
         : "NOT_READY",
 
+    ruleCount:
+      Object.keys(RULES).length,
+
     testRisk:
-      test.assessment.risk,
+      result.assessment.risk,
 
     testResilienceScore:
-      test.assessment.resilienceScore,
+      result.assessment.resilienceScore,
 
     timestamp:
       new Date().toISOString()
@@ -595,21 +951,31 @@ function verifyBHREngine() {
    EXPORTS
 ========================================================= */
 
-export {
+module.exports = {
 
-  BHR_CONSTANTS,
+  DOMAIN,
 
-  clamp,
+  STATUS,
 
-  normalizeInput,
+  VERSION,
 
-  calculateBHRStress,
+  RULES,
+
+  SCENARIO_MAP,
+
+  getStatus,
+
+  resolveRule,
+
+  calculateStress,
 
   classifyRisk,
 
   calculateResilience,
 
-  determineDecision,
+  generateCascade,
+
+  getContingencyActions,
 
   evaluateHumanRightsPrinciples,
 
