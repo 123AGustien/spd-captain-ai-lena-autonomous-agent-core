@@ -73,6 +73,7 @@
 
     input[type="range"] {
       padding: 0;
+      cursor: pointer;
     }
 
     button {
@@ -144,13 +145,16 @@
       margin-top: 20px;
     }
 
+    .intensityReadout {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
   </style>
 
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      HEADER
@@ -252,7 +256,6 @@
 
   </div>
 
-
   <div class="arm">
 
     ARM STATUS:
@@ -334,9 +337,7 @@ Waiting...
     📊 SYSTEM DOMAIN MONITOR
   </div>
 
-  <label>
-    FX
-  </label>
+  <label>FX</label>
 
   <input
     id="fx"
@@ -346,10 +347,7 @@ Waiting...
     value="52"
   >
 
-
-  <label>
-    DC
-  </label>
+  <label>DC</label>
 
   <input
     id="dc"
@@ -359,10 +357,7 @@ Waiting...
     value="20"
   >
 
-
-  <label>
-    CYB
-  </label>
+  <label>CYB</label>
 
   <input
     id="cyb"
@@ -372,10 +367,7 @@ Waiting...
     value="40"
   >
 
-
-  <label>
-    INF
-  </label>
+  <label>INF</label>
 
   <input
     id="inf"
@@ -385,10 +377,7 @@ Waiting...
     value="10"
   >
 
-
-  <label>
-    EN / ENERGY
-  </label>
+  <label>EN / ENERGY</label>
 
   <input
     id="energy"
@@ -416,10 +405,7 @@ Waiting...
     BHRRuleEngine
   </p>
 
-
-  <label>
-    LABOUR
-  </label>
+  <label>LABOUR</label>
 
   <input
     id="labour"
@@ -429,10 +415,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    HUMAN RIGHTS
-  </label>
+  <label>HUMAN RIGHTS</label>
 
   <input
     id="humanRights"
@@ -442,10 +425,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    SUPPLY CHAIN
-  </label>
+  <label>SUPPLY CHAIN</label>
 
   <input
     id="supplyChain"
@@ -455,10 +435,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    COMMUNITY
-  </label>
+  <label>COMMUNITY</label>
 
   <input
     id="community"
@@ -468,10 +445,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    GOVERNANCE
-  </label>
+  <label>GOVERNANCE</label>
 
   <input
     id="governance"
@@ -481,10 +455,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    ENVIRONMENT
-  </label>
+  <label>ENVIRONMENT</label>
 
   <input
     id="environment"
@@ -516,10 +487,7 @@ Waiting...
     FIN scenarios are routed through the Domain Integration Layer.
   </p>
 
-
-  <label>
-    LIQUIDITY
-  </label>
+  <label>LIQUIDITY</label>
 
   <input
     id="liquidity"
@@ -529,10 +497,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    CREDIT
-  </label>
+  <label>CREDIT</label>
 
   <input
     id="credit"
@@ -542,10 +507,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    BANKING
-  </label>
+  <label>BANKING</label>
 
   <input
     id="banking"
@@ -555,10 +517,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    SOVEREIGN
-  </label>
+  <label>SOVEREIGN</label>
 
   <input
     id="sovereign"
@@ -568,10 +527,7 @@ Waiting...
     value="0"
   >
 
-
-  <label>
-    FINANCIAL MARKET
-  </label>
+  <label>FINANCIAL MARKET</label>
 
   <input
     id="financialMarket"
@@ -596,56 +552,22 @@ Waiting...
 
   <select id="scenario">
 
-    <option value="NORMAL">
-      NORMAL
-    </option>
-
-    <option value="FX_SHOCK">
-      FX STRESS
-    </option>
-
-    <option value="ENERGY_SPIKE">
-      ENERGY SPIKE
-    </option>
-
-    <option value="CYBER_EVENT">
-      CYBER EVENT
-    </option>
-
-    <option value="INFRASTRUCTURE_STRESS">
-      INFRA STRAIN
-    </option>
-
-    <option value="BIODIESEL_SHORTAGE">
-      BIODIESEL SHORTAGE
-    </option>
-
-    <option value="BHR_STRESS">
-      BHR ASSESSMENT
-    </option>
-
-    <option value="LABOUR_RIGHTS">
-      LABOUR RIGHTS
-    </option>
-
-    <option value="HUMAN_RIGHTS_EVENT">
-      HUMAN RIGHTS EVENT
-    </option>
-
+    <option value="NORMAL">NORMAL</option>
+    <option value="FX_SHOCK">FX STRESS</option>
+    <option value="ENERGY_SPIKE">ENERGY SPIKE</option>
+    <option value="CYBER_EVENT">CYBER EVENT</option>
+    <option value="INFRASTRUCTURE_STRESS">INFRA STRAIN</option>
+    <option value="BIODIESEL_SHORTAGE">BIODIESEL SHORTAGE</option>
+    <option value="BHR_STRESS">BHR ASSESSMENT</option>
+    <option value="LABOUR_RIGHTS">LABOUR RIGHTS</option>
+    <option value="HUMAN_RIGHTS_EVENT">HUMAN RIGHTS EVENT</option>
     <option value="SUPPLY_CHAIN_HUMAN_RIGHTS">
       SUPPLY CHAIN HUMAN RIGHTS
     </option>
-
-    <option value="COMMUNITY_IMPACT">
-      COMMUNITY IMPACT
-    </option>
-
-    <option value="GOVERNANCE_RISK">
-      GOVERNANCE RISK
-    </option>
+    <option value="COMMUNITY_IMPACT">COMMUNITY IMPACT</option>
+    <option value="GOVERNANCE_RISK">GOVERNANCE RISK</option>
 
   </select>
-
 
   <h3>
     💰 FINANCIAL RESILIENCE SCENARIOS
@@ -653,25 +575,11 @@ Waiting...
 
   <select id="financialScenario">
 
-    <option value="FIN_STRESS">
-      FIN STRESS
-    </option>
-
-    <option value="BANKING_STRESS">
-      BANKING STRESS
-    </option>
-
-    <option value="LIQUIDITY_CRISIS">
-      LIQUIDITY CRISIS
-    </option>
-
-    <option value="CREDIT_STRESS">
-      CREDIT STRESS
-    </option>
-
-    <option value="SOVEREIGN_DEBT">
-      SOVEREIGN DEBT
-    </option>
+    <option value="FIN_STRESS">FIN STRESS</option>
+    <option value="BANKING_STRESS">BANKING STRESS</option>
+    <option value="LIQUIDITY_CRISIS">LIQUIDITY CRISIS</option>
+    <option value="CREDIT_STRESS">CREDIT STRESS</option>
+    <option value="SOVEREIGN_DEBT">SOVEREIGN DEBT</option>
 
   </select>
 
@@ -693,11 +601,11 @@ Waiting...
     type="range"
     min="0"
     max="100"
+    step="1"
     value="50"
-    oninput="updateIntensity()"
   >
 
-  <div>
+  <div class="intensityReadout">
 
     Intensity:
 
@@ -708,6 +616,11 @@ Waiting...
     </strong>
 
   </div>
+
+  <p class="muted">
+    Move the slider, then RUN SYSTEM.
+    Intensity is applied by the execution engine to the scenario state.
+  </p>
 
 </div>
 
@@ -722,15 +635,7 @@ Waiting...
     🧪 SCENARIO PANEL
   </div>
 
-  <pre id="scenarioPanel">
-{
-  "scenario": "NORMAL",
-  "financialScenario": "FIN_STRESS",
-  "intensity": "50%",
-  "intensityValue": 50,
-  "status": "READY"
-}
-  </pre>
+  <pre id="scenarioPanel"></pre>
 
 </div>
 
@@ -1086,11 +991,9 @@ import {
   verifyCoreEngine
 } from "./engine.js";
 
-
 import {
   verifyDomainIntegration
 } from "./domainIntegration.js";
-
 
 import {
   armSystem,
@@ -1099,7 +1002,6 @@ import {
   runTest,
   getArmStatus
 } from "./armController.js";
-
 
 import {
   GOLDEN_RATIO
@@ -1110,27 +1012,19 @@ import {
    SAFE VALUE
 ========================================================= */
 
-function getNumber(
-  id
-) {
+function getNumber(id) {
 
   const element =
-    document.getElementById(
-      id
-    );
+    document.getElementById(id);
 
   if (!element) {
     return 0;
   }
 
   const value =
-    Number(
-      element.value
-    );
+    Number(element.value);
 
-  return Number.isFinite(
-    value
-  )
+  return Number.isFinite(value)
     ? value
     : 0;
 
@@ -1147,9 +1041,7 @@ function renderArmStatus() {
     getArmStatus();
 
   const element =
-    document.getElementById(
-      "armStatus"
-    );
+    document.getElementById("armStatus");
 
   element.innerText =
     status.status;
@@ -1166,8 +1058,7 @@ function renderArmStatus() {
    ARM
 ========================================================= */
 
-window.armButton =
-function () {
+window.armButton = function () {
 
   const result =
     armSystem();
@@ -1190,8 +1081,7 @@ function () {
    DISARM
 ========================================================= */
 
-window.disarmButton =
-function () {
+window.disarmButton = function () {
 
   const result =
     disarmSystem();
@@ -1214,8 +1104,7 @@ function () {
    ARM SYSTEM TEST
 ========================================================= */
 
-window.armSystemTestButton =
-function () {
+window.armSystemTestButton = function () {
 
   const result =
     runSystemTest();
@@ -1236,8 +1125,7 @@ function () {
    ARM RUN TEST
 ========================================================= */
 
-window.armRunTestButton =
-function () {
+window.armRunTestButton = function () {
 
   const result =
     runTest();
@@ -1260,8 +1148,7 @@ function () {
    ARM SCREEN
 ========================================================= */
 
-window.openArmScreen =
-function () {
+window.openArmScreen = function () {
 
   window.location.href =
     "./arm_screen.html";
@@ -1273,13 +1160,10 @@ function () {
    INTENSITY
 ========================================================= */
 
-window.updateIntensity =
-function () {
+function updateIntensity() {
 
   const value =
-    getNumber(
-      "intensity"
-    );
+    getNumber("intensity");
 
   document.getElementById(
     "intensityValue"
@@ -1288,7 +1172,7 @@ function () {
 
   updateScenarioPanel();
 
-};
+}
 
 
 /* =========================================================
@@ -1308,10 +1192,10 @@ function updateScenarioPanel() {
     ).value;
 
   const intensity =
-    getNumber(
-      "intensity"
-    );
+    getNumber("intensity");
 
+  const intensityFactor =
+    intensity / 100;
 
   document.getElementById(
     "scenarioPanel"
@@ -1328,6 +1212,8 @@ function updateScenarioPanel() {
 
         intensityValue:
           intensity,
+
+        intensityFactor,
 
         status:
           "READY"
@@ -1351,33 +1237,20 @@ function getEffectiveScenario() {
       "scenario"
     ).value;
 
-
   const financialScenario =
     document.getElementById(
       "financialScenario"
     ).value;
 
-
-  /*
-   * FIN scenario is used when
-   * the selected core scenario is NORMAL
-   * and the financial selector is active.
-   */
-
   const finScenarios = [
 
     "FIN_STRESS",
-
     "BANKING_STRESS",
-
     "LIQUIDITY_CRISIS",
-
     "CREDIT_STRESS",
-
     "SOVEREIGN_DEBT"
 
   ];
-
 
   if (
     scenario === "NORMAL" &&
@@ -1389,7 +1262,6 @@ function getEffectiveScenario() {
     return financialScenario;
 
   }
-
 
   return scenario;
 
@@ -1403,10 +1275,19 @@ function getEffectiveScenario() {
 function getState() {
 
   const intensity =
-    getNumber(
-      "intensity"
+    Math.min(
+      100,
+      Math.max(
+        0,
+        getNumber("intensity")
+      )
     );
 
+  const intensityFactor =
+    intensity / 100;
+
+  const effectiveScenario =
+    getEffectiveScenario();
 
   return {
 
@@ -1470,11 +1351,10 @@ function getState() {
     /* SCENARIO */
 
     event:
-      getEffectiveScenario(),
+      effectiveScenario,
 
     scenario:
-      getEffectiveScenario(),
-
+      effectiveScenario,
 
     financialScenario:
       document.getElementById(
@@ -1482,16 +1362,15 @@ function getState() {
       ).value,
 
 
-    mode:
-      "AUTONOMOUS",
-
+    /* INTENSITY */
 
     intensity,
 
+    intensityFactor,
 
-    intensityFactor:
-      intensity / 100,
 
+    mode:
+      "AUTONOMOUS",
 
     time:
       new Date().toISOString()
@@ -1505,8 +1384,7 @@ function getState() {
    RUN SYSTEM
 ========================================================= */
 
-window.runSystem =
-function () {
+window.runSystem = function () {
 
   try {
 
@@ -1521,9 +1399,7 @@ function () {
 
 
     const result =
-      runEngine(
-        state
-      );
+      runEngine(state);
 
 
     renderResult(
@@ -1546,7 +1422,6 @@ function () {
     ).innerText =
       "ENGINE ERROR";
 
-
     document.getElementById(
       "goldenOutput"
     ).innerText =
@@ -1568,23 +1443,16 @@ function renderResult(
 ) {
 
   const output =
-    result.output ||
-    {};
-
+    result.output || {};
 
   const assessment =
-    output.assessment ||
-    {};
-
+    output.assessment || {};
 
   const decision =
-    output.decision ||
-    {};
-
+    output.decision || {};
 
   const domainAssessment =
-    output.domainAssessment ||
-    null;
+    output.domainAssessment || null;
 
 
   /* RAW STATE */
@@ -1690,6 +1558,7 @@ function renderResult(
     "solution"
   ).innerText =
     decision.action ||
+    decision.decision ||
     "MAINTAIN SAFE STATE";
 
 
@@ -1706,6 +1575,7 @@ function renderResult(
         "APPLY SELECTED MITIGATION",
 
         decision.action ||
+          decision.decision ||
           "MAINTAIN SAFE STATE",
 
         "MONITOR SYSTEM RESPONSE",
@@ -1737,6 +1607,9 @@ function renderResult(
 
         intensity:
           state.intensity,
+
+        intensityFactor:
+          state.intensityFactor,
 
         risk:
           domainAssessment?.risk ??
@@ -1784,6 +1657,9 @@ function renderResult(
         intensity:
           state.intensity,
 
+        intensityFactor:
+          state.intensityFactor,
+
         timestamp:
           result.timestamp,
 
@@ -1813,12 +1689,21 @@ function renderResult(
     "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE\n" +
 
     "DOMAIN: " +
+
     (
       output.domain ||
       "CORE"
     ) +
 
-    "\nSTATUS: " +
+    "\nSCENARIO: " +
+
+    state.scenario +
+
+    "\nINTENSITY: " +
+
+    state.intensity +
+
+    "%\n\nSTATUS: " +
 
     (
       output.status ||
@@ -1841,7 +1726,6 @@ function () {
 
     const result =
       verifyDomainIntegration();
-
 
     document.getElementById(
       "domainIntegrationTest"
@@ -1879,10 +1763,8 @@ function () {
     const armTest =
       runSystemTest();
 
-
     const coreTest =
       verifyCoreEngine();
-
 
     document.getElementById(
       "selfTest"
@@ -1903,10 +1785,8 @@ function () {
 
 
     if (
-      armTest.status ===
-      "PASS" &&
-      coreTest.status ===
-      "PASS"
+      armTest.status === "PASS" &&
+      coreTest.status === "PASS"
     ) {
 
       document.getElementById(
@@ -1914,12 +1794,10 @@ function () {
       ).innerText =
         "SELF-TEST PASS — CORE AND ARM VALIDATION COMPLETED";
 
-
       document.getElementById(
         "fault"
       ).innerText =
         "NO CORE OR ARM FAULT REPORTED";
-
 
       document.getElementById(
         "retest"
@@ -1935,12 +1813,10 @@ function () {
       ).innerText =
         "SELF-TEST REQUIRES REVIEW";
 
-
       document.getElementById(
         "fault"
       ).innerText =
         "ONE OR MORE SYSTEM TESTS DID NOT PASS";
-
 
       document.getElementById(
         "retest"
@@ -1976,28 +1852,19 @@ function () {
     const armTest =
       runSystemTest();
 
-
     const coreTest =
       verifyCoreEngine();
-
 
     const integrationTest =
       verifyDomainIntegration();
 
 
     const allPass =
-      armTest.status ===
-      "PASS" &&
-
-      coreTest.status ===
-      "PASS" &&
-
+      armTest.status === "PASS" &&
+      coreTest.status === "PASS" &&
       (
-        integrationTest.status ===
-        "READY"
-        ||
-        integrationTest.status ===
-        "PARTIAL"
+        integrationTest.status === "READY" ||
+        integrationTest.status === "PARTIAL"
       );
 
 
@@ -2029,18 +1896,15 @@ function () {
       ).innerText =
         "SELF-TEST PASS — NO CORRECTIVE ACTION REQUIRED";
 
-
       document.getElementById(
         "fault"
       ).innerText =
         "NO CRITICAL FAULT IDENTIFIED";
 
-
       document.getElementById(
         "corrective"
       ).innerText =
         "NO CORRECTIVE ACTION REQUIRED";
-
 
       document.getElementById(
         "retest"
@@ -2056,18 +1920,15 @@ function () {
       ).innerText =
         "SELF-TEST REQUIRES REVIEW";
 
-
       document.getElementById(
         "fault"
       ).innerText =
         "TEST RESULT REQUIRES FAULT ASSESSMENT";
 
-
       document.getElementById(
         "corrective"
       ).innerText =
         "MAINTAIN SAFE STATE AND REVIEW FAILED INTEGRATION";
-
 
       document.getElementById(
         "retest"
@@ -2092,8 +1953,16 @@ function () {
 
 
 /* =========================================================
-   SCENARIO LISTENERS
+   EVENT LISTENERS
 ========================================================= */
+
+document.getElementById(
+  "intensity"
+).addEventListener(
+  "input",
+  updateIntensity
+);
+
 
 document.getElementById(
   "scenario"
@@ -2129,15 +1998,10 @@ document.getElementById(
       GOLDEN_RULE_STAGES: [
 
         "OBSERVE",
-
         "VERIFY",
-
         "ASSESS",
-
         "DECIDE",
-
         "ACT",
-
         "UPDATE"
 
       ],
@@ -2159,6 +2023,8 @@ document.getElementById(
 ========================================================= */
 
 renderArmStatus();
+
+updateIntensity();
 
 updateScenarioPanel();
 
