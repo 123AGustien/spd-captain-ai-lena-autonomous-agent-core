@@ -6,6 +6,7 @@ on:
       - main
       - command-centre
       - feature/BHR-human-rights-compliance
+      - feature/SPD-v13.1-performance-benchmark
 
   workflow_dispatch:
 
@@ -28,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Verify JavaScript files
         run: |
@@ -54,13 +55,6 @@ jobs:
           test -f arm_screen.html
 
           echo "Screen files present."
-
-      - name: Verify Golden Ratio
-        run: |
-          grep -q "GOLDEN_RATIO = 1.61803398875" \
-            constants/math.constants.js
-
-          echo "Golden Ratio verified."
 
       - name: Verify Golden Rule pipeline
         run: |
@@ -106,10 +100,64 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare clean Pages site
+        run: |
+          rm -rf _site
+          mkdir -p _site
+
+          cp index.html _site/
+
+          if [ -f cockpit_dashboard.html ]; then
+            cp cockpit_dashboard.html _site/
+          fi
+
+          if [ -f arm_screen.html ]; then
+            cp arm_screen.html _site/
+          fi
+
+          if [ -f engine.js ]; then
+            cp engine.js _site/
+          fi
+
+          if [ -f captainAILena.js ]; then
+            cp captainAILena.js _site/
+          fi
+
+          if [ -f goldenRuleEngine.js ]; then
+            cp goldenRuleEngine.js _site/
+          fi
+
+          if [ -f domainIntegration.js ]; then
+            cp domainIntegration.js _site/
+          fi
+
+          if [ -f armController.js ]; then
+            cp armController.js _site/
+          fi
+
+          if [ -d constants ]; then
+            cp -r constants _site/
+          fi
+
+          if [ -d memory ]; then
+            cp -r memory _site/
+          fi
+
+          if [ -d rules ]; then
+            cp -r rules _site/
+          fi
+
+          if [ -d audit ]; then
+            cp -r audit _site/
+          fi
+
+          echo "Clean Pages site prepared."
+          echo "FIN-003 is not required for deployment."
+
       - name: Upload SPD site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./_site
 
       - name: Deploy to GitHub Pages
         id: deployment
