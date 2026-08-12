@@ -4,6 +4,7 @@
  * Data Centre Resilience Domain
  *
  * Rules:
+ * DC-000 Infrastructure Stress
  * DC-001 Cooling Failure
  * DC-002 Power Instability
  * DC-003 Network Congestion
@@ -27,6 +28,13 @@
 const PHI = 1.61803398875;
 
 const RULES = {
+
+  "DC-000": {
+    id: "DC-000",
+    name: "Infrastructure Stress",
+    category: "INFRASTRUCTURE_RESILIENCE",
+    scenario: "INFRASTRUCTURE_STRESS"
+  },
 
   "DC-001": {
     id: "DC-001",
@@ -106,6 +114,8 @@ const RULES = {
  * ----------------------------------------------------- */
 
 const SCENARIO_MAP = {
+
+  INFRASTRUCTURE_STRESS: "DC-000",
 
   COOLING_FAILURE: "DC-001",
   POWER_INSTABILITY: "DC-002",
@@ -209,6 +219,20 @@ function calculateStress(scenario, input) {
   let stress = intensity;
 
   switch (scenario) {
+
+    case "INFRASTRUCTURE_STRESS":
+
+      stress =
+        (
+          safeNumber(input.dc) +
+          safeNumber(input.inf) +
+          safeNumber(input.energy) +
+          safeNumber(input.cyb) +
+          intensity
+        ) / 5;
+
+      break;
+
 
     case "COOLING_FAILURE":
 
@@ -415,6 +439,14 @@ function generateCascade(scenario, risk) {
 
   const cascades = {
 
+    INFRASTRUCTURE_STRESS: [
+      "Infrastructure Stress",
+      "Cross-System Operational Strain",
+      "Reduced Resilience Margin",
+      "Potential Service Degradation",
+      "Potential Cross-Domain Cascade"
+    ],
+
     COOLING_FAILURE: [
       "Cooling Failure",
       "Temperature Rise",
@@ -521,6 +553,14 @@ function generateCascade(scenario, risk) {
 function getContingencyActions(scenario, risk) {
 
   const actions = {
+
+    INFRASTRUCTURE_STRESS: [
+      "Monitor infrastructure health",
+      "Verify DC and INF resilience indicators",
+      "Prioritise critical infrastructure",
+      "Reduce non-essential system load",
+      "Assess cross-domain cascade risk"
+    ],
 
     COOLING_FAILURE: [
       "Activate backup cooling systems",
