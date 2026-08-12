@@ -23,9 +23,21 @@
  * AI provides decision support.
  * HUMAN_OPERATOR retains execution authority.
  * No autonomous recovery execution is permitted.
+ *
+ * Module:
+ * ES MODULE
+ *
+ * Compatible with:
+ * domainIntegration.js
+ * index.html <script type="module">
  */
 
 const PHI = 1.61803398875;
+
+
+/* =========================================================
+   RULE REGISTRY
+========================================================= */
 
 const RULES = {
 
@@ -109,116 +121,190 @@ const RULES = {
 };
 
 
-/* -------------------------------------------------------
- * SCENARIO MAP
- * ----------------------------------------------------- */
+/* =========================================================
+   SCENARIO MAP
+========================================================= */
 
 const SCENARIO_MAP = {
 
   INFRASTRUCTURE_STRESS: "DC-000",
 
   COOLING_FAILURE: "DC-001",
+
   POWER_INSTABILITY: "DC-002",
+
   NETWORK_CONGESTION: "DC-003",
+
   COMPUTE_LOAD_SPIKE: "DC-004",
+
   BLACKOUT_RECOVERY: "DC-005",
+
   COOLING_RECOVERY_FAILURE: "DC-006",
+
   NETWORK_HARDWARE_FAILURE: "DC-007",
+
   STORAGE_DEGRADATION: "DC-008",
+
   COOLING_LOAD_SATURATION: "DC-009",
+
   MULTI_SYSTEM_CASCADE: "DC-010"
 
 };
 
 
-/* -------------------------------------------------------
- * SAFE NUMBER
- * ----------------------------------------------------- */
+/* =========================================================
+   SAFE NUMBER
+========================================================= */
 
 function safeNumber(value, fallback = 0) {
 
   const number = Number(value);
 
   if (!Number.isFinite(number)) {
+
     return fallback;
+
   }
 
-  return Math.max(0, Math.min(100, number));
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      number
+    )
+  );
 
 }
 
 
-/* -------------------------------------------------------
- * SCENARIO RESOLUTION
- * ----------------------------------------------------- */
+/* =========================================================
+   SCENARIO RESOLUTION
+========================================================= */
 
 function resolveRule(scenario) {
 
-  const ruleId = SCENARIO_MAP[scenario];
+  const ruleId =
+    SCENARIO_MAP[scenario];
 
   if (!ruleId) {
 
     return {
+
       success: false,
-      error: "DC_SCENARIO_NOT_REGISTERED"
+
+      error:
+        "DC_SCENARIO_NOT_REGISTERED",
+
+      scenario
+
+    };
+
+  }
+
+  const rule =
+    RULES[ruleId];
+
+  if (!rule) {
+
+    return {
+
+      success: false,
+
+      error:
+        "DC_RULE_NOT_REGISTERED",
+
+      scenario,
+
+      ruleId
+
     };
 
   }
 
   return {
+
     success: true,
+
     ruleId,
-    rule: RULES[ruleId]
+
+    rule
+
   };
 
 }
 
 
-/* -------------------------------------------------------
- * DOMAIN STATUS
- * ----------------------------------------------------- */
+/* =========================================================
+   DOMAIN STATUS
+========================================================= */
 
 function getStatus() {
 
   return {
 
-    id: "DC",
+    id:
+      "DC",
 
-    name: "Data Centre Resilience",
+    name:
+      "Data Centre Resilience",
 
-    status: "ACTIVE",
+    status:
+      "ACTIVE",
 
-    engineRegistered: true,
+    engine:
+      "DCRuleEngine",
 
-    ruleCount: Object.keys(RULES).length,
+    engineRegistered:
+      true,
 
-    rules: Object.keys(RULES),
+    ruleCount:
+      Object.keys(RULES).length,
 
-    scenarios: Object.keys(SCENARIO_MAP),
+    rules:
+      Object.keys(RULES),
 
-    executionAuthority: "HUMAN_OPERATOR",
+    scenarios:
+      Object.keys(SCENARIO_MAP),
 
-    humanAuthorizationRequired: true,
+    executionAuthority:
+      "HUMAN_OPERATOR",
 
-    autonomousExecution: false
+    humanAuthorizationRequired:
+      true,
+
+    autonomousExecution:
+      false
 
   };
 
 }
 
 
-/* -------------------------------------------------------
- * INDICATOR EXTRACTION
- * ----------------------------------------------------- */
+/* =========================================================
+   INDICATOR EXTRACTION / STRESS CALCULATION
+========================================================= */
 
-function calculateStress(scenario, input) {
+function calculateStress(
+  scenario,
+  input = {}
+) {
 
   const intensity =
-    safeNumber(input.intensity, 0);
+    safeNumber(
+      input.intensity,
+      0
+    );
 
-  let stress = intensity;
+  let stress =
+    intensity;
+
 
   switch (scenario) {
+
+
+    /* -----------------------------------------------------
+       DC-000
+    ----------------------------------------------------- */
 
     case "INFRASTRUCTURE_STRESS":
 
@@ -234,6 +320,10 @@ function calculateStress(scenario, input) {
       break;
 
 
+    /* -----------------------------------------------------
+       DC-001
+    ----------------------------------------------------- */
+
     case "COOLING_FAILURE":
 
       stress =
@@ -246,6 +336,10 @@ function calculateStress(scenario, input) {
 
       break;
 
+
+    /* -----------------------------------------------------
+       DC-002
+    ----------------------------------------------------- */
 
     case "POWER_INSTABILITY":
 
@@ -261,6 +355,10 @@ function calculateStress(scenario, input) {
       break;
 
 
+    /* -----------------------------------------------------
+       DC-003
+    ----------------------------------------------------- */
+
     case "NETWORK_CONGESTION":
 
       stress =
@@ -274,6 +372,10 @@ function calculateStress(scenario, input) {
 
       break;
 
+
+    /* -----------------------------------------------------
+       DC-004
+    ----------------------------------------------------- */
 
     case "COMPUTE_LOAD_SPIKE":
 
@@ -289,6 +391,10 @@ function calculateStress(scenario, input) {
       break;
 
 
+    /* -----------------------------------------------------
+       DC-005
+    ----------------------------------------------------- */
+
     case "BLACKOUT_RECOVERY":
 
       stress =
@@ -302,6 +408,10 @@ function calculateStress(scenario, input) {
 
       break;
 
+
+    /* -----------------------------------------------------
+       DC-006
+    ----------------------------------------------------- */
 
     case "COOLING_RECOVERY_FAILURE":
 
@@ -317,6 +427,10 @@ function calculateStress(scenario, input) {
       break;
 
 
+    /* -----------------------------------------------------
+       DC-007
+    ----------------------------------------------------- */
+
     case "NETWORK_HARDWARE_FAILURE":
 
       stress =
@@ -330,6 +444,10 @@ function calculateStress(scenario, input) {
 
       break;
 
+
+    /* -----------------------------------------------------
+       DC-008
+    ----------------------------------------------------- */
 
     case "STORAGE_DEGRADATION":
 
@@ -345,6 +463,10 @@ function calculateStress(scenario, input) {
       break;
 
 
+    /* -----------------------------------------------------
+       DC-009
+    ----------------------------------------------------- */
+
     case "COOLING_LOAD_SATURATION":
 
       stress =
@@ -358,6 +480,10 @@ function calculateStress(scenario, input) {
 
       break;
 
+
+    /* -----------------------------------------------------
+       DC-010
+    ----------------------------------------------------- */
 
     case "MULTI_SYSTEM_CASCADE":
 
@@ -376,49 +502,77 @@ function calculateStress(scenario, input) {
 
     default:
 
-      stress = intensity;
+      stress =
+        intensity;
 
   }
 
+
   return Math.max(
     0,
-    Math.min(100, stress)
+    Math.min(
+      100,
+      stress
+    )
   );
 
 }
 
 
-/* -------------------------------------------------------
- * RISK CLASSIFICATION
- * ----------------------------------------------------- */
+/* =========================================================
+   RISK CLASSIFICATION
+========================================================= */
 
 function classifyRisk(stress) {
 
-  if (stress < 25) {
+  const value =
+    safeNumber(
+      stress,
+      0
+    );
+
+
+  if (value < 25) {
+
     return "GREEN";
+
   }
 
-  if (stress < 50) {
+
+  if (value < 50) {
+
     return "YELLOW";
+
   }
 
-  if (stress < 75) {
+
+  if (value < 75) {
+
     return "ORANGE";
+
   }
+
 
   return "RED";
 
 }
 
 
-/* -------------------------------------------------------
- * RESILIENCE SCORE
- * ----------------------------------------------------- */
+/* =========================================================
+   RESILIENCE SCORE
+========================================================= */
 
 function calculateResilience(stress) {
 
+  const safeStress =
+    safeNumber(
+      stress,
+      0
+    );
+
   const goldenScore =
-    stress * (1 / PHI);
+    safeStress *
+    (1 / PHI);
 
   return Math.max(
     0,
@@ -431,102 +585,181 @@ function calculateResilience(stress) {
 }
 
 
-/* -------------------------------------------------------
- * CASCADE GENERATION
- * ----------------------------------------------------- */
+/* =========================================================
+   CASCADE GENERATION
+========================================================= */
 
-function generateCascade(scenario, risk) {
+function generateCascade(
+  scenario,
+  risk
+) {
 
   const cascades = {
 
+
     INFRASTRUCTURE_STRESS: [
+
       "Infrastructure Stress",
+
       "Cross-System Operational Strain",
+
       "Reduced Resilience Margin",
+
       "Potential Service Degradation",
+
       "Potential Cross-Domain Cascade"
+
     ],
+
 
     COOLING_FAILURE: [
+
       "Cooling Failure",
+
       "Temperature Rise",
+
       "Server Throttling",
+
       "Performance Degradation",
+
       "Potential Hardware Shutdown"
+
     ],
+
 
     POWER_INSTABILITY: [
+
       "Power Instability",
+
       "UPS Dependency",
+
       "Reduced Power Margin",
+
       "Operational Stress",
+
       "Service Disruption"
+
     ],
+
 
     NETWORK_CONGESTION: [
+
       "Network Congestion",
+
       "Application Slowdown",
+
       "Service Degradation",
+
       "Operational Stress"
+
     ],
+
 
     COMPUTE_LOAD_SPIKE: [
+
       "Compute Load Spike",
+
       "Resource Saturation",
+
       "Performance Degradation",
+
       "Service Latency Increase"
+
     ],
+
 
     BLACKOUT_RECOVERY: [
+
       "Blackout Event",
+
       "Infrastructure Stress",
+
       "Service Instability",
+
       "Data Synchronisation Risk",
+
       "Service Recovery"
+
     ],
+
 
     COOLING_RECOVERY_FAILURE: [
+
       "Cooling Recovery Instability",
+
       "Performance Throttling",
+
       "Workload Imbalance",
+
       "Service Degradation"
+
     ],
+
 
     NETWORK_HARDWARE_FAILURE: [
+
       "Network Hardware Failure",
+
       "Network Instability",
+
       "Service Latency",
+
       "Application Degradation",
+
       "Service Outage"
+
     ],
+
 
     STORAGE_DEGRADATION: [
+
       "Storage Degradation",
+
       "Application Slowdown",
+
       "Data Access Delays",
+
       "Service Performance Impact"
+
     ],
+
 
     COOLING_LOAD_SATURATION: [
+
       "Cooling Saturation",
+
       "Thermal Buildup",
+
       "Compute Throttling",
+
       "Service Performance Degradation"
+
     ],
 
+
     MULTI_SYSTEM_CASCADE: [
+
       "Multi-System Failure",
+
       "Cross-Domain Stress",
+
       "Infrastructure Instability",
+
       "Service Outage",
+
       "Data Loss Risk",
+
       "Cross-Domain Systemic Crisis"
+
     ]
 
   };
 
+
   const cascade =
-    cascades[scenario] || ["No cascade defined"];
+    cascades[scenario] ||
+    ["No cascade defined"];
+
 
   return {
 
@@ -535,10 +768,15 @@ function generateCascade(scenario, risk) {
     cascade,
 
     crossDomainImpact: [
+
       "DC",
+
       "INF",
+
       "CYB",
+
       "FIN"
+
     ]
 
   };
@@ -546,117 +784,204 @@ function generateCascade(scenario, risk) {
 }
 
 
-/* -------------------------------------------------------
- * CONTINGENCY ACTIONS
- * ----------------------------------------------------- */
+/* =========================================================
+   CONTINGENCY ACTIONS
+========================================================= */
 
-function getContingencyActions(scenario, risk) {
+function getContingencyActions(
+  scenario,
+  risk
+) {
 
   const actions = {
 
+
     INFRASTRUCTURE_STRESS: [
+
       "Monitor infrastructure health",
+
       "Verify DC and INF resilience indicators",
+
       "Prioritise critical infrastructure",
+
       "Reduce non-essential system load",
+
       "Assess cross-domain cascade risk"
+
     ],
+
 
     COOLING_FAILURE: [
+
       "Activate backup cooling systems",
+
       "Reduce compute workload",
+
       "Shift critical services",
+
       "Notify operations team",
+
       "Monitor thermal thresholds"
+
     ],
+
 
     POWER_INSTABILITY: [
+
       "Monitor electrical systems continuously",
+
       "Verify UPS capacity and battery health",
+
       "Test generator readiness",
+
       "Reduce non-essential electrical loads",
+
       "Prioritise critical services"
+
     ],
+
 
     NETWORK_CONGESTION: [
+
       "Monitor network performance",
+
       "Optimise routing",
+
       "Prioritise critical services",
+
       "Increase bandwidth where available",
+
       "Assess cascading impacts"
+
     ],
+
 
     COMPUTE_LOAD_SPIKE: [
+
       "Monitor compute utilisation",
+
       "Enable autoscaling",
+
       "Prioritise critical workloads",
+
       "Shed non-essential processing",
+
       "Review capacity"
+
     ],
+
 
     BLACKOUT_RECOVERY: [
+
       "Activate disaster recovery procedures",
+
       "Validate system integrity",
+
       "Prioritise critical services",
+
       "Monitor generator and UPS",
+
       "Review RTO and RPO"
+
     ],
+
 
     COOLING_RECOVERY_FAILURE: [
+
       "Monitor thermal stability",
+
       "Rebalance workloads",
+
       "Inspect cooling recalibration",
+
       "Activate additional cooling",
+
       "Escalate persistent instability"
+
     ],
+
 
     NETWORK_HARDWARE_FAILURE: [
+
       "Activate redundant network paths",
+
       "Isolate failed devices",
+
       "Restore routing stability",
+
       "Prioritise critical traffic",
+
       "Monitor segmentation"
+
     ],
+
 
     STORAGE_DEGRADATION: [
+
       "Monitor storage health",
+
       "Replace failing components",
+
       "Balance I/O workloads",
+
       "Validate data integrity",
+
       "Maintain backup and replication"
+
     ],
+
 
     COOLING_LOAD_SATURATION: [
+
       "Monitor thermal headroom",
+
       "Reduce non-critical compute",
+
       "Optimise cooling efficiency",
+
       "Redistribute workloads",
+
       "Activate auxiliary cooling"
+
     ],
 
+
     MULTI_SYSTEM_CASCADE: [
+
       "Activate full-system monitoring",
+
       "Prioritise critical infrastructure",
+
       "Isolate failing subsystems",
+
       "Engage disaster recovery",
+
       "Coordinate cross-domain response"
+
     ]
 
   };
+
 
   return actions[scenario] || [];
 
 }
 
 
-/* -------------------------------------------------------
- * MAIN EVALUATION
- * ----------------------------------------------------- */
+/* =========================================================
+   MAIN EVALUATION
+========================================================= */
 
-function evaluate(scenario, input = {}) {
+function evaluate(
+  scenario,
+  input = {}
+) {
 
   const resolution =
-    resolveRule(scenario);
+    resolveRule(
+      scenario
+    );
+
 
   if (!resolution.success) {
 
@@ -664,20 +989,30 @@ function evaluate(scenario, input = {}) {
 
   }
 
+
   const stress =
     calculateStress(
       scenario,
       input
     );
 
+
   const goldenScore =
-    stress * (1 / PHI);
+    stress *
+    (1 / PHI);
+
 
   const resilienceScore =
-    calculateResilience(stress);
+    calculateResilience(
+      stress
+    );
+
 
   const risk =
-    classifyRisk(stress);
+    classifyRisk(
+      stress
+    );
+
 
   const cascade =
     generateCascade(
@@ -685,24 +1020,33 @@ function evaluate(scenario, input = {}) {
       risk
     );
 
+
   const contingencyActions =
     getContingencyActions(
       scenario,
       risk
     );
 
+
   const timestamp =
     new Date().toISOString();
 
+
   return {
 
-    success: true,
+    success:
+      true,
 
-    domain: "DC",
+    domain:
+      "DC",
+
+    engine:
+      "DCRuleEngine",
 
     scenario,
 
-    rule: resolution.rule,
+    rule:
+      resolution.rule,
 
     assessment: {
 
@@ -737,9 +1081,11 @@ function evaluate(scenario, input = {}) {
 
     governance: {
 
-      humanAuthorizationRequired: true,
+      humanAuthorizationRequired:
+        true,
 
-      autonomousExecution: false,
+      autonomousExecution:
+        false,
 
       executionAuthority:
         "HUMAN_OPERATOR"
@@ -748,11 +1094,14 @@ function evaluate(scenario, input = {}) {
 
     audit: {
 
-      engine: "DCRuleEngine",
+      engine:
+        "DCRuleEngine",
 
-      domain: "DC",
+      domain:
+        "DC",
 
-      ruleId: resolution.ruleId,
+      ruleId:
+        resolution.ruleId,
 
       scenario,
 
@@ -771,11 +1120,11 @@ function evaluate(scenario, input = {}) {
 }
 
 
-/* -------------------------------------------------------
- * EXPORT
- * ----------------------------------------------------- */
+/* =========================================================
+   ES MODULE EXPORTS
+========================================================= */
 
-module.exports = {
+export {
 
   PHI,
 
