@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  background:#0b0f14;
+  color:#00ff88;
+  font-family:Arial,sans-serif;
+  padding:20px;
+  margin:0;
+}
+
+h1{color:#fff;margin-bottom:5px}
+
+.subtitle{
+  color:#aaa;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+.simulator-banner{
+  border:2px solid #00ff88;
+  background:#080d11;
+  color:#00ff88;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.panel{
+  border:1px solid #00ff88;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  background:#10161d;
+}
+
+.title{
+  font-size:18px;
+  margin-bottom:15px;
+  color:#fff;
+  font-weight:bold;
+}
+
+.status{
+  font-size:20px;
+  font-weight:bold;
+  padding:12px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  margin-bottom:15px;
+  background:#080d11;
+}
+
+.control-buttons,
+.scenario-controls,
+.fin-controls,
+.bhr-controls,
+.dc-controls,
+.cyb-controls,
+.authority-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  width:100%;
+}
+
+button{
+  display:inline-block;
+  visibility:visible;
+  opacity:1;
+  background:#00ff88;
+  color:#000;
+  border:2px solid #00ff88;
+  padding:14px 20px;
+  border-radius:6px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  min-height:48px;
+}
+
+button:hover{opacity:.85}
+button:active{transform:scale(.98)}
+button:focus{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+
+.self-test-button{
+  background:#1b2730;
+  color:#00ff88;
+  border:2px solid #00ff88;
+}
+
+.corrective-button{
+  background:#ffb000;
+  color:#000;
+  border:2px solid #ffb000;
+}
+
+.danger{
+  background:#ff5555;
+  color:#fff;
+  border:2px solid #ff5555;
+}
+
+.scenario-button{
+  background:#1b2730;
+  color:#00ff88;
+  border:1px solid #00ff88;
+}
+
+.fin-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00bfff;
+}
+
+.bhr-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #ffb000;
+}
+
+.dc-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00ff88;
+}
+
+.cyb-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #ff5555;
+}
+
+.authority-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #fff;
+}
+
+.fin-label,
+.bhr-label,
+.dc-label,
+.cyb-label{
+  width:100%;
+  font-size:14px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.fin-label{color:#00bfff}
+.bhr-label{color:#ffb000}
+.dc-label{color:#00ff88}
+.cyb-label{color:#ff5555}
+
+.monitor{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+}
+
+.domain{
+  border:1px solid #00ff88;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+  text-align:center;
+}
+
+.domain-name{
+  color:#aaa;
+  font-size:13px;
+}
+
+.domain-value{
+  color:#fff;
+  font-size:24px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.pipeline{
+  font-size:16px;
+  color:#fff;
+  padding:10px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.stage{
+  display:inline-block;
+  padding:8px;
+  margin:3px;
+  border:1px solid #00ff88;
+  border-radius:4px;
+}
+
+.stage.active{
+  background:#00ff88;
+  color:#000;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:#00ff88;
+  cursor:pointer;
+  min-height:30px;
+}
+
+.intensity-value{
+  color:#fff;
+  font-weight:bold;
+  font-size:18px;
+}
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  overflow-x:auto;
+  color:#00ff88;
+  line-height:1.5;
+}
+
+.muted{
+  color:#aaa;
+  font-size:13px;
+}
+
+.solution{
+  border-left:3px solid #00ff88;
+  padding:10px;
+  margin-top:8px;
+  background:#080d11;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+
+.authority-box{
+  border:2px solid #fff;
+  padding:15px;
+  border-radius:8px;
+  background:#080d11;
+}
+
+.human-decision{
+  border:1px solid #fff;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+}
+
+.execution-gate{
+  border:1px solid #ffb000;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+  color:#ffb000;
+  line-height:1.6;
+}
+
+.domain-integration{
+  border:1px solid #00bfff;
+  background:#080d11;
+}
+
+@media(max-width:600px){
+  body{padding:10px}
+  h1{font-size:22px}
+  .panel{padding:12px}
+  .title{font-size:16px}
+
+  .control-buttons,
+  .scenario-controls,
+  .fin-controls,
+  .bhr-controls,
+  .dc-controls,
+  .cyb-controls,
+  .authority-controls{
+    flex-direction:column;
+  }
+
+  .control-buttons button,
+  .scenario-controls button,
+  .fin-controls button,
+  .bhr-controls button,
+  .dc-controls button,
+  .cyb-controls button,
+  .authority-controls button{
+    width:100%;
+    min-height:52px;
+  }
+
+  .pipeline{
+    white-space:normal;
+    line-height:2;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+
+<div class="subtitle">
+<strong>Captain AI Lena Autonomous Agent Core</strong><br>
+DATA → ALGORITHMS → COMPUTE<br>
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE<br>
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+</div>
+
+<div class="simulator-banner">
+🧪 SELF-CONTAINED SIMULATOR —
+LOCAL DETERMINISTIC EXECUTION —
+NO BACKEND CONNECTION
+</div>
+
+<div class="status" id="systemStatus">
+SYSTEM STATUS: READY
+</div>
+
+<!-- SYSTEM CONTROLS -->
+
+<div class="panel">
+<div class="title">🎛️ SYSTEM CONTROLS</div>
+
+<div class="control-buttons">
+
+<button type="button" onclick="runLiveSystem()">
+▶ RUN SYSTEM
+</button>
+
+<button type="button"
+class="self-test-button"
+onclick="runAuthoritativeSelfTest()">
+🧪 RUN SELF-TEST
+</button>
+
+<button type="button"
+class="corrective-button"
+onclick="runSelfTestAndCorrect()">
+🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+</button>
+
+<button type="button"
+onclick="runDomainIntegrationTest()">
+🔌 RUN DOMAIN INTEGRATION TEST
+</button>
+
+</div>
+</div>
+
+<!-- HUMAN DECISION AUTHORITY -->
+
+<div class="panel">
+<div class="title">🧑‍✈️ HUMAN DECISION AUTHORITY</div>
+
+<div class="authority-box">
+
+<strong>
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+</strong>
+
+<br><br>
+
+<div class="execution-gate">
+🔒 EXECUTION GATE<br>
+No recovery or execution action is authorized automatically.<br>
+HUMAN AUTHORIZATION REQUIRED.
+</div>
+
+<br>
+
+<div class="human-decision">
+
+<pre id="humanDecisionAuthority">{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}</pre>
+
+<div class="authority-controls">
+
+<button type="button"
+class="authority-button"
+onclick="authorizeRecovery()">
+AUTHORIZE RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="maintainSafeState()">
+MAINTAIN SAFE STATE
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="requestDiagnostics()">
+REQUEST DIAGNOSTICS
+</button>
+
+<button type="button"
+class="danger"
+onclick="abortRecovery()">
+ABORT RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="escalateMissionAuthority()">
+ESCALATE TO MISSION AUTHORITY
+</button>
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- DOMAIN MONITOR -->
+
+<div class="panel">
+<div class="title">📊 SYSTEM DOMAIN MONITOR</div>
+
+<div class="monitor">
+
+<div class="domain">
+<div class="domain-name">FX</div>
+<div class="domain-value" id="domainFX">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">DC</div>
+<div class="domain-value" id="domainDC">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">CYB</div>
+<div class="domain-value" id="domainCYB">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">INF</div>
+<div class="domain-value" id="domainINF">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">EN / ENERGY</div>
+<div class="domain-value" id="domainEN">0</div>
+</div>
+
+</div>
+</div>
+
+<!-- DOMAIN INTEGRATION -->
+
+<div class="panel domain-integration">
+
+<div class="title">
+🔌 DOMAIN INTEGRATION LAYER
+</div>
+
+<div class="muted">
+COCKPIT<br>
+↓<br>
+LOCAL DOMAIN INTEGRATION<br>
+↓<br>
+LOCAL DOMAIN RULE ENGINE<br>
+↓<br>
+CAPTAIN AI LENA DECISION CORE<br>
+↓<br>
+GOLDEN RULE PIPELINE<br>
+↓<br>
+RESULT / MEMORY / AUDIT
+</div>
+
+<br>
+
+<pre id="domainIntegrationStatus">
+Domain integration test not executed.
+</pre>
+
+</div>
+
+<!-- BHR DOMAIN -->
+
+<div class="panel">
+
+<div class="title">
+⚖️ BHR — BUSINESS & HUMAN RIGHTS RESILIENCE
+</div>
+
+<div class="muted">
+Local simulator engine: BHRRuleEngine
+</div>
+
+<br>
+
+<div class="bhr-controls">
+
+<div class="bhr-label">BHR SCENARIOS</div>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
+BHR — HUMAN RIGHTS DUE DILIGENCE
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('FORCED_LABOUR')">
+BHR — FORCED LABOUR
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('CHILD_LABOUR')">
+BHR — CHILD LABOUR
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('DISCRIMINATION')">
+BHR — DISCRIMINATION
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
+BHR — OCCUPATIONAL HEALTH & SAFETY
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('MODERN_SLAVERY')">
+BHR — MODERN SLAVERY
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('COMMUNITY_IMPACT')">
+BHR — COMMUNITY IMPACT
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('INDIGENOUS_RIGHTS')">
+BHR — INDIGENOUS RIGHTS
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('SUPPLY_CHAIN_RISK')">
+BHR — SUPPLY CHAIN RISK
+</button>
+
+<button type="button" class="bhr-button"
+onclick="activateScenario('GRIEVANCE_MECHANISM')">
+BHR — GRIEVANCE MECHANISM
+</button>
+
+</div>
+</div>
+
+<!-- FIN DOMAIN -->
+
+<div class="panel">
+
+<div class="title">
+💰 FIN — FINANCIAL RESILIENCE
+</div>
+
+<div class="muted">
+Local simulator engine: FINRuleEngine<br>
+FIN scenarios are processed through the local Domain Integration Layer.
+</div>
+
+<br>
+
+<div class="fin-controls">
+
+<button type="button" class="fin-button"
+onclick="activateScenario('FIN_STRESS')">
+FIN STRESS
+</button>
+
+<button type="button" class="fin-button"
+onclick="activateScenario('BANKING_STRESS')">
+BANKING STRESS
+</button>
+
+<button type="button" class="fin-button"
+onclick="activateScenario('LIQUIDITY_CRISIS')">
+LIQUIDITY CRISIS
+</button>
+
+<button type="button" class="fin-button"
+onclick="activateScenario('CREDIT_STRESS')">
+CREDIT STRESS
+</button>
+
+<button type="button" class="fin-button"
+onclick="activateScenario('SOVEREIGN_DEBT')">
+SOVEREIGN DEBT
+</button>
+
+</div>
+</div>
+
+<!-- DC DOMAIN -->
+
+<div class="panel">
+
+<div class="title">
+🏢 DC — DATA CENTRE RESILIENCE
+</div>
+
+<div class="muted">
+Local simulator engine: DCRuleEngine
+</div>
+
+<br>
+
+<div class="dc-controls">
+
+<button type="button" class="dc-button"
+onclick="activateScenario('COOLING_FAILURE')">
+DC — COOLING FAILURE
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('POWER_INSTABILITY')">
+DC — POWER INSTABILITY
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('NETWORK_CONGESTION')">
+DC — NETWORK CONGESTION
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('COMPUTE_LOAD_SPIKE')">
+DC — COMPUTE LOAD SPIKE
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('BLACKOUT_RECOVERY')">
+DC — BLACKOUT RECOVERY
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('COOLING_RECOVERY_FAILURE')">
+DC — COOLING RECOVERY FAILURE
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('NETWORK_HARDWARE_FAILURE')">
+DC — NETWORK HARDWARE FAILURE
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('STORAGE_DEGRADATION')">
+DC — STORAGE DEGRADATION
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('COOLING_LOAD_SATURATION')">
+DC — COOLING LOAD SATURATION
+</button>
+
+<button type="button" class="dc-button"
+onclick="activateScenario('MULTI_SYSTEM_CASCADE')">
+DC — MULTI-SYSTEM CASCADE
+</button>
+
+</div>
+</div>
+
+<!-- CYBER DOMAIN -->
+
+<div class="panel">
+
+<div class="title">
+🛡️ CYB — CYBER RESILIENCE
+</div>
+
+<div class="muted">
+Local simulator engine: CYBRuleEngine
+</div>
+
+<br>
+
+<div class="cyb-controls">
+
+<button type="button" class="cyb-button"
+onclick="activateScenario('DATA_BREACH_CREDENTIAL_LEAK')">
+CYB — DATA BREACH / CREDENTIAL LEAK
+</button>
+
+<!-- ============================================================
+     PART 1 ENDS HERE
+     PART 2 CONTINUES DIRECTLY FROM THIS BUTTON
+============================================================ -->
+
+<button type="button" class="cyb-button"
+onclick="activateScenario('DDOS')">
+CYB — DDOS
+</button>
