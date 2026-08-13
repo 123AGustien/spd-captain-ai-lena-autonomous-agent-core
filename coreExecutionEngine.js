@@ -20,6 +20,14 @@
  * CYB — Cyber Resilience
  * INF — Infrastructure Resilience
  *
+ * IMPORTANT:
+ * The cockpit intensity is passed as a single
+ * computational input to the authoritative domain
+ * engine.
+ *
+ * Domain engines remain responsible for their own
+ * scenario-specific stress calculations.
+ *
  * Governance:
  * AI provides decision support.
  * HUMAN_OPERATOR retains final authority.
@@ -155,31 +163,18 @@ function normalizeIntensity(
 
 
 /* =========================================================
-   APPLY INTENSITY
- *
- * Retained as a public utility for compatibility.
+   VERIFY / NORMALIZATION
  *
  * IMPORTANT:
- * The main engine does NOT apply intensity to every
- * domain indicator. Authoritative domain engines receive
- * the normalized indicators and intensity separately.
-========================================================= */
-
-function applyIntensity(
-  value,
-  intensityFactor
-) {
-
-  return clamp(
-    safeNumber(value) *
-    safeNumber(intensityFactor)
-  );
-
-}
-
-
-/* =========================================================
-   VERIFY / NORMALIZATION
+ *
+ * Intensity is NOT applied to every indicator here.
+ *
+ * The authoritative domain engine receives the
+ * original scenario indicators and the normalized
+ * intensity value.
+ *
+ * This prevents accidental double application of
+ * scenario intensity.
 ========================================================= */
 
 function normalizeState(
@@ -201,7 +196,6 @@ function normalizeState(
     intensity,
 
     intensityFactor,
-
 
     /* =====================================================
        CORE DOMAIN INDICATORS
@@ -446,4 +440,580 @@ function extractDomainAssessment(
       null,
 
     assessment:
-     
+      result.assessment ||
+      null,
+
+    decision:
+      result.decision ||
+      null,
+
+    cascade:
+      result.cascade ||
+      null,
+
+    contingencyActions:
+      result.contingencyActions ||
+      [],
+
+    resilienceScore:
+      result.assessment?.resilienceScore ??
+      null,
+
+    risk:
+      result.assessment?.risk ??
+      "UNKNOWN",
+
+    executionAuthority:
+      result.decision?.executionAuthority ||
+      result.executionAuthority ||
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      result.decision?.executionStatus ||
+      result.executionStatus ||
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    status:
+      result.status ||
+      "DOMAIN_EVALUATION_COMPLETE"
+
+  };
+
+}
+
+
+/* =========================================================
+   CAPTAIN AI LENA
+========================================================= */
+
+function executeCaptainAI(
+  normalizedState
+) {
+
+  try {
+
+    const result =
+      captainAILena(
+        normalizedState
+      );
+
+
+    return {
+
+      success:
+        true,
+
+      ...result
+
+    };
+
+  }
+
+  catch (error) {
+
+    return {
+
+      success:
+        false,
+
+      error:
+        "CAPTAIN_AI_EXECUTION_ERROR",
+
+      message:
+        error.message,
+
+      assessment: {},
+
+      decision: {
+
+        action:
+          "MAINTAIN_SAFE_STATE",
+
+        priority:
+          "CRITICAL",
+
+        humanAuthorization:
+          "REQUIRED",
+
+        executionAuthority:
+          "HUMAN_OPERATOR",
+
+        executionStatus:
+          "HUMAN_AUTHORIZATION_REQUIRED"
+
+      }
+
+    };
+
+  }
+
+}
+
+
+/* =========================================================
+   MERGE DECISION SUPPORT
+========================================================= */
+
+function buildDecisionSupport(
+  domainAssessment,
+  captainResult
+) {
+
+  const captainAssessment =
+    captainResult?.assessment ||
+    {};
+
+  const captainDecision =
+    captainResult?.decision ||
+    {};
+
+
+  return {
+
+    domain:
+      domainAssessment?.domain ||
+      "CORE",
+
+    risk:
+      domainAssessment?.risk ??
+      captainAssessment.risk ??
+      "UNKNOWN",
+
+    resilienceScore:
+      domainAssessment?.resilienceScore ??
+      captainAssessment.resilienceScore ??
+      null,
+
+    assessmentSource:
+      domainAssessment
+        ? "DOMAIN_RULE_ENGINE"
+        : "CAPTAIN_AI_CORE",
+
+    captainDecision,
+
+    domainDecision:
+      domainAssessment?.decision ||
+      null,
+
+    executionAuthority:
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+}
+
+
+/* =========================================================
+   DOMAIN STATUS SNAPSHOT
+========================================================= */
+
+function getActiveDomainStatus() {
+
+  const statuses = {};
+
+  ACTIVE_DOMAINS.forEach(
+    domainId => {
+
+      statuses[
+        domainId
+      ] =
+        getDomainStatus(
+          domainId
+        );
+
+    }
+  );
+
+  return statuses;
+
+}
+
+
+/* =========================================================
+   RUN ENGINE
+========================================================= */
+
+export function runEngine(
+  state = {}
+) {
+
+  const executionTimestamp =
+    new Date().toISOString();
+
+
+  /* =======================================================
+     OBSERVE
+  ======================================================= */
+
+  const observedState =
+    observeState(
+      state
+    );
+
+
+  /* =======================================================
+     VERIFY
+  ======================================================= */
+
+  const normalizedState =
+    normalizeState(
+      observedState
+    );
+
+
+  /* =======================================================
+     DOMAIN IDENTIFICATION
+  ======================================================= */
+
+  const domain =
+    identifyDomain(
+      observedState
+    );
+
+
+  /* =======================================================
+     DOMAIN EXECUTION
+  ======================================================= */
+
+  let domainResult =
+    null;
+
+
+  try {
+
+    domainResult =
+      executeResolvedDomain(
+
+        domain,
+
+        normalizedState,
+
+        observedState
+
+      );
+
+  }
+
+  catch (error) {
+
+    domainResult = {
+
+      success:
+        false,
+
+      domain:
+        domain ||
+        "CORE",
+
+      error:
+        "DOMAIN_EXECUTION_EXCEPTION",
+
+      message:
+        error.message
+
+    };
+
+  }
+
+
+  /* =======================================================
+     DOMAIN ASSESSMENT
+  ======================================================= */
+
+  const domainAssessment =
+    extractDomainAssessment(
+      domainResult
+    );
+
+
+  /* =======================================================
+     CAPTAIN AI LENA
+  ======================================================= */
+
+  const captainResult =
+    executeCaptainAI(
+      normalizedState
+    );
+
+
+  /* =======================================================
+     DECISION SUPPORT
+  ======================================================= */
+
+  const decisionSupport =
+    buildDecisionSupport(
+
+      domainAssessment,
+
+      captainResult
+
+    );
+
+
+  /* =======================================================
+     FINAL OUTPUT
+  ======================================================= */
+
+  const output = {
+
+    status:
+      "COMPLETE",
+
+    domain:
+      domain ||
+      "CORE",
+
+    domainStatus:
+      domain
+        ? getDomainStatus(domain)
+        : null,
+
+    activeDomainStatus:
+      getActiveDomainStatus(),
+
+    domainResult,
+
+    domainAssessment,
+
+    captainAI:
+      captainResult,
+
+    assessment:
+      domainAssessment?.assessment ||
+      captainResult?.assessment ||
+      {},
+
+    decision:
+      domainAssessment?.decision ||
+      captainResult?.decision ||
+      {
+
+        action:
+          "MAINTAIN_SAFE_STATE",
+
+        humanAuthorization:
+          "REQUIRED",
+
+        executionAuthority:
+          "HUMAN_OPERATOR",
+
+        executionStatus:
+          "HUMAN_AUTHORIZATION_REQUIRED"
+
+      },
+
+    decisionSupport,
+
+    intensity:
+      normalizedState.intensity,
+
+    intensityFactor:
+      normalizedState.intensityFactor,
+
+    goldenRulePipeline:
+      GOLDEN_RULE_PIPELINE,
+
+    executionAuthority:
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      "DECISION_GENERATED_HUMAN_AUTHORIZATION_REQUIRED",
+
+    autonomousExecution:
+      false,
+
+    timestamp:
+      executionTimestamp
+
+  };
+
+
+  /* =======================================================
+     AUDIT WRAPPER
+  ======================================================= */
+
+  return {
+
+    timestamp:
+      executionTimestamp,
+
+    input:
+      observedState,
+
+    normalizedInput:
+      normalizedState,
+
+    domain:
+      domain ||
+      "CORE",
+
+    domainResult,
+
+    output,
+
+    constants: {
+
+      GOLDEN_RATIO
+
+    },
+
+    pipeline:
+      GOLDEN_RULE_PIPELINE,
+
+    status:
+      "EXECUTED"
+
+  };
+
+}
+
+
+/* =========================================================
+   ENGINE SELF-CHECK
+========================================================= */
+
+export function verifyCoreEngine() {
+
+  try {
+
+    const testState = {
+
+      fx: 0,
+      energy: 0,
+      cyb: 0,
+      inf: 0,
+      dc: 0,
+
+      labour: 0,
+      humanRights: 0,
+      supplyChain: 0,
+      community: 0,
+      governance: 0,
+      environment: 0,
+
+      liquidity: 0,
+      credit: 0,
+      banking: 0,
+      sovereign: 0,
+      financialMarket: 0,
+
+      scenario:
+        "NORMAL",
+
+      event:
+        "NORMAL",
+
+      intensity:
+        50,
+
+      mode:
+        "TEST"
+
+    };
+
+
+    const result =
+      runEngine(
+        testState
+      );
+
+
+    const pass =
+      result &&
+      result.status === "EXECUTED" &&
+      result.output &&
+      result.output.status === "COMPLETE" &&
+      result.output.intensity === 50 &&
+      result.output.intensityFactor === 0.5;
+
+
+    return {
+
+      engine:
+        "SPD v13.1 CORE EXECUTION ENGINE",
+
+      status:
+        pass
+          ? "PASS"
+          : "FAIL",
+
+      domain:
+        result.domain,
+
+      intensity:
+        result.output?.intensity,
+
+      intensityFactor:
+        result.output?.intensityFactor,
+
+      pipeline:
+        result.pipeline,
+
+      timestamp:
+        new Date().toISOString()
+
+    };
+
+  }
+
+  catch (error) {
+
+    return {
+
+      engine:
+        "SPD v13.1 CORE EXECUTION ENGINE",
+
+      status:
+        "FAIL",
+
+      error:
+        error.message,
+
+      timestamp:
+        new Date().toISOString()
+
+    };
+
+  }
+
+}
+
+
+/* =========================================================
+   EXPORTS
+========================================================= */
+
+export {
+
+  ACTIVE_DOMAINS,
+
+  GOLDEN_RULE_PIPELINE,
+
+  safeNumber,
+
+  clamp,
+
+  observeState,
+
+  normalizeIntensity,
+
+  applyIntensity,
+
+  normalizeState,
+
+  identifyDomain,
+
+  executeResolvedDomain,
+
+  extractDomainAssessment,
+
+  executeCaptainAI,
+
+  buildDecisionSupport,
+
+  getActiveDomainStatus
+
+};
