@@ -16,6 +16,7 @@
  * Active Domains:
  * FIN — Financial Resilience
  * BHR — Business & Human Rights Resilience
+ * DC  — Data Centre Resilience
  *
  * Human authority remains final.
  * The engine generates decision support only.
@@ -302,6 +303,221 @@ function normalizeState(
       applyIntensity(
         observedState.financialMarket,
         intensityFactor
+      ),
+
+
+    /* =====================================================
+       DC — DATA CENTRE
+    ===================================================== */
+
+    temperature:
+      applyIntensity(
+        observedState.temperature,
+        intensityFactor
+      ),
+
+    cooling:
+      applyIntensity(
+        observedState.cooling,
+        intensityFactor
+      ),
+
+    thermal:
+      applyIntensity(
+        observedState.thermal,
+        intensityFactor
+      ),
+
+    voltage:
+      applyIntensity(
+        observedState.voltage,
+        intensityFactor
+      ),
+
+    frequency:
+      applyIntensity(
+        observedState.frequency,
+        intensityFactor
+      ),
+
+    upsLoad:
+      applyIntensity(
+        observedState.upsLoad,
+        intensityFactor
+      ),
+
+    generatorRisk:
+      applyIntensity(
+        observedState.generatorRisk,
+        intensityFactor
+      ),
+
+    bandwidth:
+      applyIntensity(
+        observedState.bandwidth,
+        intensityFactor
+      ),
+
+    latency:
+      applyIntensity(
+        observedState.latency,
+        intensityFactor
+      ),
+
+    packetLoss:
+      applyIntensity(
+        observedState.packetLoss,
+        intensityFactor
+      ),
+
+    routerLoad:
+      applyIntensity(
+        observedState.routerLoad,
+        intensityFactor
+      ),
+
+    cpu:
+      applyIntensity(
+        observedState.cpu,
+        intensityFactor
+      ),
+
+    memory:
+      applyIntensity(
+        observedState.memory,
+        intensityFactor
+      ),
+
+    storageIO:
+      applyIntensity(
+        observedState.storageIO,
+        intensityFactor
+      ),
+
+    queueDepth:
+      applyIntensity(
+        observedState.queueDepth,
+        intensityFactor
+      ),
+
+    powerLoss:
+      applyIntensity(
+        observedState.powerLoss,
+        intensityFactor
+      ),
+
+    generatorFailure:
+      applyIntensity(
+        observedState.generatorFailure,
+        intensityFactor
+      ),
+
+    upsStress:
+      applyIntensity(
+        observedState.upsStress,
+        intensityFactor
+      ),
+
+    recoveryDelay:
+      applyIntensity(
+        observedState.recoveryDelay,
+        intensityFactor
+      ),
+
+    hotspots:
+      applyIntensity(
+        observedState.hotspots,
+        intensityFactor
+      ),
+
+    coolingInstability:
+      applyIntensity(
+        observedState.coolingInstability,
+        intensityFactor
+      ),
+
+    throttling:
+      applyIntensity(
+        observedState.throttling,
+        intensityFactor
+      ),
+
+    deviceFailure:
+      applyIntensity(
+        observedState.deviceFailure,
+        intensityFactor
+      ),
+
+    segmentation:
+      applyIntensity(
+        observedState.segmentation,
+        intensityFactor
+      ),
+
+    routingInstability:
+      applyIntensity(
+        observedState.routingInstability,
+        intensityFactor
+      ),
+
+    diskFailure:
+      applyIntensity(
+        observedState.diskFailure,
+        intensityFactor
+      ),
+
+    iops:
+      applyIntensity(
+        observedState.iops,
+        intensityFactor
+      ),
+
+    replicationLag:
+      applyIntensity(
+        observedState.replicationLag,
+        intensityFactor
+      ),
+
+    coolingUtilisation:
+      applyIntensity(
+        observedState.coolingUtilisation,
+        intensityFactor
+      ),
+
+    thermalHeadroom:
+      applyIntensity(
+        observedState.thermalHeadroom,
+        intensityFactor
+      ),
+
+    chillerLoad:
+      applyIntensity(
+        observedState.chillerLoad,
+        intensityFactor
+      ),
+
+    power:
+      applyIntensity(
+        observedState.power,
+        intensityFactor
+      ),
+
+    network:
+      applyIntensity(
+        observedState.network,
+        intensityFactor
+      ),
+
+    compute:
+      applyIntensity(
+        observedState.compute,
+        intensityFactor
+      ),
+
+    storage:
+      applyIntensity(
+        observedState.storage,
+        intensityFactor
       )
 
   };
@@ -320,6 +536,111 @@ function identifyDomain(
   return resolveDomain(
     observedState
   );
+
+}
+
+
+/* =========================================================
+   ACTIVE DOMAIN STATUS
+========================================================= */
+
+function getActiveDomainStatus(
+  state = {}
+) {
+
+  const observedState =
+    observeState(
+      state
+    );
+
+
+  const domain =
+    identifyDomain(
+      observedState
+    );
+
+
+  if (!domain) {
+
+    return {
+
+      success:
+        true,
+
+      domain:
+        "CORE",
+
+      status:
+        "NO_ACTIVE_DOMAIN",
+
+      engine:
+        null,
+
+      engineRegistered:
+        false,
+
+      evaluateAvailable:
+        false,
+
+      ruleCount:
+        null,
+
+      executionAuthority:
+        "HUMAN_OPERATOR",
+
+      humanAuthorizationRequired:
+        true,
+
+      autonomousExecution:
+        false
+
+    };
+
+  }
+
+
+  const domainStatus =
+    getDomainStatus(
+      domain
+    );
+
+
+  return {
+
+    success:
+      true,
+
+    domain,
+
+    status:
+      domainStatus?.status ||
+      "UNKNOWN",
+
+    engine:
+      domainStatus?.engine ||
+      null,
+
+    engineRegistered:
+      domainStatus?.engineRegistered === true,
+
+    evaluateAvailable:
+      domainStatus?.evaluateAvailable !== false,
+
+    ruleCount:
+      domainStatus?.ruleCount ??
+      null,
+
+    executionAuthority:
+      domainStatus?.executionAuthority ||
+      "HUMAN_OPERATOR",
+
+    humanAuthorizationRequired:
+      domainStatus?.humanAuthorizationRequired !== false,
+
+    autonomousExecution:
+      domainStatus?.autonomousExecution === true
+
+  };
 
 }
 
@@ -493,10 +814,12 @@ function extractDomainAssessment(
 
     executionAuthority:
       result.executionAuthority ||
+      result.decision?.executionAuthority ||
       "HUMAN_OPERATOR",
 
     executionStatus:
       result.executionStatus ||
+      result.decision?.executionStatus ||
       "HUMAN_AUTHORIZATION_REQUIRED",
 
     status:
@@ -603,7 +926,15 @@ function buildDecisionSupport(
 
     domainDecision:
       domainAssessment?.decision ||
-      null
+      null,
+
+    executionAuthority:
+      domainAssessment?.executionAuthority ||
+      "HUMAN_OPERATOR",
+
+    executionStatus:
+      domainAssessment?.executionStatus ||
+      "HUMAN_AUTHORIZATION_REQUIRED"
 
   };
 
@@ -732,6 +1063,16 @@ export function runEngine(
 
 
   /* =======================================================
+     ACTIVE DOMAIN STATUS
+  ======================================================= */
+
+  const activeDomainStatus =
+    getActiveDomainStatus(
+      observedState
+    );
+
+
+  /* =======================================================
      FINAL OUTPUT
   ======================================================= */
 
@@ -743,6 +1084,8 @@ export function runEngine(
     domain:
       domain ||
       "CORE",
+
+    activeDomainStatus,
 
     domainStatus:
       domain
@@ -791,6 +1134,9 @@ export function runEngine(
     executionStatus:
       "DECISION_GENERATED_HUMAN_AUTHORIZATION_REQUIRED",
 
+    autonomousExecution:
+      false,
+
     timestamp:
       executionTimestamp
 
@@ -816,6 +1162,8 @@ export function runEngine(
       domain ||
       "CORE",
 
+    activeDomainStatus,
+
     domainResult,
 
     output,
@@ -828,6 +1176,19 @@ export function runEngine(
 
     pipeline:
       GOLDEN_RULE_PIPELINE,
+
+    governance: {
+
+      executionAuthority:
+        "HUMAN_OPERATOR",
+
+      humanAuthorizationRequired:
+        true,
+
+      autonomousExecution:
+        false
+
+    },
 
     status:
       "EXECUTED"
@@ -857,6 +1218,11 @@ export function verifyCoreEngine() {
 
       dc: 0,
 
+
+      /* =====================================================
+         BHR
+      ===================================================== */
+
       labour: 0,
 
       humanRights: 0,
@@ -869,6 +1235,11 @@ export function verifyCoreEngine() {
 
       environment: 0,
 
+
+      /* =====================================================
+         FIN
+      ===================================================== */
+
       liquidity: 0,
 
       credit: 0,
@@ -878,6 +1249,82 @@ export function verifyCoreEngine() {
       sovereign: 0,
 
       financialMarket: 0,
+
+
+      /* =====================================================
+         DC
+      ===================================================== */
+
+      temperature: 0,
+
+      cooling: 0,
+
+      thermal: 0,
+
+      voltage: 0,
+
+      frequency: 0,
+
+      upsLoad: 0,
+
+      generatorRisk: 0,
+
+      bandwidth: 0,
+
+      latency: 0,
+
+      packetLoss: 0,
+
+      routerLoad: 0,
+
+      cpu: 0,
+
+      memory: 0,
+
+      storageIO: 0,
+
+      queueDepth: 0,
+
+      powerLoss: 0,
+
+      generatorFailure: 0,
+
+      upsStress: 0,
+
+      recoveryDelay: 0,
+
+      hotspots: 0,
+
+      coolingInstability: 0,
+
+      throttling: 0,
+
+      deviceFailure: 0,
+
+      segmentation: 0,
+
+      routingInstability: 0,
+
+      diskFailure: 0,
+
+      iops: 0,
+
+      replicationLag: 0,
+
+      coolingUtilisation: 0,
+
+      thermalHeadroom: 0,
+
+      chillerLoad: 0,
+
+      power: 0,
+
+      network: 0,
+
+      compute: 0,
+
+      storage: 0,
+
 
       scenario:
         "NORMAL",
@@ -902,10 +1349,26 @@ export function verifyCoreEngine() {
 
     const pass =
       result &&
-      result.status === "EXECUTED" &&
+      result.status ===
+        "EXECUTED" &&
+
       result.output &&
-      result.output.status === "COMPLETE" &&
-      result.output.intensity === 50;
+
+      result.output.status ===
+        "COMPLETE" &&
+
+      result.output.intensity ===
+        50 &&
+
+      result.output.intensityFactor ===
+        0.5 &&
+
+      Array.isArray(
+        result.pipeline
+      ) &&
+
+      result.pipeline.length ===
+        6;
 
 
     return {
@@ -921,6 +1384,9 @@ export function verifyCoreEngine() {
       domain:
         result.domain,
 
+      activeDomainStatus:
+        result.activeDomainStatus,
+
       intensity:
         result.output?.intensity,
 
@@ -929,6 +1395,12 @@ export function verifyCoreEngine() {
 
       pipeline:
         result.pipeline,
+
+      executionAuthority:
+        result.output?.executionAuthority,
+
+      autonomousExecution:
+        result.output?.autonomousExecution,
 
       timestamp:
         new Date().toISOString()
@@ -981,6 +1453,8 @@ export {
   normalizeState,
 
   identifyDomain,
+
+  getActiveDomainStatus,
 
   executeResolvedDomain,
 
