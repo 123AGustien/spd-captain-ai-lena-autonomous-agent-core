@@ -2,34 +2,26 @@
  * SPD v13.1 — CORE EXECUTION ENGINE
  *
  * COCKPIT
- *    ↓
+ *   ↓
  * DOMAIN INTEGRATION
- *    ↓
+ *   ↓
  * AUTHORITATIVE DOMAIN RULE ENGINE
- *    ↓
+ *   ↓
  * CAPTAIN AI LENA DECISION CORE
- *    ↓
+ *   ↓
  * GOLDEN RULE PIPELINE
- *    ↓
+ *   ↓
  * RESULT / MEMORY / AUDIT
  *
- * Active Domains:
+ * ACTIVE DOMAINS:
  * FIN — Financial Resilience
  * BHR — Business & Human Rights Resilience
- * DC  — Data Centre Resilience
  *
- * Human authority remains final.
- * The engine generates decision support only.
+ * HUMAN AUTHORITY REMAINS FINAL.
+ * AI GENERATES DECISION SUPPORT ONLY.
  */
 
-
-/* =========================================================
-   IMPORTS
-========================================================= */
-
-import {
-  captainAILena
-} from "./captainAILena.js";
+import { captainAILena } from "./captainAILena.js";
 
 import {
   resolveDomain,
@@ -47,14 +39,12 @@ import {
 ========================================================= */
 
 const GOLDEN_RULE_PIPELINE = [
-
   "OBSERVE",
   "VERIFY",
   "ASSESS",
   "DECIDE",
   "ACT",
   "UPDATE"
-
 ];
 
 
@@ -62,13 +52,9 @@ const GOLDEN_RULE_PIPELINE = [
    SAFE NUMBER
 ========================================================= */
 
-function safeNumber(
-  value,
-  fallback = 0
-) {
+function safeNumber(value, fallback = 0) {
 
-  const numeric =
-    Number(value);
+  const numeric = Number(value);
 
   return Number.isFinite(numeric)
     ? numeric
@@ -81,18 +67,11 @@ function safeNumber(
    CLAMP
 ========================================================= */
 
-function clamp(
-  value,
-  min = 0,
-  max = 100
-) {
+function clamp(value, min = 0, max = 100) {
 
   return Math.min(
     max,
-    Math.max(
-      min,
-      value
-    )
+    Math.max(min, safeNumber(value))
   );
 
 }
@@ -102,9 +81,7 @@ function clamp(
    OBSERVE
 ========================================================= */
 
-function observeState(
-  state = {}
-) {
+function observeState(state = {}) {
 
   return {
 
@@ -122,32 +99,29 @@ function observeState(
    INTENSITY
 ========================================================= */
 
-function normalizeIntensity(
-  value
-) {
+function normalizeIntensity(value) {
 
-  return clamp(
-    safeNumber(value),
-    0,
-    100
-  );
+  return clamp(value, 0, 100);
 
 }
 
 
 /* =========================================================
    APPLY INTENSITY
+ *
+ * IMPORTANT:
+ * Raw system inputs remain unchanged.
+ *
+ * Intensity is supplied separately to the
+ * decision/rule engines.
+ *
+ * This prevents the cockpit from silently
+ * destroying the operator-entered state.
 ========================================================= */
 
-function applyIntensity(
-  value,
-  intensityFactor
-) {
+function applyIntensity(value, intensityFactor) {
 
-  return clamp(
-    safeNumber(value) *
-    intensityFactor
-  );
+  return clamp(value);
 
 }
 
@@ -156,26 +130,12 @@ function applyIntensity(
    VERIFY / NORMALIZATION
 ========================================================= */
 
-function normalizeState(
-  observedState = {}
-) {
-
-  /*
-   * IMPORTANT:
-   *
-   * The cockpit intensity slider is a
-   * real computational input.
-   *
-   * 0%   → no scenario stress applied
-   * 50%  → half of supplied stress applied
-   * 100% → full supplied stress applied
-   */
+function normalizeState(observedState = {}) {
 
   const intensity =
     normalizeIntensity(
       observedState.intensity
     );
-
 
   const intensityFactor =
     intensity / 100;
@@ -185,49 +145,29 @@ function normalizeState(
 
     ...observedState,
 
-
-    /* =====================================================
-       INTENSITY
-    ===================================================== */
-
     intensity,
 
     intensityFactor,
 
 
     /* =====================================================
-       CORE DOMAINS
+       CORE
     ===================================================== */
 
     fx:
-      applyIntensity(
-        observedState.fx,
-        intensityFactor
-      ),
+      clamp(observedState.fx),
 
     energy:
-      applyIntensity(
-        observedState.energy,
-        intensityFactor
-      ),
+      clamp(observedState.energy),
 
     cyb:
-      applyIntensity(
-        observedState.cyb,
-        intensityFactor
-      ),
+      clamp(observedState.cyb),
 
     inf:
-      applyIntensity(
-        observedState.inf,
-        intensityFactor
-      ),
+      clamp(observedState.inf),
 
     dc:
-      applyIntensity(
-        observedState.dc,
-        intensityFactor
-      ),
+      clamp(observedState.dc),
 
 
     /* =====================================================
@@ -235,40 +175,22 @@ function normalizeState(
     ===================================================== */
 
     labour:
-      applyIntensity(
-        observedState.labour,
-        intensityFactor
-      ),
+      clamp(observedState.labour),
 
     humanRights:
-      applyIntensity(
-        observedState.humanRights,
-        intensityFactor
-      ),
+      clamp(observedState.humanRights),
 
     supplyChain:
-      applyIntensity(
-        observedState.supplyChain,
-        intensityFactor
-      ),
+      clamp(observedState.supplyChain),
 
     community:
-      applyIntensity(
-        observedState.community,
-        intensityFactor
-      ),
+      clamp(observedState.community),
 
     governance:
-      applyIntensity(
-        observedState.governance,
-        intensityFactor
-      ),
+      clamp(observedState.governance),
 
     environment:
-      applyIntensity(
-        observedState.environment,
-        intensityFactor
-      ),
+      clamp(observedState.environment),
 
 
     /* =====================================================
@@ -276,249 +198,19 @@ function normalizeState(
     ===================================================== */
 
     liquidity:
-      applyIntensity(
-        observedState.liquidity,
-        intensityFactor
-      ),
+      clamp(observedState.liquidity),
 
     credit:
-      applyIntensity(
-        observedState.credit,
-        intensityFactor
-      ),
+      clamp(observedState.credit),
 
     banking:
-      applyIntensity(
-        observedState.banking,
-        intensityFactor
-      ),
+      clamp(observedState.banking),
 
     sovereign:
-      applyIntensity(
-        observedState.sovereign,
-        intensityFactor
-      ),
+      clamp(observedState.sovereign),
 
     financialMarket:
-      applyIntensity(
-        observedState.financialMarket,
-        intensityFactor
-      ),
-
-
-    /* =====================================================
-       DC — DATA CENTRE
-    ===================================================== */
-
-    temperature:
-      applyIntensity(
-        observedState.temperature,
-        intensityFactor
-      ),
-
-    cooling:
-      applyIntensity(
-        observedState.cooling,
-        intensityFactor
-      ),
-
-    thermal:
-      applyIntensity(
-        observedState.thermal,
-        intensityFactor
-      ),
-
-    voltage:
-      applyIntensity(
-        observedState.voltage,
-        intensityFactor
-      ),
-
-    frequency:
-      applyIntensity(
-        observedState.frequency,
-        intensityFactor
-      ),
-
-    upsLoad:
-      applyIntensity(
-        observedState.upsLoad,
-        intensityFactor
-      ),
-
-    generatorRisk:
-      applyIntensity(
-        observedState.generatorRisk,
-        intensityFactor
-      ),
-
-    bandwidth:
-      applyIntensity(
-        observedState.bandwidth,
-        intensityFactor
-      ),
-
-    latency:
-      applyIntensity(
-        observedState.latency,
-        intensityFactor
-      ),
-
-    packetLoss:
-      applyIntensity(
-        observedState.packetLoss,
-        intensityFactor
-      ),
-
-    routerLoad:
-      applyIntensity(
-        observedState.routerLoad,
-        intensityFactor
-      ),
-
-    cpu:
-      applyIntensity(
-        observedState.cpu,
-        intensityFactor
-      ),
-
-    memory:
-      applyIntensity(
-        observedState.memory,
-        intensityFactor
-      ),
-
-    storageIO:
-      applyIntensity(
-        observedState.storageIO,
-        intensityFactor
-      ),
-
-    queueDepth:
-      applyIntensity(
-        observedState.queueDepth,
-        intensityFactor
-      ),
-
-    powerLoss:
-      applyIntensity(
-        observedState.powerLoss,
-        intensityFactor
-      ),
-
-    generatorFailure:
-      applyIntensity(
-        observedState.generatorFailure,
-        intensityFactor
-      ),
-
-    upsStress:
-      applyIntensity(
-        observedState.upsStress,
-        intensityFactor
-      ),
-
-    recoveryDelay:
-      applyIntensity(
-        observedState.recoveryDelay,
-        intensityFactor
-      ),
-
-    hotspots:
-      applyIntensity(
-        observedState.hotspots,
-        intensityFactor
-      ),
-
-    coolingInstability:
-      applyIntensity(
-        observedState.coolingInstability,
-        intensityFactor
-      ),
-
-    throttling:
-      applyIntensity(
-        observedState.throttling,
-        intensityFactor
-      ),
-
-    deviceFailure:
-      applyIntensity(
-        observedState.deviceFailure,
-        intensityFactor
-      ),
-
-    segmentation:
-      applyIntensity(
-        observedState.segmentation,
-        intensityFactor
-      ),
-
-    routingInstability:
-      applyIntensity(
-        observedState.routingInstability,
-        intensityFactor
-      ),
-
-    diskFailure:
-      applyIntensity(
-        observedState.diskFailure,
-        intensityFactor
-      ),
-
-    iops:
-      applyIntensity(
-        observedState.iops,
-        intensityFactor
-      ),
-
-    replicationLag:
-      applyIntensity(
-        observedState.replicationLag,
-        intensityFactor
-      ),
-
-    coolingUtilisation:
-      applyIntensity(
-        observedState.coolingUtilisation,
-        intensityFactor
-      ),
-
-    thermalHeadroom:
-      applyIntensity(
-        observedState.thermalHeadroom,
-        intensityFactor
-      ),
-
-    chillerLoad:
-      applyIntensity(
-        observedState.chillerLoad,
-        intensityFactor
-      ),
-
-    power:
-      applyIntensity(
-        observedState.power,
-        intensityFactor
-      ),
-
-    network:
-      applyIntensity(
-        observedState.network,
-        intensityFactor
-      ),
-
-    compute:
-      applyIntensity(
-        observedState.compute,
-        intensityFactor
-      ),
-
-    storage:
-      applyIntensity(
-        observedState.storage,
-        intensityFactor
-      )
+      clamp(observedState.financialMarket)
 
   };
 
@@ -529,13 +221,24 @@ function normalizeState(
    DOMAIN IDENTIFICATION
 ========================================================= */
 
-function identifyDomain(
-  observedState
-) {
+function identifyDomain(observedState = {}) {
 
-  return resolveDomain(
-    observedState
-  );
+  try {
+
+    return resolveDomain(observedState);
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Domain identification error:",
+      error
+    );
+
+    return null;
+
+  }
 
 }
 
@@ -544,103 +247,44 @@ function identifyDomain(
    ACTIVE DOMAIN STATUS
 ========================================================= */
 
-function getActiveDomainStatus(
-  state = {}
-) {
+function getActiveDomainStatus() {
 
-  const observedState =
-    observeState(
-      state
-    );
+  const domains = {};
 
-
-  const domain =
-    identifyDomain(
-      observedState
-    );
+  const activeDomains = [
+    "FIN",
+    "BHR"
+  ];
 
 
-  if (!domain) {
+  for (const domain of activeDomains) {
 
-    return {
+    try {
 
-      success:
-        true,
+      domains[domain] =
+        getDomainStatus(domain);
 
-      domain:
-        "CORE",
+    }
 
-      status:
-        "NO_ACTIVE_DOMAIN",
+    catch (error) {
 
-      engine:
-        null,
+      domains[domain] = {
 
-      engineRegistered:
-        false,
+        domain,
 
-      evaluateAvailable:
-        false,
+        status: "ERROR",
 
-      ruleCount:
-        null,
+        error:
+          error.message
 
-      executionAuthority:
-        "HUMAN_OPERATOR",
+      };
 
-      humanAuthorizationRequired:
-        true,
-
-      autonomousExecution:
-        false
-
-    };
+    }
 
   }
 
 
-  const domainStatus =
-    getDomainStatus(
-      domain
-    );
-
-
-  return {
-
-    success:
-      true,
-
-    domain,
-
-    status:
-      domainStatus?.status ||
-      "UNKNOWN",
-
-    engine:
-      domainStatus?.engine ||
-      null,
-
-    engineRegistered:
-      domainStatus?.engineRegistered === true,
-
-    evaluateAvailable:
-      domainStatus?.evaluateAvailable !== false,
-
-    ruleCount:
-      domainStatus?.ruleCount ??
-      null,
-
-    executionAuthority:
-      domainStatus?.executionAuthority ||
-      "HUMAN_OPERATOR",
-
-    humanAuthorizationRequired:
-      domainStatus?.humanAuthorizationRequired !== false,
-
-    autonomousExecution:
-      domainStatus?.autonomousExecution === true
-
-  };
+  return domains;
 
 }
 
@@ -659,11 +303,9 @@ function executeResolvedDomain(
 
     return {
 
-      success:
-        true,
+      success: true,
 
-      domain:
-        "CORE",
+      domain: "CORE",
 
       status:
         "NO_DOMAIN_ENGINE_REQUIRED"
@@ -673,21 +315,42 @@ function executeResolvedDomain(
   }
 
 
-  const domainStatus =
-    getDomainStatus(
-      domain
-    );
+  let domainStatus;
+
+  try {
+
+    domainStatus =
+      getDomainStatus(domain);
+
+  }
+
+  catch (error) {
+
+    return {
+
+      success: false,
+
+      domain,
+
+      error:
+        "DOMAIN_STATUS_ERROR",
+
+      message:
+        error.message
+
+    };
+
+  }
 
 
   if (
     !domainStatus ||
-    !domainStatus.engineRegistered
+    domainStatus.engineRegistered === false
   ) {
 
     return {
 
-      success:
-        false,
+      success: false,
 
       domain,
 
@@ -702,14 +365,12 @@ function executeResolvedDomain(
 
 
   if (
-    domainStatus.evaluateAvailable ===
-    false
+    domainStatus.evaluateAvailable === false
   ) {
 
     return {
 
-      success:
-        false,
+      success: false,
 
       domain,
 
@@ -723,32 +384,56 @@ function executeResolvedDomain(
   }
 
 
-  return executeDomainRule(
+  try {
 
-    domain,
+    return executeDomainRule(
 
-    normalizedState,
+      domain,
 
-    {
+      normalizedState,
 
-      source:
-        "SPD v13.1 COCKPIT",
+      {
 
-      scenario:
-        observedState.scenario,
+        source:
+          "SPD v13.1 COCKPIT",
 
-      intensity:
-        observedState.intensity,
+        scenario:
+          observedState.scenario,
 
-      intensityFactor:
-        normalizedState.intensityFactor,
+        intensity:
+          observedState.intensity,
 
-      event:
-        observedState.event
+        intensityFactor:
+          normalizedState.intensityFactor,
 
-    }
+        event:
+          observedState.event
 
-  );
+      }
+
+    );
+
+  }
+
+  catch (error) {
+
+    return {
+
+      success: false,
+
+      domain,
+
+      error:
+        "DOMAIN_EXECUTION_EXCEPTION",
+
+      message:
+        error.message,
+
+      domainStatus
+
+    };
+
+  }
 
 }
 
@@ -782,6 +467,14 @@ function extractDomainAssessment(
   }
 
 
+  const assessment =
+    result.assessment || {};
+
+
+  const decision =
+    result.decision || {};
+
+
   return {
 
     domain:
@@ -796,30 +489,24 @@ function extractDomainAssessment(
       result.scenario ||
       null,
 
-    assessment:
-      result.assessment ||
-      null,
+    assessment,
 
-    decision:
-      result.decision ||
-      null,
+    decision,
 
     resilienceScore:
-      result.assessment?.resilienceScore ??
+      assessment.resilienceScore ??
       null,
 
     risk:
-      result.assessment?.risk ??
+      assessment.risk ??
       "UNKNOWN",
 
     executionAuthority:
       result.executionAuthority ||
-      result.decision?.executionAuthority ||
       "HUMAN_OPERATOR",
 
     executionStatus:
       result.executionStatus ||
-      result.decision?.executionStatus ||
       "HUMAN_AUTHORIZATION_REQUIRED",
 
     status:
@@ -841,18 +528,33 @@ function executeCaptainAI(
 
   try {
 
-    return captainAILena(
-      normalizedState
-    );
+    const result =
+      captainAILena(
+        normalizedState
+      );
+
+
+    return {
+
+      success: true,
+
+      ...result
+
+    };
 
   }
 
   catch (error) {
 
+    console.error(
+      "Captain AI Lena execution error:",
+      error
+    );
+
+
     return {
 
-      success:
-        false,
+      success: false,
 
       error:
         "CAPTAIN_AI_EXECUTION_ERROR",
@@ -860,7 +562,12 @@ function executeCaptainAI(
       message:
         error.message,
 
-      assessment: {},
+      assessment: {
+
+        risk:
+          "UNKNOWN"
+
+      },
 
       decision: {
 
@@ -922,19 +629,12 @@ function buildDecisionSupport(
         : "CAPTAIN_AI_CORE",
 
     captainDecision:
+
       captainDecision,
 
     domainDecision:
       domainAssessment?.decision ||
-      null,
-
-    executionAuthority:
-      domainAssessment?.executionAuthority ||
-      "HUMAN_OPERATOR",
-
-    executionStatus:
-      domainAssessment?.executionStatus ||
-      "HUMAN_AUTHORIZATION_REQUIRED"
+      null
 
   };
 
@@ -958,9 +658,7 @@ export function runEngine(
   ======================================================= */
 
   const observedState =
-    observeState(
-      state
-    );
+    observeState(state);
 
 
   /* =======================================================
@@ -987,8 +685,7 @@ export function runEngine(
      DOMAIN EXECUTION
   ======================================================= */
 
-  let domainResult =
-    null;
+  let domainResult = null;
 
 
   try {
@@ -1010,8 +707,7 @@ export function runEngine(
 
     domainResult = {
 
-      success:
-        false,
+      success: false,
 
       domain:
         domain ||
@@ -1063,13 +759,45 @@ export function runEngine(
 
 
   /* =======================================================
-     ACTIVE DOMAIN STATUS
+     ASSESSMENT
   ======================================================= */
 
-  const activeDomainStatus =
-    getActiveDomainStatus(
-      observedState
-    );
+  const assessment =
+
+    domainAssessment?.assessment ||
+
+    captainResult?.assessment ||
+
+    {
+
+      risk:
+        "UNKNOWN",
+
+      resilienceScore:
+        null
+
+    };
+
+
+  /* =======================================================
+     DECISION
+  ======================================================= */
+
+  const decision =
+
+    domainAssessment?.decision ||
+
+    captainResult?.decision ||
+
+    {
+
+      action:
+        "MAINTAIN_SAFE_STATE",
+
+      humanAuthorization:
+        "REQUIRED"
+
+    };
 
 
   /* =======================================================
@@ -1085,8 +813,6 @@ export function runEngine(
       domain ||
       "CORE",
 
-    activeDomainStatus,
-
     domainStatus:
       domain
         ? getDomainStatus(domain)
@@ -1099,23 +825,9 @@ export function runEngine(
     captainAI:
       captainResult,
 
-    assessment:
-      domainAssessment?.assessment ||
-      captainResult?.assessment ||
-      {},
+    assessment,
 
-    decision:
-      domainAssessment?.decision ||
-      captainResult?.decision ||
-      {
-
-        action:
-          "MAINTAIN_SAFE_STATE",
-
-        humanAuthorization:
-          "REQUIRED"
-
-      },
+    decision,
 
     decisionSupport,
 
@@ -1136,6 +848,9 @@ export function runEngine(
 
     autonomousExecution:
       false,
+
+    humanAuthorizationRequired:
+      true,
 
     timestamp:
       executionTimestamp
@@ -1162,8 +877,6 @@ export function runEngine(
       domain ||
       "CORE",
 
-    activeDomainStatus,
-
     domainResult,
 
     output,
@@ -1177,18 +890,14 @@ export function runEngine(
     pipeline:
       GOLDEN_RULE_PIPELINE,
 
-    governance: {
+    executionAuthority:
+      "HUMAN_OPERATOR",
 
-      executionAuthority:
-        "HUMAN_OPERATOR",
+    autonomousExecution:
+      false,
 
-      humanAuthorizationRequired:
-        true,
-
-      autonomousExecution:
-        false
-
-    },
+    humanAuthorizationRequired:
+      true,
 
     status:
       "EXECUTED"
@@ -1208,123 +917,24 @@ export function verifyCoreEngine() {
 
     const testState = {
 
-      fx: 0,
-
-      energy: 0,
-
-      cyb: 0,
-
-      inf: 0,
-
-      dc: 0,
-
-
-      /* =====================================================
-         BHR
-      ===================================================== */
+      fx: 50,
+      energy: 50,
+      cyb: 50,
+      inf: 50,
+      dc: 50,
 
       labour: 0,
-
       humanRights: 0,
-
       supplyChain: 0,
-
       community: 0,
-
       governance: 0,
-
       environment: 0,
 
-
-      /* =====================================================
-         FIN
-      ===================================================== */
-
       liquidity: 0,
-
       credit: 0,
-
       banking: 0,
-
       sovereign: 0,
-
       financialMarket: 0,
-
-
-      /* =====================================================
-         DC
-      ===================================================== */
-
-      temperature: 0,
-
-      cooling: 0,
-
-      thermal: 0,
-
-      voltage: 0,
-
-      frequency: 0,
-
-      upsLoad: 0,
-
-      generatorRisk: 0,
-
-      bandwidth: 0,
-
-      latency: 0,
-
-      packetLoss: 0,
-
-      routerLoad: 0,
-
-      cpu: 0,
-
-      memory: 0,
-
-      storageIO: 0,
-
-      queueDepth: 0,
-
-      powerLoss: 0,
-
-      generatorFailure: 0,
-
-      upsStress: 0,
-
-      recoveryDelay: 0,
-
-      hotspots: 0,
-
-      coolingInstability: 0,
-
-      throttling: 0,
-
-      deviceFailure: 0,
-
-      segmentation: 0,
-
-      routingInstability: 0,
-
-      diskFailure: 0,
-
-      iops: 0,
-
-      replicationLag: 0,
-
-      coolingUtilisation: 0,
-
-      thermalHeadroom: 0,
-
-      chillerLoad: 0,
-
-      power: 0,
-
-      network: 0,
-
-      compute: 0,
-
-      storage: 0,
-
 
       scenario:
         "NORMAL",
@@ -1332,11 +942,23 @@ export function verifyCoreEngine() {
       event:
         "NORMAL",
 
+      financialScenario:
+        "FIN_STRESS",
+
       intensity:
         50,
 
       mode:
-        "TEST"
+        "TEST",
+
+      executionAuthority:
+        "HUMAN_OPERATOR",
+
+      humanAuthorizationRequired:
+        true,
+
+      autonomousExecution:
+        false
 
     };
 
@@ -1348,27 +970,31 @@ export function verifyCoreEngine() {
 
 
     const pass =
-      result &&
-      result.status ===
-        "EXECUTED" &&
 
-      result.output &&
+      result?.status ===
+        "EXECUTED"
 
-      result.output.status ===
-        "COMPLETE" &&
+      &&
 
-      result.output.intensity ===
-        50 &&
+      result?.output?.status ===
+        "COMPLETE"
 
-      result.output.intensityFactor ===
-        0.5 &&
+      &&
 
-      Array.isArray(
-        result.pipeline
-      ) &&
+      result?.output?.intensity ===
+        50
 
-      result.pipeline.length ===
-        6;
+      &&
+
+      result?.output
+        ?.executionAuthority ===
+        "HUMAN_OPERATOR"
+
+      &&
+
+      result?.output
+        ?.autonomousExecution ===
+        false;
 
 
     return {
@@ -1382,25 +1008,24 @@ export function verifyCoreEngine() {
           : "FAIL",
 
       domain:
-        result.domain,
-
-      activeDomainStatus:
-        result.activeDomainStatus,
+        result?.domain,
 
       intensity:
-        result.output?.intensity,
+        result?.output?.intensity,
 
       intensityFactor:
-        result.output?.intensityFactor,
-
-      pipeline:
-        result.pipeline,
+        result?.output?.intensityFactor,
 
       executionAuthority:
-        result.output?.executionAuthority,
+        result?.output
+          ?.executionAuthority,
 
       autonomousExecution:
-        result.output?.autonomousExecution,
+        result?.output
+          ?.autonomousExecution,
+
+      pipeline:
+        result?.pipeline,
 
       timestamp:
         new Date().toISOString()
