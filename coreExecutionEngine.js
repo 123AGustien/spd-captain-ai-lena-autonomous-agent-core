@@ -1017,3 +1017,92 @@ export {
   getActiveDomainStatus
 
 };
+/* =========================================================
+   ACTIVE DOMAIN STATUS
+========================================================= */
+
+function getActiveDomainStatus() {
+
+  const activeDomains = [
+    "FIN",
+    "BHR",
+    "DC",
+    "CYB",
+    "INF"
+  ];
+
+  const domains = {};
+
+  activeDomains.forEach(
+    domainId => {
+
+      domains[domainId] =
+        getDomainStatus(
+          domainId
+        );
+
+    }
+  );
+
+  const ready =
+    activeDomains.every(
+      domainId =>
+        domains[domainId] &&
+        domains[domainId].engineRegistered === true &&
+        domains[domainId].evaluateAvailable === true
+    );
+
+  return {
+
+    status:
+      ready
+        ? "READY"
+        : "PARTIAL",
+
+    activeDomains,
+
+    domains,
+
+    ready,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* =========================================================
+   EXPORTS
+========================================================= */
+
+export {
+
+  GOLDEN_RULE_PIPELINE,
+
+  safeNumber,
+
+  clamp,
+
+  observeState,
+
+  normalizeIntensity,
+
+  applyIntensity,
+
+  normalizeState,
+
+  identifyDomain,
+
+  executeResolvedDomain,
+
+  extractDomainAssessment,
+
+  executeCaptainAI,
+
+  buildDecisionSupport,
+
+  getActiveDomainStatus
+
+};
