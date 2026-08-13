@@ -2083,10 +2083,1127 @@ function calculateSystemAssessment() {
   return currentAssessment;
 }
 
-
 /* ============================================================
    SCENARIO ENGINE
 ============================================================ */
+
+/*
+ * SPD v13.1
+ *
+ * Authoritative scenario-state generator.
+ *
+ * Purpose:
+ * Convert cockpit scenario + intensity into deterministic
+ * domain state for the Golden Rule assessment pipeline.
+ *
+ * Domains:
+ * FIN / BHR / DC / CYB / INF / EN
+ *
+ * Governance:
+ * Scenario generation does NOT execute recovery actions.
+ * AI remains decision support.
+ * HUMAN_OPERATOR retains execution authority.
+ */
+
+
+/* ============================================================
+   SCENARIO STATE GENERATOR
+============================================================ */
+
+function scenarioState(
+  scenario,
+  intensity
+) {
+
+  const level =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(intensity) || 0
+      )
+    );
+
+
+  const state = {
+
+    fx: 0,
+
+    dc: 0,
+
+    cyb: 0,
+
+    inf: 0,
+
+    energy: 0
+
+  };
+
+
+  switch (scenario) {
+
+
+    /* ========================================================
+       BASE SCENARIOS
+    ======================================================== */
+
+    case "NORMAL":
+
+      break;
+
+
+    case "FX_SHOCK":
+
+      state.fx =
+        level;
+
+      break;
+
+
+    case "ENERGY_SPIKE":
+
+      state.energy =
+        level;
+
+      break;
+
+
+    case "CYBER_EVENT":
+
+      state.cyb =
+        level;
+
+      break;
+
+
+    case "INFRASTRUCTURE_STRESS":
+
+      state.inf =
+        level;
+
+      break;
+
+
+    case "BIODIESEL_SHORTAGE":
+
+      state.energy =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.35
+        );
+
+      break;
+
+
+    /* ========================================================
+       FIN — FINANCIAL RESILIENCE
+    ======================================================== */
+
+    case "FIN_STRESS":
+
+      state.fx =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.25
+        );
+
+      break;
+
+
+    case "BANKING_STRESS":
+
+      state.fx =
+        Math.round(
+          level * 0.60
+        );
+
+      state.inf =
+        Math.round(
+          level * 0.40
+        );
+
+      break;
+
+
+    case "LIQUIDITY_CRISIS":
+
+      state.fx =
+        Math.round(
+          level * 0.60
+        );
+
+      state.energy =
+        Math.round(
+          level * 0.20
+        );
+
+      state.cyb =
+        Math.round(
+          level * 0.50
+        );
+
+      state.inf =
+        Math.round(
+          level * 0.55
+        );
+
+      state.dc =
+        Math.round(
+          level * 0.25
+        );
+
+      break;
+
+
+    case "CREDIT_STRESS":
+
+      state.fx =
+        Math.round(
+          level * 0.50
+        );
+
+      state.inf =
+        Math.round(
+          level * 0.35
+        );
+
+      break;
+
+
+    case "SOVEREIGN_DEBT":
+
+      state.fx =
+        Math.round(
+          level * 0.70
+        );
+
+      state.inf =
+        Math.round(
+          level * 0.45
+        );
+
+      state.energy =
+        Math.round(
+          level * 0.30
+        );
+
+      break;
+
+
+    /* ========================================================
+       DC — DATA CENTRE RESILIENCE
+    ======================================================== */
+
+    case "COOLING_FAILURE":
+
+      state.dc =
+        level;
+
+      break;
+
+
+    case "POWER_INSTABILITY":
+
+      state.energy =
+        level;
+
+      state.dc =
+        Math.round(
+          level * 0.70
+        );
+
+      break;
+
+
+    case "NETWORK_CONGESTION":
+
+      state.dc =
+        Math.round(
+          level * 0.75
+        );
+
+      state.cyb =
+        Math.round(
+          level * 0.25
+        );
+
+      break;
+
+
+    case "COMPUTE_LOAD_SPIKE":
+
+      state.dc =
+        level;
+
+      break;
+
+
+    case "BLACKOUT_RECOVERY":
+
+      state.energy =
+        level;
+
+      state.dc =
+        level;
+
+      break;
+
+
+    case "COOLING_RECOVERY_FAILURE":
+
+      state.dc =
+        level;
+
+      state.energy =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "NETWORK_HARDWARE_FAILURE":
+
+      state.dc =
+        Math.round(
+          level * 0.85
+        );
+
+      state.cyb =
+        Math.round(
+          level * 0.30
+        );
+
+      break;
+
+
+    case "STORAGE_DEGRADATION":
+
+      state.dc =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "COOLING_LOAD_SATURATION":
+
+      state.dc =
+        level;
+
+      state.energy =
+        Math.round(
+          level * 0.30
+        );
+
+      break;
+
+
+    case "MULTI_SYSTEM_CASCADE":
+
+      state.dc =
+        level;
+
+      state.energy =
+        level;
+
+      state.cyb =
+        level;
+
+      state.inf =
+        level;
+
+      state.fx =
+        Math.round(
+          level * 0.50
+        );
+
+      break;
+
+
+    /* ========================================================
+       CYB — CYBER RESILIENCE
+    ======================================================== */
+
+    case "DATA_BREACH_CREDENTIAL_LEAK":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.50
+        );
+
+      break;
+
+
+    case "DDOS":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.25
+        );
+
+      break;
+
+
+    case "INSIDER_THREAT":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.40
+        );
+
+      break;
+
+
+    case "API_ABUSE_TOKEN_MISUSE":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.30
+        );
+
+      break;
+
+
+    case "SUPPLY_CHAIN_CYBER_COMPROMISE":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        Math.round(
+          level * 0.50
+        );
+
+      state.dc =
+        Math.round(
+          level * 0.25
+        );
+
+      break;
+
+
+    case "CLOUD_MISCONFIGURATION_EXPOSURE":
+
+      state.cyb =
+        Math.round(
+          level * 0.75
+        );
+
+      state.dc =
+        Math.round(
+          level * 0.50
+        );
+
+      break;
+
+
+    case "IDENTITY_PROVIDER_OUTAGE":
+
+      state.cyb =
+        Math.round(
+          level * 0.50
+        );
+
+      state.inf =
+        level;
+
+      break;
+
+
+    case "MULTI_VECTOR_COORDINATED_CYBER_ATTACK":
+
+      state.cyb =
+        level;
+
+      state.inf =
+        level;
+
+      state.dc =
+        Math.round(
+          level * 0.50
+        );
+
+      break;
+
+
+    /* ========================================================
+       BHR — BUSINESS & HUMAN RIGHTS RESILIENCE
+    ======================================================== */
+
+    case "HUMAN_RIGHTS_DUE_DILIGENCE":
+
+      state.inf =
+        Math.round(
+          level * 0.50
+        );
+
+      state.cyb =
+        Math.round(
+          level * 0.10
+        );
+
+      break;
+
+
+    case "FORCED_LABOUR":
+
+      state.inf =
+        level;
+
+      state.fx =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "CHILD_LABOUR":
+
+      state.inf =
+        level;
+
+      state.fx =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "DISCRIMINATION":
+
+      state.inf =
+        Math.round(
+          level * 0.80
+        );
+
+      break;
+
+
+    case "OCCUPATIONAL_HEALTH_AND_SAFETY":
+
+      state.inf =
+        level;
+
+      state.energy =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "MODERN_SLAVERY":
+
+      state.inf =
+        level;
+
+      state.fx =
+        Math.round(
+          level * 0.30
+        );
+
+      break;
+
+
+    case "COMMUNITY_IMPACT":
+
+      state.inf =
+        Math.round(
+          level * 0.80
+        );
+
+      state.fx =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "INDIGENOUS_RIGHTS":
+
+      state.inf =
+        Math.round(
+          level * 0.80
+        );
+
+      break;
+
+
+    case "SUPPLY_CHAIN_RISK":
+
+      state.inf =
+        level;
+
+      state.fx =
+        Math.round(
+          level * 0.40
+        );
+
+      state.cyb =
+        Math.round(
+          level * 0.20
+        );
+
+      break;
+
+
+    case "GRIEVANCE_MECHANISM":
+
+      state.inf =
+        Math.round(
+          level * 0.60
+        );
+
+      break;
+
+
+    /* ========================================================
+       UNKNOWN SCENARIO
+    ======================================================== */
+
+    default:
+
+      break;
+
+  }
+
+
+  return state;
+
+}
+
+
+/* ============================================================
+   APPLY SCENARIO STATE
+============================================================ */
+
+function applyScenarioState(
+  scenario,
+  intensity
+) {
+
+  currentScenario =
+    scenario || "NORMAL";
+
+
+  scenarioIntensity =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(intensity) || 0
+      )
+    );
+
+
+  systemState =
+    scenarioState(
+      currentScenario,
+      scenarioIntensity
+    );
+
+
+  write(
+    "scenarioPanel",
+    {
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      domainState:
+        systemState
+    }
+  );
+
+
+  write(
+    "rawState",
+    systemState
+  );
+
+
+  write(
+    "fxValue",
+    systemState.fx
+  );
+
+
+  write(
+    "dcValue",
+    systemState.dc
+  );
+
+
+  write(
+    "cybValue",
+    systemState.cyb
+  );
+
+
+  write(
+    "infValue",
+    systemState.inf
+  );
+
+
+  write(
+    "energyValue",
+    systemState.energy
+  );
+
+
+  return systemState;
+
+}
+
+
+/* ============================================================
+   SCENARIO SELECTION
+============================================================ */
+
+function setScenario(
+  scenario
+) {
+
+  applyScenarioState(
+    scenario,
+    scenarioIntensity
+  );
+
+
+  setSystemStatus(
+    "SCENARIO READY"
+  );
+
+
+  humanDecision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "PENDING",
+
+    decision:
+      null,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+
+  currentDecision =
+    null;
+
+
+  write(
+    "humanDecision",
+    humanDecision
+  );
+
+
+  write(
+    "decision",
+    "Waiting for Golden Rule assessment..."
+  );
+
+
+  write(
+    "actions",
+    "Waiting for system decision..."
+  );
+
+
+  return systemState;
+
+}
+
+
+/* ============================================================
+   SCENARIO RESET
+============================================================ */
+
+function resetScenario() {
+
+  currentScenario =
+    "NORMAL";
+
+
+  scenarioIntensity =
+    50;
+
+
+  systemState = {
+
+    fx: 0,
+
+    dc: 0,
+
+    cyb: 0,
+
+    inf: 0,
+
+    energy: 0
+
+  };
+
+
+  currentAssessment =
+    null;
+
+
+  currentDecision =
+    null;
+
+
+  humanDecision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "PENDING",
+
+    decision:
+      null,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+
+  const slider =
+    $("scenarioIntensity");
+
+
+  if (slider) {
+
+    slider.value =
+      "50";
+
+  }
+
+
+  write(
+    "intensityValue",
+    "50%"
+  );
+
+
+  write(
+    "scenarioPanel",
+    "Waiting..."
+  );
+
+
+  write(
+    "rawState",
+    "Waiting..."
+  );
+
+
+  write(
+    "assessment",
+    "Waiting..."
+  );
+
+
+  write(
+    "riskPanel",
+    {
+      risk:
+        "UNKNOWN",
+
+      resilienceScore:
+        "N/A",
+
+      goldenScore:
+        "N/A"
+
+    }
+  );
+
+
+  write(
+    "decision",
+    "Waiting..."
+  );
+
+
+  write(
+    "actions",
+    "Waiting..."
+  );
+
+
+  write(
+    "fxValue",
+    0
+  );
+
+
+  write(
+    "dcValue",
+    0
+  );
+
+
+  write(
+    "cybValue",
+    0
+  );
+
+
+  write(
+    "infValue",
+    0
+  );
+
+
+  write(
+    "energyValue",
+    0
+  );
+
+
+  write(
+    "humanDecision",
+    humanDecision
+  );
+
+
+  setSystemStatus(
+    "READY"
+  );
+
+
+  return systemState;
+
+}
+
+
+/* ============================================================
+   SCENARIO CONTROL BINDING
+============================================================ */
+
+function bindScenarioControls() {
+
+  document
+    .querySelectorAll(
+      "[data-scenario]"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const scenario =
+              button.dataset.scenario;
+
+
+            if (!scenario) {
+              return;
+            }
+
+
+            setScenario(
+              scenario
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* ============================================================
+   SCENARIO ENGINE SELF-TEST
+============================================================ */
+
+function selfTestScenarioEngine() {
+
+  const scenarios = [
+
+    "NORMAL",
+
+    "FX_SHOCK",
+
+    "ENERGY_SPIKE",
+
+    "CYBER_EVENT",
+
+    "INFRASTRUCTURE_STRESS",
+
+    "BIODIESEL_SHORTAGE",
+
+    "FIN_STRESS",
+
+    "BANKING_STRESS",
+
+    "LIQUIDITY_CRISIS",
+
+    "CREDIT_STRESS",
+
+    "SOVEREIGN_DEBT",
+
+    "COOLING_FAILURE",
+
+    "POWER_INSTABILITY",
+
+    "NETWORK_CONGESTION",
+
+    "COMPUTE_LOAD_SPIKE",
+
+    "BLACKOUT_RECOVERY",
+
+    "COOLING_RECOVERY_FAILURE",
+
+    "NETWORK_HARDWARE_FAILURE",
+
+    "STORAGE_DEGRADATION",
+
+    "COOLING_LOAD_SATURATION",
+
+    "MULTI_SYSTEM_CASCADE",
+
+    "DATA_BREACH_CREDENTIAL_LEAK",
+
+    "DDOS",
+
+    "INSIDER_THREAT",
+
+    "API_ABUSE_TOKEN_MISUSE",
+
+    "SUPPLY_CHAIN_CYBER_COMPROMISE",
+
+    "CLOUD_MISCONFIGURATION_EXPOSURE",
+
+    "IDENTITY_PROVIDER_OUTAGE",
+
+    "MULTI_VECTOR_COORDINATED_CYBER_ATTACK",
+
+    "HUMAN_RIGHTS_DUE_DILIGENCE",
+
+    "FORCED_LABOUR",
+
+    "CHILD_LABOUR",
+
+    "DISCRIMINATION",
+
+    "OCCUPATIONAL_HEALTH_AND_SAFETY",
+
+    "MODERN_SLAVERY",
+
+    "COMMUNITY_IMPACT",
+
+    "INDIGENOUS_RIGHTS",
+
+    "SUPPLY_CHAIN_RISK",
+
+    "GRIEVANCE_MECHANISM"
+
+  ];
+
+
+  const results =
+    {};
+
+
+  scenarios.forEach(
+    scenario => {
+
+      const result =
+        scenarioState(
+          scenario,
+          50
+        );
+
+
+      results[
+        scenario
+      ] = {
+
+        valid:
+          result &&
+          typeof result === "object",
+
+        state:
+          result
+
+      };
+
+    }
+  );
+
+
+  const passed =
+    Object.values(
+      results
+    ).every(
+      result =>
+        result.valid === true
+    );
+
+
+  return {
+
+    test:
+      "SCENARIO_ENGINE",
+
+    passed,
+
+    scenarioCount:
+      scenarios.length,
+
+    results
+
+  };
+
+}
+
+
+/* ============================================================
+   INITIAL SCENARIO STATE
+============================================================ */
+
+applyScenarioState(
+  currentScenario,
+  scenarioIntensity
+);
+
 
 /* ============================================================
    GOLDEN RULE ENGINE
