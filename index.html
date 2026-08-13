@@ -2173,4 +2173,45 @@ function scenarioState(scenario, intensity) {
       state.dc = level;
       break;
 
-    case "DATA
+    case 
+"DATAcase "DATA_BREACH_CREDENTIAL_LEAK":
+  state.cyb = level;
+  state.inf = Math.round(level * 0.50);
+  break;
+
+case "DDOS":
+  state.cyb = level;
+  state.inf = Math.round(level * 0.25);
+  break;
+
+case "INSIDER_THREAT":
+  state.cyb = level;
+  state.inf = Math.round(level * 0.40);
+  break;
+
+case "API_ABUSE_TOKEN_MISUSE":
+  state.cyb = level;
+  state.inf = Math.round(level * 0.30);
+  break;
+
+case "SUPPLY_CHAIN_CYBER_COMPROMISE":
+  state.cyb = level;
+  state.inf = Math.round(level * 0.50);
+  state.dc = Math.round(level * 0.25);
+  break;
+
+case "CLOUD_MISCONFIGURATION_EXPOSURE":
+  state.cyb = Math.round(level * 0.75);
+  state.dc = Math.round(level * 0.50);
+  break;
+
+case "IDENTITY_PROVIDER_OUTAGE":
+  state.cyb = Math.round(level * 0.50);
+  state.inf = level;
+  break;
+
+case "MULTI_VECTOR_COORDINATED_CYBER_ATTACK":
+  state.cyb = level;
+  state.inf = level;
+  state.dc = Math.round(level * 0.50);
+  break;
