@@ -1715,3 +1715,462 @@ OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
 </body>
 
 </html>
+/*
+ * ============================================================
+ * SPD v13.1 — FULL COCKPIT RESTORATION
+ * PART 2 — AUTHORITATIVE JAVASCRIPT / SYSTEM WIRING
+ * ============================================================
+ *
+ * UI preserved from Part 1.
+ *
+ * Architecture:
+ *
+ * COCKPIT
+ *    ↓
+ * DOMAIN INTEGRATION
+ *    ↓
+ * AUTHORITATIVE DOMAIN ENGINE
+ *    ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *    ↓
+ * GOLDEN RULE ENGINE
+ *    ↓
+ * HUMAN DECISION AUTHORITY
+ *    ↓
+ * ARM / EXECUTION GATE
+ *    ↓
+ * MEMORY + AUDIT
+ *
+ * IMPORTANT:
+ * AI NEVER bypasses Human Decision Authority.
+ * NO recovery action executes automatically.
+ */
+
+const PHI = 1.618033988749895;
+
+let currentScenario = "NORMAL";
+let scenarioIntensity = 50;
+
+let systemState = {
+  fx: 0,
+  dc: 0,
+  cyb: 0,
+  inf: 0,
+  energy: 0
+};
+
+let currentAssessment = null;
+let currentDecision = null;
+let humanDecision = {
+  authority: "MISSION_CONTROLLER",
+  status: "PENDING",
+  decision: null,
+  executionGate: "HUMAN_AUTHORIZATION_REQUIRED"
+};
+
+let armState = {
+  armed: false,
+  testPassed: false
+};
+
+let memoryState = {
+  lastScenario: null,
+  lastDecision: null,
+  lastRecovery: null,
+  lastSeverity: null,
+  timestamp: null
+};
+
+let auditRecords = [];
+
+const domainRegistry = {
+  FIN: {
+    name: "Financial Resilience",
+    active: true
+  },
+
+  BHR: {
+    name: "Business & Human Rights Resilience",
+    active: true
+  },
+
+  DC: {
+    name: "Data Centre Resilience",
+    active: true
+  },
+
+  CYB: {
+    name: "Cyber Resilience",
+    active: true
+  },
+
+  FX: {
+    name: "Foreign Exchange",
+    active: true
+  },
+
+  INF: {
+    name: "Infrastructure",
+    active: true
+  },
+
+  EN: {
+    name: "Energy",
+    active: true
+  }
+};
+
+
+/* ============================================================
+   DOM HELPERS
+============================================================ */
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+function write(id, value) {
+  const element = $(id);
+
+  if (!element) {
+    return;
+  }
+
+  element.textContent =
+    typeof value === "string"
+      ? value
+      : JSON.stringify(value, null, 2);
+}
+
+function nowISO() {
+  return new Date().toISOString();
+}
+
+
+/* ============================================================
+   SYSTEM STATUS
+============================================================ */
+
+function setSystemStatus(status) {
+  write(
+    "systemStatus",
+    `SYSTEM STATUS: ${status}`
+  );
+}
+
+
+/* ============================================================
+   INTENSITY
+============================================================ */
+
+function updateIntensity() {
+  const slider = $("scenarioIntensity");
+
+  if (!slider) {
+    return;
+  }
+
+  scenarioIntensity =
+    Number(slider.value);
+
+  write(
+    "intensityValue",
+    `${scenarioIntensity}%`
+  );
+
+  updateScenarioPanel();
+}
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+function activatePipelineStage(stage) {
+
+  const stages = [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+  ];
+
+  stages.forEach(name => {
+
+    const element =
+      $(`stage${name}`);
+
+    if (!element) {
+      return;
+    }
+
+    element.classList.toggle(
+      "active",
+      name === stage
+    );
+
+  });
+}
+
+
+function runGoldenRulePipeline() {
+
+  activatePipelineStage("OBSERVE");
+
+  write(
+    "pipeline",
+    "OBSERVE — system state captured."
+  );
+
+  activatePipelineStage("VERIFY");
+
+  write(
+    "pipeline",
+    "VERIFY — scenario and domain state verified."
+  );
+
+  activatePipelineStage("ASSESS");
+
+  const assessment =
+    calculateSystemAssessment();
+
+  activatePipelineStage("DECIDE");
+
+  const decision =
+    generateDecision(assessment);
+
+  activatePipelineStage("ACT");
+
+  write(
+    "actions",
+    buildActionPrompt(decision)
+  );
+
+  activatePipelineStage("UPDATE");
+
+  updateMemory(
+    assessment,
+    decision
+  );
+
+  write(
+    "pipeline",
+    [
+      "OBSERVE — COMPLETE",
+      "VERIFY — COMPLETE",
+      "ASSESS — COMPLETE",
+      "DECIDE — COMPLETE",
+      "ACT — HUMAN AUTHORIZATION REQUIRED",
+      "UPDATE — COMPLETE"
+    ].join("\n")
+  );
+
+  return {
+    assessment,
+    decision
+  };
+}
+
+
+/* ============================================================
+   SYSTEM ASSESSMENT
+============================================================ */
+
+function calculateRawStress() {
+
+  const fx =
+    Number(systemState.fx || 0);
+
+  const energy =
+    Number(systemState.energy || 0);
+
+  const cyb =
+    Number(systemState.cyb || 0);
+
+  const inf =
+    Number(systemState.inf || 0);
+
+  const dc =
+    Number(systemState.dc || 0);
+
+  /*
+   * Existing SPD v13.1 Golden Rule weighting.
+   */
+
+  const rawStress =
+    (
+      fx * 0.20 +
+      energy * 0.20 +
+      cyb * 0.20 +
+      inf * 0.20 +
+      dc * 0.20
+    );
+
+  return Number(
+    rawStress.toFixed(3)
+  );
+}
+
+
+function classifyRisk(goldenScore) {
+
+  if (goldenScore < 30) {
+    return "LOW";
+  }
+
+  if (goldenScore < 50) {
+    return "MEDIUM";
+  }
+
+  return "HIGH";
+}
+
+
+function calculateSystemAssessment() {
+
+  const rawStress =
+    calculateRawStress();
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  const risk =
+    classifyRisk(goldenScore);
+
+  currentAssessment = {
+    scenario: currentScenario,
+    intensity: scenarioIntensity,
+    rawStress: Number(
+      rawStress.toFixed(3)
+    ),
+    goldenScore: Number(
+      goldenScore.toFixed(3)
+    ),
+    resilienceScore: Number(
+      resilienceScore.toFixed(3)
+    ),
+    risk
+  };
+
+  write(
+    "assessment",
+    currentAssessment
+  );
+
+  write(
+    "riskPanel",
+    {
+      risk,
+      resilienceScore:
+        Number(
+          resilienceScore.toFixed(3)
+        ),
+      goldenScore:
+        Number(
+          goldenScore.toFixed(3)
+        )
+    }
+  );
+
+  return currentAssessment;
+}
+
+
+/* ============================================================
+   SCENARIO ENGINE
+============================================================ */
+
+function scenarioState(scenario, intensity) {
+
+  const level =
+    Number(intensity);
+
+  const state = {
+    fx: 0,
+    dc: 0,
+    cyb: 0,
+    inf: 0,
+    energy: 0
+  };
+
+  switch (scenario) {
+
+    case "FX_SHOCK":
+      state.fx = level;
+      break;
+
+    case "ENERGY_SPIKE":
+      state.energy = level;
+      break;
+
+    case "CYBER_EVENT":
+      state.cyb = level;
+      break;
+
+    case "INFRASTRUCTURE_STRESS":
+      state.inf = level;
+      break;
+
+    case "BIODIESEL_SHORTAGE":
+      state.energy = level;
+      state.inf = Math.round(
+        level * 0.35
+      );
+      break;
+
+    case "LIQUIDITY_CRISIS":
+      state.fx = Math.round(
+        level * 0.60
+      );
+
+      state.energy =
+        Math.round(level * 0.20);
+
+      state.cyb =
+        Math.round(level * 0.50);
+
+      state.inf =
+        Math.round(level * 0.55);
+
+      state.dc =
+        Math.round(level * 0.25);
+
+      break;
+
+    case "POWER_INSTABILITY":
+      state.energy = level;
+      state.dc =
+        Math.round(level * 0.70);
+      break;
+
+    case "COOLING_FAILURE":
+      state.dc = level;
+      break;
+
+    case "NETWORK_CONGESTION":
+      state.dc =
+        Math.round(level * 0.75);
+
+      state.cyb =
+        Math.round(level * 0.25);
+
+      break;
+
+    case "COMPUTE_LOAD_SPIKE":
+      state.dc = level;
+      break;
+
+    case "BLACKOUT_RECOVERY":
+      state.energy = level;
+      state.dc = level;
+      break;
+
+    case "DATA
