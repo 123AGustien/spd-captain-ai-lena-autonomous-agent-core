@@ -10,6 +10,11 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="description"
+    content="SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO — Self-contained simulator"
+  >
+
   <title>
     SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
   </title>
@@ -18,6 +23,10 @@
 
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -95,6 +104,7 @@
         opacity 0.2s ease,
         transform 0.1s ease,
         background 0.2s ease;
+      touch-action: manipulation;
     }
 
     button:hover {
@@ -285,15 +295,34 @@
       color: #000000;
     }
 
+    /*
+     * WORKING SIMULATOR INTENSITY LEVER
+     */
+
+    .intensity-control {
+      padding: 10px 0;
+    }
+
     input[type="range"] {
       width: 100%;
+      height: 42px;
       accent-color: #00ff88;
+      cursor: pointer;
+      touch-action: pan-y;
     }
 
     .intensity-value {
       color: #ffffff;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 22px;
+    }
+
+    .intensity-scale {
+      display: flex;
+      justify-content: space-between;
+      color: #aaaaaa;
+      font-size: 12px;
+      margin-top: 4px;
     }
 
     pre {
@@ -386,6 +415,16 @@
       background: #080d11;
     }
 
+    .simulator-banner {
+      border: 1px solid #00bfff;
+      color: #00bfff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #080d11;
+      font-weight: bold;
+    }
+
     @media (max-width: 600px) {
 
       body {
@@ -431,6 +470,10 @@
         line-height: 2;
       }
 
+      input[type="range"] {
+        height: 50px;
+      }
+
     }
 
   </style>
@@ -461,6 +504,10 @@
 
     AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
 
+  </div>
+
+  <div class="simulator-banner">
+    🧪 SELF-CONTAINED SIMULATOR — LOCAL DETERMINISTIC EXECUTION — NO BACKEND CONNECTION
   </div>
 
 
@@ -639,82 +686,28 @@
     <div class="monitor">
 
       <div class="domain">
-
-        <div class="domain-name">
-          FX
-        </div>
-
-        <div
-          class="domain-value"
-          id="domainFX"
-        >
-          0
-        </div>
-
+        <div class="domain-name">FX</div>
+        <div class="domain-value" id="domainFX">0</div>
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          DC
-        </div>
-
-        <div
-          class="domain-value"
-          id="domainDC"
-        >
-          0
-        </div>
-
+        <div class="domain-name">DC</div>
+        <div class="domain-value" id="domainDC">0</div>
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          CYB
-        </div>
-
-        <div
-          class="domain-value"
-          id="domainCYB"
-        >
-          0
-        </div>
-
+        <div class="domain-name">CYB</div>
+        <div class="domain-value" id="domainCYB">0</div>
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          INF
-        </div>
-
-        <div
-          class="domain-value"
-          id="domainINF"
-        >
-          0
-        </div>
-
+        <div class="domain-name">INF</div>
+        <div class="domain-value" id="domainINF">0</div>
       </div>
 
-
       <div class="domain">
-
-        <div class="domain-name">
-          EN / ENERGY
-        </div>
-
-        <div
-          class="domain-value"
-          id="domainEN"
-        >
-          0
-        </div>
-
+        <div class="domain-name">EN / ENERGY</div>
+        <div class="domain-value" id="domainEN">0</div>
       </div>
 
     </div>
@@ -779,83 +772,53 @@ Domain integration test not executed.
         BHR SCENARIOS
       </div>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
         BHR — HUMAN RIGHTS DUE DILIGENCE
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('FORCED_LABOUR')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('FORCED_LABOUR')">
         BHR — FORCED LABOUR
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('CHILD_LABOUR')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('CHILD_LABOUR')">
         BHR — CHILD LABOUR
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('DISCRIMINATION')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('DISCRIMINATION')">
         BHR — DISCRIMINATION
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
         BHR — OCCUPATIONAL HEALTH & SAFETY
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('MODERN_SLAVERY')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('MODERN_SLAVERY')">
         BHR — MODERN SLAVERY
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('COMMUNITY_IMPACT')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('COMMUNITY_IMPACT')">
         BHR — COMMUNITY IMPACT
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('INDIGENOUS_RIGHTS')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('INDIGENOUS_RIGHTS')">
         BHR — INDIGENOUS RIGHTS
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('SUPPLY_CHAIN_RISK')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('SUPPLY_CHAIN_RISK')">
         BHR — SUPPLY CHAIN RISK
       </button>
 
-      <button
-        type="button"
-        class="bhr-button"
-        onclick="activateScenario('GRIEVANCE_MECHANISM')"
-      >
+      <button type="button" class="bhr-button"
+        onclick="activateScenario('GRIEVANCE_MECHANISM')">
         BHR — GRIEVANCE MECHANISM
       </button>
 
@@ -884,43 +847,28 @@ Domain integration test not executed.
 
     <div class="fin-controls">
 
-      <button
-        type="button"
-        class="fin-button"
-        onclick="activateScenario('FIN_STRESS')"
-      >
+      <button type="button" class="fin-button"
+        onclick="activateScenario('FIN_STRESS')">
         FIN STRESS
       </button>
 
-      <button
-        type="button"
-        class="fin-button"
-        onclick="activateScenario('BANKING_STRESS')"
-      >
+      <button type="button" class="fin-button"
+        onclick="activateScenario('BANKING_STRESS')">
         BANKING STRESS
       </button>
 
-      <button
-        type="button"
-        class="fin-button"
-        onclick="activateScenario('LIQUIDITY_CRISIS')"
-      >
+      <button type="button" class="fin-button"
+        onclick="activateScenario('LIQUIDITY_CRISIS')">
         LIQUIDITY CRISIS
       </button>
 
-      <button
-        type="button"
-        class="fin-button"
-        onclick="activateScenario('CREDIT_STRESS')"
-      >
+      <button type="button" class="fin-button"
+        onclick="activateScenario('CREDIT_STRESS')">
         CREDIT STRESS
       </button>
 
-      <button
-        type="button"
-        class="fin-button"
-        onclick="activateScenario('SOVEREIGN_DEBT')"
-      >
+      <button type="button" class="fin-button"
+        onclick="activateScenario('SOVEREIGN_DEBT')">
         SOVEREIGN DEBT
       </button>
 
@@ -947,83 +895,53 @@ Domain integration test not executed.
 
     <div class="dc-controls">
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('COOLING_FAILURE')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('COOLING_FAILURE')">
         DC — COOLING FAILURE
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('POWER_INSTABILITY')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('POWER_INSTABILITY')">
         DC — POWER INSTABILITY
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('NETWORK_CONGESTION')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('NETWORK_CONGESTION')">
         DC — NETWORK CONGESTION
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('COMPUTE_LOAD_SPIKE')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('COMPUTE_LOAD_SPIKE')">
         DC — COMPUTE LOAD SPIKE
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('BLACKOUT_RECOVERY')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('BLACKOUT_RECOVERY')">
         DC — BLACKOUT RECOVERY
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('COOLING_RECOVERY_FAILURE')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('COOLING_RECOVERY_FAILURE')">
         DC — COOLING RECOVERY FAILURE
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('NETWORK_HARDWARE_FAILURE')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('NETWORK_HARDWARE_FAILURE')">
         DC — NETWORK HARDWARE FAILURE
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('STORAGE_DEGRADATION')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('STORAGE_DEGRADATION')">
         DC — STORAGE DEGRADATION
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('COOLING_LOAD_SATURATION')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('COOLING_LOAD_SATURATION')">
         DC — COOLING LOAD SATURATION
       </button>
 
-      <button
-        type="button"
-        class="dc-button"
-        onclick="activateScenario('MULTI_SYSTEM_CASCADE')"
-      >
+      <button type="button" class="dc-button"
+        onclick="activateScenario('MULTI_SYSTEM_CASCADE')">
         DC — MULTI-SYSTEM CASCADE
       </button>
 
@@ -1050,2161 +968,5 @@ Domain integration test not executed.
 
     <div class="cyb-controls">
 
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('DATA_BREACH_CREDENTIAL_LEAK')"
-      >
-        CYB — DATA BREACH / CREDENTIAL LEAK
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('DDOS')"
-      >
-        CYB — DDOS
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('INSIDER_THREAT')"
-      >
-        CYB — INSIDER THREAT
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('API_ABUSE_TOKEN_MISUSE')"
-      >
-        CYB — API ABUSE / TOKEN MISUSE
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('SUPPLY_CHAIN_CYBER_COMPROMISE')"
-      >
-        CYB — SUPPLY CHAIN CYBER COMPROMISE
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('CLOUD_MISCONFIGURATION_EXPOSURE')"
-      >
-        CYB — CLOUD MISCONFIGURATION EXPOSURE
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('IDENTITY_PROVIDER_OUTAGE')"
-      >
-        CYB — IDENTITY PROVIDER OUTAGE
-      </button>
-
-      <button
-        type="button"
-        class="cyb-button"
-        onclick="activateScenario('MULTI_VECTOR_COORDINATED_CYBER_ATTACK')"
-      >
-        CYB — MULTI-VECTOR COORDINATED CYBER ATTACK
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       SCENARIO CONTROL
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🎛️ SCENARIO CONTROL
-    </div>
-
-    <div class="scenario-controls">
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('NORMAL')"
-      >
-        NORMAL
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('FX_SHOCK')"
-      >
-        FX STRESS
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('ENERGY_SPIKE')"
-      >
-        ENERGY SPIKE
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('CYBER_EVENT')"
-      >
-        CYBER EVENT
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('INFRASTRUCTURE_STRESS')"
-      >
-        INFRA STRAIN
-      </button>
-
-      <button
-        type="button"
-        class="scenario-button"
-        onclick="activateScenario('BIODIESEL_SHORTAGE')"
-      >
-        BIODIESEL SHORTAGE
-      </button>
-
-      <button
-        type="button"
-        class="danger"
-        onclick="resetScenario()"
-      >
-        RESET
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       INTENSITY
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🎚️ SCENARIO INTENSITY CONTROL
-    </div>
-
-    <input
-      id="scenarioIntensity"
-      type="range"
-      min="0"
-      max="100"
-      step="10"
-      value="50"
-      oninput="updateIntensity()"
-    >
-
-    <div>
-
-      Intensity:
-
-      <span
-        class="intensity-value"
-        id="intensityValue"
-      >
-        50%
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       SCENARIO PANEL
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧪 SCENARIO PANEL
-    </div>
-
-    <pre id="scenarioPanel">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       RAW SYSTEM STATE
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      📊 RAW SYSTEM STATE
-    </div>
-
-    <pre id="state">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       GOLDEN RULE ENGINE
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🛰️ GOLDEN RULE ENGINE
-    </div>
-
-    <div class="pipeline">
-
-      <span
-        class="stage"
-        id="stageOBSERVE"
-      >
-        OBSERVE
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageVERIFY"
-      >
-        VERIFY
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageASSESS"
-      >
-        ASSESS
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageDECIDE"
-      >
-        DECIDE
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageACT"
-      >
-        ACT
-      </span>
-
-      →
-
-      <span
-        class="stage"
-        id="stageUPDATE"
-      >
-        UPDATE
-      </span>
-
-    </div>
-
-    <pre id="pipeline">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       SYSTEM ASSESSMENT
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚠️ SYSTEM ASSESSMENT
-    </div>
-
-    <pre id="assessment">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       DOMAIN ASSESSMENT
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔌 DOMAIN ASSESSMENT
-    </div>
-
-    <pre id="domainAssessment">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       RISK PANEL
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🚨 RISK PANEL
-    </div>
-
-    <pre id="riskPanel">{
-  "risk": "UNKNOWN",
-  "resilienceScore": "N/A",
-  "goldenScore": "N/A"
-}</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       CAPTAIN AI LENA DECISION
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚙️ CAPTAIN AI LENA DECISION
-    </div>
-
-    <pre id="decision">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       HUMAN DECISION AUTHORITY
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧑‍✈️ HUMAN DECISION AUTHORITY
-    </div>
-
-    <div class="human-decision">
-
-      <pre id="humanDecisionAuthority">{
-  "authority": "MISSION_CONTROLLER",
-  "status": "PENDING",
-  "decision": null,
-  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
-}</pre>
-
-      <div class="authority-controls">
-
-        <button
-          type="button"
-          class="authority-button"
-          onclick="authorizeRecovery()"
-        >
-          AUTHORIZE RECOVERY
-        </button>
-
-        <button
-          type="button"
-          class="authority-button"
-          onclick="maintainSafeState()"
-        >
-          MAINTAIN SAFE STATE
-        </button>
-
-        <button
-          type="button"
-          class="authority-button"
-          onclick="requestDiagnostics()"
-        >
-          REQUEST DIAGNOSTICS
-        </button>
-
-        <button
-          type="button"
-          class="danger"
-          onclick="abortRecovery()"
-        >
-          ABORT RECOVERY
-        </button>
-
-        <button
-          type="button"
-          class="authority-button"
-          onclick="escalateMissionAuthority()"
-        >
-          ESCALATE TO MISSION AUTHORITY
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       SOLUTION OPTIONS
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      💡 SOLUTION OPTIONS
-    </div>
-
-    <div
-      class="solution"
-      id="solutionOptions"
-    >
-      Waiting for system assessment...
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       ACTION SEQUENCE
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🚨 ACTION SEQUENCE PROMPT
-    </div>
-
-    <pre id="actions">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       EXECUTION GATE
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔒 EXECUTION GATE
-    </div>
-
-    <pre id="executionGate">
-HUMAN AUTHORIZATION REQUIRED.
-NO RECOVERY ACTION EXECUTED.
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       MEMORY CORE
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧠 MEMORY CORE
-    </div>
-
-    <pre id="memoryCore">Memory Core Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       AUDIT RECORD
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧾 SPD v13.1 AUDIT RECORD
-    </div>
-
-    <pre id="audit">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       PIPELINE LOG
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      📜 PIPELINE LOG
-    </div>
-
-    <pre id="pipelineLog">PIPELINE LOG ACTIVE</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       SELF TEST
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🧪 SPD v13.1 SELF-TEST
-    </div>
-
-    <pre id="selfTest">
-Self-test not executed.
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       SELF TEST INTERPRETATION
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔎 SELF-TEST INTERPRETATION
-    </div>
-
-    <pre id="selfTestInterpretation">
-Waiting for self-test execution...
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       FAULT IDENTIFICATION
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      ⚠️ FAULT IDENTIFICATION
-    </div>
-
-    <pre id="faultIdentification">
-No fault assessment available.
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       CORRECTIVE ACTION
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
-    </div>
-
-    <pre id="correctiveAction">
-No corrective action available.
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       RE-TEST
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔁 RE-TEST VALIDATION
-    </div>
-
-    <pre id="retest">
-Re-test not executed.
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       SYSTEM CONSTANTS
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      📐 SYSTEM CONSTANTS
-    </div>
-
-    <pre id="constants">Waiting...</pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       AGENT LOOP MONITOR
-  ====================================================== -->
-
-  <div class="panel">
-
-    <div class="title">
-      🔄 AGENT LOOP MONITOR
-    </div>
-
-    <div class="muted">
-      DATA → ALGORITHMS → COMPUTE
-    </div>
-
-    <pre id="trace">
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
-    </pre>
-
-  </div>
-
-
-  <!-- =====================================================
-       IMPORTANT
-       PART 2 WILL ADD THE AUTHORITATIVE JAVASCRIPT
-       ====================================================== -->
-
-  <script type="module">
-
-    /*
-     * SPD v13.1 FULL COCKPIT RESTORATION
-     *
-     * PART 1:
-     * UI / HTML / CSS ONLY
-     *
-     * PART 2:
-     * Golden Rule Engine
-     * Domain Integration
-     * FIN
-     * BHR
-     * DC
-     * CYB
-     * INF
-     * Human Decision Authority
-     * ARM / Execution Gate
-     * Memory / Audit
-     * Self-Test
-     * Corrective Action
-     *
-     * DO NOT REMOVE THE GOLDEN RULE UI.
-     */
-
-  </script>
-
-</body>
-
-</html>
-/*
- * ============================================================
- * SPD v13.1 — FULL COCKPIT RESTORATION
- * PART 2 — AUTHORITATIVE JAVASCRIPT / SYSTEM WIRING
- * ============================================================
- *
- * UI preserved from Part 1.
- *
- * Architecture:
- *
- * COCKPIT
- *    ↓
- * DOMAIN INTEGRATION
- *    ↓
- * AUTHORITATIVE DOMAIN ENGINE
- *    ↓
- * CAPTAIN AI LENA DECISION CORE
- *    ↓
- * GOLDEN RULE ENGINE
- *    ↓
- * HUMAN DECISION AUTHORITY
- *    ↓
- * ARM / EXECUTION GATE
- *    ↓
- * MEMORY + AUDIT
- *
- * IMPORTANT:
- * AI NEVER bypasses Human Decision Authority.
- * NO recovery action executes automatically.
- */
-
-const PHI = 1.618033988749895;
-
-let currentScenario = "NORMAL";
-let scenarioIntensity = 50;
-
-let systemState = {
-  fx: 0,
-  dc: 0,
-  cyb: 0,
-  inf: 0,
-  energy: 0
-};
-
-let currentAssessment = null;
-let currentDecision = null;
-let humanDecision = {
-  authority: "MISSION_CONTROLLER",
-  status: "PENDING",
-  decision: null,
-  executionGate: "HUMAN_AUTHORIZATION_REQUIRED"
-};
-
-let armState = {
-  armed: false,
-  testPassed: false
-};
-
-let memoryState = {
-  lastScenario: null,
-  lastDecision: null,
-  lastRecovery: null,
-  lastSeverity: null,
-  timestamp: null
-};
-
-let auditRecords = [];
-
-const domainRegistry = {
-  FIN: {
-    name: "Financial Resilience",
-    active: true
-  },
-
-  BHR: {
-    name: "Business & Human Rights Resilience",
-    active: true
-  },
-
-  DC: {
-    name: "Data Centre Resilience",
-    active: true
-  },
-
-  CYB: {
-    name: "Cyber Resilience",
-    active: true
-  },
-
-  FX: {
-    name: "Foreign Exchange",
-    active: true
-  },
-
-  INF: {
-    name: "Infrastructure",
-    active: true
-  },
-
-  EN: {
-    name: "Energy",
-    active: true
-  }
-};
-
-
-/* ============================================================
-   DOM HELPERS
-============================================================ */
-
-function $(id) {
-  return document.getElementById(id);
-}
-
-function write(id, value) {
-  const element = $(id);
-
-  if (!element) {
-    return;
-  }
-
-  element.textContent =
-    typeof value === "string"
-      ? value
-      : JSON.stringify(value, null, 2);
-}
-
-function nowISO() {
-  return new Date().toISOString();
-}
-
-
-/* ============================================================
-   SYSTEM STATUS
-============================================================ */
-
-function setSystemStatus(status) {
-  write(
-    "systemStatus",
-    `SYSTEM STATUS: ${status}`
-  );
-}
-
-
-/* ============================================================
-   INTENSITY
-============================================================ */
-
-function updateIntensity() {
-  const slider = $("scenarioIntensity");
-
-  if (!slider) {
-    return;
-  }
-
-  scenarioIntensity =
-    Number(slider.value);
-
-  write(
-    "intensityValue",
-    `${scenarioIntensity}%`
-  );
-
-  updateScenarioPanel();
-}
-
-
-/* ============================================================
-   GOLDEN RULE PIPELINE
-============================================================ */
-
-function activatePipelineStage(stage) {
-
-  const stages = [
-    "OBSERVE",
-    "VERIFY",
-    "ASSESS",
-    "DECIDE",
-    "ACT",
-    "UPDATE"
-  ];
-
-  stages.forEach(name => {
-
-    const element =
-      $(`stage${name}`);
-
-    if (!element) {
-      return;
-    }
-
-    element.classList.toggle(
-      "active",
-      name === stage
-    );
-
-  });
-}
-
-
-function runGoldenRulePipeline() {
-
-  activatePipelineStage("OBSERVE");
-
-  write(
-    "pipeline",
-    "OBSERVE — system state captured."
-  );
-
-  activatePipelineStage("VERIFY");
-
-  write(
-    "pipeline",
-    "VERIFY — scenario and domain state verified."
-  );
-
-  activatePipelineStage("ASSESS");
-
-  const assessment =
-    calculateSystemAssessment();
-
-  activatePipelineStage("DECIDE");
-
-  const decision =
-    generateDecision(assessment);
-
-  activatePipelineStage("ACT");
-
-  write(
-    "actions",
-    buildActionPrompt(decision)
-  );
-
-  activatePipelineStage("UPDATE");
-
-  updateMemory(
-    assessment,
-    decision
-  );
-
-  write(
-    "pipeline",
-    [
-      "OBSERVE — COMPLETE",
-      "VERIFY — COMPLETE",
-      "ASSESS — COMPLETE",
-      "DECIDE — COMPLETE",
-      "ACT — HUMAN AUTHORIZATION REQUIRED",
-      "UPDATE — COMPLETE"
-    ].join("\n")
-  );
-
-  return {
-    assessment,
-    decision
-  };
-}
-
-
-/* ============================================================
-   SYSTEM ASSESSMENT
-============================================================ */
-
-function calculateRawStress() {
-
-  const fx =
-    Number(systemState.fx || 0);
-
-  const energy =
-    Number(systemState.energy || 0);
-
-  const cyb =
-    Number(systemState.cyb || 0);
-
-  const inf =
-    Number(systemState.inf || 0);
-
-  const dc =
-    Number(systemState.dc || 0);
-
-  /*
-   * Existing SPD v13.1 Golden Rule weighting.
-   */
-
-  const rawStress =
-    (
-      fx * 0.20 +
-      energy * 0.20 +
-      cyb * 0.20 +
-      inf * 0.20 +
-      dc * 0.20
-    );
-
-  return Number(
-    rawStress.toFixed(3)
-  );
-}
-
-
-function classifyRisk(goldenScore) {
-
-  if (goldenScore < 30) {
-    return "LOW";
-  }
-
-  if (goldenScore < 50) {
-    return "MEDIUM";
-  }
-
-  return "HIGH";
-}
-
-
-function calculateSystemAssessment() {
-
-  const rawStress =
-    calculateRawStress();
-
-  const goldenScore =
-    rawStress * (1 / PHI);
-
-  const resilienceScore =
-    Math.max(
-      0,
-      100 - goldenScore
-    );
-
-  const risk =
-    classifyRisk(goldenScore);
-
-  currentAssessment = {
-    scenario: currentScenario,
-    intensity: scenarioIntensity,
-    rawStress: Number(
-      rawStress.toFixed(3)
-    ),
-    goldenScore: Number(
-      goldenScore.toFixed(3)
-    ),
-    resilienceScore: Number(
-      resilienceScore.toFixed(3)
-    ),
-    risk
-  };
-
-  write(
-    "assessment",
-    currentAssessment
-  );
-
-  write(
-    "riskPanel",
-    {
-      risk,
-      resilienceScore:
-        Number(
-          resilienceScore.toFixed(3)
-        ),
-      goldenScore:
-        Number(
-          goldenScore.toFixed(3)
-        )
-    }
-  );
-
-  return currentAssessment;
-}
-
-/* ============================================================
-   SCENARIO ENGINE
-============================================================ */
-
-/*
- * SPD v13.1
- *
- * Authoritative scenario-state generator.
- *
- * Purpose:
- * Convert cockpit scenario + intensity into deterministic
- * domain state for the Golden Rule assessment pipeline.
- *
- * Domains:
- * FIN / BHR / DC / CYB / INF / EN
- *
- * Governance:
- * Scenario generation does NOT execute recovery actions.
- * AI remains decision support.
- * HUMAN_OPERATOR retains execution authority.
- */
-
-
-/* ============================================================
-   SCENARIO STATE GENERATOR
-============================================================ */
-
-function scenarioState(
-  scenario,
-  intensity
-) {
-
-  const level =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(intensity) || 0
-      )
-    );
-
-
-  const state = {
-
-    fx: 0,
-
-    dc: 0,
-
-    cyb: 0,
-
-    inf: 0,
-
-    energy: 0
-
-  };
-
-
-  switch (scenario) {
-
-
-    /* ========================================================
-       BASE SCENARIOS
-    ======================================================== */
-
-    case "NORMAL":
-
-      break;
-
-
-    case "FX_SHOCK":
-
-      state.fx =
-        level;
-
-      break;
-
-
-    case "ENERGY_SPIKE":
-
-      state.energy =
-        level;
-
-      break;
-
-
-    case "CYBER_EVENT":
-
-      state.cyb =
-        level;
-
-      break;
-
-
-    case "INFRASTRUCTURE_STRESS":
-
-      state.inf =
-        level;
-
-      break;
-
-
-    case "BIODIESEL_SHORTAGE":
-
-      state.energy =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.35
-        );
-
-      break;
-
-
-    /* ========================================================
-       FIN — FINANCIAL RESILIENCE
-    ======================================================== */
-
-    case "FIN_STRESS":
-
-      state.fx =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.25
-        );
-
-      break;
-
-
-    case "BANKING_STRESS":
-
-      state.fx =
-        Math.round(
-          level * 0.60
-        );
-
-      state.inf =
-        Math.round(
-          level * 0.40
-        );
-
-      break;
-
-
-    case "LIQUIDITY_CRISIS":
-
-      state.fx =
-        Math.round(
-          level * 0.60
-        );
-
-      state.energy =
-        Math.round(
-          level * 0.20
-        );
-
-      state.cyb =
-        Math.round(
-          level * 0.50
-        );
-
-      state.inf =
-        Math.round(
-          level * 0.55
-        );
-
-      state.dc =
-        Math.round(
-          level * 0.25
-        );
-
-      break;
-
-
-    case "CREDIT_STRESS":
-
-      state.fx =
-        Math.round(
-          level * 0.50
-        );
-
-      state.inf =
-        Math.round(
-          level * 0.35
-        );
-
-      break;
-
-
-    case "SOVEREIGN_DEBT":
-
-      state.fx =
-        Math.round(
-          level * 0.70
-        );
-
-      state.inf =
-        Math.round(
-          level * 0.45
-        );
-
-      state.energy =
-        Math.round(
-          level * 0.30
-        );
-
-      break;
-
-
-    /* ========================================================
-       DC — DATA CENTRE RESILIENCE
-    ======================================================== */
-
-    case "COOLING_FAILURE":
-
-      state.dc =
-        level;
-
-      break;
-
-
-    case "POWER_INSTABILITY":
-
-      state.energy =
-        level;
-
-      state.dc =
-        Math.round(
-          level * 0.70
-        );
-
-      break;
-
-
-    case "NETWORK_CONGESTION":
-
-      state.dc =
-        Math.round(
-          level * 0.75
-        );
-
-      state.cyb =
-        Math.round(
-          level * 0.25
-        );
-
-      break;
-
-
-    case "COMPUTE_LOAD_SPIKE":
-
-      state.dc =
-        level;
-
-      break;
-
-
-    case "BLACKOUT_RECOVERY":
-
-      state.energy =
-        level;
-
-      state.dc =
-        level;
-
-      break;
-
-
-    case "COOLING_RECOVERY_FAILURE":
-
-      state.dc =
-        level;
-
-      state.energy =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "NETWORK_HARDWARE_FAILURE":
-
-      state.dc =
-        Math.round(
-          level * 0.85
-        );
-
-      state.cyb =
-        Math.round(
-          level * 0.30
-        );
-
-      break;
-
-
-    case "STORAGE_DEGRADATION":
-
-      state.dc =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "COOLING_LOAD_SATURATION":
-
-      state.dc =
-        level;
-
-      state.energy =
-        Math.round(
-          level * 0.30
-        );
-
-      break;
-
-
-    case "MULTI_SYSTEM_CASCADE":
-
-      state.dc =
-        level;
-
-      state.energy =
-        level;
-
-      state.cyb =
-        level;
-
-      state.inf =
-        level;
-
-      state.fx =
-        Math.round(
-          level * 0.50
-        );
-
-      break;
-
-
-    /* ========================================================
-       CYB — CYBER RESILIENCE
-    ======================================================== */
-
-    case "DATA_BREACH_CREDENTIAL_LEAK":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.50
-        );
-
-      break;
-
-
-    case "DDOS":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.25
-        );
-
-      break;
-
-
-    case "INSIDER_THREAT":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.40
-        );
-
-      break;
-
-
-    case "API_ABUSE_TOKEN_MISUSE":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.30
-        );
-
-      break;
-
-
-    case "SUPPLY_CHAIN_CYBER_COMPROMISE":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        Math.round(
-          level * 0.50
-        );
-
-      state.dc =
-        Math.round(
-          level * 0.25
-        );
-
-      break;
-
-
-    case "CLOUD_MISCONFIGURATION_EXPOSURE":
-
-      state.cyb =
-        Math.round(
-          level * 0.75
-        );
-
-      state.dc =
-        Math.round(
-          level * 0.50
-        );
-
-      break;
-
-
-    case "IDENTITY_PROVIDER_OUTAGE":
-
-      state.cyb =
-        Math.round(
-          level * 0.50
-        );
-
-      state.inf =
-        level;
-
-      break;
-
-
-    case "MULTI_VECTOR_COORDINATED_CYBER_ATTACK":
-
-      state.cyb =
-        level;
-
-      state.inf =
-        level;
-
-      state.dc =
-        Math.round(
-          level * 0.50
-        );
-
-      break;
-
-
-    /* ========================================================
-       BHR — BUSINESS & HUMAN RIGHTS RESILIENCE
-    ======================================================== */
-
-    case "HUMAN_RIGHTS_DUE_DILIGENCE":
-
-      state.inf =
-        Math.round(
-          level * 0.50
-        );
-
-      state.cyb =
-        Math.round(
-          level * 0.10
-        );
-
-      break;
-
-
-    case "FORCED_LABOUR":
-
-      state.inf =
-        level;
-
-      state.fx =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "CHILD_LABOUR":
-
-      state.inf =
-        level;
-
-      state.fx =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "DISCRIMINATION":
-
-      state.inf =
-        Math.round(
-          level * 0.80
-        );
-
-      break;
-
-
-    case "OCCUPATIONAL_HEALTH_AND_SAFETY":
-
-      state.inf =
-        level;
-
-      state.energy =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "MODERN_SLAVERY":
-
-      state.inf =
-        level;
-
-      state.fx =
-        Math.round(
-          level * 0.30
-        );
-
-      break;
-
-
-    case "COMMUNITY_IMPACT":
-
-      state.inf =
-        Math.round(
-          level * 0.80
-        );
-
-      state.fx =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "INDIGENOUS_RIGHTS":
-
-      state.inf =
-        Math.round(
-          level * 0.80
-        );
-
-      break;
-
-
-    case "SUPPLY_CHAIN_RISK":
-
-      state.inf =
-        level;
-
-      state.fx =
-        Math.round(
-          level * 0.40
-        );
-
-      state.cyb =
-        Math.round(
-          level * 0.20
-        );
-
-      break;
-
-
-    case "GRIEVANCE_MECHANISM":
-
-      state.inf =
-        Math.round(
-          level * 0.60
-        );
-
-      break;
-
-
-    /* ========================================================
-       UNKNOWN SCENARIO
-    ======================================================== */
-
-    default:
-
-      break;
-
-  }
-
-
-  return state;
-
-}
-
-
-/* ============================================================
-   APPLY SCENARIO STATE
-============================================================ */
-
-function applyScenarioState(
-  scenario,
-  intensity
-) {
-
-  currentScenario =
-    scenario || "NORMAL";
-
-
-  scenarioIntensity =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(intensity) || 0
-      )
-    );
-
-
-  systemState =
-    scenarioState(
-      currentScenario,
-      scenarioIntensity
-    );
-
-
-  write(
-    "scenarioPanel",
-    {
-      scenario:
-        currentScenario,
-
-      intensity:
-        scenarioIntensity,
-
-      domainState:
-        systemState
-    }
-  );
-
-
-  write(
-    "rawState",
-    systemState
-  );
-
-
-  write(
-    "fxValue",
-    systemState.fx
-  );
-
-
-  write(
-    "dcValue",
-    systemState.dc
-  );
-
-
-  write(
-    "cybValue",
-    systemState.cyb
-  );
-
-
-  write(
-    "infValue",
-    systemState.inf
-  );
-
-
-  write(
-    "energyValue",
-    systemState.energy
-  );
-
-
-  return systemState;
-
-}
-
-
-/* ============================================================
-   SCENARIO SELECTION
-============================================================ */
-
-function setScenario(
-  scenario
-) {
-
-  applyScenarioState(
-    scenario,
-    scenarioIntensity
-  );
-
-
-  setSystemStatus(
-    "SCENARIO READY"
-  );
-
-
-  humanDecision = {
-
-    authority:
-      "MISSION_CONTROLLER",
-
-    status:
-      "PENDING",
-
-    decision:
-      null,
-
-    executionGate:
-      "HUMAN_AUTHORIZATION_REQUIRED"
-
-  };
-
-
-  currentDecision =
-    null;
-
-
-  write(
-    "humanDecision",
-    humanDecision
-  );
-
-
-  write(
-    "decision",
-    "Waiting for Golden Rule assessment..."
-  );
-
-
-  write(
-    "actions",
-    "Waiting for system decision..."
-  );
-
-
-  return systemState;
-
-}
-
-
-/* ============================================================
-   SCENARIO RESET
-============================================================ */
-
-function resetScenario() {
-
-  currentScenario =
-    "NORMAL";
-
-
-  scenarioIntensity =
-    50;
-
-
-  systemState = {
-
-    fx: 0,
-
-    dc: 0,
-
-    cyb: 0,
-
-    inf: 0,
-
-    energy: 0
-
-  };
-
-
-  currentAssessment =
-    null;
-
-
-  currentDecision =
-    null;
-
-
-  humanDecision = {
-
-    authority:
-      "MISSION_CONTROLLER",
-
-    status:
-      "PENDING",
-
-    decision:
-      null,
-
-    executionGate:
-      "HUMAN_AUTHORIZATION_REQUIRED"
-
-  };
-
-
-  const slider =
-    $("scenarioIntensity");
-
-
-  if (slider) {
-
-    slider.value =
-      "50";
-
-  }
-
-
-  write(
-    "intensityValue",
-    "50%"
-  );
-
-
-  write(
-    "scenarioPanel",
-    "Waiting..."
-  );
-
-
-  write(
-    "rawState",
-    "Waiting..."
-  );
-
-
-  write(
-    "assessment",
-    "Waiting..."
-  );
-
-
-  write(
-    "riskPanel",
-    {
-      risk:
-        "UNKNOWN",
-
-      resilienceScore:
-        "N/A",
-
-      goldenScore:
-        "N/A"
-
-    }
-  );
-
-
-  write(
-    "decision",
-    "Waiting..."
-  );
-
-
-  write(
-    "actions",
-    "Waiting..."
-  );
-
-
-  write(
-    "fxValue",
-    0
-  );
-
-
-  write(
-    "dcValue",
-    0
-  );
-
-
-  write(
-    "cybValue",
-    0
-  );
-
-
-  write(
-    "infValue",
-    0
-  );
-
-
-  write(
-    "energyValue",
-    0
-  );
-
-
-  write(
-    "humanDecision",
-    humanDecision
-  );
-
-
-  setSystemStatus(
-    "READY"
-  );
-
-
-  return systemState;
-
-}
-
-
-/* ============================================================
-   SCENARIO CONTROL BINDING
-============================================================ */
-
-function bindScenarioControls() {
-
-  document
-    .querySelectorAll(
-      "[data-scenario]"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const scenario =
-              button.dataset.scenario;
-
-
-            if (!scenario) {
-              return;
-            }
-
-
-            setScenario(
-              scenario
-            );
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-/* ============================================================
-   SCENARIO ENGINE SELF-TEST
-============================================================ */
-
-function selfTestScenarioEngine() {
-
-  const scenarios = [
-
-    "NORMAL",
-
-    "FX_SHOCK",
-
-    "ENERGY_SPIKE",
-
-    "CYBER_EVENT",
-
-    "INFRASTRUCTURE_STRESS",
-
-    "BIODIESEL_SHORTAGE",
-
-    "FIN_STRESS",
-
-    "BANKING_STRESS",
-
-    "LIQUIDITY_CRISIS",
-
-    "CREDIT_STRESS",
-
-    "SOVEREIGN_DEBT",
-
-    "COOLING_FAILURE",
-
-    "POWER_INSTABILITY",
-
-    "NETWORK_CONGESTION",
-
-    "COMPUTE_LOAD_SPIKE",
-
-    "BLACKOUT_RECOVERY",
-
-    "COOLING_RECOVERY_FAILURE",
-
-    "NETWORK_HARDWARE_FAILURE",
-
-    "STORAGE_DEGRADATION",
-
-    "COOLING_LOAD_SATURATION",
-
-    "MULTI_SYSTEM_CASCADE",
-
-    "DATA_BREACH_CREDENTIAL_LEAK",
-
-    "DDOS",
-
-    "INSIDER_THREAT",
-
-    "API_ABUSE_TOKEN_MISUSE",
-
-    "SUPPLY_CHAIN_CYBER_COMPROMISE",
-
-    "CLOUD_MISCONFIGURATION_EXPOSURE",
-
-    "IDENTITY_PROVIDER_OUTAGE",
-
-    "MULTI_VECTOR_COORDINATED_CYBER_ATTACK",
-
-    "HUMAN_RIGHTS_DUE_DILIGENCE",
-
-    "FORCED_LABOUR",
-
-    "CHILD_LABOUR",
-
-    "DISCRIMINATION",
-
-    "OCCUPATIONAL_HEALTH_AND_SAFETY",
-
-    "MODERN_SLAVERY",
-
-    "COMMUNITY_IMPACT",
-
-    "INDIGENOUS_RIGHTS",
-
-    "SUPPLY_CHAIN_RISK",
-
-    "GRIEVANCE_MECHANISM"
-
-  ];
-
-
-  const results =
-    {};
-
-
-  scenarios.forEach(
-    scenario => {
-
-      const result =
-        scenarioState(
-          scenario,
-          50
-        );
-
-
-      results[
-        scenario
-      ] = {
-
-        valid:
-          result &&
-          typeof result === "object",
-
-        state:
-          result
-
-      };
-
-    }
-  );
-
-
-  const passed =
-    Object.values(
-      results
-    ).every(
-      result =>
-        result.valid === true
-    );
-
-
-  return {
-
-    test:
-      "SCENARIO_ENGINE",
-
-    passed,
-
-    scenarioCount:
-      scenarios.length,
-
-    results
-
-  };
-
-}
-
-
-/* ============================================================
-   INITIAL SCENARIO STATE
-============================================================ */
-
-applyScenarioState(
-  currentScenario,
-  scenarioIntensity
-);
-
-
-/* ============================================================
-   GOLDEN RULE ENGINE
-============================================================ */
+      <button type="button" class="cyb-button"
+        onclick="activateScenario('DATA_BREACH
