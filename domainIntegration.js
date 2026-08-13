@@ -1,17 +1,17 @@
 /**
  * SPD v13.1 — DOMAIN INTEGRATION LAYER
  *
- * Existing Cockpit
- *      ↓
- * Domain Integration
- *      ↓
- * Authoritative Domain Rule Engine
- *      ↓
- * Captain AI Lena Decision Core
- *      ↓
- * Golden Rule Pipeline
- *      ↓
- * Result / Memory / Audit
+ * COCKPIT
+ *    ↓
+ * DOMAIN INTEGRATION
+ *    ↓
+ * AUTHORITATIVE DOMAIN RULE ENGINE
+ *    ↓
+ * CAPTAIN AI LENA DECISION CORE
+ *    ↓
+ * GOLDEN RULE PIPELINE
+ *    ↓
+ * RESULT / MEMORY / AUDIT
  *
  * ACTIVE DOMAINS
  * FIN — Financial Resilience
@@ -20,13 +20,20 @@
  * CYB — Cyber Resilience
  * INF — Infrastructure Resilience
  *
- * Purpose:
- * Provides the authoritative gateway between the
- * existing cockpit/scenario controls and registered
- * domain rule engines.
+ * IMPORTANT:
+ * This integration layer accepts domain engines that expose
+ * either:
  *
- * The cockpit remains the primary user interface.
- * No separate domain screen is required.
+ *   getScenarioMap()
+ *   SCENARIO_MAP
+ *
+ * and either:
+ *
+ *   getRules()
+ *   RULES
+ *
+ * The authoritative domain engine remains responsible for
+ * domain-specific evaluation.
  *
  * Governance:
  * AI provides decision support.
@@ -118,20 +125,15 @@ const DOMAIN_REGISTRY = {
 
 const DOMAIN_ENGINES = {
 
-  FIN:
-    FINRuleEngine,
+  FIN: FINRuleEngine,
 
-  BHR:
-    BHRRuleEngine,
+  BHR: BHRRuleEngine,
 
-  DC:
-    DCRuleEngine,
+  DC: DCRuleEngine,
 
-  CYB:
-    CYBRuleEngine,
+  CYB: CYBRuleEngine,
 
-  INF:
-    INFRuleEngine
+  INF: INFRuleEngine
 
 };
 
@@ -182,7 +184,7 @@ const BHR_SCENARIOS = {
 const SCENARIO_DOMAIN_MAP = {
 
   /* -------------------------------------------------------
-     FINANCIAL RESILIENCE
+     FIN
   ------------------------------------------------------- */
 
   FIN_STRESS:
@@ -202,7 +204,7 @@ const SCENARIO_DOMAIN_MAP = {
 
 
   /* -------------------------------------------------------
-     BUSINESS & HUMAN RIGHTS
+     BHR
   ------------------------------------------------------- */
 
   HUMAN_RIGHTS_DUE_DILIGENCE:
@@ -237,8 +239,11 @@ const SCENARIO_DOMAIN_MAP = {
 
 
   /* -------------------------------------------------------
-     DATA CENTRE RESILIENCE
+     DC
   ------------------------------------------------------- */
+
+  INFRASTRUCTURE_STRESS:
+    "DC",
 
   COOLING_FAILURE:
     "DC",
@@ -272,7 +277,7 @@ const SCENARIO_DOMAIN_MAP = {
 
 
   /* -------------------------------------------------------
-     CYBER RESILIENCE
+     CYB
   ------------------------------------------------------- */
 
   DATA_BREACH_CREDENTIAL_LEAK:
@@ -303,12 +308,145 @@ const SCENARIO_DOMAIN_MAP = {
 
 
 /* =========================================================
-   INF SCENARIOS
+   ENGINE SCENARIO MAP COMPATIBILITY
+========================================================= */
+
+/**
+ * Supports both engine styles:
  *
- * INFRuleEngine remains authoritative.
+ * 1. engine.getScenarioMap()
  *
- * Its own SCENARIO_MAP is used rather than inventing
- * duplicate scenario names here.
+ * 2. engine.SCENARIO_MAP
+ */
+function getEngineScenarioMap(
+  engine
+) {
+
+  if (
+    !engine
+  ) {
+
+    return null;
+
+  }
+
+
+  if (
+    typeof engine.getScenarioMap ===
+    "function"
+  ) {
+
+    try {
+
+      const map =
+        engine.getScenarioMap();
+
+      if (
+        map &&
+        typeof map === "object"
+      ) {
+
+        return map;
+
+      }
+
+    }
+
+    catch (error) {
+
+      /* Fall through to exported map. */
+
+    }
+
+  }
+
+
+  if (
+    engine.SCENARIO_MAP &&
+    typeof engine.SCENARIO_MAP === "object"
+  ) {
+
+    return engine.SCENARIO_MAP;
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   ENGINE RULE REGISTRY COMPATIBILITY
+========================================================= */
+
+/**
+ * Supports both engine styles:
+ *
+ * 1. engine.getRules()
+ *
+ * 2. engine.RULES
+ */
+function getEngineRules(
+  engine
+) {
+
+  if (
+    !engine
+  ) {
+
+    return null;
+
+  }
+
+
+  if (
+    typeof engine.getRules ===
+    "function"
+  ) {
+
+    try {
+
+      const rules =
+        engine.getRules();
+
+      if (
+        rules &&
+        typeof rules === "object"
+      ) {
+
+        return rules;
+
+      }
+
+    }
+
+    catch (error) {
+
+      /* Fall through to exported RULES. */
+
+    }
+
+  }
+
+
+  if (
+    engine.RULES &&
+    typeof engine.RULES === "object"
+  ) {
+
+    return engine.RULES;
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   REGISTER ENGINE SCENARIOS
 ========================================================= */
 
 function registerEngineScenarios(
@@ -316,27 +454,28 @@ function registerEngineScenarios(
   engine
 ) {
 
-  if (
-    !engine ||
-    typeof engine.getScenarioMap !==
-    "function"
-  ) {
-
-    return;
-
-  }
-
   const scenarioMap =
-    engine.getScenarioMap();
+    getEngineScenarioMap(
+      engine
+    );
+
 
   if (
-    !scenarioMap ||
-    typeof scenarioMap !== "object"
+    !scenarioMap
   ) {
 
-    return;
+    return {
+
+      registered:
+        false,
+
+      scenarioCount:
+        0
+
+    };
 
   }
+
 
   Object.keys(
     scenarioMap
@@ -350,16 +489,37 @@ function registerEngineScenarios(
     }
   );
 
+
+  return {
+
+    registered:
+      true,
+
+    scenarioCount:
+      Object.keys(
+        scenarioMap
+      ).length
+
+  };
+
 }
 
 
 /* =========================================================
-   REGISTER AUTHORITATIVE ENGINE SCENARIOS
+   REGISTER ALL AUTHORITATIVE ENGINE SCENARIOS
 ========================================================= */
 
-registerEngineScenarios(
-  "INF",
-  INFRuleEngine
+Object.entries(
+  DOMAIN_ENGINES
+).forEach(
+  ([domainId, engine]) => {
+
+    registerEngineScenarios(
+      domainId,
+      engine
+    );
+
+  }
 );
 
 
@@ -371,11 +531,14 @@ function mapScenario(
   scenario
 ) {
 
-  if (!scenario) {
+  if (
+    !scenario
+  ) {
 
     return null;
 
   }
+
 
   return (
     SCENARIO_DOMAIN_MAP[
@@ -407,6 +570,7 @@ function registerDomainEngine(
 
   }
 
+
   if (
     typeof engine.evaluate !==
     "function"
@@ -417,6 +581,7 @@ function registerDomainEngine(
     );
 
   }
+
 
   if (
     !DOMAIN_REGISTRY[
@@ -430,14 +595,18 @@ function registerDomainEngine(
 
   }
 
+
   DOMAIN_ENGINES[
     domainId
   ] = engine;
 
-  registerEngineScenarios(
-    domainId,
-    engine
-  );
+
+  const scenarioRegistration =
+    registerEngineScenarios(
+      domainId,
+      engine
+    );
+
 
   return {
 
@@ -449,6 +618,8 @@ function registerDomainEngine(
 
     engineEvaluate:
       true,
+
+    scenarioRegistration,
 
     timestamp:
       new Date().toISOString()
@@ -471,7 +642,10 @@ function getDomainStatus(
       domainId
     ];
 
-  if (!domain) {
+
+  if (
+    !domain
+  ) {
 
     return {
 
@@ -485,23 +659,33 @@ function getDomainStatus(
         false,
 
       evaluateAvailable:
+        false,
+
+      scenarioMapAvailable:
+        false,
+
+      ruleRegistryAvailable:
         false
 
     };
 
   }
 
+
   const engine =
     DOMAIN_ENGINES[
       domainId
     ];
+
 
   return {
 
     ...domain,
 
     engineRegistered:
-      Boolean(engine),
+      Boolean(
+        engine
+      ),
 
     evaluateAvailable:
       Boolean(
@@ -512,17 +696,31 @@ function getDomainStatus(
 
     scenarioMapAvailable:
       Boolean(
-        engine &&
-        typeof engine.getScenarioMap ===
-        "function"
+        getEngineScenarioMap(
+          engine
+        )
       ),
 
     ruleRegistryAvailable:
       Boolean(
-        engine &&
-        typeof engine.getRules ===
-        "function"
-      )
+        getEngineRules(
+          engine
+        )
+      ),
+
+    scenarioCount:
+      Object.keys(
+        getEngineScenarioMap(
+          engine
+        ) || {}
+      ).length,
+
+    ruleCount:
+      Object.keys(
+        getEngineRules(
+          engine
+        ) || {}
+      ).length
 
   };
 
@@ -559,6 +757,7 @@ function verifyDomainInput(
 
   }
 
+
   if (
     !state ||
     typeof state !== "object" ||
@@ -579,6 +778,7 @@ function verifyDomainInput(
     };
 
   }
+
 
   return {
 
@@ -614,6 +814,7 @@ function executeDomainRule(
       state
     );
 
+
   if (
     !verification.valid
   ) {
@@ -633,12 +834,16 @@ function executeDomainRule(
 
   }
 
+
   const engine =
     DOMAIN_ENGINES[
       domainId
     ];
 
-  if (!engine) {
+
+  if (
+    !engine
+  ) {
 
     return {
 
@@ -654,6 +859,7 @@ function executeDomainRule(
     };
 
   }
+
 
   if (
     typeof engine.evaluate !==
@@ -675,6 +881,11 @@ function executeDomainRule(
 
   }
 
+
+  const verifiedState =
+    verification.verifiedState;
+
+
   try {
 
     let result;
@@ -682,7 +893,7 @@ function executeDomainRule(
 
     /* -----------------------------------------------------
        FIN
-       ----------------------------------------------------- */
+    ----------------------------------------------------- */
 
     if (
       domainId === "FIN"
@@ -691,9 +902,9 @@ function executeDomainRule(
       result =
         engine.evaluate(
 
-          verification.verifiedState.scenario,
+          verifiedState.scenario,
 
-          verification.verifiedState
+          verifiedState
 
         );
 
@@ -702,7 +913,7 @@ function executeDomainRule(
 
     /* -----------------------------------------------------
        BHR
-       ----------------------------------------------------- */
+    ----------------------------------------------------- */
 
     else if (
       domainId === "BHR"
@@ -711,14 +922,14 @@ function executeDomainRule(
       result =
         engine.evaluate(
 
-          verification.verifiedState,
+          verifiedState,
 
           {
 
             ...context,
 
             scenario:
-              verification.verifiedState.scenario,
+              verifiedState.scenario,
 
             domain:
               domainId
@@ -732,16 +943,16 @@ function executeDomainRule(
 
     /* -----------------------------------------------------
        DC / CYB / INF
-       ----------------------------------------------------- */
+    ----------------------------------------------------- */
 
     else {
 
       result =
         engine.evaluate(
 
-          verification.verifiedState.scenario,
+          verifiedState.scenario,
 
-          verification.verifiedState
+          verifiedState
 
         );
 
@@ -796,10 +1007,11 @@ function listDomains() {
   ).map(
     domain => {
 
-      const engine =
-        DOMAIN_ENGINES[
+      const status =
+        getDomainStatus(
           domain.id
-        ];
+        );
+
 
       return {
 
@@ -813,19 +1025,22 @@ function listDomains() {
           domain.status,
 
         engineRegistered:
-          Boolean(engine),
+          status.engineRegistered,
 
         evaluateAvailable:
-          Boolean(
-            engine &&
-            typeof engine.evaluate ===
-            "function"
-          ),
+          status.evaluateAvailable,
+
+        scenarioMapAvailable:
+          status.scenarioMapAvailable,
+
+        ruleRegistryAvailable:
+          status.ruleRegistryAvailable,
 
         scenarioCount:
-          getEngineScenarioCount(
-            engine
-          )
+          status.scenarioCount,
+
+        ruleCount:
+          status.ruleCount
 
       };
 
@@ -843,28 +1058,20 @@ function getEngineScenarioCount(
   engine
 ) {
 
-  if (
-    !engine ||
-    typeof engine.getScenarioMap !==
-    "function"
-  ) {
-
-    return 0;
-
-  }
-
   const scenarioMap =
-    engine.getScenarioMap();
+    getEngineScenarioMap(
+      engine
+    );
+
 
   if (
-    !scenarioMap ||
-    typeof scenarioMap !==
-    "object"
+    !scenarioMap
   ) {
 
     return 0;
 
   }
+
 
   return Object.keys(
     scenarioMap
@@ -880,18 +1087,23 @@ function getEngineScenarioCount(
 function verifyDomainIntegration() {
 
   const activeDomains = [
+
     "FIN",
     "BHR",
     "DC",
     "CYB",
     "INF"
+
   ];
+
 
   const statuses =
     {};
 
+
   let allReady =
     true;
+
 
   activeDomains.forEach(
     domainId => {
@@ -901,9 +1113,11 @@ function verifyDomainIntegration() {
           domainId
         );
 
+
       statuses[
         domainId
       ] = status;
+
 
       if (
         !status.engineRegistered ||
@@ -971,6 +1185,7 @@ function resolveDomain(
 
   }
 
+
   if (
     state.scenario
   ) {
@@ -980,6 +1195,7 @@ function resolveDomain(
     );
 
   }
+
 
   return null;
 
@@ -1000,7 +1216,10 @@ function executeScenarioDomain(
       state
     );
 
-  if (!domain) {
+
+  if (
+    !domain
+  ) {
 
     return {
 
@@ -1011,11 +1230,16 @@ function executeScenarioDomain(
         null,
 
       error:
-        "NO_DOMAIN_MAPPED_TO_SCENARIO"
+        "NO_DOMAIN_MAPPED_TO_SCENARIO",
+
+      scenario:
+        state.scenario ||
+        null
 
     };
 
   }
+
 
   return executeDomainRule(
 
@@ -1049,6 +1273,7 @@ function selfTestDomainRegistration() {
   const results =
     {};
 
+
   [
     "FIN",
     "BHR",
@@ -1063,14 +1288,32 @@ function selfTestDomainRegistration() {
           domainId
         );
 
+
       results[
         domainId
-      ] =
-        status.engineRegistered &&
-        status.evaluateAvailable;
+      ] = {
+
+        engineRegistered:
+          status.engineRegistered,
+
+        evaluateAvailable:
+          status.evaluateAvailable,
+
+        scenarioMapAvailable:
+          status.scenarioMapAvailable,
+
+        ruleRegistryAvailable:
+          status.ruleRegistryAvailable,
+
+        ready:
+          status.engineRegistered &&
+          status.evaluateAvailable
+
+      };
 
     }
   );
+
 
   return {
 
@@ -1081,7 +1324,8 @@ function selfTestDomainRegistration() {
       Object.values(
         results
       ).every(
-        value => value === true
+        value =>
+          value.ready === true
       ),
 
     results
@@ -1099,8 +1343,12 @@ function selfTestScenarioResolution() {
 
   const tests = {
 
+    /* FIN */
+
     LIQUIDITY_CRISIS:
       "FIN",
+
+    /* BHR */
 
     HUMAN_RIGHTS_DUE_DILIGENCE:
       "BHR",
@@ -1130,12 +1378,75 @@ function selfTestScenarioResolution() {
       "BHR",
 
     GRIEVANCE_MECHANISM:
-      "BHR"
+      "BHR",
+
+    /* DC */
+
+    INFRASTRUCTURE_STRESS:
+      "DC",
+
+    COOLING_FAILURE:
+      "DC",
+
+    POWER_INSTABILITY:
+      "DC",
+
+    NETWORK_CONGESTION:
+      "DC",
+
+    COMPUTE_LOAD_SPIKE:
+      "DC",
+
+    BLACKOUT_RECOVERY:
+      "DC",
+
+    COOLING_RECOVERY_FAILURE:
+      "DC",
+
+    NETWORK_HARDWARE_FAILURE:
+      "DC",
+
+    STORAGE_DEGRADATION:
+      "DC",
+
+    COOLING_LOAD_SATURATION:
+      "DC",
+
+    MULTI_SYSTEM_CASCADE:
+      "DC",
+
+    /* CYB */
+
+    DATA_BREACH_CREDENTIAL_LEAK:
+      "CYB",
+
+    DDOS:
+      "CYB",
+
+    INSIDER_THREAT:
+      "CYB",
+
+    API_ABUSE_TOKEN_MISUSE:
+      "CYB",
+
+    SUPPLY_CHAIN_CYBER_COMPROMISE:
+      "CYB",
+
+    CLOUD_MISCONFIGURATION_EXPOSURE:
+      "CYB",
+
+    IDENTITY_PROVIDER_OUTAGE:
+      "CYB",
+
+    MULTI_VECTOR_COORDINATED_CYBER_ATTACK:
+      "CYB"
 
   };
 
+
   const results =
     {};
+
 
   Object.entries(
     tests
@@ -1152,6 +1463,7 @@ function selfTestScenarioResolution() {
     }
   );
 
+
   return {
 
     test:
@@ -1161,7 +1473,131 @@ function selfTestScenarioResolution() {
       Object.values(
         results
       ).every(
-        value => value === true
+        value =>
+          value === true
+      ),
+
+    results
+
+  };
+
+}
+
+
+/* =========================================================
+   SELF-TEST — DC EXECUTION
+========================================================= */
+
+function selfTestDCExecution() {
+
+  const scenarios = [
+
+    "COOLING_FAILURE",
+
+    "POWER_INSTABILITY",
+
+    "NETWORK_CONGESTION",
+
+    "COMPUTE_LOAD_SPIKE",
+
+    "BLACKOUT_RECOVERY",
+
+    "COOLING_RECOVERY_FAILURE",
+
+    "NETWORK_HARDWARE_FAILURE",
+
+    "STORAGE_DEGRADATION",
+
+    "COOLING_LOAD_SATURATION",
+
+    "MULTI_SYSTEM_CASCADE"
+
+  ];
+
+
+  const results =
+    {};
+
+
+  scenarios.forEach(
+    scenario => {
+
+      const result =
+        executeScenarioDomain(
+
+          {
+
+            scenario,
+
+            intensity:
+              50,
+
+            dc:
+              50,
+
+            inf:
+              50,
+
+            energy:
+              50,
+
+            temperature:
+              50,
+
+            cooling:
+              50,
+
+            thermal:
+              50
+
+          },
+
+          {
+
+            source:
+              "SPD_V13_1_DC_SELF_TEST",
+
+            test:
+              true
+
+          }
+
+        );
+
+
+      results[
+        scenario
+      ] = {
+
+        success:
+          result?.success === true,
+
+        domain:
+          result?.domain ||
+          null,
+
+        engine:
+          result?.result?.engine ||
+          null
+
+      };
+
+    }
+  );
+
+
+  return {
+
+    test:
+      "DC_EXECUTION",
+
+    passed:
+      Object.values(
+        results
+      ).every(
+        result =>
+          result.success === true &&
+          result.domain === "DC"
       ),
 
     results
@@ -1180,17 +1616,25 @@ function selfTest() {
   const registration =
     selfTestDomainRegistration();
 
+
   const resolution =
     selfTestScenarioResolution();
+
 
   const integration =
     verifyDomainIntegration();
 
+
+  const dcExecution =
+    selfTestDCExecution();
+
+
   const passed =
     registration.passed &&
     resolution.passed &&
-    integration.status ===
-      "READY";
+    integration.status === "READY" &&
+    dcExecution.passed;
+
 
   return {
 
@@ -1204,6 +1648,8 @@ function selfTest() {
     resolution,
 
     integration,
+
+    dcExecution,
 
     governance: {
 
@@ -1256,11 +1702,19 @@ export {
 
   listDomains,
 
+  getEngineScenarioMap,
+
+  getEngineRules,
+
+  getEngineScenarioCount,
+
   verifyDomainIntegration,
 
   selfTestDomainRegistration,
 
   selfTestScenarioResolution,
+
+  selfTestDCExecution,
 
   selfTest
 
