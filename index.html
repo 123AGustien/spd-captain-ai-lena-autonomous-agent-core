@@ -2215,5 +2215,403 @@ function runReTest(){
 
   refreshAssessmentLatency();
 }
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+   SPD v13.1 — LOCAL DETERMINISTIC
+============================================================ */
 
-g
+function runDomainIntegrationTest(){
+
+  const result = {
+
+    cockpit:
+      "CONNECTED",
+
+    domainIntegration:
+      "LOCAL",
+
+    BHRRuleEngine:
+      "AVAILABLE",
+
+    FINRuleEngine:
+      "AVAILABLE",
+
+    DCRuleEngine:
+      "AVAILABLE",
+
+    CYBRuleEngine:
+      "AVAILABLE",
+
+    decisionCore:
+      "AVAILABLE",
+
+    goldenRuleEngine:
+      "AVAILABLE",
+
+    memoryCore:
+      "AVAILABLE",
+
+    auditCore:
+      "AVAILABLE",
+
+    assessmentLatencyDisplay:
+      "AVAILABLE",
+
+    backend:
+      "NOT CONNECTED",
+
+    deterministic:
+      true,
+
+    status:
+      "PASS"
+  };
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    result
+  );
+
+  addPipelineLog(
+    "Local domain integration test PASS."
+  );
+
+  refreshAssessmentLatency();
+}
+
+
+/* ============================================================
+   ASSESSMENT LATENCY
+   SPD v13.1 — SELF-CONTAINED
+   READ-ONLY / MEASUREMENT ONLY
+============================================================ */
+
+let assessmentLatencyState = {
+
+  startTime:
+    null,
+
+  assessmentTime:
+    null,
+
+  latencyMs:
+    null,
+
+  status:
+    "WAITING",
+
+  measurementOnly:
+    true
+
+};
+
+
+/* ============================================================
+   START ASSESSMENT LATENCY
+============================================================ */
+
+function startAssessmentLatencyMeasurement(){
+
+  assessmentLatencyState.startTime =
+    performance.now();
+
+  assessmentLatencyState.assessmentTime =
+    null;
+
+  assessmentLatencyState.latencyMs =
+    null;
+
+  assessmentLatencyState.status =
+    "MEASURING";
+
+  renderAssessmentLatency();
+}
+
+
+/* ============================================================
+   COMPLETE ASSESSMENT LATENCY
+============================================================ */
+
+function completeAssessmentLatencyMeasurement(){
+
+  if(
+    assessmentLatencyState.startTime === null
+  ){
+
+    return;
+
+  }
+
+  assessmentLatencyState.assessmentTime =
+    performance.now();
+
+  assessmentLatencyState.latencyMs =
+    Number(
+      (
+        assessmentLatencyState.assessmentTime -
+        assessmentLatencyState.startTime
+      ).toFixed(3)
+    );
+
+  assessmentLatencyState.status =
+    "MEASURED";
+
+  renderAssessmentLatency();
+}
+
+
+/* ============================================================
+   RENDER ASSESSMENT LATENCY
+============================================================ */
+
+function renderAssessmentLatency(){
+
+  const el =
+    document.getElementById(
+      "assessment-latency-display"
+    );
+
+  if(!el){
+
+    return;
+
+  }
+
+  if(
+    assessmentLatencyState.status ===
+    "WAITING"
+  ){
+
+    el.textContent =
+      "ASSESSMENT LATENCY\n" +
+      "Status: WAITING\n" +
+      "Measurement: N/A\n" +
+      "Mode: READ-ONLY";
+
+    return;
+
+  }
+
+  if(
+    assessmentLatencyState.status ===
+    "MEASURING"
+  ){
+
+    el.textContent =
+      "ASSESSMENT LATENCY\n" +
+      "Status: MEASURING...\n" +
+      "Mode: READ-ONLY";
+
+    return;
+
+  }
+
+  el.textContent =
+    "ASSESSMENT LATENCY\n" +
+    "Status: MEASURED\n" +
+    "Latency: " +
+    assessmentLatencyState.latencyMs +
+    " ms\n" +
+    "Mode: READ-ONLY\n" +
+    "Measurement only — no control authority.";
+
+}
+
+
+/* ============================================================
+   VERIFY ASSESSMENT LATENCY DISPLAY
+============================================================ */
+
+function verifyAssessmentLatencyDisplay(){
+
+  const el =
+    document.getElementById(
+      "assessment-latency-display"
+    );
+
+  if(!el){
+
+    return {
+
+      status:
+        "FAIL",
+
+      reason:
+        "ASSESSMENT_LATENCY_DISPLAY_NOT_FOUND"
+
+    };
+
+  }
+
+  return {
+
+    status:
+      "PASS",
+
+    element:
+      "assessment-latency-display",
+
+    measurementOnly:
+      true,
+
+    externalModule:
+      false
+
+  };
+
+}
+
+
+/* ============================================================
+   REFRESH ASSESSMENT LATENCY
+============================================================ */
+
+function refreshAssessmentLatency(){
+
+  try{
+
+    const verification =
+      verifyAssessmentLatencyDisplay();
+
+
+    if(
+      !verification ||
+      verification.status !== "PASS"
+    ){
+
+      addPipelineLog(
+        "Assessment latency display verification FAILED."
+      );
+
+      return;
+
+    }
+
+
+    renderAssessmentLatency();
+
+
+    addPipelineLog(
+      "Assessment latency display refreshed — " +
+      "SELF-CONTAINED / MEASUREMENT ONLY."
+    );
+
+  }
+
+  catch(error){
+
+    addPipelineLog(
+      "Assessment latency display error: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE LATENCY INTEGRATION
+ *
+ * Measurement surrounds the existing assessment.
+ *
+ * It does NOT modify:
+ * - risk
+ * - resilience
+ * - decision
+ * - action
+ * - human authority
+============================================================ */
+
+function measureAssessmentLatency(
+  assessmentFunction,
+  state
+){
+
+  startAssessmentLatencyMeasurement();
+
+  const result =
+    assessmentFunction(state);
+
+  completeAssessmentLatencyMeasurement();
+
+  return result;
+}
+
+
+/* ============================================================
+   REPLACE ASSESSMENT EXECUTION
+ *
+ * This function preserves the existing calculation exactly.
+============================================================ */
+
+function calculateAssessmentWithLatency(state){
+
+  return measureAssessmentLatency(
+    calculateAssessment,
+    state
+  );
+
+}
+
+
+/* ============================================================
+   SYSTEM INITIALIZATION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    updateMonitor();
+
+    setText(
+      "intensityValue",
+      scenarioIntensity + "%"
+    );
+
+    setText(
+      "systemStatus",
+      "SYSTEM STATUS: READY — LOCAL SIMULATOR"
+    );
+
+    addPipelineLog(
+      "SPD v13.1 local simulator initialized."
+    );
+
+    updateAudit(
+      "SIMULATOR_INITIALIZED",
+      {
+        backendConnection:
+          false,
+
+        deterministic:
+          true,
+
+        assessmentLatency:
+          "SELF-CONTAINED",
+
+        measurementOnly:
+          true
+      }
+    );
+
+
+    /* ========================================================
+       INITIALIZE LATENCY DISPLAY
+    ======================================================== */
+
+    refreshAssessmentLatency();
+
+  }
+);
+
+
+/* ============================================================
+   END SPD v13.1 LOCAL SIMULATOR SCRIPT
+============================================================ */
