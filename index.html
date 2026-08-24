@@ -2122,4 +2122,286 @@ function runAuthoritativeSelfTest(){
 
   return result;
 }
-g
+/* ============================================================
+   SELF TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestAndCorrect(){
+
+  const result =
+    runAuthoritativeSelfTest();
+
+  if(result.status === "PASS"){
+
+    setText(
+      "correctiveAction",
+      "NO CORRECTIVE ACTION REQUIRED.\n"
+      + "SIMULATOR CORE VALIDATED."
+    );
+
+    runReTest();
+
+    refreshAssessmentLatency();
+
+    return;
+  }
+
+  setText(
+    "correctiveAction",
+    "CORRECTIVE ACTION:\n"
+    + "REINITIALIZE LOCAL SIMULATOR STATE."
+  );
+
+  resetScenario();
+
+  runReTest();
+
+  refreshAssessmentLatency();
+}
+
+
+/* ============================================================
+   RE-TEST
+============================================================ */
+
+function runReTest(){
+
+  const result =
+    runAuthoritativeSelfTest();
+
+  const retest = {
+
+    timestamp:
+      nowISO(),
+
+    status:
+      result.status === "PASS"
+        ? "RE-TEST PASS"
+        : "RE-TEST FAIL",
+
+    passed:
+      result.passed,
+
+    failed:
+      result.failed
+
+  };
+
+  setJSON(
+    "retest",
+    retest
+  );
+
+  updateAudit(
+    "RETEST_VALIDATION",
+    retest
+  );
+
+  addPipelineLog(
+    "Re-test validation: " +
+    retest.status
+  );
+
+  refreshAssessmentLatency();
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest(){
+
+  const result = {
+
+    cockpit:
+      "CONNECTED",
+
+    domainIntegration:
+      "LOCAL",
+
+    BHRRuleEngine:
+      "AVAILABLE",
+
+    FINRuleEngine:
+      "AVAILABLE",
+
+    DCRuleEngine:
+      "AVAILABLE",
+
+    CYBRuleEngine:
+      "AVAILABLE",
+
+    decisionCore:
+      "AVAILABLE",
+
+    goldenRuleEngine:
+      "AVAILABLE",
+
+    memoryCore:
+      "AVAILABLE",
+
+    auditCore:
+      "AVAILABLE",
+
+    backend:
+      "NOT CONNECTED",
+
+    status:
+      "PASS"
+
+  };
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    result
+  );
+
+  addPipelineLog(
+    "Local domain integration test PASS."
+  );
+
+  refreshAssessmentLatency();
+}
+
+
+/* ============================================================
+   ASSESSMENT LATENCY DISPLAY
+ *
+ * READ-ONLY DISPLAY
+ *
+ * Source:
+ * assessmentLatency.js
+ *
+ * This display does NOT control:
+ * - risk
+ * - resilience
+ * - decisions
+ * - actions
+ * - Golden Rule Engine
+ * - domain engines
+ * - Human Decision Authority
+============================================================ */
+
+import {
+  renderAssessmentLatencyDisplayById,
+  verifyAssessmentLatencyDisplay
+} from "./assessmentLatencyDisplay.js";
+
+
+/* ============================================================
+   REFRESH ASSESSMENT LATENCY
+============================================================ */
+
+function refreshAssessmentLatency(){
+
+  try{
+
+    const verification =
+      verifyAssessmentLatencyDisplay();
+
+
+    const display =
+      renderAssessmentLatencyDisplayById(
+        "assessment-latency-display"
+      );
+
+
+    if(
+      !verification ||
+      verification.status !== "PASS"
+    ){
+
+      addPipelineLog(
+        "Assessment latency display verification FAILED."
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !display ||
+      display.success !== true
+    ){
+
+      addPipelineLog(
+        "Assessment latency display refresh FAILED."
+      );
+
+      return;
+
+    }
+
+
+    addPipelineLog(
+      "Assessment latency display refreshed — "
+      + "MEASUREMENT ONLY."
+    );
+
+  }
+
+  catch(error){
+
+    addPipelineLog(
+      "Assessment latency display error: "
+      + error.message
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    updateMonitor();
+
+    setText(
+      "intensityValue",
+      scenarioIntensity + "%"
+    );
+
+    setText(
+      "systemStatus",
+      "SYSTEM STATUS: READY — LOCAL SIMULATOR"
+    );
+
+    addPipelineLog(
+      "SPD v13.1 local simulator initialized."
+    );
+
+    updateAudit(
+      "SIMULATOR_INITIALIZED",
+      {
+        backendConnection:false,
+        deterministic:true
+      }
+    );
+
+
+    /* ========================================================
+       INITIALIZE ASSESSMENT LATENCY DISPLAY
+    ======================================================== */
+
+    refreshAssessmentLatency();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
