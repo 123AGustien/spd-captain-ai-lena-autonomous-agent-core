@@ -1,1 +1,55 @@
-g
+{
+  "catalogue": {
+    "name": "SPD v13.1 Assessment Latency Catalogue",
+    "version": "1.0.0",
+    "purpose": "Record measured execution latency across independent SPD processing layers.",
+    "measurementPolicy": "Measurement only. No engine logic modification.",
+    "authoritativeSources": {
+      "goldenRuleEngine": "Unchanged",
+      "domainRuleEngines": "Unchanged",
+      "cockpit": "Unchanged"
+    }
+  },
+
+  "engineSeparation": {
+    "goldenRuleEngine": {
+      "authority": "Core SPD deterministic decision engine",
+      "pipeline": [
+        "OBSERVE",
+        "VERIFY",
+        "ASSESS",
+        "DECIDE",
+        "ACT",
+        "UPDATE"
+      ]
+    },
+
+    "domainRuleEngines": {
+      "authority": "Domain-specific rule processing",
+      "domains": [
+        "FIN",
+        "BHR",
+        "CYB",
+        "DC",
+        "INF"
+      ]
+    }
+  },
+
+  "latencyStages": [
+    "INPUT",
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE",
+    "SELF_TEST",
+    "FAULT_IDENTIFICATION",
+    "CORRECTIVE_ACTION_ASSESSMENT",
+    "RE_TEST",
+    "END_TO_END"
+  ],
+
+  "records": []
+}
