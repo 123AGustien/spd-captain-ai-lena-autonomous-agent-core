@@ -5549,3 +5549,433 @@ Pipeline log initialized.
   </div>
 
 </div>
+<!-- ============================================================
+     SPD v13.1 — PART 11
+     SYSTEM INTEGRITY + FINAL COCKPIT STATUS
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   SYSTEM INTEGRITY CORE
+============================================================ */
+
+function updateSystemIntegrity() {
+
+  const integrity = {
+
+    system:
+      SYSTEM_VERSION,
+
+    cockpit:
+      SYSTEM_NAME,
+
+    aiCore:
+      AI_CORE_NAME,
+
+    executionMode:
+      "LOCAL_DETERMINISTIC_EXECUTION",
+
+    backendConnection:
+      SYSTEM_SAFETY.backendConnection,
+
+    physicalExecution:
+      SYSTEM_SAFETY.physicalExecution,
+
+    automaticRecovery:
+      SYSTEM_SAFETY.automaticRecovery,
+
+    humanAuthorization:
+      SYSTEM_SAFETY.humanAuthorizationRequired,
+
+    executionGate:
+      SYSTEM_SAFETY.executionGate,
+
+    systemStatus:
+      systemStatus,
+
+    systemArmed:
+      systemArmed,
+
+    currentScenario:
+      currentScenario,
+
+    scenarioIntensity:
+      scenarioIntensity,
+
+    assessmentAvailable:
+      currentAssessment !== null,
+
+    decisionAvailable:
+      currentDecision !== null,
+
+    trialManoeuvreAvailable:
+      currentTrialManoeuvre !== null,
+
+    memoryCore:
+      memoryCore.status,
+
+    auditCore:
+      auditCore.status,
+
+    goldenRulePipeline:
+      GOLDEN_RULE_STAGES.join(
+        " → "
+      ),
+
+    result:
+      "SYSTEM INTEGRITY VERIFIED"
+
+  };
+
+
+  setJSON(
+    "systemIntegrity",
+    integrity
+  );
+
+
+  updateAudit(
+    "SYSTEM_INTEGRITY_CHECK",
+    integrity
+  );
+
+
+  addPipelineLog(
+    "System integrity verification completed."
+  );
+
+
+  return integrity;
+}
+
+
+/* ============================================================
+   FINAL COCKPIT STATUS
+============================================================ */
+
+function updateFinalCockpitStatus() {
+
+  const status = {
+
+    system:
+      SYSTEM_VERSION,
+
+    status:
+      systemStatus,
+
+    armStatus:
+      systemArmed
+        ? "ARMED"
+        : "DISARMED",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    assessment:
+      currentAssessment
+        ? "AVAILABLE"
+        : "WAITING",
+
+    decision:
+      currentDecision
+        ? "AVAILABLE"
+        : "WAITING",
+
+    trialManoeuvre:
+      currentTrialManoeuvre
+        ? "AVAILABLE"
+        : "WAITING",
+
+    humanAuthority:
+      humanDecisionAuthority.status,
+
+    execution:
+      "HUMAN AUTHORIZATION REQUIRED",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+
+  setJSON(
+    "finalCockpitStatus",
+    status
+  );
+
+}
+
+
+/* ============================================================
+   SAFE SYSTEM SHUTDOWN / RESET
+============================================================ */
+
+function resetSystemState() {
+
+  currentState = {
+
+    fx: 0,
+    energy: 0,
+    cyb: 0,
+    inf: 0,
+    dc: 0
+
+  };
+
+
+  currentScenario =
+    "NORMAL";
+
+
+  scenarioIntensity =
+    50;
+
+
+  currentAssessment =
+    null;
+
+
+  currentDecision =
+    null;
+
+
+  currentTrialManoeuvre =
+    null;
+
+
+  humanDecisionAuthority = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "PENDING",
+
+    decision:
+      null,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+
+  systemArmed =
+    false;
+
+
+  systemStatus =
+    "READY";
+
+
+  memoryCore = {
+
+    core:
+      "MemoryCoreV1",
+
+    status:
+      "WAITING",
+
+    records:
+      []
+
+  };
+
+
+  setText(
+    "systemStatus",
+    "READY"
+  );
+
+
+  setText(
+    "armStatus",
+    "ARM STATUS: DISARMED"
+  );
+
+
+  setJSON(
+    "assessment",
+    "Waiting for assessment..."
+  );
+
+
+  setJSON(
+    "decision",
+    "Waiting for decision..."
+  );
+
+
+  setJSON(
+    "trialManoeuvre",
+    {
+
+      engine:
+        "ManoeuvreEngineV1",
+
+      mode:
+        "TRIAL_MANOEUVRE",
+
+      status:
+        "WAITING"
+
+    }
+  );
+
+
+  setJSON(
+    "memory",
+    memoryCore
+  );
+
+
+  updateFinalCockpitStatus();
+
+
+  addPipelineLog(
+    "System state reset to safe READY state."
+  );
+
+}
+
+
+/* ============================================================
+   SAFE DISARM
+============================================================ */
+
+function disarmSystem() {
+
+  systemArmed =
+    false;
+
+
+  systemStatus =
+    "READY";
+
+
+  humanDecisionAuthority.status =
+    "PENDING";
+
+
+  humanDecisionAuthority.decision =
+    null;
+
+
+  setText(
+    "armStatus",
+    "ARM STATUS: DISARMED"
+  );
+
+
+  setJSON(
+    "authority",
+    humanDecisionAuthority
+  );
+
+
+  updateFinalCockpitStatus();
+
+
+  addPipelineLog(
+    "System disarmed. Human authorization state reset."
+  );
+
+
+  updateAudit(
+    "SYSTEM_DISARMED",
+    {
+      physicalExecution:
+        false,
+
+      automaticRecovery:
+        false
+    }
+  );
+
+}
+
+
+/* ============================================================
+   FINAL HUMAN AUTHORITY SAFETY CHECK
+============================================================ */
+
+function verifyHumanExecutionGate() {
+
+  const gate = {
+
+    authority:
+      humanDecisionAuthority.authority,
+
+    status:
+      humanDecisionAuthority.status,
+
+    decision:
+      humanDecisionAuthority.decision,
+
+    executionGate:
+      SYSTEM_SAFETY.executionGate,
+
+    physicalExecution:
+      false,
+
+    automaticRecovery:
+      false,
+
+    authorized:
+      false
+
+  };
+
+
+  setJSON(
+    "authority",
+    gate
+  );
+
+
+  return gate;
+}
+
+
+/* ============================================================
+   FINAL INITIALIZATION
+============================================================ */
+
+function initializeFinalIntegrity() {
+
+  updateFinalCockpitStatus();
+
+  verifyHumanExecutionGate();
+
+  addPipelineLog(
+    "SPD v13.1 final integrity layer initialized."
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZE PART 11
+============================================================ */
+
+initializeFinalIntegrity();
+
+
+/* ============================================================
+   END PART 11
+
+   NEXT:
+   PART 12 — FINAL HTML OUTPUT PANELS,
+   FINAL SAFETY DECLARATION,
+   SCRIPT CLOSURE,
+   BODY + HTML CLOSURE
+============================================================ */
+
+</script>
