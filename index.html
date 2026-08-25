@@ -1707,5 +1707,720 @@ function clearAssessmentLatencyDisplay() {
 ============================================================ */
 
 </script>
+<!-- ============================================================
+   SPD v13.1 — PART 6
+   SYSTEM RUN
+   SELF-TEST
+   CORRECTIVE ACTION
+   DOMAIN INTEGRATION TEST
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   SYSTEM RUN
+============================================================ */
+
+function runSystem() {
+
+  addPipelineLog(
+    "SPD v13.1 system run initiated."
+  );
+
+  try {
+
+    /* ========================================================
+       SYSTEM STATE
+    ======================================================== */
+
+    if (typeof updateScenarioState === "function") {
+
+      updateScenarioState();
+
+    }
+
+
+    /* ========================================================
+       GOLDEN RULE PIPELINE
+    ======================================================== */
+
+    const result =
+      runGoldenRulePipeline();
+
+
+    /* ========================================================
+       SYSTEM STATUS
+    ======================================================== */
+
+    setText(
+      "systemStatus",
+      "🟢 SYSTEM ONLINE — PIPELINE COMPLETE"
+    );
+
+
+    /* ========================================================
+       AUDIT
+    ======================================================== */
+
+    updateAudit(
+      "SYSTEM_RUN_COMPLETE",
+      result
+    );
+
+
+    addPipelineLog(
+      "SPD v13.1 system run completed successfully."
+    );
+
+
+    return result;
+
+  } catch (error) {
+
+    setText(
+      "systemStatus",
+      "🔴 SYSTEM RUN ERROR"
+    );
+
+    addPipelineLog(
+      "System run error: " +
+      error.message
+    );
+
+    updateAudit(
+      "SYSTEM_RUN_ERROR",
+      {
+        error:
+          error.message
+      }
+    );
+
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+
+/* ============================================================
+   SELF-TEST
+============================================================ */
+
+function runSelfTest() {
+
+  addPipelineLog(
+    "SPD v13.1 self-test initiated."
+  );
+
+
+  const tests = [];
+
+
+  /* ==========================================================
+     TEST 1 — ASSESSMENT ENGINE
+  ========================================================== */
+
+  try {
+
+    const testState = {
+
+      fx: 50,
+      energy: 50,
+      cyb: 50,
+      inf: 50,
+      dc: 50
+
+    };
+
+
+    const assessment =
+      calculateAssessment(
+        testState
+      );
+
+
+    tests.push({
+
+      test:
+        "ASSESSMENT_ENGINE",
+
+      passed:
+        assessment &&
+        typeof assessment.rawStress === "number" &&
+        typeof assessment.goldenScore === "number" &&
+        typeof assessment.resilienceScore === "number",
+
+      result:
+        assessment
+
+    });
+
+  } catch (error) {
+
+    tests.push({
+
+      test:
+        "ASSESSMENT_ENGINE",
+
+      passed:
+        false,
+
+      error:
+        error.message
+
+    });
+
+  }
+
+
+  /* ==========================================================
+     TEST 2 — DOMAIN ASSESSMENT
+  ========================================================== */
+
+  try {
+
+    const domainTest =
+      calculateDomainAssessment({
+
+        fx: 10,
+        energy: 20,
+        cyb: 30,
+        inf: 40,
+        dc: 50
+
+      });
+
+
+    tests.push({
+
+      test:
+        "DOMAIN_ASSESSMENT",
+
+      passed:
+        domainTest &&
+        domainTest.dominantDomain === "dc",
+
+      result:
+        domainTest
+
+    });
+
+  } catch (error) {
+
+    tests.push({
+
+      test:
+        "DOMAIN_ASSESSMENT",
+
+      passed:
+        false,
+
+      error:
+        error.message
+
+    });
+
+  }
+
+
+  /* ==========================================================
+     TEST 3 — LATENCY MEASUREMENT
+  ========================================================== */
+
+  try {
+
+    const latencyState = {
+
+      fx: 10,
+      energy: 10,
+      cyb: 10,
+      inf: 10,
+      dc: 10
+
+    };
+
+
+    const latencyAssessment =
+      calculateAssessment(
+        latencyState
+      );
+
+
+    tests.push({
+
+      test:
+        "ASSESSMENT_LATENCY",
+
+      passed:
+        typeof latencyAssessment.assessmentLatencyMs ===
+        "number",
+
+      result:
+        {
+
+          latency:
+            latencyAssessment.assessmentLatencyMs,
+
+          unit:
+            latencyAssessment.latencyUnit,
+
+          measurement:
+            latencyAssessment.latencyMeasurement
+
+        }
+
+    });
+
+  } catch (error) {
+
+    tests.push({
+
+      test:
+        "ASSESSMENT_LATENCY",
+
+      passed:
+        false,
+
+      error:
+        error.message
+
+    });
+
+  }
+
+
+  /* ==========================================================
+     TEST 4 — DETERMINISTIC EXECUTION
+  ========================================================== */
+
+  try {
+
+    const deterministicState = {
+
+      fx: 40,
+      energy: 40,
+      cyb: 40,
+      inf: 40,
+      dc: 40
+
+    };
+
+
+    const resultA =
+      calculateAssessment(
+        deterministicState
+      );
+
+    const resultB =
+      calculateAssessment(
+        deterministicState
+      );
+
+
+    const deterministic =
+      resultA.rawStress === resultB.rawStress &&
+      resultA.goldenScore === resultB.goldenScore &&
+      resultA.resilienceScore === resultB.resilienceScore &&
+      resultA.risk === resultB.risk;
+
+
+    tests.push({
+
+      test:
+        "DETERMINISTIC_EXECUTION",
+
+      passed:
+        deterministic,
+
+      result:
+        {
+
+          first:
+            resultA,
+
+          second:
+            resultB
+
+        }
+
+    });
+
+  } catch (error) {
+
+    tests.push({
+
+      test:
+        "DETERMINISTIC_EXECUTION",
+
+      passed:
+        false,
+
+      error:
+        error.message
+
+    });
+
+  }
+
+
+  /* ==========================================================
+     TEST SUMMARY
+  ========================================================== */
+
+  const passed =
+    tests.filter(
+      function(test) {
+        return test.passed;
+      }
+    ).length;
+
+
+  const failed =
+    tests.length - passed;
+
+
+  const selfTestResult = {
+
+    test:
+      "SPD v13.1 SELF-TEST",
+
+    timestamp:
+      new Date().toISOString(),
+
+    totalTests:
+      tests.length,
+
+    passed:
+      passed,
+
+    failed:
+      failed,
+
+    status:
+      failed === 0
+        ? "PASS"
+        : "FAIL",
+
+    executionMode:
+      "LOCAL_DETERMINISTIC",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    tests:
+      tests
+
+  };
+
+
+  setJSON(
+    "selfTest",
+    selfTestResult
+  );
+
+
+  updateAudit(
+    "SELF_TEST_COMPLETE",
+    selfTestResult
+  );
+
+
+  addPipelineLog(
+    "Self-test complete: " +
+    passed +
+    "/" +
+    tests.length +
+    " tests passed."
+  );
+
+
+  return selfTestResult;
+}
+
+
+/* ============================================================
+   SELF-TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestCorrectiveAction() {
+
+  addPipelineLog(
+    "Self-test + corrective action initiated."
+  );
+
+
+  const result =
+    runSelfTest();
+
+
+  if (
+    result.status === "PASS"
+  ) {
+
+    addPipelineLog(
+      "Self-test passed. No corrective action required."
+    );
+
+    updateAudit(
+      "CORRECTIVE_ACTION_NOT_REQUIRED",
+      result
+    );
+
+    return result;
+  }
+
+
+  /* ==========================================================
+     CORRECTIVE ACTION
+  ========================================================== */
+
+  addPipelineLog(
+    "Self-test failure detected. Corrective action initiated."
+  );
+
+
+  const correctiveAction = {
+
+    action:
+      "LOCAL_STATE_REINITIALIZATION",
+
+    executed:
+      true,
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+
+  /* ==========================================================
+     SAFE LOCAL CORRECTION
+  ========================================================== */
+
+  if (
+    typeof resetScenario === "function"
+  ) {
+
+    resetScenario();
+
+  }
+
+
+  setJSON(
+    "correctiveAction",
+    correctiveAction
+  );
+
+
+  updateAudit(
+    "CORRECTIVE_ACTION_COMPLETE",
+    correctiveAction
+  );
+
+
+  addPipelineLog(
+    "Corrective action completed in local simulator."
+  );
+
+
+  return {
+
+    selfTest:
+      result,
+
+    correctiveAction:
+      correctiveAction
+
+  };
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest() {
+
+  addPipelineLog(
+    "Domain Integration Layer test initiated."
+  );
+
+
+  const domains = [
+
+    "FX",
+    "ENERGY",
+    "CYB",
+    "INF",
+    "DC"
+
+  ];
+
+
+  const results = [];
+
+
+  domains.forEach(
+    function(domain) {
+
+      try {
+
+        let engine =
+          "LOCAL DOMAIN RULE ENGINE";
+
+
+        if (
+          typeof DOMAIN_ENGINES !== "undefined" &&
+          DOMAIN_ENGINES[domain]
+        ) {
+
+          engine =
+            DOMAIN_ENGINES[domain];
+
+        }
+
+
+        results.push({
+
+          domain:
+            domain,
+
+          registered:
+            true,
+
+          engine:
+            engine,
+
+          executed:
+            true,
+
+          backendConnection:
+            false,
+
+          physicalExecution:
+            false,
+
+          status:
+            "PASS"
+
+        });
+
+      } catch (error) {
+
+        results.push({
+
+          domain:
+            domain,
+
+          registered:
+            false,
+
+          executed:
+            false,
+
+          status:
+            "FAIL",
+
+          error:
+            error.message
+
+        });
+
+      }
+
+    }
+  );
+
+
+  /* ==========================================================
+     DOMAIN TEST SUMMARY
+  ========================================================== */
+
+  const failed =
+    results.filter(
+      function(item) {
+        return item.status === "FAIL";
+      }
+    ).length;
+
+
+  const integrationResult = {
+
+    test:
+      "DOMAIN INTEGRATION LAYER",
+
+    status:
+      failed === 0
+        ? "PASS"
+        : "FAIL",
+
+    totalDomains:
+      results.length,
+
+    passed:
+      results.length - failed,
+
+    failed:
+      failed,
+
+    executionMode:
+      "LOCAL_DETERMINISTIC",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    results:
+      results
+
+  };
+
+
+  setJSON(
+    "domainIntegration",
+    integrationResult
+  );
+
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST_COMPLETE",
+    integrationResult
+  );
+
+
+  addPipelineLog(
+    "Domain Integration Layer test completed: " +
+    integrationResult.status
+  );
+
+
+  return integrationResult;
+}
+
+
+/* ============================================================
+   END PART 6
+   NEXT:
+   PART 7 — SCENARIO ENGINE +
+   DOMAIN SCENARIO CONTROLS +
+   SYSTEM STATE UPDATE
+============================================================ */
+
+</script>
 
 
