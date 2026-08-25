@@ -3214,4 +3214,613 @@ Waiting for assessment...
      MEMORY +
      AUDIT
 ============================================================ -->
+<!-- ============================================================
+     SPD v13.1 — PART 9
+     FINAL DECISION CORE
+     HUMAN AUTHORITY
+     TRIAL MANOEUVRE
+     MEMORY CORE
+     AUDIT CORE
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   CAPTAIN AI LENA — DECISION CORE
+   AI DECISION SUPPORT ONLY
+   HUMAN OPERATOR REMAINS FINAL AUTHORITY
+============================================================ */
+
+function generateDecision(assessment) {
+
+  if (!assessment) {
+
+    return {
+      decision: "NO_DECISION",
+      authority: "MISSION_CONTROLLER",
+      status: "PENDING",
+      reason: "Assessment unavailable.",
+      executionGate: "HUMAN_AUTHORIZATION_REQUIRED"
+    };
+  }
+
+  let recommendedAction;
+
+  if (assessment.risk === "HIGH") {
+
+    recommendedAction =
+      "ACTIVATE_EMERGENCY_STABILIZATION";
+
+  } else if (assessment.risk === "MEDIUM") {
+
+    recommendedAction =
+      "MAINTAIN_SAFE_STATE";
+
+  } else {
+
+    recommendedAction =
+      "CONTINUE_MONITORED_OPERATION";
+  }
+
+  return {
+
+    core:
+      "CAPTAIN AI LENA DECISION CORE",
+
+    decision:
+      recommendedAction,
+
+    risk:
+      assessment.risk,
+
+    severity:
+      assessment.severity,
+
+    resilienceScore:
+      assessment.resilienceScore,
+
+    scenario:
+      assessment.scenario,
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    aiRole:
+      "DECISION_SUPPORT",
+
+    humanAuthority:
+      true,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+  };
+}
+
+
+/* ============================================================
+   ACTION PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+) {
+
+  if (!assessment || !decision) {
+
+    return "No action prompt available.";
+  }
+
+  return (
+
+    "CAPTAIN AI LENA RECOMMENDATION\n\n" +
+
+    "Scenario: " +
+    assessment.scenario +
+
+    "\nRisk: " +
+    assessment.risk +
+
+    "\nSeverity: " +
+    assessment.severity +
+
+    "\nRecommended Action: " +
+    decision.decision +
+
+    "\n\nAI DECISION SUPPORT ONLY." +
+
+    "\nFINAL AUTHORITY: MISSION CONTROLLER." +
+
+    "\nNO AUTOMATIC PHYSICAL EXECUTION."
+  );
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function updateSolutionOptions(
+  assessment,
+  decision
+) {
+
+  const options = {
+
+    AUTHORIZE_RECOVERY:
+      "Authorize the recommended recovery sequence.",
+
+    MAINTAIN_SAFE_STATE:
+      "Maintain the current safe system state.",
+
+    REQUEST_ADDITIONAL_DIAGNOSTICS:
+      "Request additional diagnostics before action.",
+
+    ABORT_RECOVERY:
+      "Abort the proposed recovery sequence.",
+
+    ESCALATE_TO_MISSION_AUTHORITY:
+      "Escalate to mission authority."
+  };
+
+  setJSON(
+    "solutionOptions",
+    {
+
+      assessment:
+        assessment,
+
+      recommendation:
+        decision
+          ? decision.decision
+          : null,
+
+      availableOptions:
+        options,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+    }
+  );
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+============================================================ */
+
+function recordHumanDecision(decision) {
+
+  const validDecisions = [
+
+    "AUTHORIZE_RECOVERY",
+    "MAINTAIN_SAFE_STATE",
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+    "ABORT_RECOVERY",
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  ];
+
+  if (
+    !validDecisions.includes(decision)
+  ) {
+
+    return {
+
+      status:
+        "REJECTED",
+
+      reason:
+        "Invalid human decision.",
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+    };
+  }
+
+
+  const authorityResult = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    decision:
+      decision,
+
+    status:
+      "RECORDED",
+
+    timestamp:
+      new Date().toISOString(),
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    aiRole:
+      "ADVISORY_ONLY"
+  };
+
+
+  setJSON(
+    "humanDecision",
+    authorityResult
+  );
+
+
+  updateAudit(
+    "HUMAN_DECISION_RECORDED",
+    authorityResult
+  );
+
+
+  addPipelineLog(
+    "Human decision recorded: " +
+    decision
+  );
+
+
+  return authorityResult;
+}
+
+
+/* ============================================================
+   HUMAN AUTHORITY BUTTON HANDLERS
+============================================================ */
+
+function authorizeRecovery() {
+
+  return recordHumanDecision(
+    "AUTHORIZE_RECOVERY"
+  );
+}
+
+
+function maintainSafeState() {
+
+  return recordHumanDecision(
+    "MAINTAIN_SAFE_STATE"
+  );
+}
+
+
+function requestDiagnostics() {
+
+  return recordHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS"
+  );
+}
+
+
+function abortRecovery() {
+
+  return recordHumanDecision(
+    "ABORT_RECOVERY"
+  );
+}
+
+
+function escalateMissionAuthority() {
+
+  return recordHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  );
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE ENGINE
+   LOCAL SIMULATOR ONLY
+   NO PHYSICAL EXECUTION
+============================================================ */
+
+function runTrialManoeuvre() {
+
+  const assessment =
+    currentAssessment;
+
+  const decision =
+    assessment
+      ? generateDecision(assessment)
+      : null;
+
+
+  const trial = {
+
+    engine:
+      "ManoeuvreEngineV1",
+
+    mode:
+      "TRIAL_MANOEUVRE",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    assessment:
+      assessment,
+
+    proposedAction:
+      decision
+        ? decision.decision
+        : "NO_ACTION",
+
+    execution:
+      "SIMULATION_ONLY",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    status:
+      "TRIAL MANOEUVRE GENERATED"
+  };
+
+
+  setJSON(
+    "trialManoeuvre",
+    trial
+  );
+
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_GENERATED",
+    trial
+  );
+
+
+  addPipelineLog(
+    "Trial manoeuvre generated — simulation only."
+  );
+
+
+  return trial;
+}
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+) {
+
+  const memoryRecord = {
+
+    core:
+      "MemoryCoreV1",
+
+    timestamp:
+      new Date().toISOString(),
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    lastAssessment:
+      assessment,
+
+    lastDecision:
+      decision
+        ? decision.decision
+        : null,
+
+    lastRecovery:
+      decision
+        ? decision.decision
+        : null,
+
+    severity:
+      assessment
+        ? assessment.severity
+        : null,
+
+    humanDecision:
+      null,
+
+    execution:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+  };
+
+
+  window.spdMemoryCore =
+    memoryRecord;
+
+
+  setJSON(
+    "memoryCore",
+    memoryRecord
+  );
+
+
+  return memoryRecord;
+}
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+) {
+
+  const auditRecord = {
+
+    core:
+      "AuditCoreV1",
+
+    timestamp:
+      new Date().toISOString(),
+
+    event:
+      event,
+
+    scenario:
+      currentScenario,
+
+    data:
+      data,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+  };
+
+
+  if (!Array.isArray(window.spdAuditLog)) {
+
+    window.spdAuditLog = [];
+  }
+
+
+  window.spdAuditLog.push(
+    auditRecord
+  );
+
+
+  setJSON(
+    "auditCore",
+    {
+
+      core:
+        "AuditCoreV1",
+
+      records:
+        window.spdAuditLog,
+
+      recordCount:
+        window.spdAuditLog.length
+    }
+  );
+
+
+  return auditRecord;
+}
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+function addPipelineLog(message) {
+
+  const timestamp =
+    new Date().toISOString();
+
+  const entry =
+    "[" +
+    timestamp +
+    "] " +
+    message;
+
+
+  if (!Array.isArray(window.spdPipelineLog)) {
+
+    window.spdPipelineLog = [];
+  }
+
+
+  window.spdPipelineLog.push(
+    entry
+  );
+
+
+  const logElement =
+    document.getElementById(
+      "pipelineLog"
+    );
+
+
+  if (logElement) {
+
+    logElement.textContent =
+      window.spdPipelineLog.join(
+        "\n"
+      );
+  }
+}
+
+
+/* ============================================================
+   HUMAN AUTHORITY STATUS
+============================================================ */
+
+function getHumanAuthorityStatus() {
+
+  return {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "PENDING",
+
+    decision:
+      null,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    automaticExecution:
+      false,
+
+    physicalExecution:
+      false
+  };
+}
+
+
+/* ============================================================
+   INITIAL HUMAN AUTHORITY STATE
+============================================================ */
+
+function initializeHumanAuthority() {
+
+  setJSON(
+    "humanDecision",
+    getHumanAuthorityStatus()
+  );
+
+  addPipelineLog(
+    "Human Decision Authority initialized."
+  );
+}
+
+
+/* ============================================================
+   END PART 9
+   NEXT:
+   PART 10 — FINAL HUMAN AUTHORITY HTML +
+   TRIAL MANOEUVRE PANEL +
+   MEMORY +
+   AUDIT +
+   PIPELINE LOG
+============================================================ */
+
+</script>
 
