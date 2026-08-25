@@ -1339,5 +1339,373 @@ SYSTEM STATUS: READY
      DOMAIN ASSESSMENT +
      RISK PANEL
 ============================================================ -->
+<!-- ============================================================
+   SPD v13.1 — PART 5
+   GOLDEN RULE PIPELINE
+   OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+function activateStage(stage) {
+
+  const stages = [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+  ];
+
+  stages.forEach(function(name) {
+
+    const el =
+      document.getElementById("stage" + name);
+
+    if (el) {
+
+      el.classList.toggle(
+        "active",
+        name === stage
+      );
+
+    }
+
+  });
+}
+
+
+/* ============================================================
+   RUN GOLDEN RULE PIPELINE
+============================================================ */
+
+function runGoldenRulePipeline() {
+
+  /* ==========================================================
+     OBSERVE
+  ========================================================== */
+
+  activateStage("OBSERVE");
+
+  const observed = {
+    ...currentState
+  };
+
+
+  /* ==========================================================
+     VERIFY
+  ========================================================== */
+
+  activateStage("VERIFY");
+
+  const verification = {
+
+    verified:
+      true,
+
+    deterministic:
+      true,
+
+    backendConnected:
+      false,
+
+    physicalExecution:
+      false,
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity
+
+  };
+
+
+  /* ==========================================================
+     ASSESS
+  ========================================================== */
+
+  activateStage("ASSESS");
+
+  currentAssessment =
+    calculateAssessment(
+      observed
+    );
+
+
+  /* ==========================================================
+     MAIN ASSESSMENT DISPLAY
+  ========================================================== */
+
+  setJSON(
+    "assessment",
+    currentAssessment
+  );
+
+
+  /* ==========================================================
+     RISK PANEL
+  ========================================================== */
+
+  setJSON(
+    "riskPanel",
+    {
+
+      risk:
+        currentAssessment.risk,
+
+      resilienceScore:
+        currentAssessment.resilienceScore,
+
+      goldenScore:
+        currentAssessment.goldenScore,
+
+      assessmentLatencyMs:
+        currentAssessment.assessmentLatencyMs
+
+    }
+  );
+
+
+  /* ==========================================================
+     ASSESSMENT LATENCY
+     Measurement remains available even when the
+     latency screen is hidden.
+  ========================================================== */
+
+  updateAssessmentLatencyDisplay(
+    currentAssessment
+  );
+
+
+  /* ==========================================================
+     DOMAIN ASSESSMENT
+  ========================================================== */
+
+  setJSON(
+    "domainAssessment",
+    currentAssessment.domainAssessment
+  );
+
+
+  /* ==========================================================
+     DECIDE
+  ========================================================== */
+
+  activateStage("DECIDE");
+
+  const decision =
+    generateDecision(
+      currentAssessment
+    );
+
+
+  setJSON(
+    "decision",
+    decision
+  );
+
+
+  /* ==========================================================
+     ACT
+     
+     AI ONLY GENERATES THE ACTION PROMPT.
+     NO AUTOMATIC PHYSICAL EXECUTION.
+  ========================================================== */
+
+  activateStage("ACT");
+
+  const actionPrompt =
+    generateActionPrompt(
+      currentAssessment,
+      decision
+    );
+
+
+  setText(
+    "actions",
+    actionPrompt
+  );
+
+
+  /* ==========================================================
+     SOLUTION OPTIONS
+  ========================================================== */
+
+  updateSolutionOptions(
+    currentAssessment,
+    decision
+  );
+
+
+  /* ==========================================================
+     UPDATE
+  ========================================================== */
+
+  activateStage("UPDATE");
+
+  updateMemory(
+    decision,
+    currentAssessment
+  );
+
+
+  /* ==========================================================
+     COMPLETE PIPELINE RESULT
+  ========================================================== */
+
+  const result = {
+
+    pipeline:
+      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    observed:
+      observed,
+
+    verification:
+      verification,
+
+    assessment:
+      currentAssessment,
+
+    decision:
+      decision,
+
+    actionPrompt:
+      actionPrompt,
+
+    assessmentLatency:
+      {
+
+        value:
+          currentAssessment.assessmentLatencyMs,
+
+        unit:
+          currentAssessment.latencyUnit,
+
+        measurement:
+          currentAssessment.latencyMeasurement
+
+      },
+
+    execution:
+      "HUMAN AUTHORIZATION REQUIRED",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false
+
+  };
+
+
+  /* ==========================================================
+     PIPELINE DISPLAY
+  ========================================================== */
+
+  setJSON(
+    "pipeline",
+    result
+  );
+
+
+  /* ==========================================================
+     AUDIT
+  ========================================================== */
+
+  updateAudit(
+    "GOLDEN_RULE_PIPELINE_COMPLETE",
+    result
+  );
+
+
+  /* ==========================================================
+     PIPELINE LOG
+  ========================================================== */
+
+  addPipelineLog(
+    "Golden Rule pipeline completed."
+  );
+
+
+  /* ==========================================================
+     LATENCY LOG
+  ========================================================== */
+
+  addPipelineLog(
+    "Assessment latency: " +
+    currentAssessment.assessmentLatencyMs +
+    " ms"
+  );
+
+
+  /* ==========================================================
+     RETURN AUTHORITATIVE RESULT
+  ========================================================== */
+
+  return result;
+}
+
+
+/* ============================================================
+   ASSESSMENT LATENCY QUICK VIEW
+============================================================ */
+
+function showLatestAssessmentLatency() {
+
+  if (!currentAssessment) {
+
+    openAssessmentLatency();
+
+    return;
+
+  }
+
+  updateAssessmentLatencyDisplay(
+    currentAssessment
+  );
+
+  openAssessmentLatency();
+}
+
+
+/* ============================================================
+   CLEAR ASSESSMENT LATENCY DISPLAY
+   Does not modify the system assessment.
+============================================================ */
+
+function clearAssessmentLatencyDisplay() {
+
+  setText(
+    "assessmentLatencyScreen",
+    "Assessment latency data cleared from display."
+  );
+
+  addPipelineLog(
+    "Assessment latency display cleared."
+  );
+}
+
+
+/* ============================================================
+   END PART 5
+   NEXT:
+   PART 6 — SYSTEM RUN + SELF-TEST +
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+</script>
 
 
