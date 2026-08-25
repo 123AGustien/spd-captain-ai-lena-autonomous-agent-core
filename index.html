@@ -3824,3 +3824,361 @@ function initializeHumanAuthority() {
 
 </script>
 
+<!-- ============================================================
+     SPD v13.1 — PART 10
+     HUMAN AUTHORITY + TRIAL MANOEUVRE
+     MEMORY CORE + AUDIT CORE + PIPELINE LOG
+============================================================ -->
+
+
+<!-- ============================================================
+     HUMAN DECISION AUTHORITY
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧑‍✈️ HUMAN DECISION AUTHORITY
+  </div>
+
+  <div class="simulator-banner">
+
+    AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+
+    <br><br>
+
+    🔒 EXECUTION GATE
+
+    <br>
+
+    No recovery or execution action is authorized automatically.
+
+    <br>
+
+    <strong>HUMAN AUTHORIZATION REQUIRED.</strong>
+
+  </div>
+
+
+  <pre id="humanDecision">{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}</pre>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="authorizeRecovery()">
+      AUTHORIZE RECOVERY
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="maintainSafeState()">
+      MAINTAIN SAFE STATE
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="requestDiagnostics()">
+      REQUEST DIAGNOSTICS
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="abortRecovery()">
+      ABORT RECOVERY
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="escalateMissionAuthority()">
+      ESCALATE TO MISSION AUTHORITY
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     TRIAL MANOEUVRE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛰️ TRIAL MANOEUVRE
+  </div>
+
+  <div class="muted">
+
+    Generate a proposed manoeuvre using the current
+    deterministic assessment.
+
+    <br><br>
+
+    Trial mode only — no physical execution.
+
+  </div>
+
+  <br>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="runTrialManoeuvre()">
+      🛰️ RUN TRIAL MANOEUVRE
+    </button>
+
+  </div>
+
+
+  <br>
+
+  <div class="status">
+    MANOEUVRE ENGINE STATUS
+  </div>
+
+
+  <pre id="trialManoeuvre">{
+  "engine": "ManoeuvreEngineV1",
+  "mode": "TRIAL_MANOEUVRE",
+  "status": "WAITING"
+}</pre>
+
+
+  <div class="authority-box">
+
+    <strong>
+      TRIAL EXECUTION SAFETY
+    </strong>
+
+    <br><br>
+
+    This manoeuvre is generated for simulation and
+    decision-support purposes only.
+
+    <br><br>
+
+    <strong>
+      NO AUTOMATIC PHYSICAL EXECUTION
+    </strong>
+
+    <br>
+
+    Human authorization remains mandatory.
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     DECISION OUTPUT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 CAPTAIN AI LENA — DECISION CORE
+  </div>
+
+  <pre id="decision">Waiting for assessment...</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧭 SOLUTION OPTIONS
+  </div>
+
+  <pre id="solutionOptions">Waiting for decision...</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 MEMORY CORE
+  </div>
+
+  <div class="simulator-banner">
+
+    MemoryCoreV1 — LOCAL SIMULATOR MEMORY
+
+  </div>
+
+  <pre id="memoryCore">{
+  "core": "MemoryCoreV1",
+  "status": "WAITING"
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     AUDIT CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📋 AUDIT CORE
+  </div>
+
+  <div class="simulator-banner">
+
+    AuditCoreV1 — DETERMINISTIC LOCAL AUDIT
+
+  </div>
+
+  <pre id="auditCore">{
+  "core": "AuditCoreV1",
+  "records": [],
+  "recordCount": 0
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE LOG
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📜 GOLDEN RULE PIPELINE LOG
+  </div>
+
+  <pre id="pipelineLog">Pipeline log initialized.</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     SYSTEM SAFETY DECLARATION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔒 EXECUTION SAFETY DECLARATION
+  </div>
+
+  <div class="authority-box">
+
+    <strong>
+      SPD v13.1 — HUMAN AUTHORITY PRINCIPLE
+    </strong>
+
+    <br><br>
+
+    Captain AI Lena provides deterministic
+    decision support.
+
+    <br><br>
+
+    AI recommendations do not constitute
+    autonomous physical commands.
+
+    <br><br>
+
+    Recovery execution requires explicit
+    authorization from the Mission Controller.
+
+    <br><br>
+
+    <strong>
+      AI DECISION SUPPORT
+      →
+      HUMAN DECISION
+      →
+      AUTHORIZED ACTION
+    </strong>
+
+    <br><br>
+
+    Backend connection:
+
+    <strong>FALSE</strong>
+
+    <br>
+
+    Physical execution:
+
+    <strong>FALSE</strong>
+
+    <br>
+
+    Human authorization:
+
+    <strong>REQUIRED</strong>
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     PART 10 INITIALIZATION
+============================================================ -->
+
+<script>
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    initializeHumanAuthority();
+
+  }
+);
+
+</script>
+
+
+<!-- ============================================================
+     END PART 10
+
+     NEXT:
+     PART 11 — SYSTEM CONTROL ENGINE
+     RUN SYSTEM
+     SELF-TEST
+     CORRECTIVE ACTION
+     DOMAIN INTEGRATION TEST
+============================================================ -->
