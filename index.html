@@ -1,1 +1,630 @@
-g
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+  </title>
+
+  <meta
+    name="description"
+    content="SPD v13.1 — Sextant Resilience Cockpit Pro — Captain AI Lena Autonomous Agent Core"
+  >
+
+  <style>
+
+    /* =========================================================
+       SPD v13.1 — GLOBAL FOUNDATION
+    ========================================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+
+      margin: 0;
+      padding: 0;
+
+      background:
+        #07111f;
+
+      color:
+        #e8f1ff;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       MAIN APPLICATION
+    ========================================================= */
+
+    .app {
+
+      width: 100%;
+      max-width: 1400px;
+
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .header {
+
+      padding: 20px;
+
+      border: 1px solid #29415e;
+      border-radius: 14px;
+
+      background:
+        #0c1b2d;
+
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+
+      margin: 0 0 8px 0;
+
+      font-size: clamp(
+        22px,
+        4vw,
+        34px
+      );
+    }
+
+    .header h2 {
+
+      margin: 0;
+
+      font-size: clamp(
+        14px,
+        2.5vw,
+        20px
+      );
+
+      font-weight: normal;
+
+      opacity: 0.85;
+    }
+
+
+    /* =========================================================
+       SYSTEM BANNER
+    ========================================================= */
+
+    .system-banner {
+
+      margin-top: 16px;
+
+      padding: 14px;
+
+      border-radius: 10px;
+
+      background:
+        #10263d;
+
+      border: 1px solid #315579;
+
+      font-weight: bold;
+    }
+
+
+    /* =========================================================
+       PANELS
+    ========================================================= */
+
+    .panel {
+
+      margin-bottom: 16px;
+
+      padding: 18px;
+
+      border: 1px solid #29415e;
+      border-radius: 14px;
+
+      background:
+        #0c1b2d;
+    }
+
+
+    .title {
+
+      font-size: 20px;
+
+      font-weight: bold;
+
+      margin-bottom: 10px;
+    }
+
+
+    .muted {
+
+      opacity: 0.75;
+
+      font-size: 14px;
+    }
+
+
+    .status {
+
+      padding: 10px;
+
+      margin: 10px 0;
+
+      border-radius: 8px;
+
+      background:
+        #10263d;
+
+      font-weight: bold;
+    }
+
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+
+    .control-buttons {
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+
+    button {
+
+      min-height: 44px;
+
+      padding:
+        10px 16px;
+
+      border-radius: 8px;
+
+      border: 1px solid #466b91;
+
+      background:
+        #16304a;
+
+      color:
+        #ffffff;
+
+      cursor: pointer;
+
+      font-weight: bold;
+
+      font-size: 14px;
+    }
+
+
+    button:hover {
+
+      background:
+        #214664;
+    }
+
+
+    button:active {
+
+      transform:
+        translateY(1px);
+    }
+
+
+    .self-test-button {
+
+      background:
+        #183c35;
+    }
+
+
+    .authority-button {
+
+      background:
+        #3b3020;
+    }
+
+
+    .danger-button {
+
+      background:
+        #4a2025;
+    }
+
+
+    /* =========================================================
+       DATA OUTPUT
+    ========================================================= */
+
+    pre {
+
+      width: 100%;
+
+      min-height: 70px;
+
+      margin: 10px 0 0 0;
+
+      padding: 14px;
+
+      overflow-x: auto;
+
+      white-space: pre-wrap;
+      word-break: break-word;
+
+      border-radius: 8px;
+
+      border: 1px solid #263e57;
+
+      background:
+        #050d17;
+
+      color:
+        #d9e8ff;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size: 13px;
+    }
+
+
+    /* =========================================================
+       GRID
+    ========================================================= */
+
+    .grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(
+            250px,
+            1fr
+          )
+        );
+
+      gap: 16px;
+    }
+
+
+    /* =========================================================
+       DOMAIN MONITOR
+    ========================================================= */
+
+    .domain-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(
+            120px,
+            1fr
+          )
+        );
+
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+
+    .domain-card {
+
+      padding: 14px;
+
+      text-align: center;
+
+      border-radius: 10px;
+
+      border: 1px solid #29415e;
+
+      background:
+        #081522;
+    }
+
+
+    .domain-name {
+
+      font-weight: bold;
+
+      font-size: 14px;
+    }
+
+
+    .domain-value {
+
+      margin-top: 6px;
+
+      font-size: 24px;
+
+      font-weight: bold;
+    }
+
+
+    /* =========================================================
+       GOLDEN RULE PIPELINE
+    ========================================================= */
+
+    .pipeline {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(
+            120px,
+            1fr
+          )
+        );
+
+      gap: 8px;
+
+      margin-top: 12px;
+    }
+
+
+    .pipeline-stage {
+
+      padding: 12px;
+
+      text-align: center;
+
+      border-radius: 8px;
+
+      border: 1px solid #29415e;
+
+      background:
+        #081522;
+
+      font-weight: bold;
+
+      font-size: 13px;
+    }
+
+
+    .pipeline-stage.active {
+
+      background:
+        #234d6b;
+
+      border-color:
+        #72b8ed;
+    }
+
+
+    /* =========================================================
+       SCENARIO INTENSITY
+    ========================================================= */
+
+    .intensity-control {
+
+      width: 100%;
+
+      margin-top: 12px;
+    }
+
+
+    .intensity-value {
+
+      font-size: 20px;
+
+      font-weight: bold;
+
+      margin-top: 8px;
+    }
+
+
+    /* =========================================================
+       AUTHORITY BOX
+    ========================================================= */
+
+    .authority-box {
+
+      padding: 16px;
+
+      border-radius: 10px;
+
+      border: 1px solid #66532c;
+
+      background:
+        #211b10;
+    }
+
+
+    /* =========================================================
+       SOLUTION BOX
+    ========================================================= */
+
+    .solution {
+
+      padding: 16px;
+
+      margin-top: 12px;
+
+      border-radius: 10px;
+
+      border: 1px solid #29415e;
+
+      background:
+        #0a1725;
+    }
+
+
+    /* =========================================================
+       SIMULATOR BANNER
+    ========================================================= */
+
+    .simulator-banner {
+
+      padding: 12px;
+
+      margin: 10px 0;
+
+      border-radius: 8px;
+
+      border: 1px solid #3e607e;
+
+      background:
+        #0b2033;
+
+      text-align: center;
+
+      font-weight: bold;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (
+      max-width: 600px
+    ) {
+
+      .app {
+        padding: 10px;
+      }
+
+      .panel {
+        padding: 14px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .control-buttons {
+        flex-direction: column;
+      }
+
+    }
+
+
+    /* =========================================================
+       HIDDEN SCREEN SUPPORT
+    ========================================================= */
+
+    .hidden-screen {
+
+      display: none;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div
+    id="app"
+    class="app"
+  >
+
+    <!-- =======================================================
+         MAIN COCKPIT WILL BE BUILT IN THE FOLLOWING PARTS
+    ======================================================== -->
+
+    <div
+      id="mainCockpit"
+    >
+
+      <!-- PART 1 FOUNDATION -->
+
+      <div class="header">
+
+        <h1>
+          🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+        </h1>
+
+        <h2>
+          Captain AI Lena Autonomous Agent Core
+        </h2>
+
+        <div class="system-banner">
+
+          DATA → ALGORITHMS → COMPUTE
+
+          <br>
+
+          OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+          <br>
+
+          AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="title">
+          🧪 SYSTEM INITIALIZATION
+        </div>
+
+        <div class="muted">
+          SPD v13.1 clean-build foundation loaded.
+        </div>
+
+        <pre id="initializationStatus">SYSTEM STATUS: INITIALIZING...</pre>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===========================================================
+       JAVASCRIPT BEGINS IN PART 2
+  ============================================================ -->
+
+  <script>
+
+    /*
+     * SPD v13.1
+     * PART 1 FOUNDATION
+     *
+     * No system logic is executed yet.
+     * The remaining deterministic engines and cockpit controls
+     * will be added in Parts 2–12.
+     */
+
+  </script>
+
+</body>
+</html>
