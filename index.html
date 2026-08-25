@@ -4338,3 +4338,201 @@ document.addEventListener(
 
 </script>
 
+<!-- ============================================================
+     SPD v13.1 — PART 8
+     ASSESSMENT LATENCY SCREEN
+     FINAL HTML UI COMPONENT
+============================================================ -->
+
+
+<!-- ============================================================
+     MAIN COCKPIT LATENCY BUTTON
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⏱️ ASSESSMENT PERFORMANCE
+  </div>
+
+  <div class="muted">
+    View the measured execution latency of the
+    SPD v13.1 local deterministic assessment engine.
+  </div>
+
+  <br>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="showLatestAssessmentLatency()">
+      📈 VIEW ASSESSMENT LATENCY
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     MAIN COCKPIT ANCHOR
+============================================================ -->
+
+<div id="mainCockpitAnchor"></div>
+
+
+<!-- ============================================================
+     ASSESSMENT LATENCY SCREEN
+     HIDDEN UNTIL BUTTON IS PRESSED
+============================================================ -->
+
+<div
+  class="panel"
+  id="assessmentLatencyPanel"
+  style="display:none;">
+
+  <div class="title">
+    ⏱️ SPD v13.1 — ASSESSMENT LATENCY
+  </div>
+
+
+  <div class="simulator-banner">
+
+    🧪 LOCAL DETERMINISTIC PERFORMANCE SCREEN
+
+    <br>
+
+    NO BACKEND CONNECTION —
+    NO PHYSICAL EXECUTION
+
+  </div>
+
+
+  <!-- ==========================================================
+       LATENCY STATUS
+  =========================================================== -->
+
+  <div class="status">
+
+    ASSESSMENT LATENCY MEASUREMENT
+
+  </div>
+
+
+  <!-- ==========================================================
+       LATENCY RESULT
+  =========================================================== -->
+
+  <pre id="assessmentLatencyScreen">Waiting for assessment...</pre>
+
+
+  <!-- ==========================================================
+       LATENCY EXPLANATION
+  =========================================================== -->
+
+  <div class="solution">
+
+    <strong>ASSESSMENT LATENCY</strong>
+
+    <br><br>
+
+    The displayed value represents the measured execution time
+    of the local SPD v13.1 assessment operation using:
+
+    <br><br>
+
+    <strong>performance.now()</strong>
+
+    <br><br>
+
+    Measurement begins when the assessment engine starts and
+    ends after the deterministic assessment result has been
+    calculated.
+
+    <br><br>
+
+    This measurement does not represent network latency,
+    spacecraft latency, sensor latency, or physical actuator
+    response time.
+
+  </div>
+
+
+  <!-- ==========================================================
+       LATENCY CONTROLS
+  =========================================================== -->
+
+  <br>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="showLatestAssessmentLatency()">
+      🔄 REFRESH LATEST LATENCY
+    </button>
+
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="clearAssessmentLatencyDisplay()">
+      🧹 CLEAR DISPLAY
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="closeAssessmentLatency()">
+      ← RETURN TO MAIN COCKPIT
+    </button>
+
+  </div>
+
+
+  <!-- ==========================================================
+       PERFORMANCE INTEGRITY
+  =========================================================== -->
+
+  <br>
+
+  <div class="authority-box">
+
+    <strong>
+      PERFORMANCE MEASUREMENT INTEGRITY
+    </strong>
+
+    <br><br>
+
+    <pre id="assessmentLatencyIntegrity">{
+  "measurement": "performance.now()",
+  "executionMode": "LOCAL_DETERMINISTIC",
+  "backendConnection": false,
+  "physicalExecution": false,
+  "humanAuthorizationRequired": true
+}</pre>
+
+  </div>
+
+
+  <!-- ==========================================================
+       RETURN ANCHOR
+  =========================================================== -->
+
+  <div id="latencyReturnAnchor"></div>
+
+</div>
+
+
+<!-- ============================================================
+     END PART 8
+
+     NEXT:
+     PART 9 — FINAL DECISION CORE +
+     HUMAN AUTHORITY +
+     TRIAL MANOEUVRE +
+     MEMORY +
+     AUDIT
+============================================================ -->
