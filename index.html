@@ -1885,7 +1885,157 @@ function runGoldenRulePipeline() {
   );
 }
 
-HHH ============================================================
+/* ============================================================
+   ASSESSMENT ENGINE
+   SPD v13.1 — ASSESSMENT LATENCY INSTRUMENTATION
+============================================================ */
+
+function calculateAssessment(state) {
+
+  /* ==========================================================
+     ASSESSMENT LATENCY START
+  ========================================================== */
+
+  const assessmentStart =
+    performance.now();
+
+  /* ==========================================================
+     RAW STRESS CALCULATION
+  ========================================================== */
+
+  const rawStress =
+    (
+      state.fx * 0.25 +
+      state.energy * 0.20 +
+      state.cyb * 0.20 +
+      state.inf * 0.20 +
+      state.dc * 0.15
+    );
+
+  /* ==========================================================
+     GOLDEN SCORE
+  ========================================================== */
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  /* ==========================================================
+     RESILIENCE SCORE
+  ========================================================== */
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  /* ==========================================================
+     RISK CLASSIFICATION
+  ========================================================== */
+
+  let risk;
+
+  if (goldenScore < 30) {
+
+    risk = "LOW";
+
+  }
+  else if (goldenScore < 50) {
+
+    risk = "MEDIUM";
+
+  }
+  else {
+
+    risk = "HIGH";
+  }
+
+  /* ==========================================================
+     SEVERITY
+  ========================================================== */
+
+  const severity =
+    risk === "HIGH"
+      ? "HIGH"
+      : risk === "MEDIUM"
+        ? "MEDIUM"
+        : "LOW";
+
+  /* ==========================================================
+     DOMAIN ASSESSMENT
+  ========================================================== */
+
+  const domainResult =
+    calculateDomainAssessment(state);
+
+  /* ==========================================================
+     ASSESSMENT LATENCY END
+     Measures the complete assessment operation.
+  ========================================================== */
+
+  const assessmentEnd =
+    performance.now();
+
+  const assessmentLatencyMs =
+    Number(
+      (assessmentEnd - assessmentStart)
+        .toFixed(3)
+    );
+
+  /* ==========================================================
+     AUTHORITATIVE ASSESSMENT RESULT
+  ========================================================== */
+
+  const result = {
+
+    rawStress:
+      Number(
+        rawStress.toFixed(3)
+      ),
+
+    goldenScore:
+      Number(
+        goldenScore.toFixed(3)
+      ),
+
+    resilienceScore:
+      Number(
+        resilienceScore.toFixed(3)
+      ),
+
+    risk:
+      risk,
+
+    severity:
+      severity,
+
+    assessmentLatencyMs:
+      assessmentLatencyMs,
+
+    latencyUnit:
+      "ms",
+
+    latencyMeasurement:
+      "performance.now()",
+
+    assessmentEngine:
+      "SPD v13.1 LOCAL DETERMINISTIC ASSESSMENT ENGINE",
+
+    domainAssessment:
+      domainResult
+  };
+
+  /* ==========================================================
+     DISPLAY DOMAIN ASSESSMENT
+  ========================================================== */
+
+  setJSON(
+    "domainAssessment",
+    domainResult
+  );
+
+  return result;
+} ============================================================
    DOMAIN ASSESSMENT
 ============================================================ */
 
