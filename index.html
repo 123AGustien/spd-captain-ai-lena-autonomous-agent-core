@@ -872,4 +872,300 @@ SYSTEM STATUS: READY
      NEXT:
      PART 3 — FIN + DC + CYB DOMAINS
 ============================================================ -->==================== -->
+<!-- ============================================================
+     SPD v13.1 — PART 3
+     FIN + DC + CYB DOMAIN CONTROLS
+============================================================ -->
+
+
+<!-- ============================================================
+     FIN DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    💰 FIN — FINANCIAL RESILIENCE
+  </div>
+
+  <div class="muted">
+
+    Local simulator engine: FINRuleEngine
+
+    <br>
+
+    FIN scenarios are processed through the
+    local Domain Integration Layer.
+
+  </div>
+
+  <br>
+
+  <div class="fin-controls">
+
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('FIN_STRESS')"
+    >
+      FIN STRESS
+    </button>
+
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('BANKING_STRESS')"
+    >
+      BANKING STRESS
+    </button>
+
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('LIQUIDITY_CRISIS')"
+    >
+      LIQUIDITY CRISIS
+    </button>
+
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('CREDIT_STRESS')"
+    >
+      CREDIT STRESS
+    </button>
+
+
+    <button
+      type="button"
+      class="fin-button"
+      onclick="activateScenario('SOVEREIGN_DEBT')"
+    >
+      SOVEREIGN DEBT
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     DC DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🏢 DC — DATA CENTRE RESILIENCE
+  </div>
+
+  <div class="muted">
+    Local simulator engine: DCRuleEngine
+  </div>
+
+  <br>
+
+  <div class="dc-controls">
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('COOLING_FAILURE')"
+    >
+      DC — COOLING FAILURE
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('POWER_INSTABILITY')"
+    >
+      DC — POWER INSTABILITY
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('NETWORK_CONGESTION')"
+    >
+      DC — NETWORK CONGESTION
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('COMPUTE_LOAD_SPIKE')"
+    >
+      DC — COMPUTE LOAD SPIKE
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('BLACKOUT_RECOVERY')"
+    >
+      DC — BLACKOUT RECOVERY
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('COOLING_RECOVERY_FAILURE')"
+    >
+      DC — COOLING RECOVERY FAILURE
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('NETWORK_HARDWARE_FAILURE')"
+    >
+      DC — NETWORK HARDWARE FAILURE
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('STORAGE_DEGRADATION')"
+    >
+      DC — STORAGE DEGRADATION
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('COOLING_LOAD_SATURATION')"
+    >
+      DC — COOLING LOAD SATURATION
+    </button>
+
+
+    <button
+      type="button"
+      class="dc-button"
+      onclick="activateScenario('MULTI_SYSTEM_CASCADE')"
+    >
+      DC — MULTI-SYSTEM CASCADE
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     CYBER DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛡️ CYB — CYBER RESILIENCE
+  </div>
+
+  <div class="muted">
+    Local simulator engine: CYBRuleEngine
+  </div>
+
+  <br>
+
+  <div class="cyb-controls">
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('DATA_BREACH_CREDENTIAL_LEAK')"
+    >
+      CYB — DATA BREACH / CREDENTIAL LEAK
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('DDOS')"
+    >
+      CYB — DDOS
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('INSIDER_THREAT')"
+    >
+      CYB — INSIDER THREAT
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('API_ABUSE_TOKEN_MISUSE')"
+    >
+      CYB — API ABUSE / TOKEN MISUSE
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('SUPPLY_CHAIN_CYBER_COMPROMISE')"
+    >
+      CYB — SUPPLY CHAIN CYBER COMPROMISE
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('CLOUD_MISCONFIGURATION_EXPOSURE')"
+    >
+      CYB — CLOUD MISCONFIGURATION EXPOSURE
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('IDENTITY_PROVIDER_OUTAGE')"
+    >
+      CYB — IDENTITY PROVIDER OUTAGE
+    </button>
+
+
+    <button
+      type="button"
+      class="cyb-button"
+      onclick="activateScenario('MULTI_VECTOR_COORDINATED_CYBER_ATTACK')"
+    >
+      CYB — MULTI-VECTOR COORDINATED CYBER ATTACK
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     PART 3 COMPLETE
+     NEXT:
+     PART 4 — SCENARIO CONTROL + INTENSITY +
+     SCENARIO PANEL + RAW SYSTEM STATE
+============================================================ -->
+
 
