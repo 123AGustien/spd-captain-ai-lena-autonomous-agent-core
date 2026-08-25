@@ -5979,3 +5979,630 @@ initializeFinalIntegrity();
 ============================================================ */
 
 </script>
+<!-- ============================================================
+     SPD v13.1 — PART 12
+     FINAL COCKPIT OUTPUT PANELS
+     FINAL SAFETY DECLARATION
+     FINAL DOCUMENT CLOSURE
+============================================================ -->
+
+
+<!-- ============================================================
+     SCENARIO PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧪 SCENARIO PANEL
+  </div>
+
+  <pre id="scenarioPanel">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     RAW SYSTEM STATE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 RAW SYSTEM STATE
+  </div>
+
+  <pre id="rawState">
+Waiting...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧭 GOLDEN RULE PIPELINE
+  </div>
+
+  <div class="pipeline">
+
+    <div
+      id="stageOBSERVE"
+      class="pipeline-stage">
+      OBSERVE
+    </div>
+
+    <div
+      id="stageVERIFY"
+      class="pipeline-stage">
+      VERIFY
+    </div>
+
+    <div
+      id="stageASSESS"
+      class="pipeline-stage">
+      ASSESS
+    </div>
+
+    <div
+      id="stageDECIDE"
+      class="pipeline-stage">
+      DECIDE
+    </div>
+
+    <div
+      id="stageACT"
+      class="pipeline-stage">
+      ACT
+    </div>
+
+    <div
+      id="stageUPDATE"
+      class="pipeline-stage">
+      UPDATE
+    </div>
+
+  </div>
+
+  <pre id="pipeline">
+{
+  "pipeline":
+    "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+  "status":
+    "WAITING"
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 SYSTEM ASSESSMENT
+  </div>
+
+  <pre id="assessment">
+Waiting for assessment...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     RISK / RESILIENCE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚠️ RISK / RESILIENCE
+  </div>
+
+  <pre id="riskPanel">
+{
+  "risk": "NOT ASSESSED",
+  "resilienceScore": null,
+  "goldenScore": null,
+  "assessmentLatencyMs": null
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     DOMAIN ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔌 DOMAIN ASSESSMENT
+  </div>
+
+  <pre id="domainAssessment">
+Waiting for domain assessment...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     ACTION PROMPT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚙️ ACTION PROMPT
+  </div>
+
+  <pre id="actions">
+Waiting for action recommendation...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     DECISION CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 CAPTAIN AI LENA — DECISION CORE
+  </div>
+
+  <div class="simulator-banner">
+
+    AI DECISION SUPPORT
+
+    <br>
+
+    HUMAN OPERATOR RETAINS FINAL AUTHORITY
+
+  </div>
+
+  <pre id="decision">
+Waiting for assessment...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧭 SOLUTION OPTIONS
+  </div>
+
+  <div
+    id="solutionOptions"
+    class="solution">
+
+    Waiting for decision...
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     TRIAL MANOEUVRE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛰️ TRIAL MANOEUVRE
+  </div>
+
+  <div class="muted">
+
+    Generate a proposed manoeuvre using the current
+    deterministic assessment.
+
+    <br><br>
+
+    <strong>
+      Trial mode only — no physical execution.
+    </strong>
+
+  </div>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="runTrialManoeuvre()">
+
+      🛰️ RUN TRIAL MANOEUVRE
+
+    </button>
+
+  </div>
+
+
+  <div class="status">
+
+    MANOEUVRE ENGINE STATUS
+
+  </div>
+
+
+  <pre id="trialManoeuvre">
+{
+  "engine": "ManoeuvreEngineV1",
+  "mode": "TRIAL_MANOEUVRE",
+  "status": "WAITING"
+}
+  </pre>
+
+
+  <div class="authority-box">
+
+    <strong>
+      TRIAL EXECUTION SAFETY
+    </strong>
+
+    <br><br>
+
+    This manoeuvre is generated for simulation and
+    decision-support purposes only.
+
+    <br><br>
+
+    <strong>
+      NO AUTOMATIC PHYSICAL EXECUTION
+    </strong>
+
+    <br><br>
+
+    Human authorization remains mandatory.
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 MEMORY CORE
+  </div>
+
+  <div class="muted">
+    MemoryCoreV1 — LOCAL SIMULATOR MEMORY
+  </div>
+
+  <pre id="memory">
+{
+  "core": "MemoryCoreV1",
+  "status": "WAITING"
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     AUDIT CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📋 AUDIT CORE
+  </div>
+
+  <div class="muted">
+    AuditCoreV1 — DETERMINISTIC LOCAL AUDIT
+  </div>
+
+  <pre id="audit">
+{
+  "core": "AuditCoreV1",
+  "records": [],
+  "recordCount": 0
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE LOG
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📜 GOLDEN RULE PIPELINE LOG
+  </div>
+
+  <pre id="pipelineLog">
+Pipeline log initialized.
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM INTEGRITY
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛡️ SPD v13.1 SYSTEM INTEGRITY
+  </div>
+
+  <pre id="systemIntegrity">
+System integrity verification pending...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     FINAL COCKPIT STATUS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🟢 FINAL COCKPIT STATUS
+  </div>
+
+  <pre id="finalCockpitStatus">
+{
+  "system": "SPD v13.1",
+  "status": "READY",
+  "armStatus": "DISARMED",
+  "assessment": "WAITING",
+  "decision": "WAITING",
+  "trialManoeuvre": "WAITING",
+  "humanAuthority": "PENDING",
+  "execution": "HUMAN AUTHORIZATION REQUIRED"
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     EXECUTION SAFETY DECLARATION
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔒 EXECUTION SAFETY DECLARATION
+  </div>
+
+  <div class="authority-box">
+
+    <strong>
+      SPD v13.1 — HUMAN AUTHORITY PRINCIPLE
+    </strong>
+
+    <br><br>
+
+    Captain AI Lena provides deterministic decision support.
+
+    <br><br>
+
+    AI recommendations do not constitute autonomous
+    physical commands.
+
+    <br><br>
+
+    Recovery execution requires explicit authorization
+    from the Mission Controller.
+
+    <br><br>
+
+    <strong>
+      AI DECISION SUPPORT
+      →
+      HUMAN DECISION
+      →
+      AUTHORIZED ACTION
+    </strong>
+
+    <br><br>
+
+    Backend connection:
+    <strong>FALSE</strong>
+
+    <br>
+
+    Physical execution:
+    <strong>FALSE</strong>
+
+    <br>
+
+    Automatic recovery:
+    <strong>DISABLED</strong>
+
+    <br>
+
+    Human authorization:
+    <strong>REQUIRED</strong>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     FINAL SYSTEM CONTROL PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎛️ FINAL SYSTEM CONTROLS
+  </div>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="runSystem()">
+
+      ▶ RUN SYSTEM
+
+    </button>
+
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="runSelfTest()">
+
+      🧪 RUN SELF-TEST
+
+    </button>
+
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="runSelfTestCorrective()">
+
+      🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+
+    </button>
+
+
+    <button
+      type="button"
+      onclick="runDomainIntegrationTest()">
+
+      🔌 RUN DOMAIN INTEGRATION TEST
+
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="showLatestAssessmentLatency()">
+
+      ⏱️ ASSESSMENT LATENCY
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     FINAL DOCUMENT INITIALIZATION
+============================================================ -->
+
+<script>
+
+(function initializeFinalCockpit() {
+
+  setText(
+    "initializationStatus",
+    "SYSTEM STATUS: READY"
+  );
+
+
+  setJSON(
+    "rawState",
+    currentState
+  );
+
+
+  setJSON(
+    "scenarioPanel",
+    {
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      status:
+        "READY"
+    }
+  );
+
+
+  setJSON(
+    "systemIntegrity",
+    {
+
+      system:
+        SYSTEM_VERSION,
+
+      executionMode:
+        "LOCAL_DETERMINISTIC_EXECUTION",
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false,
+
+      automaticRecovery:
+        false,
+
+      humanAuthorizationRequired:
+        true,
+
+      result:
+        "SYSTEM READY"
+
+    }
+  );
+
+
+  updateFinalCockpitStatus();
+
+
+  addPipelineLog(
+    "Final cockpit interface initialized."
+  );
+
+})();
+
+</script>
+
+
+<!-- ============================================================
+     FINAL HTML CLOSURE
+============================================================ -->
+
+</div>
+
+</body>
+
+</html>
