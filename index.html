@@ -3078,3 +3078,435 @@ function clearAssessmentLatencyDisplay() {
 ============================================================ */
 
 </script>
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 6
+   CAPTAIN AI LENA DECISION CORE
+   DECISION SUPPORT ONLY
+   HUMAN AUTHORIZATION REQUIRED
+============================================================ */
+
+
+/* ============================================================
+   GENERATE DECISION
+============================================================ */
+
+function generateDecision(
+  assessment
+) {
+
+  if (!assessment) {
+
+    return {
+
+      status:
+        "WAITING",
+
+      decision:
+        null,
+
+      reason:
+        "Assessment required before decision generation.",
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    };
+
+  }
+
+
+  let recommendation;
+
+  let priority;
+
+
+  /* ==========================================================
+     RISK-BASED DECISION SUPPORT
+  ========================================================== */
+
+  if (assessment.risk === "HIGH") {
+
+    recommendation =
+      "ENTER_PROTECTIVE_SAFE_STATE";
+
+    priority =
+      "CRITICAL";
+
+  }
+
+  else if (
+    assessment.risk === "MEDIUM"
+  ) {
+
+    recommendation =
+      "MAINTAIN_SAFE_STATE_AND_REQUEST_DIAGNOSTICS";
+
+    priority =
+      "HIGH";
+
+  }
+
+  else {
+
+    recommendation =
+      "CONTINUE_MONITORED_OPERATION";
+
+    priority =
+      "NORMAL";
+
+  }
+
+
+  const decision = {
+
+    core:
+      "Captain AI Lena Decision Core",
+
+    status:
+      "DECISION_SUPPORT_READY",
+
+    scenario:
+      assessment.scenario,
+
+    risk:
+      assessment.risk,
+
+    severity:
+      assessment.severity,
+
+    recommendation:
+      recommendation,
+
+    priority:
+      priority,
+
+    dominantDomain:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantDomain
+        : "NONE",
+
+    resilienceScore:
+      assessment.resilienceScore,
+
+    goldenScore:
+      assessment.goldenScore,
+
+    rationale:
+      "Decision generated from the validated local deterministic assessment.",
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    automaticExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+
+  currentDecision =
+    decision;
+
+
+  return decision;
+
+}
+
+
+/* ============================================================
+   GENERATE ACTION PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+) {
+
+  if (
+    !assessment ||
+    !decision
+  ) {
+
+    return (
+      "Waiting for assessment and decision."
+    );
+
+  }
+
+
+  return (
+
+    "Captain AI Lena recommendation: " +
+
+    decision.recommendation +
+
+    ". " +
+
+    "Priority: " +
+
+    decision.priority +
+
+    ". " +
+
+    "Human Mission Controller authorization is required before any recovery action."
+
+  );
+
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function updateSolutionOptions(
+  assessment,
+  decision
+) {
+
+  const element =
+    document.getElementById(
+      "solutionOptions"
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  if (
+    !assessment ||
+    !decision
+  ) {
+
+    element.textContent =
+      "Waiting for decision...";
+
+    return;
+
+  }
+
+
+  const options = {
+
+    scenario:
+      assessment.scenario,
+
+    recommendedOption:
+      decision.recommendation,
+
+    availableOptions: [
+
+      "AUTHORIZE RECOVERY",
+
+      "MAINTAIN SAFE STATE",
+
+      "REQUEST ADDITIONAL DIAGNOSTICS",
+
+      "ABORT RECOVERY",
+
+      "ESCALATE TO MISSION AUTHORITY"
+
+    ],
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    automaticExecution:
+      false
+
+  };
+
+
+  element.textContent =
+    JSON.stringify(
+      options,
+      null,
+      2
+    );
+
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+============================================================ */
+
+function recordHumanDecision(
+  decision
+) {
+
+  const validDecisions = [
+
+    "AUTHORIZE_RECOVERY",
+
+    "MAINTAIN_SAFE_STATE",
+
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+    "ABORT_RECOVERY",
+
+    "ESCALATE_TO_MISSION_AUTHORITY"
+
+  ];
+
+
+  if (
+    !validDecisions.includes(
+      decision
+    )
+  ) {
+
+    return {
+
+      status:
+        "INVALID_DECISION",
+
+      decision:
+        decision
+
+    };
+
+  }
+
+
+  humanDecisionAuthority = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "DECISION_RECORDED",
+
+    decision:
+      decision,
+
+    timestamp:
+      new Date().toISOString(),
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+
+  setJSON(
+    "humanAuthority",
+    humanDecisionAuthority
+  );
+
+
+  updateAudit(
+    "HUMAN_DECISION_RECORDED",
+    humanDecisionAuthority
+  );
+
+
+  updateMemory(
+    humanDecisionAuthority,
+    currentAssessment
+  );
+
+
+  addPipelineLog(
+    "Human Mission Controller decision recorded: " +
+    decision
+  );
+
+
+  return humanDecisionAuthority;
+
+}
+
+
+/* ============================================================
+   HUMAN AUTHORITY BUTTON HANDLERS
+============================================================ */
+
+function authorizeRecovery() {
+
+  return recordHumanDecision(
+    "AUTHORIZE_RECOVERY"
+  );
+
+}
+
+
+function maintainSafeState() {
+
+  return recordHumanDecision(
+    "MAINTAIN_SAFE_STATE"
+  );
+
+}
+
+
+function requestDiagnostics() {
+
+  return recordHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS"
+  );
+
+}
+
+
+function abortRecovery() {
+
+  return recordHumanDecision(
+    "ABORT_RECOVERY"
+  );
+
+}
+
+
+function escalateMissionAuthority() {
+
+  return recordHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  );
+
+}
+
+
+/* ============================================================
+   DECISION CORE STATUS
+============================================================ */
+
+function updateDecisionCoreDisplay() {
+
+  if (!currentDecision) {
+
+    setText(
+      "decision",
+      "Waiting for assessment..."
+    );
+
+    return;
+
+  }
+
+
+  setJSON(
+    "decision",
+    currentDecision
+  );
+
+}
+
+
+/* ============================================================
+   END PART 6
+   NEXT:
+   PART 7 — GOLDEN RULE PIPELINE
+   OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+============================================================ */
+
+</script>
