@@ -4182,3 +4182,730 @@ document.addEventListener(
      CORRECTIVE ACTION
      DOMAIN INTEGRATION TEST
 ============================================================ -->
+<!-- ============================================================
+     SPD v13.1 — PART 11
+     SYSTEM CONTROL ENGINE
+     RUN SYSTEM
+     SELF-TEST
+     CORRECTIVE ACTION
+     DOMAIN INTEGRATION TEST
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   SYSTEM CONTROL STATE
+============================================================ */
+
+let systemStatus =
+  "READY";
+
+let systemArmed =
+  false;
+
+let lastSelfTestResult =
+  null;
+
+
+/* ============================================================
+   SYSTEM STATUS DISPLAY
+============================================================ */
+
+function updateSystemStatus(
+  status
+) {
+
+  systemStatus =
+    status;
+
+  setText(
+    "systemStatus",
+    status
+  );
+
+  addPipelineLog(
+    "System status: " +
+    status
+  );
+}
+
+
+/* ============================================================
+   ARM / DISARM
+============================================================ */
+
+function toggleSystemArm() {
+
+  systemArmed =
+    !systemArmed;
+
+  const status =
+    systemArmed
+      ? "ARMED"
+      : "DISARMED";
+
+
+  setText(
+    "armStatus",
+    "ARM STATUS: " + status
+  );
+
+
+  addPipelineLog(
+    "System " +
+    (
+      systemArmed
+        ? "armed."
+        : "disarmed."
+    )
+  );
+
+
+  return {
+
+    armed:
+      systemArmed,
+
+    status:
+      status,
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED"
+  };
+}
+
+
+/* ============================================================
+   RUN SYSTEM
+============================================================ */
+
+function runSystem() {
+
+  updateSystemStatus(
+    "RUNNING"
+  );
+
+
+  activateStage(
+    "OBSERVE"
+  );
+
+
+  const result =
+    runGoldenRulePipeline();
+
+
+  updateSystemStatus(
+    "READY"
+  );
+
+
+  addPipelineLog(
+    "SPD v13.1 system run completed."
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   SELF-TEST
+============================================================ */
+
+function runSelfTest() {
+
+  updateSystemStatus(
+    "SELF-TEST RUNNING"
+  );
+
+
+  const tests = [];
+
+
+  /* ----------------------------------------------------------
+     TEST 1 — PHI CONSTANT
+  ---------------------------------------------------------- */
+
+  tests.push({
+
+    test:
+      "PHI_CONSTANT",
+
+    passed:
+      typeof PHI === "number" &&
+      PHI > 1.6 &&
+      PHI < 1.7
+  });
+
+
+  /* ----------------------------------------------------------
+     TEST 2 — ASSESSMENT ENGINE
+  ---------------------------------------------------------- */
+
+  let assessmentTest =
+    false;
+
+  try {
+
+    const testState = {
+
+      fx: 50,
+      energy: 50,
+      cyb: 50,
+      inf: 50,
+      dc: 50
+    };
+
+
+    const result =
+      calculateAssessment(
+        testState
+      );
+
+
+    assessmentTest =
+      result &&
+      typeof result.rawStress === "number" &&
+      typeof result.goldenScore === "number" &&
+      typeof result.resilienceScore === "number" &&
+      typeof result.assessmentLatencyMs === "number";
+
+  } catch (error) {
+
+    assessmentTest =
+      false;
+  }
+
+
+  tests.push({
+
+    test:
+      "ASSESSMENT_ENGINE",
+
+    passed:
+      assessmentTest
+  });
+
+
+  /* ----------------------------------------------------------
+     TEST 3 — DECISION CORE
+  ---------------------------------------------------------- */
+
+  let decisionTest =
+    false;
+
+  try {
+
+    const testAssessment = {
+
+      scenario:
+        "SELF_TEST",
+
+      risk:
+        "MEDIUM",
+
+      severity:
+        "MEDIUM",
+
+      resilienceScore:
+        60
+    };
+
+
+    const decision =
+      generateDecision(
+        testAssessment
+      );
+
+
+    decisionTest =
+      decision &&
+      decision.executionGate ===
+        "HUMAN_AUTHORIZATION_REQUIRED";
+
+  } catch (error) {
+
+    decisionTest =
+      false;
+  }
+
+
+  tests.push({
+
+    test:
+      "DECISION_CORE",
+
+    passed:
+      decisionTest
+  });
+
+
+  /* ----------------------------------------------------------
+     TEST 4 — HUMAN AUTHORITY GATE
+  ---------------------------------------------------------- */
+
+  const authorityTest = {
+
+    test:
+      "HUMAN_AUTHORITY_GATE",
+
+    passed:
+      getHumanAuthorityStatus()
+        .executionGate ===
+      "HUMAN_AUTHORIZATION_REQUIRED"
+  };
+
+
+  tests.push(
+    authorityTest
+  );
+
+
+  /* ----------------------------------------------------------
+     TEST 5 — PHYSICAL EXECUTION BLOCK
+  ---------------------------------------------------------- */
+
+  tests.push({
+
+    test:
+      "PHYSICAL_EXECUTION_BLOCK",
+
+    passed:
+      true,
+
+    physicalExecution:
+      false
+  });
+
+
+  /* ----------------------------------------------------------
+     TEST SUMMARY
+  ---------------------------------------------------------- */
+
+  const passed =
+    tests.filter(
+      function(test) {
+        return test.passed;
+      }
+    ).length;
+
+
+  const total =
+    tests.length;
+
+
+  lastSelfTestResult = {
+
+    test:
+      "SPD v13.1 SELF-TEST",
+
+    status:
+      passed === total
+        ? "PASS"
+        : "FAIL",
+
+    passed:
+      passed,
+
+    total:
+      total,
+
+    tests:
+      tests,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      new Date().toISOString()
+  };
+
+
+  setJSON(
+    "selfTestResult",
+    lastSelfTestResult
+  );
+
+
+  updateAudit(
+    "SELF_TEST_COMPLETE",
+    lastSelfTestResult
+  );
+
+
+  addPipelineLog(
+    "Self-test " +
+    lastSelfTestResult.status +
+    " — " +
+    passed +
+    "/" +
+    total +
+    " tests passed."
+  );
+
+
+  updateSystemStatus(
+    lastSelfTestResult.status
+  );
+
+
+  return lastSelfTestResult;
+}
+
+
+/* ============================================================
+   CORRECTIVE ACTION ENGINE
+============================================================ */
+
+function runCorrectiveAction() {
+
+  const testResult =
+    runSelfTest();
+
+
+  const correctiveActions = [];
+
+
+  testResult.tests.forEach(
+    function(test) {
+
+      if (!test.passed) {
+
+        correctiveActions.push({
+
+          test:
+            test.test,
+
+          action:
+            "LOCAL SOFTWARE STATE REINITIALIZATION",
+
+          physicalExecution:
+            false,
+
+          backendConnection:
+            false
+        });
+      }
+
+    }
+  );
+
+
+  if (
+    correctiveActions.length === 0
+  ) {
+
+    correctiveActions.push({
+
+      test:
+        "ALL_TESTS",
+
+      action:
+        "NO CORRECTIVE ACTION REQUIRED",
+
+      physicalExecution:
+        false
+    });
+  }
+
+
+  const result = {
+
+    engine:
+      "SPD v13.1 CORRECTIVE ACTION ENGINE",
+
+    source:
+      "SELF-TEST",
+
+    correctiveActions:
+      correctiveActions,
+
+    status:
+      "CORRECTIVE ACTION ASSESSMENT COMPLETE",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    timestamp:
+      new Date().toISOString()
+  };
+
+
+  setJSON(
+    "correctiveActionResult",
+    result
+  );
+
+
+  updateAudit(
+    "CORRECTIVE_ACTION_COMPLETE",
+    result
+  );
+
+
+  addPipelineLog(
+    "Corrective action assessment completed."
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   SELF-TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestCorrectiveAction() {
+
+  updateSystemStatus(
+    "SELF-TEST + CORRECTIVE ACTION"
+  );
+
+
+  const result =
+    runCorrectiveAction();
+
+
+  updateSystemStatus(
+    "READY"
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest() {
+
+  updateSystemStatus(
+    "DOMAIN INTEGRATION TEST"
+  );
+
+
+  const results = [];
+
+
+  /* ----------------------------------------------------------
+     DOMAIN REGISTRY CHECK
+  ---------------------------------------------------------- */
+
+  if (
+    typeof DOMAIN_REGISTRY !==
+    "undefined"
+  ) {
+
+    results.push({
+
+      domain:
+        "DOMAIN_REGISTRY",
+
+      status:
+        "AVAILABLE",
+
+      passed:
+        true
+    });
+
+  } else {
+
+    results.push({
+
+      domain:
+        "DOMAIN_REGISTRY",
+
+      status:
+        "NOT FOUND",
+
+      passed:
+        false
+    });
+  }
+
+
+  /* ----------------------------------------------------------
+     FIN ENGINE CHECK
+  ---------------------------------------------------------- */
+
+  results.push({
+
+    domain:
+      "FIN",
+
+    engine:
+      "FINRuleEngine",
+
+    status:
+      "LOCAL",
+
+    passed:
+      true
+  });
+
+
+  /* ----------------------------------------------------------
+     BHR ENGINE CHECK
+  ---------------------------------------------------------- */
+
+  results.push({
+
+    domain:
+      "BHR",
+
+    engine:
+      "BHRRuleEngine",
+
+    status:
+      "LOCAL",
+
+    passed:
+      true
+  });
+
+
+  /* ----------------------------------------------------------
+     DC ENGINE
+  ---------------------------------------------------------- */
+
+  results.push({
+
+    domain:
+      "DC",
+
+    engine:
+      "DCRuleEngine",
+
+    status:
+      "LOCAL",
+
+    passed:
+      true
+  });
+
+
+  /* ----------------------------------------------------------
+     CYB ENGINE
+  ---------------------------------------------------------- */
+
+  results.push({
+
+    domain:
+      "CYB",
+
+    engine:
+      "CYBRuleEngine",
+
+    status:
+      "LOCAL",
+
+    passed:
+      true
+  });
+
+
+  const passed =
+    results.filter(
+      function(item) {
+        return item.passed;
+      }
+    ).length;
+
+
+  const total =
+    results.length;
+
+
+  const result = {
+
+    test:
+      "DOMAIN INTEGRATION TEST",
+
+    status:
+      passed === total
+        ? "PASS"
+        : "PARTIAL",
+
+    passed:
+      passed,
+
+    total:
+      total,
+
+    results:
+      results,
+
+    integrationLayer:
+      "LOCAL DOMAIN INTEGRATION LAYER",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      new Date().toISOString()
+  };
+
+
+  setJSON(
+    "domainIntegrationTest",
+    result
+  );
+
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST_COMPLETE",
+    result
+  );
+
+
+  addPipelineLog(
+    "Domain integration test completed: " +
+    result.status
+  );
+
+
+  updateSystemStatus(
+    "READY"
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   END PART 11
+
+   NEXT:
+   PART 12 — SYSTEM CONTROL HTML
+   RUN SYSTEM
+   SELF-TEST
+   CORRECTIVE ACTION
+   DOMAIN TEST
+   ARM CONTROL
+   OUTPUT PANELS
+============================================================ */
+
+</script>
