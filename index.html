@@ -1724,3 +1724,915 @@ applyScenarioState();
 ============================================================ */
 
 </script>
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 4
+   DOMAIN MONITOR + DOMAIN RULE ENGINES
+   LOCAL DOMAIN INTEGRATION LAYER
+============================================================ */
+
+
+/* ============================================================
+   DOMAIN ENGINE REGISTRY
+============================================================ */
+
+const DOMAIN_ENGINES = {
+
+  FIN: {
+    id: "FINRuleEngine",
+    domain: "FIN",
+    status: "CONNECTED"
+  },
+
+  BHR: {
+    id: "BHRRuleEngine",
+    domain: "BHR",
+    status: "CONNECTED"
+  },
+
+  DC: {
+    id: "DCRuleEngine",
+    domain: "DC",
+    status: "CONNECTED"
+  },
+
+  CYB: {
+    id: "CYBRuleEngine",
+    domain: "CYB",
+    status: "CONNECTED"
+  },
+
+  ENERGY: {
+    id: "EnergyRuleEngine",
+    domain: "ENERGY",
+    status: "CONNECTED"
+  },
+
+  INF: {
+    id: "INFRuleEngine",
+    domain: "INF",
+    status: "CONNECTED"
+  }
+
+};
+
+
+/* ============================================================
+   DOMAIN SCENARIO DEFINITIONS
+============================================================ */
+
+const DOMAIN_SCENARIOS = {
+
+  BHR: [
+
+    "BHR — HUMAN RIGHTS DUE DILIGENCE",
+    "BHR — FORCED LABOUR",
+    "BHR — CHILD LABOUR",
+    "BHR — DISCRIMINATION",
+    "BHR — OCCUPATIONAL HEALTH & SAFETY",
+    "BHR — MODERN SLAVERY",
+    "BHR — COMMUNITY IMPACT",
+    "BHR — INDIGENOUS RIGHTS",
+    "BHR — SUPPLY CHAIN RISK",
+    "BHR — GRIEVANCE MECHANISM"
+
+  ],
+
+  FIN: [
+
+    "FIN — BANKING STRESS",
+    "FIN — LIQUIDITY CRISIS",
+    "FIN — CREDIT STRESS",
+    "FIN — SOVEREIGN DEBT"
+
+  ],
+
+  DC: [
+
+    "DC — COOLING FAILURE",
+    "DC — POWER INSTABILITY",
+    "DC — NETWORK CONGESTION",
+    "DC — COMPUTE LOAD SPIKE",
+    "DC — BLACKOUT RECOVERY",
+    "DC — COOLING RECOVERY FAILURE",
+    "DC — NETWORK HARDWARE FAILURE",
+    "DC — STORAGE DEGRADATION",
+    "DC — COOLING LOAD SATURATION",
+    "DC — MULTI-SYSTEM CASCADE"
+
+  ],
+
+  CYB: [
+
+    "CYB — DATA BREACH / CREDENTIAL LEAK",
+    "CYB — DDOS",
+    "CYB — INSIDER THREAT",
+    "CYB — API ABUSE / TOKEN MISUSE",
+    "CYB — SUPPLY CHAIN CYBER COMPROMISE",
+    "CYB — CLOUD MISCONFIGURATION EXPOSURE",
+    "CYB — IDENTITY PROVIDER OUTAGE",
+    "CYB — MULTI-VECTOR COORDINATED CYBER ATTACK"
+
+  ]
+
+};
+
+
+/* ============================================================
+   DOMAIN RESULT HELPER
+============================================================ */
+
+function createDomainResult(
+  domain,
+  scenario,
+  stress,
+  status
+) {
+
+  return {
+
+    domain:
+      domain,
+
+    scenario:
+      scenario,
+
+    stress:
+      Number(
+        clampValue(
+          stress,
+          0,
+          100
+        ).toFixed(3)
+      ),
+
+    status:
+      status,
+
+    engine:
+      DOMAIN_ENGINES[domain]
+        ? DOMAIN_ENGINES[domain].id
+        : "LOCAL_DOMAIN_ENGINE",
+
+    executionMode:
+      "LOCAL_DETERMINISTIC",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+}
+
+
+/* ============================================================
+   FIN DOMAIN ENGINE
+============================================================ */
+
+function executeFINRule(
+  scenario,
+  intensity
+) {
+
+  return createDomainResult(
+    "FIN",
+    scenario,
+    intensity,
+    "FINANCIAL RESILIENCE ASSESSMENT COMPLETE"
+  );
+
+}
+
+
+/* ============================================================
+   BHR DOMAIN ENGINE
+============================================================ */
+
+function executeBHRRule(
+  scenario,
+  intensity
+) {
+
+  let status =
+    "BHR RESILIENCE ASSESSMENT COMPLETE";
+
+
+  if (intensity >= 70) {
+
+    status =
+      "BHR HIGH-RISK REVIEW REQUIRED";
+
+  } else if (intensity >= 40) {
+
+    status =
+      "BHR ENHANCED DUE DILIGENCE REQUIRED";
+
+  }
+
+
+  return createDomainResult(
+    "BHR",
+    scenario,
+    intensity,
+    status
+  );
+
+}
+
+
+/* ============================================================
+   DATA CENTRE DOMAIN ENGINE
+============================================================ */
+
+function executeDCRule(
+  scenario,
+  intensity
+) {
+
+  return createDomainResult(
+    "DC",
+    scenario,
+    intensity,
+    "DATA CENTRE RESILIENCE ASSESSMENT COMPLETE"
+  );
+
+}
+
+
+/* ============================================================
+   CYBER DOMAIN ENGINE
+============================================================ */
+
+function executeCYBRule(
+  scenario,
+  intensity
+) {
+
+  return createDomainResult(
+    "CYB",
+    scenario,
+    intensity,
+    "CYBER RESILIENCE ASSESSMENT COMPLETE"
+  );
+
+}
+
+
+/* ============================================================
+   ENERGY DOMAIN ENGINE
+============================================================ */
+
+function executeEnergyRule(
+  scenario,
+  intensity
+) {
+
+  return createDomainResult(
+    "ENERGY",
+    scenario,
+    intensity,
+    "ENERGY RESILIENCE ASSESSMENT COMPLETE"
+  );
+
+}
+
+
+/* ============================================================
+   INFRASTRUCTURE DOMAIN ENGINE
+============================================================ */
+
+function executeINFRule(
+  scenario,
+  intensity
+) {
+
+  return createDomainResult(
+    "INF",
+    scenario,
+    intensity,
+    "INFRASTRUCTURE RESILIENCE ASSESSMENT COMPLETE"
+  );
+
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION LAYER
+============================================================ */
+
+function executeDomainRule(
+  domain,
+  scenario,
+  intensity
+) {
+
+  const safeIntensity =
+    clampValue(
+      Number(intensity),
+      0,
+      100
+    );
+
+
+  switch (domain) {
+
+    case "FIN":
+
+      return executeFINRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    case "BHR":
+
+      return executeBHRRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    case "DC":
+
+      return executeDCRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    case "CYB":
+
+      return executeCYBRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    case "ENERGY":
+
+      return executeEnergyRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    case "INF":
+
+      return executeINFRule(
+        scenario,
+        safeIntensity
+      );
+
+
+    default:
+
+      return {
+
+        domain:
+          domain,
+
+        status:
+          "DOMAIN ENGINE NOT REGISTERED",
+
+        executionMode:
+          "LOCAL_DETERMINISTIC",
+
+        backendConnection:
+          false,
+
+        physicalExecution:
+          false
+
+      };
+
+  }
+
+}
+
+
+/* ============================================================
+   DOMAIN INPUT VERIFICATION
+============================================================ */
+
+function verifyDomainInput(
+  domain,
+  scenario,
+  intensity
+) {
+
+  const validDomain =
+    Boolean(
+      DOMAIN_ENGINES[domain]
+    );
+
+
+  const validIntensity =
+    Number.isFinite(
+      Number(intensity)
+    ) &&
+    Number(intensity) >= 0 &&
+    Number(intensity) <= 100;
+
+
+  return {
+
+    verified:
+      validDomain &&
+      validIntensity,
+
+    domain:
+      domain,
+
+    scenario:
+      scenario,
+
+    intensity:
+      Number(intensity),
+
+    engineRegistered:
+      validDomain,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest() {
+
+  const domains =
+    Object.keys(
+      DOMAIN_ENGINES
+    );
+
+
+  const results = [];
+
+
+  domains.forEach(
+    function(domain) {
+
+      const verification =
+        verifyDomainInput(
+          domain,
+          currentScenario,
+          scenarioIntensity
+        );
+
+
+      if (!verification.verified) {
+
+        results.push({
+
+          domain:
+            domain,
+
+          status:
+            "FAILED",
+
+          verification:
+            verification
+
+        });
+
+        return;
+
+      }
+
+
+      const result =
+        executeDomainRule(
+          domain,
+          currentScenario,
+          scenarioIntensity
+        );
+
+
+      results.push(
+        result
+      );
+
+    }
+  );
+
+
+  const passed =
+    results.filter(
+      function(result) {
+
+        return (
+          result.status &&
+          result.status !== "DOMAIN ENGINE NOT REGISTERED"
+        );
+
+      }
+    ).length;
+
+
+  domainIntegrationTestResult = {
+
+    test:
+      "DOMAIN INTEGRATION TEST",
+
+    status:
+      passed === domains.length
+        ? "PASS"
+        : "PARTIAL",
+
+    domainsTested:
+      domains.length,
+
+    domainsPassed:
+      passed,
+
+    results:
+      results,
+
+    integrationLayer:
+      "LOCAL DOMAIN INTEGRATION LAYER",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+
+  setJSON(
+    "domainIntegrationTest",
+    domainIntegrationTestResult
+  );
+
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    domainIntegrationTestResult
+  );
+
+
+  addPipelineLog(
+    "Domain integration test completed: " +
+    domainIntegrationTestResult.status
+  );
+
+
+  return domainIntegrationTestResult;
+
+}
+
+
+/* ============================================================
+   BUILD DOMAIN MONITOR
+============================================================ */
+
+function buildDomainMonitor() {
+
+  const main =
+    document.getElementById(
+      "mainCockpit"
+    );
+
+  if (!main) {
+    return;
+  }
+
+
+  const panel =
+    document.createElement(
+      "div"
+    );
+
+  panel.className =
+    "panel";
+
+
+  panel.innerHTML = `
+
+    <div class="title">
+      📊 SYSTEM DOMAIN MONITOR
+    </div>
+
+    <div class="domain-grid">
+
+      <div class="domain-card">
+        <div class="domain-name">FX</div>
+        <div
+          class="domain-value"
+          id="domain_FX">
+          0
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-name">DC</div>
+        <div
+          class="domain-value"
+          id="domain_DC">
+          0
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-name">CYB</div>
+        <div
+          class="domain-value"
+          id="domain_CYB">
+          0
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-name">INF</div>
+        <div
+          class="domain-value"
+          id="domain_INF">
+          0
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-name">EN / ENERGY</div>
+        <div
+          class="domain-value"
+          id="domain_ENERGY">
+          0
+        </div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="title">
+      🔌 DOMAIN INTEGRATION LAYER
+    </div>
+
+    <div class="simulator-banner">
+
+      COCKPIT
+      ↓
+      LOCAL DOMAIN INTEGRATION
+      ↓
+      LOCAL DOMAIN RULE ENGINE
+      ↓
+      CAPTAIN AI LENA DECISION CORE
+      ↓
+      GOLDEN RULE PIPELINE
+      ↓
+      RESULT / MEMORY / AUDIT
+
+    </div>
+
+    <div class="control-buttons">
+
+      <button
+        type="button"
+        onclick="runDomainIntegrationTest()">
+        🔌 RUN DOMAIN INTEGRATION TEST
+      </button>
+
+    </div>
+
+    <pre id="domainIntegrationTest">
+Domain integration test not executed.
+    </pre>
+
+  `;
+
+
+  main.appendChild(
+    panel
+  );
+
+}
+
+
+/* ============================================================
+   BUILD DOMAIN SCENARIO PANELS
+============================================================ */
+
+function buildDomainScenarioPanel(
+  domain,
+  title,
+  description
+) {
+
+  const main =
+    document.getElementById(
+      "mainCockpit"
+    );
+
+  if (!main) {
+    return;
+  }
+
+
+  const scenarios =
+    DOMAIN_SCENARIOS[domain] || [];
+
+
+  const panel =
+    document.createElement(
+      "div"
+    );
+
+  panel.className =
+    "panel";
+
+
+  let buttons = "";
+
+
+  scenarios.forEach(
+    function(scenario) {
+
+      const escaped =
+        scenario
+          .replace(
+            /\\/g,
+            "\\\\"
+          )
+          .replace(
+            /'/g,
+            "\\'"
+          );
+
+
+      buttons += `
+
+        <button
+          type="button"
+          onclick="executeSelectedDomainScenario(
+            '${domain}',
+            '${escaped}'
+          )">
+
+          ${scenario}
+
+        </button>
+
+      `;
+
+    }
+  );
+
+
+  panel.innerHTML = `
+
+    <div class="title">
+      ${title}
+    </div>
+
+    <div class="muted">
+      ${description}
+    </div>
+
+    <div class="control-buttons">
+
+      ${buttons}
+
+    </div>
+
+    <pre id="${domain}ScenarioResult">
+Waiting for ${domain} scenario...
+    </pre>
+
+  `;
+
+
+  main.appendChild(
+    panel
+  );
+
+}
+
+
+/* ============================================================
+   EXECUTE SELECTED DOMAIN SCENARIO
+============================================================ */
+
+function executeSelectedDomainScenario(
+  domain,
+  scenario
+) {
+
+  const verification =
+    verifyDomainInput(
+      domain,
+      scenario,
+      scenarioIntensity
+    );
+
+
+  if (!verification.verified) {
+
+    setJSON(
+      domain + "ScenarioResult",
+      {
+
+        status:
+          "DOMAIN INPUT VERIFICATION FAILED",
+
+        verification:
+          verification
+
+      }
+    );
+
+    return;
+
+  }
+
+
+  const result =
+    executeDomainRule(
+      domain,
+      scenario,
+      scenarioIntensity
+    );
+
+
+  setJSON(
+    domain + "ScenarioResult",
+    result
+  );
+
+
+  updateAudit(
+    "DOMAIN_SCENARIO_EXECUTED",
+    result
+  );
+
+
+  addPipelineLog(
+    domain +
+    " scenario executed: " +
+    scenario
+  );
+
+
+  return result;
+
+}
+
+
+/* ============================================================
+   BUILD DOMAIN UI
+============================================================ */
+
+buildDomainMonitor();
+
+
+buildDomainScenarioPanel(
+  "BHR",
+  "⚖️ BHR — BUSINESS & HUMAN RIGHTS RESILIENCE",
+  "Local simulator engine: BHRRuleEngine"
+);
+
+
+buildDomainScenarioPanel(
+  "FIN",
+  "💰 FIN — FINANCIAL RESILIENCE",
+  "Local simulator engine: FINRuleEngine. FIN scenarios are processed through the local Domain Integration Layer."
+);
+
+
+buildDomainScenarioPanel(
+  "DC",
+  "🏢 DC — DATA CENTRE RESILIENCE",
+  "Local simulator engine: DCRuleEngine"
+);
+
+
+buildDomainScenarioPanel(
+  "CYB",
+  "🛡️ CYB — CYBER RESILIENCE",
+  "Local simulator engine: CYBRuleEngine"
+);
+
+
+/* ============================================================
+   END PART 4
+   NEXT:
+   PART 5 — ASSESSMENT ENGINE + LATENCY INSTRUMENTATION
+============================================================ */
+
+</script>
