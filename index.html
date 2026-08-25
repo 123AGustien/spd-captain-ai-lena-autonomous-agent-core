@@ -5237,3 +5237,315 @@ Waiting for decision...
   </pre>
 
 </div>
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 10
+   MEMORY CORE + AUDIT CORE + GOLDEN RULE PIPELINE LOG
+============================================================ */
+
+
+/* ============================================================
+   MEMORY CORE DISPLAY
+============================================================ */
+
+function refreshMemoryDisplay() {
+
+  setJSON(
+    "memory",
+    memoryCore
+  );
+
+}
+
+
+/* ============================================================
+   AUDIT CORE DISPLAY
+============================================================ */
+
+function refreshAuditDisplay() {
+
+  setJSON(
+    "audit",
+    auditCore
+  );
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE DISPLAY
+============================================================ */
+
+function refreshPipelineLogDisplay() {
+
+  const element =
+    document.getElementById(
+      "pipelineLog"
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  element.textContent =
+    pipelineLog.join("\n");
+
+}
+
+
+/* ============================================================
+   CLEAR PIPELINE LOG
+============================================================ */
+
+function clearPipelineLog() {
+
+  pipelineLog = [
+
+    "Pipeline log initialized."
+
+  ];
+
+
+  refreshPipelineLogDisplay();
+
+
+  addPipelineLog(
+    "Pipeline log cleared and reinitialized."
+  );
+
+}
+
+
+/* ============================================================
+   CLEAR AUDIT CORE
+============================================================ */
+
+function clearAuditCore() {
+
+  auditCore = {
+
+    core:
+      "AuditCoreV1",
+
+    status:
+      "READY",
+
+    records:
+      []
+
+  };
+
+
+  refreshAuditDisplay();
+
+
+  addPipelineLog(
+    "Audit Core cleared."
+  );
+
+}
+
+
+/* ============================================================
+   MEMORY CORE STATUS
+============================================================ */
+
+function getMemoryCoreStatus() {
+
+  return {
+
+    core:
+      memoryCore.core,
+
+    status:
+      memoryCore.status,
+
+    recordCount:
+      memoryCore.records.length,
+
+    local:
+      true,
+
+    backendConnection:
+      false
+
+  };
+
+}
+
+
+/* ============================================================
+   AUDIT CORE STATUS
+============================================================ */
+
+function getAuditCoreStatus() {
+
+  return {
+
+    core:
+      auditCore.core,
+
+    status:
+      auditCore.status,
+
+    recordCount:
+      auditCore.records.length,
+
+    local:
+      true,
+
+    backendConnection:
+      false
+
+  };
+
+}
+
+
+/* ============================================================
+   PIPELINE STATUS
+============================================================ */
+
+function getPipelineStatus() {
+
+  return {
+
+    pipeline:
+      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+
+    stageCount:
+      GOLDEN_RULE_STAGES.length,
+
+    stages:
+      GOLDEN_RULE_STAGES,
+
+    local:
+      true,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    humanAuthorizationRequired:
+      true
+
+  };
+
+}
+
+
+/* ============================================================
+   INITIAL DISPLAY
+============================================================ */
+
+refreshMemoryDisplay();
+
+refreshAuditDisplay();
+
+refreshPipelineLogDisplay();
+
+
+/* ============================================================
+   END PART 10
+
+   NEXT:
+   PART 11 — FINAL COCKPIT OUTPUT PANELS +
+   SYSTEM ASSESSMENT + RISK +
+   DOMAIN ASSESSMENT + ACTION +
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+</script>
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 MEMORY CORE
+  </div>
+
+  <div class="muted">
+    MemoryCoreV1 — LOCAL SIMULATOR MEMORY
+  </div>
+
+  <pre id="memory">
+{
+  "core": "MemoryCoreV1",
+  "status": "WAITING"
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     AUDIT CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📋 AUDIT CORE
+  </div>
+
+  <div class="muted">
+    AuditCoreV1 — DETERMINISTIC LOCAL AUDIT
+  </div>
+
+  <pre id="audit">
+{
+  "core": "AuditCoreV1",
+  "records": [],
+  "recordCount": 0
+}
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE LOG
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📜 GOLDEN RULE PIPELINE LOG
+  </div>
+
+  <pre id="pipelineLog">
+Pipeline log initialized.
+  </pre>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="refreshPipelineLogDisplay()"
+    >
+      🔄 REFRESH LOG
+    </button>
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="clearPipelineLog()"
+    >
+      🧹 CLEAR LOG
+    </button>
+
+  </div>
+
+</div>
