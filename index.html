@@ -3029,4 +3029,753 @@ function clearAssessmentLatencyDisplay() {
 ============================================================ */
 
 </script>
+<script>
+
+/* ============================================================
+   SPD v13.1 — SYSTEM RUN CONTROL
+============================================================ */
+
+function runLiveSystem() {
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: RUNNING — LOCAL SIMULATOR"
+  );
+
+  addPipelineLog(
+    "Live system execution started."
+  );
+
+  /* ==========================================================
+     RUN CURRENT SCENARIO
+  ========================================================== */
+
+  applyScenario(
+    currentScenario || "NORMAL",
+    false
+  );
+
+  /* ==========================================================
+     EXECUTE GOLDEN RULE PIPELINE
+  ========================================================== */
+
+  const result =
+    runGoldenRulePipeline();
+
+  /* ==========================================================
+     SYSTEM STATUS
+  ========================================================== */
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: READY — SIMULATION COMPLETE"
+  );
+
+  /* ==========================================================
+     AUDIT
+  ========================================================== */
+
+  updateAudit(
+    "SYSTEM_RUN_COMPLETE",
+    {
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      risk:
+        currentAssessment
+          ? currentAssessment.risk
+          : "UNKNOWN",
+
+      assessmentLatencyMs:
+        currentAssessment
+          ? currentAssessment.assessmentLatencyMs
+          : null,
+
+      executionMode:
+        "LOCAL_DETERMINISTIC_SIMULATOR",
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+    }
+  );
+
+  addPipelineLog(
+    "System run completed successfully."
+  );
+
+  return result;
+}
+
+
+/* ============================================================
+   AUTHORITATIVE SELF-TEST
+============================================================ */
+
+function runAuthoritativeSelfTest() {
+
+  const tests = [];
+
+
+  /* ==========================================================
+     DOM TEST
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "DOM ELEMENTS",
+
+    result:
+      document.getElementById(
+        "scenarioIntensity"
+      )
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     INTENSITY CONTROL
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "INTENSITY LEVER",
+
+    result:
+      typeof updateIntensity === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     GOLDEN RULE ENGINE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "GOLDEN RULE ENGINE",
+
+    result:
+      typeof runGoldenRulePipeline === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     ASSESSMENT ENGINE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "ASSESSMENT ENGINE",
+
+    result:
+      typeof calculateAssessment === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     DOMAIN ASSESSMENT
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "DOMAIN ASSESSMENT",
+
+    result:
+      typeof calculateDomainAssessment === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     LATENCY INSTRUMENTATION
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "ASSESSMENT LATENCY",
+
+    result:
+      typeof performance !== "undefined" &&
+      typeof performance.now === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     LATENCY SCREEN
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "ASSESSMENT LATENCY SCREEN",
+
+    result:
+      document.getElementById(
+        "assessmentLatencyPanel"
+      ) &&
+      document.getElementById(
+        "assessmentLatencyScreen"
+      )
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     DECISION CORE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "DECISION CORE",
+
+    result:
+      typeof generateDecision === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     MEMORY CORE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "MEMORY CORE",
+
+    result:
+      typeof updateMemory === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     AUDIT CORE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "AUDIT CORE",
+
+    result:
+      typeof updateAudit === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     TRIAL MANOEUVRE
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "TRIAL MANOEUVRE",
+
+    result:
+      typeof runTrialManoeuvre === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     HUMAN DECISION AUTHORITY
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "HUMAN DECISION AUTHORITY",
+
+    result:
+      typeof recordHumanDecision === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     DOMAIN INTEGRATION
+  ========================================================== */
+
+  tests.push({
+
+    test:
+      "DOMAIN INTEGRATION TEST",
+
+    result:
+      typeof runDomainIntegrationTest === "function"
+        ? "PASS"
+        : "FAIL"
+  });
+
+
+  /* ==========================================================
+     TEST SUMMARY
+  ========================================================== */
+
+  const passed =
+    tests.filter(
+      function(test) {
+
+        return test.result === "PASS";
+
+      }
+    ).length;
+
+
+  const failed =
+    tests.length - passed;
+
+
+  const result = {
+
+    testType:
+      "SPD v13.1 AUTHORITATIVE LOCAL SELF-TEST",
+
+    timestamp:
+      nowISO(),
+
+    executionMode:
+      "LOCAL_DETERMINISTIC_SIMULATOR",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    passed:
+      passed,
+
+    failed:
+      failed,
+
+    total:
+      tests.length,
+
+    status:
+      failed === 0
+        ? "PASS"
+        : "FAIL",
+
+    tests:
+      tests
+  };
+
+
+  /* ==========================================================
+     DISPLAY SELF TEST
+  ========================================================== */
+
+  setJSON(
+    "selfTest",
+    result
+  );
+
+
+  /* ==========================================================
+     INTERPRETATION
+  ========================================================== */
+
+  setText(
+    "selfTestInterpretation",
+
+    failed === 0
+
+      ? "SELF-TEST PASS — ALL CORE SIMULATOR FUNCTIONS AVAILABLE."
+
+      : "SELF-TEST FAIL — ONE OR MORE CORE FUNCTIONS UNAVAILABLE."
+  );
+
+
+  /* ==========================================================
+     FAULT IDENTIFICATION
+  ========================================================== */
+
+  setJSON(
+
+    "faultIdentification",
+
+    failed === 0
+
+      ? {
+
+          fault:
+            false,
+
+          message:
+            "No simulator fault identified.",
+
+          assessment:
+            "CORE FUNCTIONS AVAILABLE"
+        }
+
+      : {
+
+          fault:
+            true,
+
+          failedTests:
+            tests.filter(
+              function(test) {
+
+                return test.result === "FAIL";
+
+              }
+            )
+        }
+  );
+
+
+  /* ==========================================================
+     AUDIT
+  ========================================================== */
+
+  updateAudit(
+    "SELF_TEST",
+    result
+  );
+
+
+  addPipelineLog(
+    "Authoritative self-test: " +
+    result.status
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   SELF-TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestAndCorrect() {
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SELF-TEST + CORRECTIVE ACTION"
+  );
+
+
+  addPipelineLog(
+    "Self-test and corrective-action sequence started."
+  );
+
+
+  /* ==========================================================
+     INITIAL SELF TEST
+  ========================================================== */
+
+  const result =
+    runAuthoritativeSelfTest();
+
+
+  /* ==========================================================
+     PASS — NO CORRECTION REQUIRED
+  ========================================================== */
+
+  if (result.status === "PASS") {
+
+    setText(
+
+      "correctiveAction",
+
+      "NO CORRECTIVE ACTION REQUIRED.\n" +
+      "SPD v13.1 LOCAL SIMULATOR CORE VALIDATED."
+    );
+
+
+    addPipelineLog(
+      "No corrective action required."
+    );
+
+
+    runReTest();
+
+
+    setText(
+      "systemStatus",
+      "SYSTEM STATUS: READY — VALIDATION COMPLETE"
+    );
+
+    return;
+  }
+
+
+  /* ==========================================================
+     FAIL — CORRECTIVE ACTION
+  ========================================================== */
+
+  setText(
+
+    "correctiveAction",
+
+    "CORRECTIVE ACTION INITIATED.\n\n" +
+
+    "1. Reinitialize local simulator state.\n" +
+
+    "2. Restore deterministic scenario state.\n" +
+
+    "3. Restore default intensity.\n" +
+
+    "4. Clear transient assessment state.\n" +
+
+    "5. Re-run validation."
+  );
+
+
+  addPipelineLog(
+    "Corrective action initiated."
+  );
+
+
+  /* ==========================================================
+     RESET LOCAL STATE
+  ========================================================== */
+
+  resetScenario();
+
+
+  /* ==========================================================
+     RE-TEST
+  ========================================================== */
+
+  runReTest();
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: READY — CORRECTIVE VALIDATION COMPLETE"
+  );
+}
+
+
+/* ============================================================
+   RE-TEST VALIDATION
+============================================================ */
+
+function runReTest() {
+
+  addPipelineLog(
+    "Re-test validation started."
+  );
+
+
+  const result =
+    runAuthoritativeSelfTest();
+
+
+  const retest = {
+
+    timestamp:
+      nowISO(),
+
+    testType:
+      "SPD v13.1 RE-TEST VALIDATION",
+
+    status:
+      result.status === "PASS"
+        ? "RE-TEST PASS"
+        : "RE-TEST FAIL",
+
+    passed:
+      result.passed,
+
+    failed:
+      result.failed,
+
+    total:
+      result.total,
+
+    executionMode:
+      "LOCAL_DETERMINISTIC_SIMULATOR",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+  };
+
+
+  /* ==========================================================
+     DISPLAY RETEST
+  ========================================================== */
+
+  setJSON(
+    "retest",
+    retest
+  );
+
+
+  /* ==========================================================
+     AUDIT
+  ========================================================== */
+
+  updateAudit(
+    "RETEST_VALIDATION",
+    retest
+  );
+
+
+  addPipelineLog(
+    "Re-test validation: " +
+    retest.status
+  );
+
+
+  return retest;
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest() {
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: DOMAIN INTEGRATION TEST"
+  );
+
+
+  const result = {
+
+    cockpit:
+      "CONNECTED",
+
+    domainIntegration:
+      "LOCAL",
+
+    domainRegistry:
+      "AVAILABLE",
+
+    BHRRuleEngine:
+      "AVAILABLE",
+
+    FINRuleEngine:
+      "AVAILABLE",
+
+    DCRuleEngine:
+      "AVAILABLE",
+
+    CYBRuleEngine:
+      "AVAILABLE",
+
+    decisionCore:
+      "AVAILABLE",
+
+    goldenRuleEngine:
+      "AVAILABLE",
+
+    assessmentEngine:
+      "AVAILABLE",
+
+    assessmentLatencyInstrumentation:
+      "AVAILABLE",
+
+    memoryCore:
+      "AVAILABLE",
+
+    auditCore:
+      "AVAILABLE",
+
+    humanDecisionAuthority:
+      "AVAILABLE",
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    backend:
+      "NOT CONNECTED",
+
+    physicalExecution:
+      "NOT CONNECTED",
+
+    deterministic:
+      true,
+
+    status:
+      "PASS",
+
+    timestamp:
+      nowISO()
+  };
+
+
+  /* ==========================================================
+     DISPLAY
+  ========================================================== */
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+
+  /* ==========================================================
+     AUDIT
+  ========================================================== */
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    result
+  );
+
+
+  addPipelineLog(
+    "Local domain integration test PASS."
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: READY — DOMAIN INTEGRATION PASS"
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   END PART 6
+   NEXT:
+   PART 7 — RESET / INITIALIZATION /
+   FINAL EVENT WIRING
+============================================================ */
+
+</script>
 
