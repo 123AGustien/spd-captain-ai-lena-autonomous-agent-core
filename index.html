@@ -1494,8 +1494,122 @@ function activateStage(stage){
     }
   });
 }
+function runGoldenRulePipeline(){
 
-hhhhj ============================================================
+  activateStage("OBSERVE");
+
+  const observed = {...currentState};
+
+  activateStage("VERIFY");
+
+  const verification = {
+    verified: true,
+    deterministic: true,
+    backendConnected: false,
+    scenario: currentScenario
+  };
+
+  activateStage("ASSESS");
+
+  currentAssessment =
+    calculateAssessmentWithLatency(observed);
+
+  /* SYSTEM ASSESSMENT */
+  setJSON(
+    "assessment",
+    currentAssessment
+  );
+
+  /* RISK PANEL */
+  setJSON(
+    "riskPanel",
+    {
+      risk:
+        currentAssessment.risk ??
+        currentAssessment.riskLevel ??
+        "UNKNOWN",
+
+      resilienceScore:
+        currentAssessment.resilienceScore ??
+        "N/A",
+
+      goldenScore:
+        currentAssessment.goldenScore ??
+        "N/A"
+    }
+  );
+
+  activateStage("DECIDE");
+
+  const decision =
+    generateDecision(currentAssessment);
+
+  /* CAPTAIN AI LENA DECISION */
+  setJSON(
+    "decision",
+    decision
+  );
+
+  activateStage("ACT");
+
+  const actionPrompt =
+    generateActionPrompt(
+      currentAssessment,
+      decision
+    );
+
+  /* ACTION SEQUENCE */
+  setText(
+    "actions",
+    actionPrompt
+  );
+
+  activateStage("UPDATE");
+
+  updateMemory(
+    decision,
+    currentAssessment
+  );
+
+  const result = {
+    pipeline:
+      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    observed,
+
+    verification,
+
+    assessment:
+      currentAssessment,
+
+    decision,
+
+    actionPrompt,
+
+    execution:
+      "HUMAN AUTHORIZATION REQUIRED"
+  };
+
+  setJSON(
+    "pipeline",
+    result
+  );
+
+  updateAudit(
+    "GOLDEN_RULE_PIPELINE_COMPLETE",
+    result
+  );
+
+  addPipelineLog(
+    "Golden Rule pipeline completed."
+  );
+} ============================================================
    ASSESSMENT
 ============================================================ */
 
