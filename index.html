@@ -4056,3 +4056,448 @@ updateSystemStatusDisplay();
 ============================================================ */
 
 </script>
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 8
+   ASSESSMENT LATENCY SCREEN
+   OPEN / REFRESH / CLEAR / RETURN
+============================================================ */
+
+
+/* ============================================================
+   ASSESSMENT LATENCY DISPLAY
+============================================================ */
+
+function updateAssessmentLatencyDisplay(
+  assessment
+) {
+
+  const output =
+    assessment &&
+    typeof assessment.assessmentLatencyMs === "number"
+      ? {
+
+          screen:
+            "SPD v13.1 ASSESSMENT LATENCY",
+
+          scenario:
+            assessment.scenario,
+
+          latency:
+            assessment.assessmentLatencyMs,
+
+          unit:
+            assessment.latencyUnit,
+
+          measurement:
+            assessment.latencyMeasurement,
+
+          engine:
+            assessment.assessmentEngine,
+
+          deterministic:
+            true,
+
+          backendConnection:
+            false,
+
+          physicalExecution:
+            false,
+
+          humanAuthorizationRequired:
+            true,
+
+          result:
+            "ASSESSMENT LATENCY MEASURED"
+
+        }
+      : {
+
+          screen:
+            "SPD v13.1 ASSESSMENT LATENCY",
+
+          status:
+            "WAITING",
+
+          message:
+            "Run a scenario first to generate assessment latency data.",
+
+          deterministic:
+            true,
+
+          backendConnection:
+            false,
+
+          physicalExecution:
+            false
+
+        };
+
+
+  setJSON(
+    "assessmentLatencyScreen",
+    output
+  );
+
+
+  setJSON(
+    "assessmentLatencyIntegrity",
+    {
+
+      measurement:
+        "performance.now()",
+
+      executionMode:
+        "LOCAL_DETERMINISTIC",
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false,
+
+      humanAuthorizationRequired:
+        true
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   OPEN ASSESSMENT LATENCY SCREEN
+============================================================ */
+
+function openAssessmentLatency() {
+
+  const panel =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+
+  if (!panel) {
+    return;
+  }
+
+
+  panel.style.display =
+    "block";
+
+
+  if (currentAssessment) {
+
+    updateAssessmentLatencyDisplay(
+      currentAssessment
+    );
+
+  } else {
+
+    updateAssessmentLatencyDisplay(
+      null
+    );
+
+  }
+
+
+  panel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+
+  addPipelineLog(
+    "Assessment latency screen opened."
+  );
+
+}
+
+
+/* ============================================================
+   CLOSE ASSESSMENT LATENCY SCREEN
+============================================================ */
+
+function closeAssessmentLatency() {
+
+  const panel =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+
+  if (!panel) {
+    return;
+  }
+
+
+  panel.style.display =
+    "none";
+
+
+  const cockpit =
+    document.getElementById(
+      "mainCockpit"
+    );
+
+
+  if (cockpit) {
+
+    cockpit.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }
+
+
+  addPipelineLog(
+    "Assessment latency screen closed."
+  );
+
+}
+
+
+/* ============================================================
+   SHOW LATEST ASSESSMENT LATENCY
+============================================================ */
+
+function showLatestAssessmentLatency() {
+
+  openAssessmentLatency();
+
+
+  if (currentAssessment) {
+
+    updateAssessmentLatencyDisplay(
+      currentAssessment
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   CLEAR LATENCY DISPLAY
+============================================================ */
+
+function clearAssessmentLatencyDisplay() {
+
+  setJSON(
+    "assessmentLatencyScreen",
+    {
+
+      screen:
+        "SPD v13.1 ASSESSMENT LATENCY",
+
+      status:
+        "DISPLAY CLEARED",
+
+      message:
+        "Run the system again to generate a new measurement.",
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+
+  addPipelineLog(
+    "Assessment latency display cleared."
+  );
+
+}
+
+
+/* ============================================================
+   INITIAL LATENCY DISPLAY
+============================================================ */
+
+updateAssessmentLatencyDisplay(
+  currentAssessment
+);
+
+
+/* ============================================================
+   END PART 8
+
+   NEXT:
+   PART 9 — HUMAN DECISION AUTHORITY +
+   DECISION CORE +
+   TRIAL MANOEUVRE
+============================================================ */
+
+</script>
+
+
+<!-- ============================================================
+     SPD v13.1 — ASSESSMENT PERFORMANCE
+============================================================ -->
+
+<div
+  class="panel"
+  id="assessmentPerformancePanel"
+>
+
+  <div class="title">
+    ⏱️ ASSESSMENT PERFORMANCE
+  </div>
+
+  <div class="muted">
+
+    View the measured execution latency of the
+    SPD v13.1 local deterministic assessment engine.
+
+  </div>
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="showLatestAssessmentLatency()"
+    >
+      📈 VIEW ASSESSMENT LATENCY
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     ASSESSMENT LATENCY SCREEN
+     HIDDEN UNTIL OPENED
+============================================================ -->
+
+<div
+  class="panel"
+  id="assessmentLatencyPanel"
+  style="display:none;"
+>
+
+  <div class="title">
+    ⏱️ SPD v13.1 — ASSESSMENT LATENCY
+  </div>
+
+
+  <div class="simulator-banner">
+
+    🧪 LOCAL DETERMINISTIC PERFORMANCE SCREEN
+
+    <br>
+
+    NO BACKEND CONNECTION —
+    NO PHYSICAL EXECUTION
+
+  </div>
+
+
+  <div class="status">
+
+    ASSESSMENT LATENCY MEASUREMENT
+
+  </div>
+
+
+  <pre id="assessmentLatencyScreen">
+Waiting for assessment...
+  </pre>
+
+
+  <div class="solution">
+
+    <strong>
+      ASSESSMENT LATENCY
+    </strong>
+
+    <br><br>
+
+    The displayed value represents the measured
+    execution time of the local SPD v13.1
+    assessment operation.
+
+    <br><br>
+
+    Measurement method:
+
+    <br>
+
+    <strong>
+      performance.now()
+    </strong>
+
+    <br><br>
+
+    Measurement begins when the assessment engine
+    starts and ends after the deterministic
+    assessment result has been calculated.
+
+    <br><br>
+
+    This measurement does not represent network
+    latency, spacecraft latency, sensor latency,
+    or physical actuator response time.
+
+  </div>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="showLatestAssessmentLatency()"
+    >
+      🔄 REFRESH LATEST LATENCY
+    </button>
+
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="clearAssessmentLatencyDisplay()"
+    >
+      🧹 CLEAR DISPLAY
+    </button>
+
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="closeAssessmentLatency()"
+    >
+      ← RETURN TO MAIN COCKPIT
+    </button>
+
+  </div>
+
+
+  <div class="authority-box">
+
+    <strong>
+      PERFORMANCE MEASUREMENT INTEGRITY
+    </strong>
+
+    <br><br>
+
+    <pre id="assessmentLatencyIntegrity">
+{
+  "measurement": "performance.now()",
+  "executionMode": "LOCAL_DETERMINISTIC",
+  "backendConnection": false,
+  "physicalExecution": false,
+  "humanAuthorizationRequired": true
+}
+    </pre>
+
+  </div>
+
+</div>
