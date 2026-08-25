@@ -774,3 +774,892 @@ pre {
      NEXT:
      PART 2 — MAIN COCKPIT HTML
 ============================================================ -->
+<!-- ============================================================
+     SPD v13.1 INDEX.HTML
+     PART 2 OF 10 — MAIN COCKPIT
+============================================================ -->
+
+<!-- ============================================================
+     MAIN COCKPIT SCREEN
+============================================================ -->
+
+<div id="mainCockpit" class="screen active">
+
+<h1>
+🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</h1>
+
+<div class="subtitle">
+
+<strong>
+Captain AI Lena Autonomous Agent Core
+</strong>
+
+<br>
+
+DATA → ALGORITHMS → COMPUTE
+
+<br>
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+<br>
+
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+
+</div>
+
+<div class="simulator-banner">
+
+🧪 SELF-CONTAINED SIMULATOR —
+LOCAL DETERMINISTIC EXECUTION —
+NO BACKEND CONNECTION —
+NO PHYSICAL EXECUTION
+
+</div>
+
+<div
+  class="status"
+  id="systemStatus"
+>
+
+SYSTEM STATUS: READY
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM CONTROLS
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🎛️ SYSTEM CONTROLS
+</div>
+
+<div class="control-buttons">
+
+<button
+  type="button"
+  onclick="runLiveSystem()"
+>
+▶ RUN SYSTEM
+</button>
+
+<button
+  type="button"
+  class="self-test-button"
+  onclick="runAuthoritativeSelfTest()"
+>
+🧪 RUN SELF-TEST
+</button>
+
+<button
+  type="button"
+  class="corrective-button"
+  onclick="runSelfTestAndCorrect()"
+>
+🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+</button>
+
+<button
+  type="button"
+  onclick="runDomainIntegrationTest()"
+>
+🔌 RUN DOMAIN INTEGRATION TEST
+</button>
+
+<button
+  type="button"
+  class="latency-button"
+  onclick="showLatencyScreen()"
+>
+⏱️ ASSESSMENT LATENCY
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     HUMAN DECISION AUTHORITY
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧑‍✈️ HUMAN DECISION AUTHORITY
+</div>
+
+<div class="authority-box">
+
+<strong>
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+</strong>
+
+<br>
+<br>
+
+<div class="execution-gate">
+
+🔒 EXECUTION GATE
+
+<br>
+
+No recovery or execution action is authorized automatically.
+
+<br>
+
+<strong>
+HUMAN AUTHORIZATION REQUIRED.
+</strong>
+
+</div>
+
+<br>
+
+<div class="human-decision">
+
+<pre id="humanDecisionAuthority">{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}</pre>
+
+<div class="authority-controls">
+
+<button
+  type="button"
+  class="authority-button"
+  onclick="authorizeRecovery()"
+>
+AUTHORIZE RECOVERY
+</button>
+
+<button
+  type="button"
+  class="authority-button"
+  onclick="maintainSafeState()"
+>
+MAINTAIN SAFE STATE
+</button>
+
+<button
+  type="button"
+  class="authority-button"
+  onclick="requestDiagnostics()"
+>
+REQUEST DIAGNOSTICS
+</button>
+
+<button
+  type="button"
+  class="danger"
+  onclick="abortRecovery()"
+>
+ABORT RECOVERY
+</button>
+
+<button
+  type="button"
+  class="authority-button"
+  onclick="escalateMissionAuthority()"
+>
+ESCALATE TO MISSION AUTHORITY
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM DOMAIN MONITOR
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+📊 SYSTEM DOMAIN MONITOR
+</div>
+
+<div class="monitor">
+
+<div class="domain">
+
+<div class="domain-name">
+FX
+</div>
+
+<div
+  class="domain-value"
+  id="domainFX"
+>
+0
+</div>
+
+</div>
+
+
+<div class="domain">
+
+<div class="domain-name">
+DC
+</div>
+
+<div
+  class="domain-value"
+  id="domainDC"
+>
+0
+</div>
+
+</div>
+
+
+<div class="domain">
+
+<div class="domain-name">
+CYB
+</div>
+
+<div
+  class="domain-value"
+  id="domainCYB"
+>
+0
+</div>
+
+</div>
+
+
+<div class="domain">
+
+<div class="domain-name">
+INF
+</div>
+
+<div
+  class="domain-value"
+  id="domainINF"
+>
+0
+</div>
+
+</div>
+
+
+<div class="domain">
+
+<div class="domain-name">
+EN / ENERGY
+</div>
+
+<div
+  class="domain-value"
+  id="domainEN"
+>
+0
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     DOMAIN INTEGRATION LAYER
+============================================================ -->
+
+<div class="panel domain-integration">
+
+<div class="title">
+🔌 DOMAIN INTEGRATION LAYER
+</div>
+
+<div class="muted">
+
+COCKPIT
+
+<br>
+↓
+
+LOCAL DOMAIN INTEGRATION
+
+<br>
+↓
+
+LOCAL DOMAIN RULE ENGINE
+
+<br>
+↓
+
+CAPTAIN AI LENA DECISION CORE
+
+<br>
+↓
+
+GOLDEN RULE PIPELINE
+
+<br>
+↓
+
+RESULT / MEMORY / AUDIT
+
+</div>
+
+<br>
+
+<pre id="domainIntegrationStatus">Domain integration test not executed.</pre>
+
+</div>
+
+
+<!-- ============================================================
+     BHR DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+⚖️ BHR — BUSINESS & HUMAN RIGHTS RESILIENCE
+</div>
+
+<div class="muted">
+
+Local simulator engine:
+BHRRuleEngine
+
+</div>
+
+<br>
+
+<div class="bhr-controls">
+
+<div class="bhr-label">
+BHR SCENARIOS
+</div>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')"
+>
+BHR — HUMAN RIGHTS DUE DILIGENCE
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('FORCED_LABOUR')"
+>
+BHR — FORCED LABOUR
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('CHILD_LABOUR')"
+>
+BHR — CHILD LABOUR
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('DISCRIMINATION')"
+>
+BHR — DISCRIMINATION
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')"
+>
+BHR — OCCUPATIONAL HEALTH & SAFETY
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('MODERN_SLAVERY')"
+>
+BHR — MODERN SLAVERY
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('COMMUNITY_IMPACT')"
+>
+BHR — COMMUNITY IMPACT
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('INDIGENOUS_RIGHTS')"
+>
+BHR — INDIGENOUS RIGHTS
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('SUPPLY_CHAIN_RISK')"
+>
+BHR — SUPPLY CHAIN RISK
+</button>
+
+
+<button
+  type="button"
+  class="bhr-button"
+  onclick="activateScenario('GRIEVANCE_MECHANISM')"
+>
+BHR — GRIEVANCE MECHANISM
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     FIN DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+💰 FIN — FINANCIAL RESILIENCE
+</div>
+
+<div class="muted">
+
+Local simulator engine:
+FINRuleEngine
+
+<br>
+
+FIN scenarios are processed through the
+local Domain Integration Layer.
+
+</div>
+
+<br>
+
+<div class="fin-controls">
+
+
+<button
+  type="button"
+  class="fin-button"
+  onclick="activateScenario('FIN_STRESS')"
+>
+FIN STRESS
+</button>
+
+
+<button
+  type="button"
+  class="fin-button"
+  onclick="activateScenario('BANKING_STRESS')"
+>
+BANKING STRESS
+</button>
+
+
+<button
+  type="button"
+  class="fin-button"
+  onclick="activateScenario('LIQUIDITY_CRISIS')"
+>
+LIQUIDITY CRISIS
+</button>
+
+
+<button
+  type="button"
+  class="fin-button"
+  onclick="activateScenario('CREDIT_STRESS')"
+>
+CREDIT STRESS
+</button>
+
+
+<button
+  type="button"
+  class="fin-button"
+  onclick="activateScenario('SOVEREIGN_DEBT')"
+>
+SOVEREIGN DEBT
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     DC DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🏢 DC — DATA CENTRE RESILIENCE
+</div>
+
+<div class="muted">
+
+Local simulator engine:
+DCRuleEngine
+
+</div>
+
+<br>
+
+<div class="dc-controls">
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('COOLING_FAILURE')"
+>
+DC — COOLING FAILURE
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('POWER_INSTABILITY')"
+>
+DC — POWER INSTABILITY
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('NETWORK_CONGESTION')"
+>
+DC — NETWORK CONGESTION
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('COMPUTE_LOAD_SPIKE')"
+>
+DC — COMPUTE LOAD SPIKE
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('BLACKOUT_RECOVERY')"
+>
+DC — BLACKOUT RECOVERY
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('COOLING_RECOVERY_FAILURE')"
+>
+DC — COOLING RECOVERY FAILURE
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('NETWORK_HARDWARE_FAILURE')"
+>
+DC — NETWORK HARDWARE FAILURE
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('STORAGE_DEGRADATION')"
+>
+DC — STORAGE DEGRADATION
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('COOLING_LOAD_SATURATION')"
+>
+DC — COOLING LOAD SATURATION
+</button>
+
+
+<button
+  type="button"
+  class="dc-button"
+  onclick="activateScenario('MULTI_SYSTEM_CASCADE')"
+>
+DC — MULTI-SYSTEM CASCADE
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     CYBER DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🛡️ CYB — CYBER RESILIENCE
+</div>
+
+<div class="muted">
+
+Local simulator engine:
+CYBRuleEngine
+
+</div>
+
+<br>
+
+<div class="cyb-controls">
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('DATA_BREACH_CREDENTIAL_LEAK')"
+>
+CYB — DATA BREACH / CREDENTIAL LEAK
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('DDOS')"
+>
+CYB — DDOS
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('INSIDER_THREAT')"
+>
+CYB — INSIDER THREAT
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('API_ABUSE_TOKEN_MISUSE')"
+>
+CYB — API ABUSE / TOKEN MISUSE
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('SUPPLY_CHAIN_CYBER_COMPROMISE')"
+>
+CYB — SUPPLY CHAIN CYBER COMPROMISE
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('CLOUD_MISCONFIGURATION_EXPOSURE')"
+>
+CYB — CLOUD MISCONFIGURATION EXPOSURE
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('IDENTITY_PROVIDER_OUTAGE')"
+>
+CYB — IDENTITY PROVIDER OUTAGE
+</button>
+
+
+<button
+  type="button"
+  class="cyb-button"
+  onclick="activateScenario('MULTI_VECTOR_COORDINATED_CYBER_ATTACK')"
+>
+CYB — MULTI-VECTOR COORDINATED CYBER ATTACK
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO CONTROL
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🎛️ SCENARIO CONTROL
+</div>
+
+<div class="scenario-controls">
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('NORMAL')"
+>
+NORMAL
+</button>
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('FX_SHOCK')"
+>
+FX STRESS
+</button>
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('ENERGY_SPIKE')"
+>
+ENERGY SPIKE
+</button>
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('CYBER_EVENT')"
+>
+CYBER EVENT
+</button>
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('INFRASTRUCTURE_STRESS')"
+>
+INFRA STRAIN
+</button>
+
+
+<button
+  type="button"
+  class="scenario-button"
+  onclick="activateScenario('BIODIESEL_SHORTAGE')"
+>
+BIODIESEL SHORTAGE
+</button>
+
+
+<button
+  type="button"
+  class="danger"
+  onclick="resetScenario()"
+>
+RESET
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO INTENSITY
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🎚️ SCENARIO INTENSITY CONTROL
+</div>
+
+<div class="muted">
+
+Move the lever to change deterministic simulator
+scenario intensity from 0% to 100%.
+
+</div>
+
+<br>
+
+<input
+  id="scenarioIntensity"
+  type="range"
+  min="0"
+  max="100"
+  step="1"
+  value="50"
+  oninput="updateIntensity()"
+>
+
+<div>
+
+Intensity:
+
+<span
+  class="intensity-value"
+  id="intensityValue"
+>
+50%
+</span>
+
+</div>
+
+</div>
+
+<!-- ============================================================
+     END OF PART 2
+     NEXT:
+     PART 3 — OUTPUT PANELS
+============================================================ -->
