@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</title>
+
+<style>
+
+/* ============================================================
+   SPD v13.1 — GLOBAL STYLES
+============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+
+  background: #0b0f14;
+
+  color: #00ff88;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  padding: 20px;
+
+  line-height: 1.5;
+}
+
+/* ============================================================
+   HEADINGS
+============================================================ */
+
+h1 {
+
+  color: #ffffff;
+
+  margin-top: 0;
+
+  margin-bottom: 5px;
+
+  font-size: 28px;
+}
+
+h2,
+h3 {
+
+  color: #ffffff;
+}
+
+.subtitle {
+
+  color: #aaaaaa;
+
+  margin-bottom: 20px;
+
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SIMULATOR BANNER
+============================================================ */
+
+.simulator-banner {
+
+  border: 2px solid #00ff88;
+
+  background: #080d11;
+
+  color: #00ff88;
+
+  padding: 12px;
+
+  margin-bottom: 15px;
+
+  border-radius: 8px;
+
+  font-weight: bold;
+
+  text-align: center;
+}
+
+/* ============================================================
+   PANELS
+============================================================ */
+
+.panel {
+
+  border: 1px solid #00ff88;
+
+  padding: 15px;
+
+  margin-bottom: 15px;
+
+  border-radius: 8px;
+
+  background: #10161d;
+}
+
+.title {
+
+  font-size: 18px;
+
+  margin-bottom: 15px;
+
+  color: #ffffff;
+
+  font-weight: bold;
+}
+
+/* ============================================================
+   SYSTEM STATUS
+============================================================ */
+
+.status {
+
+  font-size: 20px;
+
+  font-weight: bold;
+
+  padding: 12px;
+
+  border: 1px solid #00ff88;
+
+  border-radius: 6px;
+
+  margin-bottom: 15px;
+
+  background: #080d11;
+}
+
+/* ============================================================
+   BUTTON GROUPS
+============================================================ */
+
+.control-buttons,
+.scenario-controls,
+.fin-controls,
+.bhr-controls,
+.dc-controls,
+.cyb-controls,
+.authority-controls,
+.latency-controls {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  width: 100%;
+}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+button {
+
+  display: inline-block;
+
+  visibility: visible;
+
+  opacity: 1;
+
+  background: #00ff88;
+
+  color: #000000;
+
+  border: 2px solid #00ff88;
+
+  padding: 14px 20px;
+
+  border-radius: 6px;
+
+  font-weight: bold;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  min-height: 48px;
+
+  touch-action: manipulation;
+}
+
+button:hover {
+
+  opacity: 0.85;
+}
+
+button:active {
+
+  transform: scale(0.98);
+}
+
+button:focus {
+
+  outline: 2px solid #ffffff;
+
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   BUTTON TYPES
+============================================================ */
+
+.self-test-button {
+
+  background: #1b2730;
+
+  color: #00ff88;
+
+  border: 2px solid #00ff88;
+}
+
+.corrective-button {
+
+  background: #ffb000;
+
+  color: #000000;
+
+  border: 2px solid #ffb000;
+}
+
+.danger {
+
+  background: #ff5555;
+
+  color: #ffffff;
+
+  border: 2px solid #ff5555;
+}
+
+.scenario-button {
+
+  background: #1b2730;
+
+  color: #00ff88;
+
+  border: 1px solid #00ff88;
+}
+
+.fin-button {
+
+  background: #17242c;
+
+  color: #ffffff;
+
+  border: 1px solid #00bfff;
+}
+
+.bhr-button {
+
+  background: #17242c;
+
+  color: #ffffff;
+
+  border: 1px solid #ffb000;
+}
+
+.dc-button {
+
+  background: #17242c;
+
+  color: #ffffff;
+
+  border: 1px solid #00ff88;
+}
+
+.cyb-button {
+
+  background: #17242c;
+
+  color: #ffffff;
+
+  border: 1px solid #ff5555;
+}
+
+.authority-button {
+
+  background: #17242c;
+
+  color: #ffffff;
+
+  border: 1px solid #ffffff;
+}
+
+/* ============================================================
+   ASSESSMENT LATENCY BUTTON
+============================================================ */
+
+.latency-button {
+
+  background: #17242c;
+
+  color: #00bfff;
+
+  border: 2px solid #00bfff;
+}
+
+/* ============================================================
+   LABELS
+============================================================ */
+
+.fin-label,
+.bhr-label,
+.dc-label,
+.cyb-label {
+
+  width: 100%;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  margin-top: 8px;
+}
+
+.fin-label {
+
+  color: #00bfff;
+}
+
+.bhr-label {
+
+  color: #ffb000;
+}
+
+.dc-label {
+
+  color: #00ff88;
+}
+
+.cyb-label {
+
+  color: #ff5555;
+}
+
+/* ============================================================
+   DOMAIN MONITOR
+============================================================ */
+
+.monitor {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(140px, 1fr)
+    );
+
+  gap: 10px;
+}
+
+.domain {
+
+  border: 1px solid #00ff88;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: #080d11;
+
+  text-align: center;
+}
+
+.domain-name {
+
+  color: #aaaaaa;
+
+  font-size: 13px;
+}
+
+.domain-value {
+
+  color: #ffffff;
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+  margin-top: 5px;
+}
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+.pipeline {
+
+  font-size: 16px;
+
+  color: #ffffff;
+
+  padding: 10px;
+
+  border: 1px solid #00ff88;
+
+  border-radius: 6px;
+
+  overflow-x: auto;
+
+  white-space: nowrap;
+}
+
+.stage {
+
+  display: inline-block;
+
+  padding: 8px;
+
+  margin: 3px;
+
+  border: 1px solid #00ff88;
+
+  border-radius: 4px;
+}
+
+.stage.active {
+
+  background: #00ff88;
+
+  color: #000000;
+}
+
+/* ============================================================
+   INTENSITY
+============================================================ */
+
+input[type="range"] {
+
+  width: 100%;
+
+  accent-color: #00ff88;
+
+  cursor: pointer;
+
+  min-height: 30px;
+}
+
+.intensity-value {
+
+  color: #ffffff;
+
+  font-weight: bold;
+
+  font-size: 18px;
+}
+
+/* ============================================================
+   OUTPUT
+============================================================ */
+
+pre {
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  overflow-x: auto;
+
+  color: #00ff88;
+
+  line-height: 1.5;
+
+  margin: 0;
+}
+
+.muted {
+
+  color: #aaaaaa;
+
+  font-size: 13px;
+}
+
+.solution {
+
+  border-left: 3px solid #00ff88;
+
+  padding: 10px;
+
+  margin-top: 8px;
+
+  background: #080d11;
+
+  white-space: pre-wrap;
+
+  line-height: 1.6;
+}
+
+/* ============================================================
+   HUMAN AUTHORITY
+============================================================ */
+
+.authority-box {
+
+  border: 2px solid #ffffff;
+
+  padding: 15px;
+
+  border-radius: 8px;
+
+  background: #080d11;
+}
+
+.human-decision {
+
+  border: 1px solid #ffffff;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: #080d11;
+}
+
+.execution-gate {
+
+  border: 1px solid #ffb000;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: #080d11;
+
+  color: #ffb000;
+
+  line-height: 1.6;
+}
+
+/* ============================================================
+   DOMAIN INTEGRATION
+============================================================ */
+
+.domain-integration {
+
+  border: 1px solid #00bfff;
+
+  background: #080d11;
+}
+
+/* ============================================================
+   ASSESSMENT LATENCY SCREEN
+============================================================ */
+
+.screen {
+
+  display: none;
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  padding-bottom: 30px;
+}
+
+.screen.active {
+
+  display: block;
+}
+
+.latency-screen {
+
+  border: 2px solid #00bfff;
+
+  background: #080d11;
+
+  border-radius: 10px;
+
+  padding: 15px;
+
+  margin-bottom: 15px;
+}
+
+.latency-header {
+
+  border-bottom: 1px solid #00bfff;
+
+  padding-bottom: 12px;
+
+  margin-bottom: 15px;
+}
+
+.latency-header h2 {
+
+  margin: 0;
+
+  color: #00bfff;
+}
+
+.latency-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+
+  gap: 10px;
+
+  margin-bottom: 15px;
+}
+
+.latency-card {
+
+  border: 1px solid #00bfff;
+
+  border-radius: 6px;
+
+  padding: 14px;
+
+  background: #10161d;
+}
+
+.latency-card-label {
+
+  color: #aaaaaa;
+
+  font-size: 13px;
+
+  margin-bottom: 5px;
+}
+
+.latency-card-value {
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  font-weight: bold;
+
+  word-break: break-word;
+}
+
+.latency-total {
+
+  border: 2px solid #00ff88;
+
+  border-radius: 8px;
+
+  padding: 18px;
+
+  background: #080d11;
+
+  margin-bottom: 15px;
+
+  text-align: center;
+}
+
+.latency-total-label {
+
+  color: #aaaaaa;
+
+  font-size: 14px;
+}
+
+.latency-total-value {
+
+  color: #00ff88;
+
+  font-size: 32px;
+
+  font-weight: bold;
+
+  margin-top: 5px;
+}
+
+/* ============================================================
+   RESPONSIVE MOBILE LAYOUT
+============================================================ */
+
+@media (max-width: 600px) {
+
+  body {
+
+    padding: 10px;
+  }
+
+  h1 {
+
+    font-size: 22px;
+  }
+
+  .panel {
+
+    padding: 12px;
+  }
+
+  .title {
+
+    font-size: 16px;
+  }
+
+  .control-buttons,
+  .scenario-controls,
+  .fin-controls,
+  .bhr-controls,
+  .dc-controls,
+  .cyb-controls,
+  .authority-controls,
+  .latency-controls {
+
+    flex-direction: column;
+  }
+
+  .control-buttons button,
+  .scenario-controls button,
+  .fin-controls button,
+  .bhr-controls button,
+  .dc-controls button,
+  .cyb-controls button,
+  .authority-controls button,
+  .latency-controls button {
+
+    width: 100%;
+
+    min-height: 52px;
+  }
+
+  .pipeline {
+
+    white-space: normal;
+
+    line-height: 2;
+  }
+
+  .latency-card-value {
+
+    font-size: 18px;
+  }
+
+  .latency-total-value {
+
+    font-size: 28px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ============================================================
+     SPD v13.1 INDEX.HTML
+     PART 1 OF 10 COMPLETE
+
+     NEXT:
+     PART 2 — MAIN COCKPIT HTML
+============================================================ -->
