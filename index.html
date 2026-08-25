@@ -1110,3 +1110,617 @@ initializeCoreStatus();
 
 
 </html>
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 3
+   SCENARIO ENGINE + DETERMINISTIC STATE GENERATOR
+   LOCAL EXECUTION — NO BACKEND — NO PHYSICAL EXECUTION
+============================================================ */
+
+
+/* ============================================================
+   SCENARIO DEFINITIONS
+============================================================ */
+
+const SCENARIO_DEFINITIONS = {
+
+  NORMAL: {
+    label: "NORMAL",
+    base: {
+      fx: 5,
+      energy: 5,
+      cyb: 5,
+      inf: 5,
+      dc: 5
+    }
+  },
+
+  FX_STRESS: {
+    label: "FX STRESS",
+    base: {
+      fx: 80,
+      energy: 15,
+      cyb: 10,
+      inf: 15,
+      dc: 10
+    }
+  },
+
+  ENERGY_SPIKE: {
+    label: "ENERGY SPIKE",
+    base: {
+      fx: 15,
+      energy: 85,
+      cyb: 10,
+      inf: 20,
+      dc: 30
+    }
+  },
+
+  CYBER_EVENT: {
+    label: "CYBER EVENT",
+    base: {
+      fx: 15,
+      energy: 20,
+      cyb: 90,
+      inf: 35,
+      dc: 25
+    }
+  },
+
+  INFRA_STRAIN: {
+    label: "INFRA STRAIN",
+    base: {
+      fx: 20,
+      energy: 25,
+      cyb: 20,
+      inf: 85,
+      dc: 45
+    }
+  },
+
+  BIODIESEL_SHORTAGE: {
+    label: "BIODIESEL SHORTAGE",
+    base: {
+      fx: 35,
+      energy: 75,
+      cyb: 10,
+      inf: 45,
+      dc: 40
+    }
+  }
+
+};
+
+
+/* ============================================================
+   SCENARIO CONTROL UI
+============================================================ */
+
+function buildScenarioControls() {
+
+  const main =
+    document.getElementById(
+      "mainCockpit"
+    );
+
+  if (!main) {
+    return;
+  }
+
+  const panel =
+    document.createElement("div");
+
+  panel.className =
+    "panel";
+
+  panel.innerHTML = `
+
+    <div class="title">
+      🎛️ SCENARIO CONTROL
+    </div>
+
+    <div class="muted">
+      Select a deterministic simulator scenario.
+    </div>
+
+    <div class="control-buttons">
+
+      <button
+        type="button"
+        onclick="selectScenario('NORMAL')">
+        NORMAL
+      </button>
+
+      <button
+        type="button"
+        onclick="selectScenario('FX_STRESS')">
+        FX STRESS
+      </button>
+
+      <button
+        type="button"
+        onclick="selectScenario('ENERGY_SPIKE')">
+        ENERGY SPIKE
+      </button>
+
+      <button
+        type="button"
+        onclick="selectScenario('CYBER_EVENT')">
+        CYBER EVENT
+      </button>
+
+      <button
+        type="button"
+        onclick="selectScenario('INFRA_STRAIN')">
+        INFRA STRAIN
+      </button>
+
+      <button
+        type="button"
+        onclick="selectScenario('BIODIESEL_SHORTAGE')">
+        BIODIESEL SHORTAGE
+      </button>
+
+      <button
+        type="button"
+        class="danger-button"
+        onclick="resetScenario()">
+        RESET
+      </button>
+
+    </div>
+
+    <div class="status">
+
+      CURRENT SCENARIO:
+      <span id="currentScenarioDisplay">
+        NORMAL
+      </span>
+
+    </div>
+
+    <div class="muted">
+
+      Scenario intensity controls the deterministic
+      stress level from 0% to 100%.
+
+    </div>
+
+    <input
+      id="scenarioIntensity"
+      class="intensity-control"
+      type="range"
+      min="0"
+      max="100"
+      value="50"
+      oninput="setScenarioIntensity(this.value)"
+    >
+
+    <div class="intensity-value">
+
+      Intensity:
+      <span id="scenarioIntensityDisplay">
+        50
+      </span>%
+
+    </div>
+
+  `;
+
+  main.appendChild(panel);
+
+}
+
+
+/* ============================================================
+   DETERMINISTIC VALUE LIMITER
+============================================================ */
+
+function clampValue(
+  value,
+  minimum,
+  maximum
+) {
+
+  return Math.max(
+    minimum,
+    Math.min(
+      maximum,
+      value
+    )
+  );
+
+}
+
+
+/* ============================================================
+   GENERATE DETERMINISTIC STATE
+============================================================ */
+
+function generateScenarioState(
+  scenario,
+  intensity
+) {
+
+  const definition =
+    SCENARIO_DEFINITIONS[
+      scenario
+    ];
+
+  if (!definition) {
+
+    return {
+      fx: 0,
+      energy: 0,
+      cyb: 0,
+      inf: 0,
+      dc: 0
+    };
+
+  }
+
+
+  /*
+   * Intensity is applied proportionally.
+   *
+   * 0%   → zero scenario stress
+   * 50%  → half base stress
+   * 100% → full base stress
+   */
+
+  const multiplier =
+    clampValue(
+      Number(intensity) / 100,
+      0,
+      1
+    );
+
+
+  return {
+
+    fx:
+      Number(
+        (
+          definition.base.fx *
+          multiplier
+        ).toFixed(3)
+      ),
+
+    energy:
+      Number(
+        (
+          definition.base.energy *
+          multiplier
+        ).toFixed(3)
+      ),
+
+    cyb:
+      Number(
+        (
+          definition.base.cyb *
+          multiplier
+        ).toFixed(3)
+      ),
+
+    inf:
+      Number(
+        (
+          definition.base.inf *
+          multiplier
+        ).toFixed(3)
+      ),
+
+    dc:
+      Number(
+        (
+          definition.base.dc *
+          multiplier
+        ).toFixed(3)
+      )
+
+  };
+
+}
+
+
+/* ============================================================
+   APPLY SCENARIO
+============================================================ */
+
+function applyScenarioState() {
+
+  currentState =
+    generateScenarioState(
+      currentScenario,
+      scenarioIntensity
+    );
+
+
+  /* ==========================================================
+     UPDATE CURRENT SCENARIO DISPLAY
+  ========================================================== */
+
+  setText(
+    "currentScenarioDisplay",
+    currentScenario
+  );
+
+
+  /* ==========================================================
+     UPDATE INTENSITY DISPLAY
+  ========================================================== */
+
+  setText(
+    "scenarioIntensityDisplay",
+    scenarioIntensity
+  );
+
+
+  /* ==========================================================
+     UPDATE RAW STATE DISPLAY
+  ========================================================== */
+
+  setJSON(
+    "rawSystemState",
+    {
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState,
+
+      executionMode:
+        "LOCAL_DETERMINISTIC",
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+
+  /* ==========================================================
+     UPDATE DOMAIN MONITOR
+  ========================================================== */
+
+  updateDomainMonitor();
+
+
+  /* ==========================================================
+     SCENARIO PANEL
+  ========================================================== */
+
+  setJSON(
+    "scenarioPanel",
+    {
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState,
+
+      status:
+        "SCENARIO STATE GENERATED"
+
+    }
+  );
+
+
+  addPipelineLog(
+    "Scenario state updated: " +
+    currentScenario +
+    " @ " +
+    scenarioIntensity +
+    "%"
+  );
+
+
+  return currentState;
+
+}
+
+
+/* ============================================================
+   SELECT SCENARIO
+============================================================ */
+
+function selectScenario(
+  scenario
+) {
+
+  if (
+    !SCENARIO_DEFINITIONS[
+      scenario
+    ]
+  ) {
+
+    return;
+
+  }
+
+
+  currentScenario =
+    scenario;
+
+
+  applyScenarioState();
+
+
+  updateAudit(
+    "SCENARIO_SELECTED",
+    {
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   SET SCENARIO INTENSITY
+============================================================ */
+
+function setScenarioIntensity(
+  value
+) {
+
+  scenarioIntensity =
+    clampValue(
+      Number(value),
+      0,
+      100
+    );
+
+
+  applyScenarioState();
+
+}
+
+
+/* ============================================================
+   RESET SCENARIO
+============================================================ */
+
+function resetScenario() {
+
+  currentScenario =
+    "NORMAL";
+
+  scenarioIntensity =
+    50;
+
+  currentState =
+    generateScenarioState(
+      currentScenario,
+      scenarioIntensity
+    );
+
+
+  const slider =
+    document.getElementById(
+      "scenarioIntensity"
+    );
+
+  if (slider) {
+
+    slider.value =
+      scenarioIntensity;
+
+  }
+
+
+  applyScenarioState();
+
+
+  addPipelineLog(
+    "Scenario control reset."
+  );
+
+
+  updateAudit(
+    "SCENARIO_RESET",
+    {
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   DOMAIN MONITOR
+============================================================ */
+
+function updateDomainMonitor() {
+
+  const domains = {
+
+    FX:
+      currentState.fx,
+
+    DC:
+      currentState.dc,
+
+    CYB:
+      currentState.cyb,
+
+    INF:
+      currentState.inf,
+
+    ENERGY:
+      currentState.energy
+
+  };
+
+
+  Object.keys(
+    domains
+  ).forEach(
+    function(domain) {
+
+      const element =
+        document.getElementById(
+          "domain_" + domain
+        );
+
+      if (element) {
+
+        element.textContent =
+          domains[domain];
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   INITIAL SCENARIO BUILD
+============================================================ */
+
+buildScenarioControls();
+
+applyScenarioState();
+
+
+/* ============================================================
+   END PART 3
+   NEXT:
+   PART 4 — DOMAIN MONITOR + BHR/FIN/DC/CYB
+   DOMAIN INTEGRATION LAYER
+============================================================ */
+
+</script>
