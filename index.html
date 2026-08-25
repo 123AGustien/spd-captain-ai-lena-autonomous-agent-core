@@ -625,6 +625,488 @@
      */
 
   </script>
+<script>
 
-</body>
+/* ============================================================
+   SPD v13.1 — PART 2
+   CORE STATE + CONSTANTS + UTILITY FUNCTIONS
+   LOCAL DETERMINISTIC EXECUTION
+============================================================ */
+
+
+/* ============================================================
+   CORE SYSTEM CONSTANTS
+============================================================ */
+
+const PHI = 1.618033988749895;
+
+const SYSTEM_VERSION =
+  "SPD v13.1";
+
+const SYSTEM_NAME =
+  "SEXTANT RESILIENCE COCKPIT PRO";
+
+const AI_CORE_NAME =
+  "Captain AI Lena Autonomous Agent Core";
+
+
+/* ============================================================
+   EXECUTION SAFETY
+============================================================ */
+
+const SYSTEM_SAFETY = {
+
+  backendConnection:
+    false,
+
+  physicalExecution:
+    false,
+
+  automaticRecovery:
+    false,
+
+  humanAuthorizationRequired:
+    true,
+
+  executionGate:
+    "HUMAN_AUTHORIZATION_REQUIRED"
+};
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+const GOLDEN_RULE_STAGES = [
+
+  "OBSERVE",
+  "VERIFY",
+  "ASSESS",
+  "DECIDE",
+  "ACT",
+  "UPDATE"
+
+];
+
+
+/* ============================================================
+   DOMAIN REGISTRY
+============================================================ */
+
+const DOMAIN_REGISTRY = {
+
+  FX: {
+    name: "Financial / FX",
+    engine: "FINRuleEngine",
+    status: "ACTIVE"
+  },
+
+  ENERGY: {
+    name: "Energy",
+    engine: "EnergyRuleEngine",
+    status: "ACTIVE"
+  },
+
+  CYB: {
+    name: "Cyber Resilience",
+    engine: "CYBRuleEngine",
+    status: "ACTIVE"
+  },
+
+  INF: {
+    name: "Infrastructure",
+    engine: "INFRuleEngine",
+    status: "ACTIVE"
+  },
+
+  DC: {
+    name: "Data Centre",
+    engine: "DCRuleEngine",
+    status: "ACTIVE"
+  },
+
+  BHR: {
+    name: "Business & Human Rights",
+    engine: "BHRRuleEngine",
+    status: "ACTIVE"
+  }
+
+};
+
+
+/* ============================================================
+   INITIAL SYSTEM STATE
+============================================================ */
+
+let currentState = {
+
+  fx: 0,
+
+  energy: 0,
+
+  cyb: 0,
+
+  inf: 0,
+
+  dc: 0
+
+};
+
+
+/* ============================================================
+   CURRENT SCENARIO STATE
+============================================================ */
+
+let currentScenario =
+  "NORMAL";
+
+
+let scenarioIntensity =
+  50;
+
+
+/* ============================================================
+   CURRENT ASSESSMENT
+============================================================ */
+
+let currentAssessment =
+  null;
+
+
+/* ============================================================
+   CURRENT DECISION
+============================================================ */
+
+let currentDecision =
+  null;
+
+
+/* ============================================================
+   CURRENT TRIAL MANOEUVRE
+============================================================ */
+
+let currentTrialManoeuvre =
+  null;
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+============================================================ */
+
+let humanDecisionAuthority = {
+
+  authority:
+    "MISSION_CONTROLLER",
+
+  status:
+    "PENDING",
+
+  decision:
+    null,
+
+  executionGate:
+    "HUMAN_AUTHORIZATION_REQUIRED"
+
+};
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+let memoryCore = {
+
+  core:
+    "MemoryCoreV1",
+
+  status:
+    "WAITING",
+
+  records:
+    []
+
+};
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+let auditCore = {
+
+  core:
+    "AuditCoreV1",
+
+  status:
+    "READY",
+
+  records:
+    []
+
+};
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+let pipelineLog = [
+
+  "Pipeline log initialized."
+
+];
+
+
+/* ============================================================
+   SYSTEM TEST STATE
+============================================================ */
+
+let selfTestResult = {
+
+  test:
+    "SPD v13.1 SELF-TEST",
+
+  status:
+    "NOT_EXECUTED"
+
+};
+
+
+let correctiveActionResult = {
+
+  engine:
+    "SPD v13.1 CORRECTIVE ACTION ENGINE",
+
+  status:
+    "NOT_EXECUTED"
+
+};
+
+
+let domainIntegrationTestResult = {
+
+  test:
+    "DOMAIN INTEGRATION TEST",
+
+  status:
+    "NOT EXECUTED",
+
+  integrationLayer:
+    "LOCAL DOMAIN INTEGRATION LAYER",
+
+  backendConnection:
+    false,
+
+  physicalExecution:
+    false
+
+};
+
+
+/* ============================================================
+   SYSTEM STATUS
+============================================================ */
+
+let systemStatus =
+  "READY";
+
+
+let systemArmed =
+  false;
+
+
+/* ============================================================
+   SAFE DOM TEXT FUNCTION
+============================================================ */
+
+function setText(
+  elementId,
+  value
+) {
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+  if (!element) {
+    return;
+  }
+
+  element.textContent =
+    String(value);
+
+}
+
+
+/* ============================================================
+   SAFE JSON DISPLAY FUNCTION
+============================================================ */
+
+function setJSON(
+  elementId,
+  value
+) {
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+  if (!element) {
+    return;
+  }
+
+  element.textContent =
+    JSON.stringify(
+      value,
+      null,
+      2
+    );
+
+}
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+function addPipelineLog(
+  message
+) {
+
+  const timestamp =
+    new Date().toISOString();
+
+  pipelineLog.push(
+    timestamp +
+    " — " +
+    message
+  );
+
+  const element =
+    document.getElementById(
+      "pipelineLog"
+    );
+
+  if (element) {
+
+    element.textContent =
+      pipelineLog.join("\n");
+
+  }
+
+}
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+) {
+
+  const record = {
+
+    timestamp:
+      new Date().toISOString(),
+
+    event:
+      event,
+
+    data:
+      data
+
+  };
+
+  auditCore.records.push(
+    record
+  );
+
+  auditCore.status =
+    "ACTIVE";
+
+  setJSON(
+    "audit",
+    auditCore
+  );
+
+}
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+) {
+
+  const record = {
+
+    timestamp:
+      new Date().toISOString(),
+
+    scenario:
+      currentScenario,
+
+    decision:
+      decision,
+
+    assessment:
+      assessment
+
+  };
+
+  memoryCore.records.push(
+    record
+  );
+
+  memoryCore.status =
+    "ACTIVE";
+
+  setJSON(
+    "memory",
+    memoryCore
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZATION STATUS
+============================================================ */
+
+function initializeCoreStatus() {
+
+  systemStatus =
+    "READY";
+
+  setText(
+    "initializationStatus",
+    "SYSTEM STATUS: READY"
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+initializeCoreStatus();
+
+
+/* ============================================================
+   END PART 2
+   NEXT:
+   PART 3 — SCENARIO ENGINE + DETERMINISTIC STATE GENERATOR
+============================================================ */
+
+</script>
+
+
 </html>
