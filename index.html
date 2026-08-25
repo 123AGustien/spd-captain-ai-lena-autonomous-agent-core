@@ -4909,3 +4909,450 @@ function runDomainIntegrationTest() {
 ============================================================ */
 
 </script>
+<!-- ============================================================
+     SPD v13.1 — PART 12 FINAL
+     SYSTEM CONTROL UI
+     ARM CONTROL
+     SELF-TEST OUTPUT
+     CORRECTIVE ACTION OUTPUT
+     DOMAIN INTEGRATION OUTPUT
+============================================================ -->
+
+
+<!-- ============================================================
+     SYSTEM CONTROL PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎛️ SYSTEM CONTROLS
+  </div>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="runSystem()">
+      ▶ RUN SYSTEM
+    </button>
+
+
+    <button
+      type="button"
+      onclick="runSelfTest()">
+      🧪 RUN SELF-TEST
+    </button>
+
+
+    <button
+      type="button"
+      class="self-test-button"
+      onclick="runSelfTestCorrectiveAction()">
+      🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+    </button>
+
+
+    <button
+      type="button"
+      onclick="runDomainIntegrationTest()">
+      🔌 RUN DOMAIN INTEGRATION TEST
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     ARM CONTROL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔐 SYSTEM ARM CONTROL
+  </div>
+
+
+  <div
+    id="armStatus"
+    class="status">
+
+    ARM STATUS: DISARMED
+
+  </div>
+
+
+  <div class="muted">
+
+    Arming the simulator does not authorize physical
+    execution. Human authorization remains mandatory.
+
+  </div>
+
+
+  <br>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="toggleSystemArm()">
+
+      🔐 ARM / DISARM SYSTEM
+
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     SYSTEM STATUS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🟢 SYSTEM STATUS
+  </div>
+
+
+  <pre id="systemStatus">READY</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     SELF-TEST RESULT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧪 SELF-TEST RESULT
+  </div>
+
+
+  <pre id="selfTestResult">{
+  "test": "SPD v13.1 SELF-TEST",
+  "status": "NOT_EXECUTED"
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     CORRECTIVE ACTION RESULT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛠️ CORRECTIVE ACTION
+  </div>
+
+
+  <pre id="correctiveActionResult">{
+  "engine": "SPD v13.1 CORRECTIVE ACTION ENGINE",
+  "status": "NOT_EXECUTED"
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     DOMAIN INTEGRATION TEST RESULT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔌 DOMAIN INTEGRATION TEST
+  </div>
+
+
+  <pre id="domainIntegrationTest">{
+  "test": "DOMAIN INTEGRATION TEST",
+  "status": "NOT EXECUTED",
+  "integrationLayer": "LOCAL DOMAIN INTEGRATION LAYER",
+  "backendConnection": false,
+  "physicalExecution": false
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     ASSESSMENT OUTPUT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 SYSTEM ASSESSMENT
+  </div>
+
+
+  <pre id="assessment">Waiting for assessment...</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     RISK PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚠️ RISK / RESILIENCE
+  </div>
+
+
+  <pre id="riskPanel">{
+  "risk": "NOT ASSESSED",
+  "resilienceScore": null,
+  "goldenScore": null,
+  "assessmentLatencyMs": null
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     DOMAIN ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🔌 DOMAIN ASSESSMENT
+  </div>
+
+
+  <pre id="domainAssessment">Waiting for domain assessment...</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     ACTION OUTPUT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    ⚙️ ACTION PROMPT
+  </div>
+
+
+  <pre id="actions">Waiting for action recommendation...</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     GOLDEN RULE PIPELINE OUTPUT
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧭 GOLDEN RULE PIPELINE
+  </div>
+
+
+  <pre id="pipeline">{
+  "pipeline": "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+  "status": "WAITING"
+}</pre>
+
+</div>
+
+
+
+<!-- ============================================================
+     FINAL SYSTEM INTEGRITY PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛡️ SPD v13.1 SYSTEM INTEGRITY
+  </div>
+
+
+  <div class="authority-box">
+
+    <strong>
+      CAPTAIN AI LENA AUTONOMOUS AGENT CORE
+    </strong>
+
+    <br><br>
+
+    DATA → ALGORITHMS → COMPUTE
+
+    <br><br>
+
+    OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+    <br><br>
+
+    AI DECISION SUPPORT
+    →
+    HUMAN OPERATOR AUTHORIZATION
+
+    <br><br>
+
+    <strong>
+      LOCAL DETERMINISTIC EXECUTION
+    </strong>
+
+    <br>
+
+    Backend connection:
+    <strong>FALSE</strong>
+
+    <br>
+
+    Physical execution:
+    <strong>FALSE</strong>
+
+    <br>
+
+    Automatic recovery:
+    <strong>DISABLED</strong>
+
+    <br>
+
+    Human authorization:
+    <strong>REQUIRED</strong>
+
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     FINAL INITIALIZATION
+============================================================ -->
+
+<script>
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    /* ----------------------------------------------------------
+       INITIAL SYSTEM STATE
+    ---------------------------------------------------------- */
+
+    systemStatus =
+      "READY";
+
+    systemArmed =
+      false;
+
+
+    setText(
+      "systemStatus",
+      "READY"
+    );
+
+
+    setText(
+      "armStatus",
+      "ARM STATUS: DISARMED"
+    );
+
+
+    /* ----------------------------------------------------------
+       INITIAL HUMAN AUTHORITY
+    ---------------------------------------------------------- */
+
+    initializeHumanAuthority();
+
+
+    /* ----------------------------------------------------------
+       INITIAL PIPELINE LOG
+    ---------------------------------------------------------- */
+
+    addPipelineLog(
+      "SPD v13.1 cockpit initialized."
+    );
+
+    addPipelineLog(
+      "Local deterministic execution active."
+    );
+
+    addPipelineLog(
+      "Backend connection: FALSE."
+    );
+
+    addPipelineLog(
+      "Physical execution: FALSE."
+    );
+
+    addPipelineLog(
+      "Human authorization required."
+    );
+
+  }
+
+);
+
+
+/* ============================================================
+   FINAL SAFETY GUARD
+   No function in this simulator is permitted to initiate
+   physical execution.
+============================================================ */
+
+function verifyExecutionSafety() {
+
+  return {
+
+    safe:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    automaticExecution:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+  };
+}
+
+
+/* ============================================================
+   END SPD v13.1 — PART 12
+   FINAL PART
+============================================================ */
+
+</script>
