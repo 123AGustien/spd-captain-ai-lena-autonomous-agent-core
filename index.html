@@ -1167,5 +1167,177 @@ SYSTEM STATUS: READY
      PART 4 — SCENARIO CONTROL + INTENSITY +
      SCENARIO PANEL + RAW SYSTEM STATE
 ============================================================ -->
+<!-- ============================================================
+     SPD v13.1 — PART 4
+     SCENARIO CONTROL
+     INTENSITY
+     SCENARIO PANEL
+     RAW SYSTEM STATE
+============================================================ -->
+
+
+<!-- ============================================================
+     SCENARIO CONTROL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎛️ SCENARIO CONTROL
+  </div>
+
+  <div class="scenario-controls">
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('NORMAL')"
+    >
+      NORMAL
+    </button>
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('FX_SHOCK')"
+    >
+      FX STRESS
+    </button>
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('ENERGY_SPIKE')"
+    >
+      ENERGY SPIKE
+    </button>
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('CYBER_EVENT')"
+    >
+      CYBER EVENT
+    </button>
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('INFRASTRUCTURE_STRESS')"
+    >
+      INFRA STRAIN
+    </button>
+
+
+    <button
+      type="button"
+      class="scenario-button"
+      onclick="activateScenario('BIODIESEL_SHORTAGE')"
+    >
+      BIODIESEL SHORTAGE
+    </button>
+
+
+    <button
+      type="button"
+      class="danger"
+      onclick="resetScenario()"
+    >
+      RESET
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO INTENSITY CONTROL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🎚️ SCENARIO INTENSITY CONTROL
+  </div>
+
+  <div class="muted">
+
+    Move the lever to change deterministic simulator
+    scenario intensity from 0% to 100%.
+
+  </div>
+
+  <br>
+
+  <input
+    id="scenarioIntensity"
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    value="50"
+    oninput="updateIntensity()"
+  >
+
+  <div>
+
+    Intensity:
+
+    <span
+      class="intensity-value"
+      id="intensityValue"
+    >
+      50%
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO PANEL
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧪 SCENARIO PANEL
+  </div>
+
+  <pre id="scenarioPanel">Waiting...</pre>
+
+</div>
+
+
+<!-- ============================================================
+     RAW SYSTEM STATE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    📊 RAW SYSTEM STATE
+  </div>
+
+  <pre id="state">Waiting...</pre>
+
+</div>
+
+
+<!-- ============================================================
+     PART 4 COMPLETE
+     NEXT:
+     PART 5 — GOLDEN RULE ENGINE +
+     SYSTEM ASSESSMENT +
+     DOMAIN ASSESSMENT +
+     RISK PANEL
+============================================================ -->
 
 
