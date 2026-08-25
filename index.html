@@ -1466,8 +1466,117 @@ function updateMonitor(){
   setText("domainINF",currentState.inf);
   setText("domainEN",currentState.energy);
 }
+/* ============================================================
+   GOLDEN RULE ENGINE
+============================================================ */
 
-hhh
+function activateStage(stage){
+
+  [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+  ].forEach(name=>{
+
+    const el =
+      document.getElementById(
+        "stage" + name
+      );
+
+    if(el){
+      el.classList.toggle(
+        "active",
+        name === stage
+      );
+    }
+  });
+}
+
+function runGoldenRulePipeline(){
+
+  activateStage("OBSERVE");
+
+  const observed =
+    {...currentState};
+
+  activateStage("VERIFY");
+
+  const verification = {
+    verified:true,
+    deterministic:true,
+    backendConnected:false,
+    scenario:currentScenario
+  };
+
+  activateStage("ASSESS");
+
+  currentAssessment =
+    calculateAssessmentWithLatency(observed);
+
+  activateStage("DECIDE");
+
+  const decision =
+    generateDecision(currentAssessment);
+
+  activateStage("ACT");
+
+  const actionPrompt =
+    generateActionPrompt(
+      currentAssessment,
+      decision
+    );
+
+  activateStage("UPDATE");
+
+  updateMemory(
+    decision,
+    currentAssessment
+  );
+
+  const result = {
+    pipeline:
+      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+    scenario:currentScenario,
+    intensity:scenarioIntensity,
+    observed,
+    verification,
+    assessment:currentAssessment,
+    decision,
+    actionPrompt,
+    execution:
+      "HUMAN AUTHORIZATION REQUIRED"
+  };
+
+  setJSON("pipeline",result);
+
+  setJSON(
+    "assessment",
+    currentAssessment
+  );
+
+  setJSON(
+    "decision",
+    decision
+  );
+
+  setText(
+    "actions",
+    actionPrompt
+  );
+
+  updateAudit(
+    "GOLDEN_RULE_PIPELINE_COMPLETE",
+    result
+  );
+
+  addPipelineLog(
+    "Golden Rule pipeline completed."
+  );
+}
+
 /* ============================================================
    ASSESSMENT
 ============================================================ */
