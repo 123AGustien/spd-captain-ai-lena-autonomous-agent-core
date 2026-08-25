@@ -2025,54 +2025,7 @@ function calculateAssessment(state) {
       domainResult
   };
 
-  /* ==========================================================
-     DISPLAY DOMAIN ASSESSMENT
-  ========================================================== */
-
-  setJSON(
-    "domainAssessment",
-    domainResult
-  );
-
-  return result;
- hHhh bbHHHHH
-function calculateDomainAssessment(state) {
-
-  const entries =
-    Object.entries(state);
-
-  entries.sort(
-    function(a, b) {
-      return b[1] - a[1];
-    }
-  );
-
-  const highestDomain =
-    entries[0];
-
-  return {
-
-    scenario:
-      currentScenario,
-
-    dominantDomain:
-      highestDomain[0],
-
-    dominantStress:
-      highestDomain[1],
-
-    engine:
-      "LOCAL DOMAIN RULE ENGINE",
-
-    result:
-      "DOMAIN ASSESSMENT COMPLETE"
-  };
-}
-
-/* ============================================================
-   DECISION CORE
-============================================================ */
-
+  Hhhh
 function generateDecision(assessment) {
 
   let action;
