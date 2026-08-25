@@ -4501,3 +4501,739 @@ Waiting for assessment...
   </div>
 
 </div>
+
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 9
+   DECISION CORE + HUMAN AUTHORITY + TRIAL MANOEUVRE
+============================================================ */
+
+
+/* ============================================================
+   DECISION GENERATION
+============================================================ */
+
+function generateDecision(
+  assessment
+) {
+
+  if (!assessment) {
+
+    return {
+
+      status:
+        "WAITING",
+
+      decision:
+        null,
+
+      reason:
+        "Assessment required before decision generation."
+
+    };
+
+  }
+
+
+  let decisionType;
+  let rationale;
+
+
+  if (assessment.risk === "HIGH") {
+
+    decisionType =
+      "REQUEST_ADDITIONAL_DIAGNOSTICS";
+
+    rationale =
+      "High-risk condition detected. Maintain safety and obtain additional diagnostics before any recovery action.";
+
+  } else if (
+    assessment.risk === "MEDIUM"
+  ) {
+
+    decisionType =
+      "MAINTAIN_SAFE_STATE";
+
+    rationale =
+      "Medium-risk condition detected. Maintain a controlled safe state while evaluating recovery options.";
+
+  } else {
+
+    decisionType =
+      "MAINTAIN_SAFE_STATE";
+
+    rationale =
+      "Low-risk condition detected. Continue safe-state monitoring.";
+
+  }
+
+
+  const decision = {
+
+    engine:
+      "Captain AI Lena Decision Core",
+
+    status:
+      "DECISION_GENERATED",
+
+    scenario:
+      assessment.scenario,
+
+    risk:
+      assessment.risk,
+
+    severity:
+      assessment.severity,
+
+    recommendedDecision:
+      decisionType,
+
+    rationale:
+      rationale,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    automaticExecution:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+
+  currentDecision =
+    decision;
+
+
+  return decision;
+
+}
+
+
+/* ============================================================
+   ACTION PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+) {
+
+  if (
+    !assessment ||
+    !decision
+  ) {
+
+    return (
+      "Waiting for assessment and decision."
+    );
+
+  }
+
+
+  return (
+
+    "CAPTAIN AI LENA RECOMMENDATION: " +
+
+    decision.recommendedDecision +
+
+    " — " +
+
+    decision.rationale +
+
+    " HUMAN AUTHORIZATION IS REQUIRED BEFORE ANY RECOVERY ACTION."
+
+  );
+
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function updateSolutionOptions(
+  assessment,
+  decision
+) {
+
+  if (
+    !assessment ||
+    !decision
+  ) {
+
+    setText(
+      "solutionOptions",
+      "Waiting for decision..."
+    );
+
+    return;
+
+  }
+
+
+  const options = [
+
+    "AUTHORIZE_RECOVERY",
+
+    "MAINTAIN_SAFE_STATE",
+
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+    "ABORT_RECOVERY",
+
+    "ESCALATE_TO_MISSION_AUTHORITY"
+
+  ];
+
+
+  setJSON(
+    "solutionOptions",
+    {
+
+      recommended:
+        decision.recommendedDecision,
+
+      availableHumanDecisions:
+        options,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      automaticExecution:
+        false,
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY DISPLAY
+============================================================ */
+
+function updateHumanAuthorityDisplay() {
+
+  setJSON(
+    "humanAuthority",
+    humanDecisionAuthority
+  );
+
+}
+
+
+/* ============================================================
+   RECORD HUMAN DECISION
+============================================================ */
+
+function recordHumanDecision(
+  decision
+) {
+
+  const validDecisions = [
+
+    "AUTHORIZE_RECOVERY",
+
+    "MAINTAIN_SAFE_STATE",
+
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+    "ABORT_RECOVERY",
+
+    "ESCALATE_TO_MISSION_AUTHORITY"
+
+  ];
+
+
+  if (
+    !validDecisions.includes(
+      decision
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  humanDecisionAuthority = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "DECISION_RECORDED",
+
+    decision:
+      decision,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+
+  updateHumanAuthorityDisplay();
+
+
+  updateAudit(
+    "HUMAN_DECISION_RECORDED",
+    humanDecisionAuthority
+  );
+
+
+  addPipelineLog(
+    "Human decision recorded: " +
+    decision
+  );
+
+
+  return humanDecisionAuthority;
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE GENERATOR
+============================================================ */
+
+function generateTrialManoeuvre() {
+
+  if (!currentAssessment) {
+
+    currentTrialManoeuvre = {
+
+      engine:
+        "ManoeuvreEngineV1",
+
+      mode:
+        "TRIAL_MANOEUVRE",
+
+      status:
+        "WAITING_FOR_ASSESSMENT",
+
+      execution:
+        "NOT_EXECUTED",
+
+      physicalExecution:
+        false,
+
+      humanAuthorizationRequired:
+        true
+
+    };
+
+
+    setJSON(
+      "trialManoeuvre",
+      currentTrialManoeuvre
+    );
+
+
+    addPipelineLog(
+      "Trial manoeuvre requires an assessment."
+    );
+
+
+    return currentTrialManoeuvre;
+
+  }
+
+
+  let proposedAction;
+
+
+  if (
+    currentAssessment.risk ===
+    "HIGH"
+  ) {
+
+    proposedAction =
+      "HOLD_SAFE_STATE_AND_REQUEST_DIAGNOSTICS";
+
+  } else if (
+    currentAssessment.risk ===
+    "MEDIUM"
+  ) {
+
+    proposedAction =
+      "MAINTAIN_SAFE_STATE_AND_PREPARE_RECOVERY_OPTIONS";
+
+  } else {
+
+    proposedAction =
+      "CONTINUE_MONITORING_SAFE_STATE";
+
+  }
+
+
+  currentTrialManoeuvre = {
+
+    engine:
+      "ManoeuvreEngineV1",
+
+    mode:
+      "TRIAL_MANOEUVRE",
+
+    status:
+      "PROPOSED",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    assessmentRisk:
+      currentAssessment.risk,
+
+    proposedAction:
+      proposedAction,
+
+    execution:
+      "SIMULATION_ONLY",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+
+  setJSON(
+    "trialManoeuvre",
+    currentTrialManoeuvre
+  );
+
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_GENERATED",
+    currentTrialManoeuvre
+  );
+
+
+  addPipelineLog(
+    "Trial manoeuvre generated: " +
+    proposedAction
+  );
+
+
+  return currentTrialManoeuvre;
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE STATUS
+============================================================ */
+
+function initializeTrialManoeuvre() {
+
+  currentTrialManoeuvre = {
+
+    engine:
+      "ManoeuvreEngineV1",
+
+    mode:
+      "TRIAL_MANOEUVRE",
+
+    status:
+      "WAITING"
+
+  };
+
+
+  setJSON(
+    "trialManoeuvre",
+    currentTrialManoeuvre
+  );
+
+}
+
+
+/* ============================================================
+   HUMAN AUTHORITY BUTTON HANDLERS
+============================================================ */
+
+function authorizeRecovery() {
+
+  recordHumanDecision(
+    "AUTHORIZE_RECOVERY"
+  );
+
+}
+
+
+function maintainSafeState() {
+
+  recordHumanDecision(
+    "MAINTAIN_SAFE_STATE"
+  );
+
+}
+
+
+function requestDiagnostics() {
+
+  recordHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS"
+  );
+
+}
+
+
+function abortRecovery() {
+
+  recordHumanDecision(
+    "ABORT_RECOVERY"
+  );
+
+}
+
+
+function escalateMissionAuthority() {
+
+  recordHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+updateHumanAuthorityDisplay();
+
+initializeTrialManoeuvre();
+
+
+/* ============================================================
+   END PART 9
+
+   NEXT:
+   PART 10 — MEMORY CORE + AUDIT CORE +
+   GOLDEN RULE PIPELINE DISPLAY
+============================================================ */
+
+</script>
+
+
+<!-- ============================================================
+     HUMAN DECISION AUTHORITY
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧑‍✈️ HUMAN DECISION AUTHORITY
+  </div>
+
+  <div class="muted">
+    AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+  </div>
+
+  <div class="authority-box">
+
+    <strong>
+      🔒 EXECUTION GATE
+    </strong>
+
+    <br><br>
+
+    No recovery or execution action is authorized
+    automatically.
+
+    <br><br>
+
+    <strong>
+      HUMAN AUTHORIZATION REQUIRED.
+    </strong>
+
+    <pre id="humanAuthority">
+{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}
+    </pre>
+
+  </div>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="authorizeRecovery()"
+    >
+      AUTHORIZE RECOVERY
+    </button>
+
+    <button
+      type="button"
+      onclick="maintainSafeState()"
+    >
+      MAINTAIN SAFE STATE
+    </button>
+
+    <button
+      type="button"
+      onclick="requestDiagnostics()"
+    >
+      REQUEST DIAGNOSTICS
+    </button>
+
+    <button
+      type="button"
+      class="danger-button"
+      onclick="abortRecovery()"
+    >
+      ABORT RECOVERY
+    </button>
+
+    <button
+      type="button"
+      class="authority-button"
+      onclick="escalateMissionAuthority()"
+    >
+      ESCALATE TO MISSION AUTHORITY
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     TRIAL MANOEUVRE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🛰️ TRIAL MANOEUVRE
+  </div>
+
+  <div class="muted">
+
+    Generate a proposed manoeuvre using the current
+    deterministic assessment.
+
+    <br>
+
+    Trial mode only — no physical execution.
+
+  </div>
+
+
+  <div class="control-buttons">
+
+    <button
+      type="button"
+      onclick="generateTrialManoeuvre()"
+    >
+      🛰️ RUN TRIAL MANOEUVRE
+    </button>
+
+  </div>
+
+
+  <div class="status">
+    MANOEUVRE ENGINE STATUS
+  </div>
+
+
+  <pre id="trialManoeuvre">
+{
+  "engine": "ManoeuvreEngineV1",
+  "mode": "TRIAL_MANOEUVRE",
+  "status": "WAITING"
+}
+  </pre>
+
+
+  <div class="authority-box">
+
+    <strong>
+      TRIAL EXECUTION SAFETY
+    </strong>
+
+    <br><br>
+
+    This manoeuvre is generated for simulation and
+    decision-support purposes only.
+
+    <br><br>
+
+    <strong>
+      NO AUTOMATIC PHYSICAL EXECUTION
+    </strong>
+
+    <br><br>
+
+    Human authorization remains mandatory.
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     CAPTAIN AI LENA DECISION CORE
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧠 CAPTAIN AI LENA — DECISION CORE
+  </div>
+
+  <pre id="decision">
+Waiting for assessment...
+  </pre>
+
+</div>
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+<div class="panel">
+
+  <div class="title">
+    🧭 SOLUTION OPTIONS
+  </div>
+
+  <pre id="solutionOptions">
+Waiting for decision...
+  </pre>
+
+</div>
