@@ -2422,5 +2422,598 @@ function runDomainIntegrationTest() {
 ============================================================ */
 
 </script>
+<!-- ============================================================
+   SPD v13.1 — PART 7
+   SCENARIO ENGINE
+   DOMAIN SCENARIO CONTROLS
+   SYSTEM STATE UPDATE
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   SCENARIO DEFINITIONS
+============================================================ */
+
+const SPD_SCENARIOS = {
+
+  NORMAL: {
+    name: "NORMAL",
+    baseState: {
+      fx: 0,
+      energy: 0,
+      cyb: 0,
+      inf: 0,
+      dc: 0
+    }
+  },
+
+  FX_STRESS: {
+    name: "FX STRESS",
+    baseState: {
+      fx: 80,
+      energy: 20,
+      cyb: 10,
+      inf: 10,
+      dc: 10
+    }
+  },
+
+  ENERGY_SPIKE: {
+    name: "ENERGY SPIKE",
+    baseState: {
+      fx: 10,
+      energy: 90,
+      cyb: 10,
+      inf: 10,
+      dc: 20
+    }
+  },
+
+  CYBER_EVENT: {
+    name: "CYBER EVENT",
+    baseState: {
+      fx: 10,
+      energy: 20,
+      cyb: 90,
+      inf: 20,
+      dc: 10
+    }
+  },
+
+  INFRA_STRAIN: {
+    name: "INFRA STRAIN",
+    baseState: {
+      fx: 10,
+      energy: 30,
+      cyb: 20,
+      inf: 90,
+      dc: 40
+    }
+  },
+
+  BIODIESEL_SHORTAGE: {
+    name: "BIODIESEL SHORTAGE",
+    baseState: {
+      fx: 20,
+      energy: 85,
+      cyb: 10,
+      inf: 40,
+      dc: 30
+    }
+  }
+
+};
+
+
+/* ============================================================
+   SCENARIO INTENSITY
+============================================================ */
+
+function clampScenarioIntensity(value) {
+
+  const numeric =
+    Number(value);
+
+  if (Number.isNaN(numeric)) {
+    return 50;
+  }
+
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      numeric
+    )
+  );
+}
+
+
+/* ============================================================
+   CALCULATE SCENARIO STATE
+============================================================ */
+
+function calculateScenarioState() {
+
+  const scenario =
+    SPD_SCENARIOS[currentScenario] ||
+    SPD_SCENARIOS.NORMAL;
+
+
+  const intensity =
+    clampScenarioIntensity(
+      scenarioIntensity
+    );
+
+
+  const factor =
+    intensity / 100;
+
+
+  const state = {};
+
+
+  Object.keys(
+    scenario.baseState
+  ).forEach(
+    function(domain) {
+
+      state[domain] =
+        Number(
+          (
+            scenario.baseState[domain] *
+            factor
+          ).toFixed(3)
+        );
+
+    }
+  );
+
+
+  return state;
+}
+
+
+/* ============================================================
+   UPDATE SYSTEM STATE
+============================================================ */
+
+function updateScenarioState() {
+
+  currentState =
+    calculateScenarioState();
+
+
+  /* ==========================================================
+     SYSTEM DOMAIN MONITOR
+  ========================================================== */
+
+  setText(
+    "domainFX",
+    currentState.fx
+  );
+
+  setText(
+    "domainDC",
+    currentState.dc
+  );
+
+  setText(
+    "domainCYB",
+    currentState.cyb
+  );
+
+  setText(
+    "domainINF",
+    currentState.inf
+  );
+
+  setText(
+    "domainENERGY",
+    currentState.energy
+  );
+
+
+  /* ==========================================================
+     SCENARIO DISPLAY
+  ========================================================== */
+
+  setText(
+    "scenarioDisplay",
+    currentScenario
+  );
+
+
+  setText(
+    "scenarioIntensityDisplay",
+    scenarioIntensity + "%"
+  );
+
+
+  /* ==========================================================
+     PIPELINE LOG
+  ========================================================== */
+
+  addPipelineLog(
+    "Scenario state updated: " +
+    currentScenario +
+    " @ " +
+    scenarioIntensity +
+    "%"
+  );
+
+
+  return currentState;
+}
+
+
+/* ============================================================
+   SET SCENARIO
+============================================================ */
+
+function setScenario(
+  scenarioName
+) {
+
+  if (
+    !SPD_SCENARIOS[
+      scenarioName
+    ]
+  ) {
+
+    addPipelineLog(
+      "Unknown scenario: " +
+      scenarioName
+    );
+
+    return false;
+  }
+
+
+  currentScenario =
+    scenarioName;
+
+
+  updateScenarioState();
+
+
+  addPipelineLog(
+    "Scenario selected: " +
+    scenarioName
+  );
+
+
+  updateAudit(
+    "SCENARIO_SELECTED",
+    {
+      scenario:
+        scenarioName,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState
+    }
+  );
+
+
+  return true;
+}
+
+
+/* ============================================================
+   SCENARIO INTENSITY CONTROL
+============================================================ */
+
+function setScenarioIntensity(
+  value
+) {
+
+  scenarioIntensity =
+    clampScenarioIntensity(
+      value
+    );
+
+
+  updateScenarioState();
+
+
+  /* ==========================================================
+     UPDATE SLIDER IF PRESENT
+  ========================================================== */
+
+  const slider =
+    document.getElementById(
+      "scenarioIntensity"
+    );
+
+  if (slider) {
+
+    slider.value =
+      scenarioIntensity;
+
+  }
+
+
+  const display =
+    document.getElementById(
+      "scenarioIntensityDisplay"
+    );
+
+  if (display) {
+
+    display.textContent =
+      scenarioIntensity + "%";
+
+  }
+
+
+  return scenarioIntensity;
+}
+
+
+/* ============================================================
+   RESET SCENARIO
+============================================================ */
+
+function resetScenario() {
+
+  currentScenario =
+    "NORMAL";
+
+  scenarioIntensity =
+    50;
+
+
+  updateScenarioState();
+
+
+  setText(
+    "scenarioDisplay",
+    "NORMAL"
+  );
+
+
+  setText(
+    "scenarioIntensityDisplay",
+    "50%"
+  );
+
+
+  addPipelineLog(
+    "Scenario engine reset to NORMAL."
+  );
+
+
+  updateAudit(
+    "SCENARIO_RESET",
+    {
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      state:
+        currentState
+    }
+  );
+
+
+  return currentState;
+}
+
+
+/* ============================================================
+   DOMAIN SCENARIO EXECUTION
+============================================================ */
+
+function runDomainScenario(
+  domain,
+  scenario
+) {
+
+  const result = {
+
+    domain:
+      domain,
+
+    scenario:
+      scenario,
+
+    executionMode:
+      "LOCAL_DETERMINISTIC",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    status:
+      "SIMULATION_READY"
+
+  };
+
+
+  /* ==========================================================
+     DOMAIN INTEGRATION LAYER
+  ========================================================== */
+
+  if (
+    typeof executeDomainRule === "function"
+  ) {
+
+    try {
+
+      result.domainResult =
+        executeDomainRule(
+          domain,
+          scenario,
+          currentState
+        );
+
+      result.status =
+        "DOMAIN_RULE_EXECUTED";
+
+    } catch (error) {
+
+      result.status =
+        "DOMAIN_RULE_ERROR";
+
+      result.error =
+        error.message;
+
+    }
+
+  }
+
+
+  setJSON(
+    "domainScenarioResult",
+    result
+  );
+
+
+  updateAudit(
+    "DOMAIN_SCENARIO_EXECUTED",
+    result
+  );
+
+
+  addPipelineLog(
+    "Domain scenario executed: " +
+    domain +
+    " / " +
+    scenario
+  );
+
+
+  return result;
+}
+
+
+/* ============================================================
+   DOMAIN BUTTON HELPERS
+============================================================ */
+
+function runFXScenario(
+  scenario
+) {
+
+  return runDomainScenario(
+    "FIN",
+    scenario
+  );
+
+}
+
+
+function runBHRScenario(
+  scenario
+) {
+
+  return runDomainScenario(
+    "BHR",
+    scenario
+  );
+
+}
+
+
+function runDCScenario(
+  scenario
+) {
+
+  return runDomainScenario(
+    "DC",
+    scenario
+  );
+
+}
+
+
+function runCYBScenario(
+  scenario
+) {
+
+  return runDomainScenario(
+    "CYB",
+    scenario
+  );
+
+}
+
+
+/* ============================================================
+   SCENARIO CONTROL BUTTON HELPERS
+============================================================ */
+
+function selectNormalScenario() {
+
+  return setScenario(
+    "NORMAL"
+  );
+
+}
+
+
+function selectFXStressScenario() {
+
+  return setScenario(
+    "FX_STRESS"
+  );
+
+}
+
+
+function selectEnergySpikeScenario() {
+
+  return setScenario(
+    "ENERGY_SPIKE"
+  );
+
+}
+
+
+function selectCyberEventScenario() {
+
+  return setScenario(
+    "CYBER_EVENT"
+  );
+
+}
+
+
+function selectInfrastructureStrainScenario() {
+
+  return setScenario(
+    "INFRA_STRAIN"
+  );
+
+}
+
+
+function selectBiodieselShortageScenario() {
+
+  return setScenario(
+    "BIODIESEL_SHORTAGE"
+  );
+
+}
+
+
+/* ============================================================
+   END PART 7
+   NEXT:
+   PART 8 — FINAL LATENCY SCREEN HTML +
+   BUTTON + MAIN COCKPIT ANCHOR
+============================================================ */
+
+</script>
 
 
