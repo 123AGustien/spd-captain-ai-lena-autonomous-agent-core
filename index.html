@@ -4536,3 +4536,748 @@ document.addEventListener(
      MEMORY +
      AUDIT
 ============================================================ -->
+<script>
+
+/* ============================================================
+   SPD v13.1 — PART 9
+   DECISION CORE
+   SOLUTION OPTIONS
+   ACTION SEQUENCE
+   HUMAN DECISION AUTHORITY
+   EXECUTION GATE
+   TRIAL MANOEUVRE
+   MEMORY CORE
+   AUDIT CORE
+   PIPELINE LOG
+============================================================ */
+
+
+/* ============================================================
+   DECISION CORE
+   Captain AI Lena
+   AI ADVISORY — HUMAN FINAL AUTHORITY
+============================================================ */
+
+function generateDecision(assessment) {
+
+  let action;
+  let recovery;
+  let rationale;
+
+  if (!assessment) {
+
+    return {
+
+      agent:
+        "Captain AI Lena",
+
+      decision:
+        "NO_DECISION",
+
+      recommendedRecovery:
+        "NO_RECOVERY_ACTION",
+
+      rationale:
+        "Assessment unavailable.",
+
+      authority:
+        "HUMAN OPERATOR",
+
+      execution:
+        "NOT AUTHORIZED AUTOMATICALLY"
+    };
+  }
+
+
+  /* ----------------------------------------------------------
+     HIGH RISK
+  ---------------------------------------------------------- */
+
+  if (assessment.risk === "HIGH") {
+
+    action =
+      "INITIATE_RECOVERY_SEQUENCE";
+
+    recovery =
+      "STABILIZE_SYSTEM_AND_ESCALATE";
+
+    rationale =
+      "High resilience risk detected. " +
+      "Immediate stabilization and escalation " +
+      "are recommended for human consideration.";
+  }
+
+
+  /* ----------------------------------------------------------
+     MEDIUM RISK
+  ---------------------------------------------------------- */
+
+  else if (assessment.risk === "MEDIUM") {
+
+    action =
+      "INITIATE_PROTECTIVE_RESPONSE";
+
+    recovery =
+      "MAINTAIN_STABILIZATION_AND_MONITOR";
+
+    rationale =
+      "Medium resilience risk detected. " +
+      "Protective stabilization and continued " +
+      "monitoring are recommended.";
+  }
+
+
+  /* ----------------------------------------------------------
+     LOW RISK
+  ---------------------------------------------------------- */
+
+  else {
+
+    action =
+      "MAINTAIN_SAFE_STATE";
+
+    recovery =
+      "CONTINUE_MONITORING";
+
+    rationale =
+      "Low resilience risk detected. " +
+      "Continue safe-state monitoring.";
+  }
+
+
+  return {
+
+    agent:
+      "Captain AI Lena",
+
+    decision:
+      action,
+
+    recommendedRecovery:
+      recovery,
+
+    rationale:
+      rationale,
+
+    risk:
+      assessment.risk,
+
+    severity:
+      assessment.severity,
+
+    dominantDomain:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantDomain
+        : "UNKNOWN",
+
+    authority:
+      "HUMAN OPERATOR",
+
+    execution:
+      "NOT AUTHORIZED AUTOMATICALLY",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false
+  };
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function updateSolutionOptions(
+  assessment,
+  decision
+) {
+
+  if (!assessment || !decision) {
+
+    setText(
+      "solutionOptions",
+      "Waiting for system assessment..."
+    );
+
+    return;
+  }
+
+
+  const options = [];
+
+
+  if (assessment.risk === "HIGH") {
+
+    options.push(
+      "1. AUTHORIZE RECOVERY — subject to mission controller approval."
+    );
+
+    options.push(
+      "2. MAINTAIN SAFE STATE — prevent escalation while diagnostics continue."
+    );
+
+    options.push(
+      "3. REQUEST ADDITIONAL DIAGNOSTICS."
+    );
+
+    options.push(
+      "4. ESCALATE TO MISSION AUTHORITY."
+    );
+
+  }
+
+  else if (assessment.risk === "MEDIUM") {
+
+    options.push(
+      "1. MAINTAIN STABILIZATION AND MONITOR."
+    );
+
+    options.push(
+      "2. REQUEST ADDITIONAL DIAGNOSTICS."
+    );
+
+    options.push(
+      "3. AUTHORIZE PROTECTIVE RESPONSE — human authorization required."
+    );
+
+    options.push(
+      "4. ESCALATE IF CONDITIONS DETERIORATE."
+    );
+
+  }
+
+  else {
+
+    options.push(
+      "1. MAINTAIN SAFE STATE."
+    );
+
+    options.push(
+      "2. CONTINUE MONITORING."
+    );
+
+    options.push(
+      "3. REQUEST DIAGNOSTICS IF REQUIRED."
+    );
+  }
+
+
+  options.push(
+    "",
+    "AI RECOMMENDATION:",
+    decision.decision,
+    "",
+    "RECOMMENDED RECOVERY:",
+    decision.recommendedRecovery,
+    "",
+    "EXECUTION POLICY:",
+    "NO AUTOMATIC RECOVERY ACTION.",
+    "HUMAN AUTHORIZATION REQUIRED."
+  );
+
+
+  setText(
+    "solutionOptions",
+    options.join("\n")
+  );
+}
+
+
+/* ============================================================
+   ACTION SEQUENCE PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+) {
+
+  if (!assessment || !decision) {
+
+    return [
+      "ACTION SEQUENCE PROMPT",
+      "",
+      "Assessment unavailable.",
+      "HUMAN AUTHORIZATION REQUIRED."
+    ].join("\n");
+  }
+
+
+  return [
+
+    "ACTION SEQUENCE PROMPT",
+
+    "",
+
+    "Scenario: " +
+      currentScenario,
+
+    "Intensity: " +
+      scenarioIntensity +
+      "%",
+
+    "Risk: " +
+      assessment.risk,
+
+    "Severity: " +
+      assessment.severity,
+
+    "Dominant Domain: " +
+      (
+        assessment.domainAssessment
+          ? assessment.domainAssessment.dominantDomain
+          : "UNKNOWN"
+      ),
+
+    "",
+
+    "AI Recommendation:",
+
+    decision.decision,
+
+    "",
+
+    "Recommended Recovery:",
+
+    decision.recommendedRecovery,
+
+    "",
+
+    "Rationale:",
+
+    decision.rationale,
+
+    "",
+
+    "EXECUTION GATE:",
+
+    "HUMAN AUTHORIZATION REQUIRED.",
+
+    "NO AUTOMATIC RECOVERY ACTION EXECUTED.",
+
+    "",
+
+    "Physical Execution:",
+    "FALSE",
+
+    "Backend Connection:",
+    "FALSE"
+
+  ].join("\n");
+}
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+) {
+
+  if (!decision || !assessment) {
+    return;
+  }
+
+
+  memory = {
+
+    lastScenario:
+      currentScenario,
+
+    lastDecision:
+      decision.decision,
+
+    lastRecovery:
+      decision.recommendedRecovery,
+
+    lastSeverity:
+      assessment.severity,
+
+    lastRisk:
+      assessment.risk,
+
+    dominantDomain:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantDomain
+        : null,
+
+    dominantStress:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantStress
+        : null,
+
+    assessmentLatencyMs:
+      assessment.assessmentLatencyMs,
+
+    timestamp:
+      nowISO()
+  };
+
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+
+  addPipelineLog(
+    "Memory Core updated."
+  );
+}
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+) {
+
+  const record = {
+
+    id:
+      auditRecords.length + 1,
+
+    timestamp:
+      nowISO(),
+
+    event:
+      event,
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    data:
+      data
+  };
+
+
+  auditRecords.push(
+    record
+  );
+
+
+  setJSON(
+    "audit",
+    auditRecords
+  );
+}
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+function addPipelineLog(
+  message
+) {
+
+  pipelineLog.push({
+
+    timestamp:
+      nowISO(),
+
+    message:
+      message
+  });
+
+
+  /* ----------------------------------------------------------
+     Maintain maximum 100 records
+  ---------------------------------------------------------- */
+
+  if (pipelineLog.length > 100) {
+
+    pipelineLog.shift();
+  }
+
+
+  setJSON(
+    "pipelineLog",
+    pipelineLog
+  );
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+============================================================ */
+
+function recordHumanDecision(
+  decision,
+  status
+) {
+
+  const authorized =
+    status === "AUTHORIZED";
+
+
+  const record = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      status,
+
+    decision:
+      decision,
+
+    timestamp:
+      nowISO(),
+
+    executionGate:
+      authorized
+
+        ? "HUMAN_AUTHORIZATION_GRANTED"
+
+        : "HUMAN_AUTHORIZATION_REQUIRED",
+
+    automaticExecution:
+      false,
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false
+  };
+
+
+  setJSON(
+    "humanDecisionAuthority",
+    record
+  );
+
+
+  /* ----------------------------------------------------------
+     EXECUTION GATE
+  ---------------------------------------------------------- */
+
+  if (authorized) {
+
+    setText(
+      "executionGate",
+
+      "HUMAN AUTHORIZATION GRANTED.\n" +
+
+      "AUTHORIZED DECISION: " +
+      decision +
+
+      "\n\n" +
+
+      "SIMULATOR EXECUTION ONLY.\n" +
+
+      "NO PHYSICAL EXECUTION."
+    );
+
+  }
+
+  else {
+
+    setText(
+      "executionGate",
+
+      "HUMAN AUTHORIZATION REQUIRED.\n" +
+
+      "NO RECOVERY ACTION EXECUTED."
+    );
+  }
+
+
+  updateAudit(
+    "HUMAN_DECISION",
+    record
+  );
+
+
+  addPipelineLog(
+    "Human decision recorded: " +
+    decision
+  );
+
+
+  return record;
+}
+
+
+/* ============================================================
+   AUTHORIZE RECOVERY
+============================================================ */
+
+function authorizeRecovery() {
+
+  const record =
+    recordHumanDecision(
+      "AUTHORIZE_RECOVERY",
+      "AUTHORIZED"
+    );
+
+
+  setText(
+    "actions",
+
+    "HUMAN AUTHORIZATION GRANTED.\n" +
+
+    "AUTHORIZED DECISION: AUTHORIZE_RECOVERY.\n\n" +
+
+    "Trial/recovery action may proceed within " +
+    "local simulator constraints.\n\n" +
+
+    "NO PHYSICAL EXECUTION."
+  );
+
+
+  addPipelineLog(
+    "Recovery authorization granted by mission controller."
+  );
+
+
+  return record;
+}
+
+
+/* ============================================================
+   MAINTAIN SAFE STATE
+============================================================ */
+
+function maintainSafeState() {
+
+  const record =
+    recordHumanDecision(
+      "MAINTAIN_SAFE_STATE",
+      "AUTHORIZED"
+    );
+
+
+  setText(
+    "actions",
+
+    "MISSION CONTROLLER AUTHORIZED " +
+    "MAINTAIN SAFE STATE.\n\n" +
+
+    "NO RECOVERY ACTION EXECUTED.\n" +
+
+    "SYSTEM REMAINS IN SAFE SIMULATOR STATE."
+  );
+
+
+  return record;
+}
+
+
+/* ============================================================
+   REQUEST ADDITIONAL DIAGNOSTICS
+============================================================ */
+
+function requestDiagnostics() {
+
+  const record =
+    recordHumanDecision(
+      "REQUEST_ADDITIONAL_DIAGNOSTICS",
+      "AUTHORIZED"
+    );
+
+
+  setText(
+    "actions",
+
+    "ADDITIONAL DIAGNOSTICS REQUESTED.\n\n" +
+
+    "LOCAL TRIAL MANOEUVRE / DIAGNOSTIC " +
+    "SIMULATION MAY PROCEED.\n\n" +
+
+    "NO PHYSICAL EXECUTION."
+  );
+
+
+  runTrialManoeuvre();
+
+
+  return record;
+}
+
+
+/* ============================================================
+   ABORT RECOVERY
+============================================================ */
+
+function abortRecovery() {
+
+  const record =
+    recordHumanDecision(
+      "ABORT_RECOVERY",
+      "AUTHORIZED"
+    );
+
+
+  setText(
+    "actions",
+
+    "RECOVERY ABORTED BY MISSION CONTROLLER.\n\n" +
+
+    "SAFE STATE MAINTAINED.\n\n" +
+
+    "NO RECOVERY ACTION EXECUTED."
+  );
+
+
+  addPipelineLog(
+    "Recovery sequence aborted by human authority."
+  );
+
+
+  return record;
+}
+
+
+/* ============================================================
+   ESCALATE TO MISSION AUTHORITY
+============================================================ */
+
+function escalateMissionAuthority() {
+
+  const record =
+    recordHumanDecision(
+      "ESCALATE_TO_MISSION_AUTHORITY",
+      "AUTHORIZED"
+    );
+
+
+  setText(
+    "actions",
+
+    "ESCALATED TO MISSION AUTHORITY.\n\n" +
+
+    "HUMAN DECISION AUTHORITY RETAINED.\n\n" +
+
+    "NO AUTOMATIC EXECUTION."
+  );
+
+
+  addPipelineLog(
+    "Mission authority escalation recorded."
+  );
+
+
+  return record;
+}
+
+
+/* ============================================================
+   END PART 9
+   NEXT:
+   PART 10 — TRIAL MANOEUVRE + VERIFICATION +
+   INITIALIZATION + FINAL SYSTEM CLOSE
+============================================================ */
+
+</script>
