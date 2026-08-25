@@ -2320,3 +2320,353 @@ function addPipelineLog(message) {
 /* ============================================================
    END PART 4
 ============================================================ */
+/* ============================================================
+   SPD v13.1 — HUMAN DECISION AUTHORITY
+   AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+============================================================ */
+
+function recordHumanDecision(
+  decision,
+  status
+) {
+
+  const record = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      status,
+
+    decision:
+      decision,
+
+    executionGate:
+      status === "AUTHORIZED"
+        ? "HUMAN_AUTHORIZATION_GRANTED"
+        : "HUMAN_AUTHORIZATION_REQUIRED",
+
+    timestamp:
+      nowISO()
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    record
+  );
+
+  /* ----------------------------------------------------------
+     EXECUTION GATE
+  ---------------------------------------------------------- */
+
+  if (status === "AUTHORIZED") {
+
+    setText(
+      "executionGate",
+
+      "HUMAN AUTHORIZATION GRANTED.\n" +
+      "AUTHORIZED DECISION: " +
+      decision +
+      "\n" +
+      "SIMULATOR EXECUTION ONLY.\n" +
+      "NO PHYSICAL EXECUTION."
+    );
+
+  } else {
+
+    setText(
+      "executionGate",
+
+      "HUMAN AUTHORIZATION REQUIRED.\n" +
+      "NO RECOVERY ACTION EXECUTED."
+    );
+  }
+
+  /* ----------------------------------------------------------
+     AUDIT
+  ---------------------------------------------------------- */
+
+  updateAudit(
+    "HUMAN_DECISION",
+    record
+  );
+
+  addPipelineLog(
+    "Human decision recorded: " +
+    decision
+  );
+}
+
+
+/* ============================================================
+   AUTHORIZE RECOVERY
+============================================================ */
+
+function authorizeRecovery() {
+
+  recordHumanDecision(
+    "AUTHORIZE_RECOVERY",
+    "AUTHORIZED"
+  );
+
+  setText(
+    "actions",
+
+    "HUMAN AUTHORIZATION GRANTED.\n" +
+    "AUTHORIZED DECISION: AUTHORIZE_RECOVERY.\n\n" +
+
+    "Trial/recovery action may proceed within\n" +
+    "local simulator constraints.\n\n" +
+
+    "NO PHYSICAL EXECUTION."
+  );
+}
+
+
+/* ============================================================
+   MAINTAIN SAFE STATE
+============================================================ */
+
+function maintainSafeState() {
+
+  recordHumanDecision(
+    "MAINTAIN_SAFE_STATE",
+    "AUTHORIZED"
+  );
+
+  setText(
+    "actions",
+
+    "MISSION CONTROLLER AUTHORIZED:\n" +
+    "MAINTAIN SAFE STATE.\n\n" +
+
+    "NO RECOVERY ACTION EXECUTED.\n" +
+    "SYSTEM REMAINS IN SIMULATED SAFE STATE."
+  );
+}
+
+
+/* ============================================================
+   REQUEST ADDITIONAL DIAGNOSTICS
+============================================================ */
+
+function requestDiagnostics() {
+
+  recordHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+    "AUTHORIZED"
+  );
+
+  setText(
+    "actions",
+
+    "MISSION CONTROLLER REQUESTED:\n" +
+    "ADDITIONAL DIAGNOSTICS.\n\n" +
+
+    "LOCAL DIAGNOSTIC TRIAL WILL BE EXECUTED.\n" +
+    "NO PHYSICAL EXECUTION."
+  );
+
+  runTrialManoeuvre();
+}
+
+
+/* ============================================================
+   ABORT RECOVERY
+============================================================ */
+
+function abortRecovery() {
+
+  recordHumanDecision(
+    "ABORT_RECOVERY",
+    "AUTHORIZED"
+  );
+
+  setText(
+    "actions",
+
+    "RECOVERY ABORTED BY MISSION CONTROLLER.\n\n" +
+    "SAFE STATE MAINTAINED.\n" +
+    "NO RECOVERY ACTION EXECUTED."
+  );
+}
+
+
+/* ============================================================
+   ESCALATE TO MISSION AUTHORITY
+============================================================ */
+
+function escalateMissionAuthority() {
+
+  recordHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY",
+    "AUTHORIZED"
+  );
+
+  setText(
+    "actions",
+
+    "ESCALATED TO MISSION AUTHORITY.\n\n" +
+    "LOCAL SIMULATOR WILL NOT EXECUTE\n" +
+    "AUTONOMOUS RECOVERY."
+  );
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE SIMULATOR
+============================================================ */
+
+function runTrialManoeuvre() {
+
+  const trial = {
+
+    mode:
+      "LOCAL TRIAL MANOEUVRE SIMULATION",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    currentState:
+      {
+        ...currentState
+      },
+
+    dominantDomain:
+      currentAssessment &&
+      currentAssessment.domainAssessment
+        ? currentAssessment
+            .domainAssessment
+            .dominantDomain
+        : "N/A",
+
+    manoeuvre:
+      "SIMULATED_RECOVERY_MANOEUVRE",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    status:
+      "TRIAL MANOEUVRE SIMULATED",
+
+    timestamp:
+      nowISO()
+  };
+
+  setJSON(
+    "trialManoeuvre",
+    trial
+  );
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_SIMULATION",
+    trial
+  );
+
+  addPipelineLog(
+    "Trial manoeuvre simulation completed."
+  );
+}
+
+
+/* ============================================================
+   VERIFY TRIAL MANOEUVRE
+============================================================ */
+
+function verifyTrialManoeuvre() {
+
+  const verification = {
+
+    trialManoeuvreVerified:
+      true,
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    result:
+      "TRIAL MANOEUVRE VALIDATION PASS",
+
+    timestamp:
+      nowISO()
+  };
+
+  setJSON(
+    "trialManoeuvre",
+    verification
+  );
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_VERIFICATION",
+    verification
+  );
+
+  addPipelineLog(
+    "Trial manoeuvre verification PASS."
+  );
+}
+
+
+/* ============================================================
+   EXECUTION GATE RESET
+============================================================ */
+
+function resetExecutionGate() {
+
+  setJSON(
+    "humanDecisionAuthority",
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      status:
+        "PENDING",
+
+      decision:
+        null,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+    }
+  );
+
+  setText(
+    "executionGate",
+
+    "HUMAN AUTHORIZATION REQUIRED.\n" +
+    "NO RECOVERY ACTION EXECUTED."
+  );
+
+  addPipelineLog(
+    "Human execution gate reset."
+  );
+}
+
+
+/* ============================================================
+   END PART 5
+============================================================ */
