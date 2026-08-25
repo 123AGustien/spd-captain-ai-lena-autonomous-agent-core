@@ -3778,4 +3778,563 @@ function runDomainIntegrationTest() {
 ============================================================ */
 
 </script>
+<script>
+
+/* ============================================================
+   SPD v13.1 — RESET ENGINE
+============================================================ */
+
+function resetScenario() {
+
+  /* ==========================================================
+     RESET SCENARIO
+  ========================================================== */
+
+  currentScenario =
+    "NORMAL";
+
+  scenarioIntensity =
+    50;
+
+
+  /* ==========================================================
+     RESET SLIDER
+  ========================================================== */
+
+  const slider =
+    document.getElementById(
+      "scenarioIntensity"
+    );
+
+  if (slider) {
+
+    slider.value =
+      50;
+  }
+
+
+  setText(
+    "intensityValue",
+    "50%"
+  );
+
+
+  /* ==========================================================
+     RESET SYSTEM STATE
+  ========================================================== */
+
+  currentState = {
+
+    fx: 0,
+    dc: 0,
+    cyb: 0,
+    inf: 0,
+    energy: 0
+  };
+
+
+  currentAssessment =
+    null;
+
+
+  /* ==========================================================
+     RESET MEMORY
+  ========================================================== */
+
+  memory = {
+
+    lastScenario:
+      null,
+
+    lastDecision:
+      null,
+
+    lastRecovery:
+      null,
+
+    lastSeverity:
+      null,
+
+    dominantDomain:
+      null,
+
+    dominantStress:
+      null,
+
+    assessmentLatencyMs:
+      null,
+
+    timestamp:
+      null
+  };
+
+
+  /* ==========================================================
+     RESET MONITOR
+  ========================================================== */
+
+  updateMonitor();
+
+
+  /* ==========================================================
+     RESET SCENARIO PANEL
+  ========================================================== */
+
+  setText(
+    "scenarioPanel",
+    "Scenario reset."
+  );
+
+
+  /* ==========================================================
+     RESET RAW STATE
+  ========================================================== */
+
+  setText(
+    "state",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET ASSESSMENT
+  ========================================================== */
+
+  setText(
+    "assessment",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET DOMAIN ASSESSMENT
+  ========================================================== */
+
+  setText(
+    "domainAssessment",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET RISK
+  ========================================================== */
+
+  setJSON(
+    "riskPanel",
+    {
+
+      risk:
+        "UNKNOWN",
+
+      resilienceScore:
+        "N/A",
+
+      goldenScore:
+        "N/A",
+
+      assessmentLatencyMs:
+        "N/A"
+    }
+  );
+
+
+  /* ==========================================================
+     RESET DECISION
+  ========================================================== */
+
+  setText(
+    "decision",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET ACTIONS
+  ========================================================== */
+
+  setText(
+    "actions",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET SOLUTIONS
+  ========================================================== */
+
+  setText(
+    "solutionOptions",
+    "Waiting for system assessment..."
+  );
+
+
+  /* ==========================================================
+     RESET PIPELINE
+  ========================================================== */
+
+  setText(
+    "pipeline",
+    "Waiting..."
+  );
+
+
+  /* ==========================================================
+     RESET PIPELINE STAGES
+  ========================================================== */
+
+  activateStage(
+    "NONE"
+  );
+
+
+  /* ==========================================================
+     RESET EXECUTION GATE
+  ========================================================== */
+
+  setText(
+
+    "executionGate",
+
+    "HUMAN AUTHORIZATION REQUIRED.\n" +
+    "NO RECOVERY ACTION EXECUTED."
+  );
+
+
+  /* ==========================================================
+     RESET HUMAN AUTHORITY
+  ========================================================== */
+
+  setJSON(
+
+    "humanDecisionAuthority",
+
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      status:
+        "PENDING",
+
+      decision:
+        null,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+    }
+  );
+
+
+  /* ==========================================================
+     RESET MEMORY DISPLAY
+  ========================================================== */
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+
+  /* ==========================================================
+     RESET TRIAL MANOEUVRE
+  ========================================================== */
+
+  setText(
+    "trialManoeuvre",
+    "Trial manoeuvre not executed."
+  );
+
+
+  /* ==========================================================
+     RESET LATENCY SCREEN
+  ========================================================== */
+
+  setText(
+
+    "assessmentLatencyScreen",
+
+    "Assessment latency unavailable.\n" +
+    "Run a scenario to generate a new measurement."
+  );
+
+
+  /* ==========================================================
+     KEEP LATENCY PANEL CLOSED
+  ========================================================== */
+
+  const latencyPanel =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+  if (latencyPanel) {
+
+    latencyPanel.style.display =
+      "none";
+  }
+
+
+  /* ==========================================================
+     RESET SYSTEM STATUS
+  ========================================================== */
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: READY — LOCAL SIMULATOR"
+  );
+
+
+  addPipelineLog(
+    "Simulator state reset."
+  );
+
+
+  updateAudit(
+    "SIMULATOR_RESET",
+    {
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+    }
+  );
+}
+
+
+/* ============================================================
+   UPDATE SYSTEM MONITOR
+============================================================ */
+
+function updateMonitor() {
+
+  setText(
+    "domainFX",
+    currentState.fx
+  );
+
+  setText(
+    "domainDC",
+    currentState.dc
+  );
+
+  setText(
+    "domainCYB",
+    currentState.cyb
+  );
+
+  setText(
+    "domainINF",
+    currentState.inf
+  );
+
+  setText(
+    "domainEN",
+    currentState.energy
+  );
+}
+
+
+/* ============================================================
+   FINAL LATENCY PANEL CONTROL
+============================================================ */
+
+function toggleAssessmentLatency() {
+
+  const panel =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+  if (!panel) {
+
+    return;
+  }
+
+
+  const isHidden =
+    panel.style.display === "none" ||
+    panel.style.display === "";
+
+
+  if (isHidden) {
+
+    openAssessmentLatency();
+
+  } else {
+
+    closeAssessmentLatency();
+  }
+}
+
+
+/* ============================================================
+   RETURN TO MAIN SCREEN
+============================================================ */
+
+function returnToMainScreen() {
+
+  closeAssessmentLatency();
+
+
+  const mainScreen =
+    document.getElementById(
+      "mainCockpit"
+    );
+
+
+  if (mainScreen) {
+
+    mainScreen.scrollIntoView({
+
+      behavior:
+        "smooth",
+
+      block:
+        "start"
+    });
+
+  } else {
+
+    window.scrollTo({
+
+      top:
+        0,
+
+      behavior:
+        "smooth"
+    });
+  }
+
+
+  addPipelineLog(
+    "Returned to main cockpit screen."
+  );
+}
+
+
+/* ============================================================
+   INITIALIZE LATENCY SCREEN
+============================================================ */
+
+function initializeAssessmentLatencyScreen() {
+
+  const panel =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+
+  if (panel) {
+
+    panel.style.display =
+      "none";
+  }
+
+
+  const output =
+    document.getElementById(
+      "assessmentLatencyScreen"
+    );
+
+
+  if (output) {
+
+    output.textContent =
+      "Assessment latency unavailable.\n" +
+      "Run a scenario to generate a measurement.";
+  }
+}
+
+
+/* ============================================================
+   SYSTEM INITIALIZATION
+============================================================ */
+
+function initializeSPD() {
+
+  updateMonitor();
+
+
+  setText(
+    "intensityValue",
+    scenarioIntensity + "%"
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: READY — LOCAL SIMULATOR"
+  );
+
+
+  initializeAssessmentLatencyScreen();
+
+
+  addPipelineLog(
+    "SPD v13.1 local simulator initialized."
+  );
+
+
+  updateAudit(
+
+    "SIMULATOR_INITIALIZED",
+
+    {
+
+      backendConnection:
+        false,
+
+      deterministic:
+        true,
+
+      executionMode:
+        "LOCAL_ONLY",
+
+      assessmentLatency:
+        "PERFORMANCE.NOW",
+
+      humanAuthorization:
+        "REQUIRED",
+
+      physicalExecution:
+        false
+    }
+  );
+}
+
+
+/* ============================================================
+   DOM READY
+============================================================ */
+
+document.addEventListener(
+
+  "DOMContentLoaded",
+
+  function() {
+
+    initializeSPD();
+
+  }
+
+);
+
+
+/* ============================================================
+   END PART 7
+   NEXT:
+   PART 8 — FINAL LATENCY SCREEN HTML +
+   BUTTON + MAIN COCKPIT ANCHOR
+============================================================ */
+
+</script>
 
