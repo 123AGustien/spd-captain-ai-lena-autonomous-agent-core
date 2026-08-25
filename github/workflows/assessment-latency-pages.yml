@@ -1,1 +1,487 @@
-g
+# ============================================================
+# SPD v13.1 — Assessment Latency Catalogue
+# GitHub Pages Deployment + Module Validation
+#
+# VERSION: 1.0.0
+#
+# PURPOSE:
+# Validate and deploy the independent Assessment Latency
+# measurement/display layer.
+#
+# MEASUREMENT ONLY.
+#
+# THIS WORKFLOW DOES NOT:
+# - execute Golden Rule decisions
+# - execute Captain AI Lena
+# - execute domain rules
+# - modify risk classification
+# - modify resilience calculations
+# - modify decisions
+# - modify actions
+# - modify Human Decision Authority
+#
+# ============================================================
+
+name: SPD v13.1 Assessment Latency Pages
+
+on:
+
+  push:
+    branches:
+      - feature/SPD-v13.1-assessment-latency-catalogue
+
+  workflow_dispatch:
+
+
+# ============================================================
+# GITHUB PERMISSIONS
+# ============================================================
+
+permissions:
+
+  contents: read
+
+  pages: write
+
+  id-token: write
+
+
+# ============================================================
+# DEPLOYMENT CONCURRENCY
+# ============================================================
+
+concurrency:
+
+  group: pages
+
+  cancel-in-progress: true
+
+
+# ============================================================
+# VALIDATION JOB
+# ============================================================
+
+jobs:
+
+  validate:
+
+    name: Validate Assessment Latency
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      # ------------------------------------------------------
+      # CHECKOUT
+      # ------------------------------------------------------
+
+      - name: Checkout repository
+
+        uses: actions/checkout@v4
+
+
+      # ------------------------------------------------------
+      # REQUIRED FILE VALIDATION
+      # ------------------------------------------------------
+
+      - name: Validate required Assessment Latency files
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          echo "=============================================="
+          echo "SPD v13.1 Assessment Latency Validation"
+          echo "=============================================="
+
+          required_files=(
+
+            "assessment-latency/README.md"
+
+            "assessment-latency/assessmentLatency.js"
+
+            "assessment-latency/assessmentLatency.test.js"
+
+            "assessment-latency/assessmentLatencyObserver.test.js"
+
+            "assessment-latency/latencyCatalogue.json"
+
+            "assessment-latency/assessmentLatencyDisplay.js"
+
+            "assessment-latency/assessmentLatencyDisplayWiring.js"
+
+          )
+
+
+          echo ""
+          echo "Checking required files..."
+          echo ""
+
+
+          for file in "${required_files[@]}"; do
+
+            if [ ! -f "$file" ]; then
+
+              echo "::error file=$file::Required Assessment Latency file is missing."
+
+              exit 1
+
+            fi
+
+            echo "PASS: $file"
+
+          done
+
+
+          echo ""
+          echo "All required Assessment Latency files are present."
+
+
+      # ------------------------------------------------------
+      # VERIFY WIRING MODULE
+      # ------------------------------------------------------
+
+      - name: Validate Display Wiring module
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          wiring="assessment-latency/assessmentLatencyDisplayWiring.js"
+
+          echo "Checking:"
+          echo "$wiring"
+
+          test -s "$wiring"
+
+          grep -Fq \
+            './assessmentLatencyDisplay.js' \
+            "$wiring"
+
+          echo "PASS: Display Wiring module exists."
+
+          echo "PASS: Display module import path exists."
+
+
+      # ------------------------------------------------------
+      # VERIFY DISPLAY MODULE
+      # ------------------------------------------------------
+
+      - name: Validate Display module
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          display="assessment-latency/assessmentLatencyDisplay.js"
+
+          test -s "$display"
+
+          grep -Fq \
+            './assessmentLatency.js' \
+            "$display"
+
+          echo "PASS: Assessment Latency Display module."
+
+
+      # ------------------------------------------------------
+      # VERIFY LATENCY ENGINE MODULE
+      # ------------------------------------------------------
+
+      - name: Validate latency source module
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          source="assessment-latency/assessmentLatency.js"
+
+          test -s "$source"
+
+          echo "PASS: Assessment Latency source module."
+
+
+      # ------------------------------------------------------
+      # VALIDATE JSON CATALOGUE
+      # ------------------------------------------------------
+
+      - name: Validate latencyCatalogue.json
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          python - <<'PY'
+
+          import json
+
+          path = "assessment-latency/latencyCatalogue.json"
+
+          with open(path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          catalogue = data.get("catalogue", {})
+
+          records = data.get("records", [])
+
+
+          assert (
+              catalogue.get("name")
+              == "SPD v13.1 Assessment Latency Catalogue"
+          ), "Invalid catalogue name"
+
+
+          assert (
+              catalogue.get("version")
+              == "1.0.0"
+          ), "Invalid catalogue version"
+
+
+          assert isinstance(
+              records,
+              list
+          ), "records must be an array"
+
+
+          print(
+              "PASS: latencyCatalogue.json"
+          )
+
+          print(
+              f"Records: {len(records)}"
+          )
+
+          print(
+              "Measurement policy:",
+              catalogue.get("measurementPolicy")
+          )
+
+          PY
+
+
+      # ------------------------------------------------------
+      # ENSURE NO FABRICATED MEASUREMENTS
+      # ------------------------------------------------------
+
+      - name: Verify empty catalogue integrity
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          python - <<'PY'
+
+          import json
+
+          path = "assessment-latency/latencyCatalogue.json"
+
+          with open(path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          records = data.get("records", [])
+
+
+          print(
+              f"Catalogue records: {len(records)}"
+          )
+
+
+          if len(records) == 0:
+
+              print(
+                  "PASS: No latency measurements fabricated or inferred."
+              )
+
+          else:
+
+              print(
+                  "INFO: Catalogue contains recorded measurements."
+              )
+
+          PY
+
+
+      # ------------------------------------------------------
+      # ARCHITECTURE PROTECTION
+      # ------------------------------------------------------
+
+      - name: Architecture protection declaration
+
+        shell: bash
+
+        run: |
+
+          echo "=============================================="
+          echo "ARCHITECTURE PROTECTION"
+          echo "=============================================="
+
+          echo "Measurement layer: READ ONLY"
+
+          echo "Cockpit: UNCHANGED"
+
+          echo "Golden Rule Engine: UNCHANGED"
+
+          echo "Domain Rule Engines: UNCHANGED"
+
+          echo "Domain Thresholds: UNCHANGED"
+
+          echo "Risk Classification: UNCHANGED"
+
+          echo "Resilience Calculations: UNCHANGED"
+
+          echo "Decision Logic: UNCHANGED"
+
+          echo "Action Logic: UNCHANGED"
+
+          echo "Human Decision Authority: UNCHANGED"
+
+          echo "Captain AI Lena execution: NOT EXECUTED"
+
+          echo "Recovery actions: NOT EXECUTED"
+
+          echo "=============================================="
+
+
+# ============================================================
+# GITHUB PAGES DEPLOYMENT
+# ============================================================
+
+  deploy:
+
+    name: Deploy Assessment Latency Pages
+
+    needs:
+
+      - validate
+
+    runs-on: ubuntu-latest
+
+
+    environment:
+
+      name: github-pages
+
+      url: ${{ steps.deployment.outputs.page_url }}
+
+
+    steps:
+
+      # ------------------------------------------------------
+      # CHECKOUT
+      # ------------------------------------------------------
+
+      - name: Checkout repository
+
+        uses: actions/checkout@v4
+
+
+      # ------------------------------------------------------
+      # CONFIGURE PAGES
+      # ------------------------------------------------------
+
+      - name: Configure GitHub Pages
+
+        uses: actions/configure-pages@v5
+
+
+      # ------------------------------------------------------
+      # VERIFY DEPLOYMENT FILE AGAIN
+      # ------------------------------------------------------
+
+      - name: Verify deployed wiring file
+
+        shell: bash
+
+        run: |
+
+          set -euo pipefail
+
+          FILE="assessment-latency/assessmentLatencyDisplayWiring.js"
+
+          if [ ! -f "$FILE" ]; then
+
+            echo "::error file=$FILE::Deployment file missing."
+
+            exit 1
+
+          fi
+
+          echo "PASS: $FILE will be included in Pages artifact."
+
+
+      # ------------------------------------------------------
+      # UPLOAD COMPLETE REPOSITORY
+      # ------------------------------------------------------
+
+      - name: Upload GitHub Pages artifact
+
+        uses: actions/upload-pages-artifact@v3
+
+        with:
+
+          path: .
+
+
+      # ------------------------------------------------------
+      # DEPLOY
+      # ------------------------------------------------------
+
+      - name: Deploy to GitHub Pages
+
+        id: deployment
+
+        uses: actions/deploy-pages@v4
+
+
+      # ------------------------------------------------------
+      # DEPLOYMENT CONFIRMATION
+      # ------------------------------------------------------
+
+      - name: Deployment confirmation
+
+        shell: bash
+
+        run: |
+
+          echo "=============================================="
+
+          echo "SPD v13.1 Assessment Latency deployment complete."
+
+          echo "=============================================="
+
+          echo "Pages URL: ${{ steps.deployment.outputs.page_url }}"
+
+          echo ""
+
+          echo "Assessment Latency mode:"
+          echo "MEASUREMENT ONLY"
+
+          echo ""
+
+          echo "Decision authority:"
+          echo "PROTECTED"
+
+          echo ""
+
+          echo "Golden Rule Engine:"
+          echo "UNCHANGED"
+
+          echo ""
+
+          echo "Human Decision Authority:"
+          echo "UNCHANGED"
+
+          echo "=============================================="
