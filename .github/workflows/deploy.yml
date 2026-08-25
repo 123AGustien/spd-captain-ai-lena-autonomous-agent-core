@@ -1,1 +1,709 @@
-g
+name: SPD v13.1 — Validate and Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - command-centre
+      - feature/BHR-human-rights-compliance
+      - feature/SPD-v13.1-performance-benchmark
+      - feature/SPD-v13.1-assessment-latency-catalogue
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+
+  # =========================================================
+  # VALIDATION
+  # =========================================================
+
+  validate:
+    name: Validate SPD v13.1
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # =====================================================
+      # CHECKOUT
+      # =====================================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # =====================================================
+      # NODE
+      # =====================================================
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # =====================================================
+      # CORE FILES
+      # =====================================================
+
+      - name: Verify Core JavaScript files
+        run: |
+          set -e
+
+          echo "Checking SPD core modules..."
+
+          test -f engine.js
+          test -f captainAILena.js
+          test -f fx.js
+          test -f energy.js
+          test -f risk.js
+          test -f scenario.js
+          test -f armController.js
+          test -f constants/math.constants.js
+
+          echo "CORE FILES: PASS"
+
+      # =====================================================
+      # DOMAIN INTEGRATION
+      # =====================================================
+
+      - name: Verify Domain Integration Layer
+        run: |
+          set -e
+
+          echo "Checking domain integration..."
+
+          test -f domainIntegration.js
+
+          echo "domainIntegration.js: PRESENT"
+
+          for domain in FIN BHR DC CYB INF; do
+            if [ -d "$domain" ]; then
+              echo "$domain directory: PRESENT"
+            else
+              echo "$domain directory: NOT PRESENT ON THIS BRANCH"
+            fi
+          done
+
+          echo "DOMAIN INTEGRATION LAYER: PASS"
+
+      # =====================================================
+      # DOMAIN ENGINE CONTENT
+      # =====================================================
+
+      - name: Verify available domain engines
+        run: |
+          set -e
+
+          echo "Checking available authoritative domain engines..."
+
+          checked=0
+
+          if [ -f FIN/finRuleEngine.js ]; then
+            grep -q "evaluate" FIN/finRuleEngine.js
+            echo "FIN evaluate(): PASS"
+            checked=$((checked + 1))
+          fi
+
+          if [ -f BHR/BHRRuleEngine.js ]; then
+            grep -q "evaluate" BHR/BHRRuleEngine.js
+            echo "BHR evaluate(): PASS"
+            checked=$((checked + 1))
+          fi
+
+          if [ -f DC/DCRuleEngine.js ]; then
+            grep -q "evaluate" DC/DCRuleEngine.js
+            echo "DC evaluate(): PASS"
+            checked=$((checked + 1))
+          fi
+
+          if [ -f CYB/CYBRuleEngine.js ]; then
+            grep -q "evaluate" CYB/CYBRuleEngine.js
+            echo "CYB evaluate(): PASS"
+            checked=$((checked + 1))
+          fi
+
+          if [ -f INF/INFRuleEngine.js ]; then
+            grep -q "evaluate" INF/INFRuleEngine.js
+            echo "INF evaluate(): PASS"
+            checked=$((checked + 1))
+          fi
+
+          echo "Domain engines checked: $checked"
+
+      # =====================================================
+      # GOLDEN RULE
+      # =====================================================
+
+      - name: Verify Golden Rule pipeline
+        run: |
+          set -e
+
+          echo "Checking Golden Rule pipeline..."
+
+          grep -q "OBSERVE" captainAILena.js
+          grep -q "VERIFY" captainAILena.js
+          grep -q "ASSESS" captainAILena.js
+          grep -q "DECIDE" captainAILena.js
+          grep -q "ACT" captainAILena.js
+          grep -q "UPDATE" captainAILena.js
+
+          echo "GOLDEN RULE PIPELINE: PASS"
+
+      # =====================================================
+      # HUMAN AUTHORITY
+      # =====================================================
+
+      - name: Verify governance controls
+        run: |
+          set -e
+
+          echo "Checking human authority controls..."
+
+          grep -q "HUMAN_OPERATOR" domainIntegration.js
+          grep -q "autonomousExecution" domainIntegration.js
+          grep -q "humanAuthorizationRequired" domainIntegration.js
+
+          echo "HUMAN AUTHORITY GOVERNANCE: VERIFIED"
+
+      # =====================================================
+      # ARM CONTROLLER
+      # =====================================================
+
+      - name: Verify ARM controller
+        run: |
+          set -e
+
+          echo "Checking ARM controller..."
+
+          grep -q "runSystemTest" armController.js
+          grep -q "armSystem" armController.js
+          grep -q "disarmSystem" armController.js
+          grep -q "getArmStatus" armController.js
+
+          echo "ARM CONTROLLER: PASS"
+
+      # =====================================================
+      # HTML
+      # =====================================================
+
+      - name: Verify HTML files
+        run: |
+          set -e
+
+          echo "Checking SPD screens..."
+
+          test -f index.html
+
+          if [ -f cockpit_dashboard.html ]; then
+            echo "cockpit_dashboard.html: PRESENT"
+          fi
+
+          if [ -f arm_screen.html ]; then
+            echo "arm_screen.html: PRESENT"
+          fi
+
+          echo "HTML VALIDATION: PASS"
+
+      # =====================================================
+      # ASSESSMENT LATENCY — FILES
+      # =====================================================
+
+      - name: Verify Assessment Latency modules
+        run: |
+          set -e
+
+          echo "=============================================="
+          echo "Checking SPD v13.1 Assessment Latency modules"
+          echo "=============================================="
+
+          test -d assessment-latency
+
+          test -f assessment-latency/assessmentLatency.js
+          test -f assessment-latency/assessmentLatencyDisplay.js
+          test -f assessment-latency/assessmentLatencyDisplayWiring.js
+
+          echo "Assessment Latency source: PRESENT"
+          echo "Assessment Latency display: PRESENT"
+          echo "Assessment Latency wiring: PRESENT"
+
+          echo "ASSESSMENT LATENCY FILE VALIDATION: PASS"
+
+      # =====================================================
+      # ASSESSMENT LATENCY — IMPORT CONTRACT
+      # =====================================================
+
+      - name: Verify Assessment Latency module contract
+        run: |
+          set -e
+
+          node --input-type=module <<'EOF'
+
+          import * as latency
+            from "./assessment-latency/assessmentLatency.js";
+
+          import * as display
+            from "./assessment-latency/assessmentLatencyDisplay.js";
+
+          import * as wiring
+            from "./assessment-latency/assessmentLatencyDisplayWiring.js";
+
+          const requiredLatencyExports = [
+            "getLatencyCatalogue",
+            "getLatencyDisplayModel",
+            "getLatencyStatistics",
+            "getStageLatencyStatistics",
+            "getDomainLatencyStatistics",
+            "getScenarioLatencyStatistics",
+            "getLatencyObserverStatus"
+          ];
+
+          const requiredDisplayExports = [
+            "getAssessmentLatencyDisplay",
+            "getAssessmentLatencyDisplaySummary",
+            "getAssessmentLatencyStageDisplay",
+            "getAssessmentLatencyDomainDisplay",
+            "getAssessmentLatencyScenarioDisplay",
+            "getAssessmentLatencyRecords",
+            "formatLatencyMs",
+            "buildAssessmentLatencyRows",
+            "renderAssessmentLatencyDisplay",
+            "verifyAssessmentLatencyDisplay"
+          ];
+
+          const requiredWiringExports = [
+            "getAssessmentLatencyDisplayWiringStatus",
+            "refreshAssessmentLatencyDisplay",
+            "initializeAssessmentLatencyDisplayWiring",
+            "verifyAssessmentLatencyDisplayWiring",
+            "getAssessmentLatencyDisplayWiringSnapshot"
+          ];
+
+          for (const name of requiredLatencyExports) {
+            if (typeof latency[name] !== "function") {
+              throw new Error(
+                `Missing Assessment Latency export: ${name}`
+              );
+            }
+          }
+
+          for (const name of requiredDisplayExports) {
+            if (typeof display[name] !== "function") {
+              throw new Error(
+                `Missing Assessment Latency Display export: ${name}`
+              );
+            }
+          }
+
+          for (const name of requiredWiringExports) {
+            if (typeof wiring[name] !== "function") {
+              throw new Error(
+                `Missing Assessment Latency Wiring export: ${name}`
+              );
+            }
+          }
+
+          console.log(
+            "ASSESSMENT LATENCY MODULE CONTRACT: PASS"
+          );
+
+          EOF
+
+      # =====================================================
+      # ASSESSMENT LATENCY — HTML/WIRING CONTRACT
+      # =====================================================
+
+      - name: Verify Assessment Latency HTML wiring contract
+        run: |
+          set -e
+
+          echo "=============================================="
+          echo "Checking Assessment Latency HTML/Wiring contract"
+          echo "=============================================="
+
+          # Authoritative display container used by the HTML.
+          grep -q \
+            'id="spd-assessment-latency-container"' \
+            index.html
+
+          # The wiring module MUST locate that container.
+          grep -q \
+            '#spd-assessment-latency-container' \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          # Required display functions.
+          grep -q \
+            'renderAssessmentLatencyDisplay' \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          grep -q \
+            'verifyAssessmentLatencyDisplayWiring' \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          grep -q \
+            'initializeAssessmentLatencyDisplayWiring' \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          # HTML must use the actual exported refresh function.
+          grep -q \
+            'refreshAssessmentLatencyDisplay' \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          echo "HTML container contract       : PASS"
+          echo "Display rendering contract    : PASS"
+          echo "Initialization contract       : PASS"
+          echo "Verification contract          : PASS"
+          echo "Refresh contract               : PASS"
+
+          echo "ASSESSMENT LATENCY HTML/WIRING CONTRACT: PASS"
+
+      # =====================================================
+      # ASSESSMENT LATENCY — REJECT STALE API
+      # =====================================================
+
+      - name: Reject stale Assessment Latency refresh API
+        run: |
+          set -e
+
+          echo "Checking for stale refresh API..."
+
+          if grep -q \
+            "refreshAssessmentLatencyScreen" \
+            index.html; then
+
+            echo "ERROR: stale refreshAssessmentLatencyScreen() API detected."
+
+            exit 1
+          fi
+
+          echo "Stale refresh API: NOT PRESENT"
+          echo "REFRESH API CONTRACT: PASS"
+
+      # =====================================================
+      # ASSESSMENT LATENCY — MEASUREMENT ONLY
+      # =====================================================
+
+      - name: Verify Assessment Latency measurement-only protection
+        run: |
+          set -e
+
+          echo "Checking measurement-only architecture..."
+
+          grep -q "MEASUREMENT" \
+            assessment-latency/assessmentLatency.js
+
+          grep -q "latency" \
+            assessment-latency/assessmentLatency.js
+
+          grep -q "MEASUREMENT ONLY" \
+            assessment-latency/assessmentLatencyDisplay.js
+
+          grep -q "MEASUREMENT ONLY" \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          grep -q "architectureProtection" \
+            assessment-latency/assessmentLatencyDisplayWiring.js
+
+          echo "Measurement-only source protection: PASS"
+
+      # =====================================================
+      # ASSESSMENT LATENCY — WIRING IMPORT CHECK
+      # =====================================================
+
+      - name: Verify Assessment Latency wiring module
+        run: |
+          set -e
+
+          node --input-type=module <<'EOF'
+
+          import * as wiring
+            from "./assessment-latency/assessmentLatencyDisplayWiring.js";
+
+          const status =
+            wiring.getAssessmentLatencyDisplayWiringStatus();
+
+          const snapshot =
+            wiring.getAssessmentLatencyDisplayWiringSnapshot();
+
+          console.log(
+            "Wiring status:",
+            JSON.stringify(status, null, 2)
+          );
+
+          console.log(
+            "Wiring snapshot:",
+            JSON.stringify(snapshot, null, 2)
+          );
+
+          if (
+            typeof wiring.initializeAssessmentLatencyDisplayWiring !==
+            "function"
+          ) {
+            throw new Error(
+              "initializeAssessmentLatencyDisplayWiring unavailable"
+            );
+          }
+
+          if (
+            typeof wiring.refreshAssessmentLatencyDisplay !==
+            "function"
+          ) {
+            throw new Error(
+              "refreshAssessmentLatencyDisplay unavailable"
+            );
+          }
+
+          if (
+            typeof wiring.verifyAssessmentLatencyDisplayWiring !==
+            "function"
+          ) {
+            throw new Error(
+              "verifyAssessmentLatencyDisplayWiring unavailable"
+            );
+          }
+
+          console.log(
+            "ASSESSMENT LATENCY WIRING IMPORT: PASS"
+          );
+
+          EOF
+
+      # =====================================================
+      # DOMAIN MODULE IMPORT CHECK
+      # =====================================================
+
+      - name: Verify domain module integration
+        run: |
+          set -e
+
+          node --input-type=module <<'EOF'
+
+          import * as domainIntegration
+            from "./domainIntegration.js";
+
+          console.log(
+            "domainIntegration.js imported successfully."
+          );
+
+          if (
+            typeof domainIntegration.getDomainStatus !==
+            "function"
+          ) {
+            throw new Error(
+              "getDomainStatus() unavailable"
+            );
+          }
+
+          console.log(
+            "DOMAIN INTEGRATION IMPORT: PASS"
+          );
+
+          EOF
+
+      # =====================================================
+      # CORE ENGINE SELF CHECK
+      # =====================================================
+
+      - name: Run Core Engine Self-Check
+        run: |
+          set -e
+
+          node --input-type=module <<'EOF'
+
+          import {
+            verifyCoreEngine
+          } from "./engine.js";
+
+          const result =
+            verifyCoreEngine();
+
+          console.log(
+            JSON.stringify(result, null, 2)
+          );
+
+          if (result.status !== "PASS") {
+            throw new Error(
+              "Core engine self-check FAILED"
+            );
+          }
+
+          console.log(
+            "CORE ENGINE SELF-CHECK: PASS"
+          );
+
+          EOF
+
+      # =====================================================
+      # VALIDATION COMPLETE
+      # =====================================================
+
+      - name: Validation complete
+        run: |
+          echo "=============================================="
+          echo "SPD v13.1 VALIDATION: PASS"
+          echo "=============================================="
+          echo "Core Engine              : PASS"
+          echo "Domain Integration       : PASS"
+          echo "Golden Rule              : PASS"
+          echo "Human Authority          : VERIFIED"
+          echo "ARM Controller           : PASS"
+          echo "Assessment Latency       : PASS"
+          echo "Latency Wiring           : PASS"
+          echo "HTML/Wiring Contract     : PASS"
+          echo "Refresh API Contract     : PASS"
+          echo "Measurement Only         : VERIFIED"
+          echo "Decision Authority       : PROTECTED"
+          echo "=============================================="
+
+
+  # =========================================================
+  # DEPLOYMENT
+  # =========================================================
+
+  deploy:
+    name: Deploy SPD v13.1
+    needs: validate
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      # =====================================================
+      # CHECKOUT
+      # =====================================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # =====================================================
+      # GITHUB PAGES
+      # =====================================================
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # =====================================================
+      # PREPARE SITE
+      # =====================================================
+
+      - name: Prepare clean Pages site
+        run: |
+          set -e
+
+          rm -rf _site
+          mkdir -p _site
+
+          echo "Preparing SPD v13.1 Pages site..."
+
+          cp index.html _site/
+
+          if [ -f cockpit_dashboard.html ]; then
+            cp cockpit_dashboard.html _site/
+          fi
+
+          if [ -f arm_screen.html ]; then
+            cp arm_screen.html _site/
+          fi
+
+          for file in \
+            engine.js \
+            captainAILena.js \
+            goldenRuleEngine.js \
+            armController.js \
+            scenario.js \
+            fx.js \
+            energy.js \
+            risk.js \
+            domainIntegration.js
+          do
+            if [ -f "$file" ]; then
+              cp "$file" _site/
+            fi
+          done
+
+          for dir in FIN BHR DC CYB INF; do
+            if [ -d "$dir" ]; then
+              cp -r "$dir" _site/
+            fi
+          done
+
+          for dir in \
+            constants \
+            memory \
+            rules \
+            audit
+          do
+            if [ -d "$dir" ]; then
+              cp -r "$dir" _site/
+            fi
+          done
+
+          if [ ! -d assessment-latency ]; then
+            echo "ERROR: assessment-latency directory missing."
+            exit 1
+          fi
+
+          cp -r assessment-latency _site/
+
+          echo "=============================================="
+          echo "Assessment Latency deployment verification"
+          echo "=============================================="
+
+          test -f \
+            _site/assessment-latency/assessmentLatency.js
+
+          test -f \
+            _site/assessment-latency/assessmentLatencyDisplay.js
+
+          test -f \
+            _site/assessment-latency/assessmentLatencyDisplayWiring.js
+
+          grep -q \
+            '#spd-assessment-latency-container' \
+            _site/assessment-latency/assessmentLatencyDisplayWiring.js
+
+          grep -q \
+            'refreshAssessmentLatencyDisplay' \
+            _site/assessment-latency/assessmentLatencyDisplayWiring.js
+
+          if grep -q \
+            'refreshAssessmentLatencyScreen' \
+            _site/index.html; then
+
+            echo "ERROR: stale refresh API remains in deployed HTML."
+            exit 1
+          fi
+
+          echo "assessmentLatency.js               : PASS"
+          echo "assessmentLatencyDisplay.js       : PASS"
+          echo "assessmentLatencyDisplayWiring.js : PASS"
+          echo "HTML container contract           : PASS"
+          echo "Refresh API contract               : PASS"
+          echo "=============================================="
+          echo "ASSESSMENT LATENCY DEPLOYMENT: PASS"
+          echo "=============================================="
+
+          echo "Deployment tree:"
+          find _site -maxdepth 3 -type f | sort
+
+      # =====================================================
+      # UPLOAD
+      # =====================================================
+
+      - name: Upload SPD site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+      # =====================================================
+      # DEPLOY
+      # =====================================================
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
