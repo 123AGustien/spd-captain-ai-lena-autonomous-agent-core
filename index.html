@@ -1663,3 +1663,312 @@ Intensity:
      NEXT:
      PART 3 — OUTPUT PANELS
 ============================================================ -->
+<script>
+
+/* ============================================================
+   SPD v13.1 — ASSESSMENT ENGINE
+   LOCAL DETERMINISTIC EXECUTION
+   ASSESSMENT LATENCY INSTRUMENTATION
+============================================================ */
+
+function calculateAssessment(state) {
+
+  /* ==========================================================
+     ASSESSMENT LATENCY START
+  ========================================================== */
+
+  const assessmentStart = performance.now();
+
+  /* ==========================================================
+     RAW STRESS CALCULATION
+  ========================================================== */
+
+  const rawStress =
+    (
+      state.fx * 0.25 +
+      state.energy * 0.20 +
+      state.cyb * 0.20 +
+      state.inf * 0.20 +
+      state.dc * 0.15
+    );
+
+  /* ==========================================================
+     GOLDEN SCORE
+  ========================================================== */
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  /* ==========================================================
+     RESILIENCE SCORE
+  ========================================================== */
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  /* ==========================================================
+     RISK CLASSIFICATION
+  ========================================================== */
+
+  let risk;
+
+  if (goldenScore < 30) {
+
+    risk = "LOW";
+
+  } else if (goldenScore < 50) {
+
+    risk = "MEDIUM";
+
+  } else {
+
+    risk = "HIGH";
+  }
+
+  /* ==========================================================
+     SEVERITY
+  ========================================================== */
+
+  const severity =
+    risk === "HIGH"
+      ? "HIGH"
+      : risk === "MEDIUM"
+        ? "MEDIUM"
+        : "LOW";
+
+  /* ==========================================================
+     DOMAIN ASSESSMENT
+  ========================================================== */
+
+  const domainResult =
+    calculateDomainAssessment(state);
+
+  /* ==========================================================
+     ASSESSMENT LATENCY END
+  ========================================================== */
+
+  const assessmentEnd =
+    performance.now();
+
+  const assessmentLatencyMs =
+    Number(
+      (assessmentEnd - assessmentStart)
+        .toFixed(3)
+    );
+
+  /* ==========================================================
+     AUTHORITATIVE RESULT
+  ========================================================== */
+
+  const result = {
+
+    scenario:
+      currentScenario,
+
+    rawStress:
+      Number(
+        rawStress.toFixed(3)
+      ),
+
+    goldenScore:
+      Number(
+        goldenScore.toFixed(3)
+      ),
+
+    resilienceScore:
+      Number(
+        resilienceScore.toFixed(3)
+      ),
+
+    risk:
+      risk,
+
+    severity:
+      severity,
+
+    assessmentLatencyMs:
+      assessmentLatencyMs,
+
+    latencyUnit:
+      "ms",
+
+    latencyMeasurement:
+      "performance.now()",
+
+    assessmentEngine:
+      "SPD v13.1 LOCAL DETERMINISTIC ASSESSMENT ENGINE",
+
+    domainAssessment:
+      domainResult
+  };
+
+  return result;
+}
+
+
+/* ============================================================
+   DOMAIN ASSESSMENT
+   LOCAL DOMAIN RULE ENGINE
+============================================================ */
+
+function calculateDomainAssessment(state) {
+
+  const entries =
+    Object.entries(state);
+
+  entries.sort(
+    function(a, b) {
+      return b[1] - a[1];
+    }
+  );
+
+  const highestDomain =
+    entries.length > 0
+      ? entries[0]
+      : ["NONE", 0];
+
+  return {
+
+    scenario:
+      currentScenario,
+
+    dominantDomain:
+      highestDomain[0],
+
+    dominantStress:
+      highestDomain[1],
+
+    engine:
+      "LOCAL DOMAIN RULE ENGINE",
+
+    result:
+      "DOMAIN ASSESSMENT COMPLETE"
+  };
+}
+
+
+/* ============================================================
+   ASSESSMENT LATENCY DISPLAY
+============================================================ */
+
+function updateAssessmentLatencyDisplay(
+  assessment
+) {
+
+  const latency =
+    assessment &&
+    typeof assessment.assessmentLatencyMs === "number"
+      ? assessment.assessmentLatencyMs
+      : null;
+
+  if (latency === null) {
+
+    setText(
+      "assessmentLatencyScreen",
+      "Assessment latency unavailable."
+    );
+
+    return;
+  }
+
+  setJSON(
+    "assessmentLatencyScreen",
+    {
+
+      screen:
+        "SPD v13.1 ASSESSMENT LATENCY",
+
+      scenario:
+        assessment.scenario,
+
+      latency:
+        assessment.assessmentLatencyMs,
+
+      unit:
+        assessment.latencyUnit,
+
+      measurement:
+        assessment.latencyMeasurement,
+
+      engine:
+        assessment.assessmentEngine,
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false,
+
+      result:
+        "ASSESSMENT LATENCY MEASURED"
+    }
+  );
+}
+
+
+/* ============================================================
+   ASSESSMENT LATENCY SCREEN
+   UI CAN BE OPENED / CLOSED
+============================================================ */
+
+function openAssessmentLatency() {
+
+  const screen =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+  if (!screen) {
+    return;
+  }
+
+  screen.style.display = "block";
+
+  if (currentAssessment) {
+
+    updateAssessmentLatencyDisplay(
+      currentAssessment
+    );
+
+  } else {
+
+    setText(
+      "assessmentLatencyScreen",
+      "Run a scenario first to generate assessment latency data."
+    );
+  }
+
+  addPipelineLog(
+    "Assessment latency screen opened."
+  );
+}
+
+
+function closeAssessmentLatency() {
+
+  const screen =
+    document.getElementById(
+      "assessmentLatencyPanel"
+    );
+
+  if (!screen) {
+    return;
+  }
+
+  screen.style.display = "none";
+
+  addPipelineLog(
+    "Assessment latency screen closed."
+  );
+}
+
+
+/* ============================================================
+   END ASSESSMENT ENGINE
+============================================================ */
