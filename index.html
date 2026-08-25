@@ -1972,3 +1972,351 @@ function closeAssessmentLatency() {
 /* ============================================================
    END ASSESSMENT ENGINE
 ============================================================ */
+/* ============================================================
+   SPD v13.1 — DECISION CORE
+   CAPTAIN AI LENA
+============================================================ */
+
+function generateDecision(assessment) {
+
+  let action;
+  let recovery;
+
+  if (assessment.risk === "HIGH") {
+
+    action =
+      "INITIATE_RECOVERY_SEQUENCE";
+
+    recovery =
+      "STABILIZE_SYSTEM_AND_ESCALATE";
+
+  } else if (assessment.risk === "MEDIUM") {
+
+    action =
+      "INITIATE_PROTECTIVE_RESPONSE";
+
+    recovery =
+      "MAINTAIN_STABILIZATION_AND_MONITOR";
+
+  } else {
+
+    action =
+      "MAINTAIN_SAFE_STATE";
+
+    recovery =
+      "CONTINUE_MONITORING";
+  }
+
+  return {
+
+    agent:
+      "Captain AI Lena",
+
+    decision:
+      action,
+
+    recommendedRecovery:
+      recovery,
+
+    risk:
+      assessment.risk,
+
+    severity:
+      assessment.severity,
+
+    dominantDomain:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantDomain
+        : "N/A",
+
+    dominantStress:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantStress
+        : 0,
+
+    authority:
+      "HUMAN OPERATOR",
+
+    execution:
+      "NOT AUTHORIZED AUTOMATICALLY"
+  };
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function updateSolutionOptions(
+  assessment,
+  decision
+) {
+
+  const options = [];
+
+  if (assessment.risk === "HIGH") {
+
+    options.push(
+      "1. AUTHORIZE RECOVERY — subject to mission controller approval."
+    );
+
+    options.push(
+      "2. MAINTAIN SAFE STATE — prevent escalation while diagnostics continue."
+    );
+
+    options.push(
+      "3. REQUEST ADDITIONAL DIAGNOSTICS."
+    );
+
+    options.push(
+      "4. ESCALATE TO MISSION AUTHORITY."
+    );
+
+  } else if (assessment.risk === "MEDIUM") {
+
+    options.push(
+      "1. MAINTAIN STABILIZATION AND MONITOR."
+    );
+
+    options.push(
+      "2. REQUEST ADDITIONAL DIAGNOSTICS."
+    );
+
+    options.push(
+      "3. AUTHORIZE PROTECTIVE RESPONSE — HUMAN AUTHORIZATION REQUIRED."
+    );
+
+    options.push(
+      "4. ESCALATE IF CONDITIONS DETERIORATE."
+    );
+
+  } else {
+
+    options.push(
+      "1. MAINTAIN SAFE STATE."
+    );
+
+    options.push(
+      "2. CONTINUE MONITORING."
+    );
+
+    options.push(
+      "3. REQUEST DIAGNOSTICS IF REQUIRED."
+    );
+  }
+
+  options.push(
+    "",
+    "AI RECOMMENDATION:",
+    decision.decision,
+    "",
+    "RECOMMENDED RECOVERY:",
+    decision.recommendedRecovery,
+    "",
+    "DOMINANT DOMAIN:",
+    decision.dominantDomain,
+    "",
+    "DOMINANT STRESS:",
+    decision.dominantStress,
+    "",
+    "EXECUTION POLICY:",
+    "NO AUTOMATIC RECOVERY ACTION."
+  );
+
+  setText(
+    "solutionOptions",
+    options.join("\n")
+  );
+}
+
+
+/* ============================================================
+   ACTION SEQUENCE PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+) {
+
+  return [
+
+    "ACTION SEQUENCE PROMPT",
+
+    "",
+
+    "Scenario: " +
+      currentScenario,
+
+    "Intensity: " +
+      scenarioIntensity +
+      "%",
+
+    "Risk: " +
+      assessment.risk,
+
+    "Severity: " +
+      assessment.severity,
+
+    "Dominant Domain: " +
+      (
+        assessment.domainAssessment
+          ? assessment.domainAssessment.dominantDomain
+          : "N/A"
+      ),
+
+    "Dominant Stress: " +
+      (
+        assessment.domainAssessment
+          ? assessment.domainAssessment.dominantStress
+          : "N/A"
+      ),
+
+    "",
+
+    "AI Recommendation:",
+    decision.decision,
+
+    "",
+
+    "Recommended Recovery:",
+    decision.recommendedRecovery,
+
+    "",
+
+    "Assessment Latency:",
+    assessment.assessmentLatencyMs +
+      " ms",
+
+    "",
+
+    "EXECUTION GATE:",
+    "HUMAN AUTHORIZATION REQUIRED.",
+
+    "NO AUTOMATIC RECOVERY ACTION EXECUTED."
+
+  ].join("\n");
+}
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+) {
+
+  memory = {
+
+    lastScenario:
+      currentScenario,
+
+    lastDecision:
+      decision.decision,
+
+    lastRecovery:
+      decision.recommendedRecovery,
+
+    lastSeverity:
+      assessment.severity,
+
+    dominantDomain:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantDomain
+        : null,
+
+    dominantStress:
+      assessment.domainAssessment
+        ? assessment.domainAssessment.dominantStress
+        : null,
+
+    assessmentLatencyMs:
+      assessment.assessmentLatencyMs,
+
+    timestamp:
+      nowISO()
+  };
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+  addPipelineLog(
+    "Memory Core updated."
+  );
+}
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+) {
+
+  const record = {
+
+    id:
+      auditRecords.length + 1,
+
+    timestamp:
+      nowISO(),
+
+    event:
+      event,
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    data:
+      data
+  };
+
+  auditRecords.push(record);
+
+  setJSON(
+    "audit",
+    auditRecords
+  );
+}
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+function addPipelineLog(message) {
+
+  pipelineLog.push({
+
+    timestamp:
+      nowISO(),
+
+    message:
+      message
+  });
+
+  if (pipelineLog.length > 100) {
+
+    pipelineLog.shift();
+
+  }
+
+  setJSON(
+    "pipelineLog",
+    pipelineLog
+  );
+}
+
+
+/* ============================================================
+   END PART 4
+============================================================ */
