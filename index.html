@@ -1,1 +1,2826 @@
-g
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SPD v13.1 — ANTIPODEAN RESILIENCE COCKPIT</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  background:#0b0f14;
+  color:#00ff88;
+  font-family:Arial,sans-serif;
+  padding:20px;
+  margin:0;
+}
+
+h1{
+  color:#fff;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  color:#aaa;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+.banner{
+  border:2px solid #00ff88;
+  background:#080d11;
+  color:#00ff88;
+  padding:14px;
+  margin-bottom:15px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.panel{
+  border:1px solid #00ff88;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  background:#10161d;
+}
+
+.title{
+  font-size:18px;
+  margin-bottom:15px;
+  color:#fff;
+  font-weight:bold;
+}
+
+.status{
+  font-size:20px;
+  font-weight:bold;
+  padding:12px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  margin-bottom:15px;
+  background:#080d11;
+}
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  width:100%;
+}
+
+button{
+  display:inline-block;
+  visibility:visible;
+  opacity:1;
+  background:#00ff88;
+  color:#000;
+  border:2px solid #00ff88;
+  padding:14px 20px;
+  border-radius:6px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  min-height:48px;
+}
+
+button:hover{
+  opacity:.85;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+button:focus{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+
+.secondary{
+  background:#1b2730;
+  color:#00ff88;
+}
+
+.fin-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00bfff;
+}
+
+.energy-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #ffb000;
+}
+
+.infra-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00ff88;
+}
+
+.danger{
+  background:#ff5555;
+  color:#fff;
+  border:2px solid #ff5555;
+}
+
+.authority-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #fff;
+}
+
+.label{
+  width:100%;
+  font-size:14px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.fin-label{color:#00bfff}
+.energy-label{color:#ffb000}
+.infra-label{color:#00ff88}
+
+.monitor{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+}
+
+.domain{
+  border:1px solid #00ff88;
+  padding:15px;
+  border-radius:6px;
+  background:#080d11;
+  text-align:center;
+}
+
+.domain.fin{
+  border-color:#00bfff;
+}
+
+.domain.energy{
+  border-color:#ffb000;
+}
+
+.domain.infra{
+  border-color:#00ff88;
+}
+
+.domain-name{
+  color:#aaa;
+  font-size:13px;
+}
+
+.domain-value{
+  color:#fff;
+  font-size:26px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.pipeline{
+  font-size:16px;
+  color:#fff;
+  padding:10px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.stage{
+  display:inline-block;
+  padding:8px;
+  margin:3px;
+  border:1px solid #00ff88;
+  border-radius:4px;
+}
+
+.stage.active{
+  background:#00ff88;
+  color:#000;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:#00ff88;
+  cursor:pointer;
+  min-height:30px;
+}
+
+.intensity-value{
+  color:#fff;
+  font-weight:bold;
+  font-size:18px;
+}
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  overflow-x:auto;
+  color:#00ff88;
+  line-height:1.5;
+}
+
+.muted{
+  color:#aaa;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.solution{
+  border-left:3px solid #00ff88;
+  padding:10px;
+  margin-top:8px;
+  background:#080d11;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+
+.authority-box{
+  border:2px solid #fff;
+  padding:15px;
+  border-radius:8px;
+  background:#080d11;
+}
+
+.execution-gate{
+  border:1px solid #ffb000;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+  color:#ffb000;
+  line-height:1.6;
+}
+
+.domain-integration{
+  border:1px solid #00bfff;
+  background:#080d11;
+}
+
+.validation-pass{
+  border-left:3px solid #00ff88;
+  padding:10px;
+  background:#080d11;
+}
+
+@media(max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  h1{
+    font-size:22px;
+  }
+
+  .panel{
+    padding:12px;
+  }
+
+  .title{
+    font-size:16px;
+  }
+
+  .controls{
+    flex-direction:column;
+  }
+
+  .controls button{
+    width:100%;
+    min-height:52px;
+  }
+
+  .pipeline{
+    white-space:normal;
+    line-height:2;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🛰️ SPD v13.1 — ANTIPODEAN RESILIENCE COCKPIT</h1>
+
+<div class="subtitle">
+<strong>Captain AI Lena Autonomous Agent Core</strong><br>
+ANTIPODEAN CLIENT-SPECIFIC RESILIENCE SYSTEM<br><br>
+
+DATA → ALGORITHMS → COMPUTE<br>
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+</div>
+
+<div class="banner">
+🧪 SELF-CONTAINED SIMULATOR —
+LOCAL DETERMINISTIC EXECUTION —
+NO BACKEND CONNECTION
+</div>
+
+<div class="status" id="systemStatus">
+SYSTEM STATUS: 🟢 READY — LOCAL DETERMINISTIC SIMULATOR
+</div>
+
+
+<!-- ============================================================
+     SYSTEM CONTROLS
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">🎛️ SYSTEM CONTROLS</div>
+
+<div class="controls">
+
+<button type="button"
+onclick="runLiveSystem()">
+▶ RUN SYSTEM
+</button>
+
+<button type="button"
+class="secondary"
+onclick="runAuthoritativeSelfTest()">
+🧪 RUN SELF-TEST
+</button>
+
+<button type="button"
+class="secondary"
+onclick="runSelfTestAndCorrect()">
+🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+</button>
+
+<button type="button"
+onclick="runDomainIntegrationTest()">
+🔌 RUN DOMAIN INTEGRATION TEST
+</button>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     HUMAN DECISION AUTHORITY
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧑‍✈️ HUMAN DECISION AUTHORITY
+</div>
+
+<div class="authority-box">
+
+<strong>
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+</strong>
+
+<br><br>
+
+<div class="execution-gate">
+
+🔒 EXECUTION GATE<br>
+
+No recovery or execution action is authorized automatically.<br>
+
+<strong>
+HUMAN AUTHORIZATION REQUIRED.
+</strong>
+
+</div>
+
+<br>
+
+<pre id="humanDecisionAuthority">{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}</pre>
+
+<div class="controls">
+
+<button type="button"
+class="authority-button"
+onclick="authorizeRecovery()">
+AUTHORIZE RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="maintainSafeState()">
+MAINTAIN SAFE STATE
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="requestDiagnostics()">
+REQUEST ADDITIONAL DIAGNOSTICS
+</button>
+
+<button type="button"
+class="danger"
+onclick="abortRecovery()">
+ABORT RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="escalateMissionAuthority()">
+ESCALATE TO MISSION AUTHORITY
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     ANTIPODEAN DOMAIN MONITOR
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+📊 ANTIPODEAN DOMAIN MONITOR
+</div>
+
+<div class="monitor">
+
+<div class="domain fin">
+<div class="domain-name">💰 FIN — FINANCIAL</div>
+<div class="domain-value" id="domainFX">0</div>
+</div>
+
+<div class="domain energy">
+<div class="domain-name">⚡ ENERGY</div>
+<div class="domain-value" id="domainEN">0</div>
+</div>
+
+<div class="domain infra">
+<div class="domain-name">🏗️ INFRASTRUCTURE</div>
+<div class="domain-value" id="domainINF">0</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     FIN DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+💰 FIN — FINANCIAL RESILIENCE
+</div>
+
+<div class="muted">
+<strong>PRIMARY ANTIPODEAN CLIENT DOMAIN</strong><br>
+Local simulator engine: FINRuleEngine<br>
+Financial scenarios are processed through the local Domain Integration Layer.
+</div>
+
+<br>
+
+<div class="controls">
+
+<div class="label fin-label">
+FINANCIAL SCENARIOS
+</div>
+
+<button type="button"
+class="fin-button"
+onclick="activateScenario('FX_STRESS')">
+FX STRESS
+</button>
+
+<button type="button"
+class="fin-button"
+onclick="activateScenario('BANKING_STRESS')">
+BANKING STRESS
+</button>
+
+<button type="button"
+class="fin-button"
+onclick="activateScenario('LIQUIDITY_CRISIS')">
+LIQUIDITY CRISIS
+</button>
+
+<button type="button"
+class="fin-button"
+onclick="activateScenario('CREDIT_STRESS')">
+CREDIT STRESS
+</button>
+
+<button type="button"
+class="fin-button"
+onclick="activateScenario('SOVEREIGN_DEBT')">
+SOVEREIGN DEBT
+</button>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     ENERGY DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+⚡ ENERGY — ENERGY RESILIENCE
+</div>
+
+<div class="muted">
+<strong>SUPPORTING ANTIPODEAN DOMAIN</strong><br>
+Local simulator engine: EnergyRuleEngine
+</div>
+
+<br>
+
+<div class="controls">
+
+<div class="label energy-label">
+ENERGY SCENARIOS
+</div>
+
+<button type="button"
+class="energy-button"
+onclick="activateScenario('ENERGY_SUPPLY_STRESS')">
+ENERGY SUPPLY STRESS
+</button>
+
+<button type="button"
+class="energy-button"
+onclick="activateScenario('BIODIESEL_SHORTAGE')">
+BIODIESEL SHORTAGE
+</button>
+
+<button type="button"
+class="energy-button"
+onclick="activateScenario('FUEL_SUPPLY_DISRUPTION')">
+FUEL SUPPLY DISRUPTION
+</button>
+
+<button type="button"
+class="energy-button"
+onclick="activateScenario('ENERGY_PRICE_SHOCK')">
+ENERGY PRICE SHOCK
+</button>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     INFRA DOMAIN
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🏗️ INFRA — INFRASTRUCTURE RESILIENCE
+</div>
+
+<div class="muted">
+<strong>SUPPORTING ANTIPODEAN DOMAIN</strong><br>
+Local simulator engine: INFRA Rule Engine
+</div>
+
+<br>
+
+<div class="controls">
+
+<div class="label infra-label">
+INFRASTRUCTURE SCENARIOS
+</div>
+
+<button type="button"
+class="infra-button"
+onclick="activateScenario('INFRASTRUCTURE_STRAIN')">
+INFRASTRUCTURE STRAIN
+</button>
+
+<button type="button"
+class="infra-button"
+onclick="activateScenario('CRITICAL_INFRASTRUCTURE_FAILURE')">
+CRITICAL INFRASTRUCTURE FAILURE
+</button>
+
+<button type="button"
+class="infra-button"
+onclick="activateScenario('SUPPLY_CHAIN_DISRUPTION')">
+SUPPLY CHAIN DISRUPTION
+</button>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     DOMAIN INTEGRATION
+============================================================ -->
+
+<div class="panel domain-integration">
+
+<div class="title">
+🔌 ANTIPODEAN DOMAIN INTEGRATION LAYER
+</div>
+
+<div class="muted">
+
+COCKPIT<br>
+↓<br>
+LOCAL DOMAIN INTEGRATION<br>
+↓<br>
+FIN / ENERGY / INFRA RULE ENGINES<br>
+↓<br>
+CAPTAIN AI LENA DECISION CORE<br>
+↓<br>
+GOLDEN RULE PIPELINE<br>
+↓<br>
+RESULT / MEMORY / AUDIT
+
+</div>
+
+<br>
+
+<pre id="domainIntegrationStatus">
+Domain integration test not executed.
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO CONTROL
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🛰️ SCENARIO CONTROL
+</div>
+
+<div class="controls">
+
+<button type="button"
+class="secondary"
+onclick="activateScenario('NORMAL')">
+NORMAL
+</button>
+
+<button type="button"
+class="secondary"
+onclick="activateScenario('FX_STRESS')">
+FX STRESS
+</button>
+
+<button type="button"
+class="secondary"
+onclick="activateScenario('ENERGY_SPIKE')">
+ENERGY SPIKE
+</button>
+
+<button type="button"
+class="secondary"
+onclick="activateScenario('INFRASTRUCTURE_STRAIN')">
+INFRASTRUCTURE STRAIN
+</button>
+
+<button type="button"
+class="secondary"
+onclick="activateScenario('BIODIESEL_SHORTAGE')">
+BIODIESEL SHORTAGE
+</button>
+
+<button type="button"
+class="danger"
+onclick="resetScenario()">
+RESET
+</button>
+
+</div>
+</div>
+
+
+<!-- ============================================================
+     INTENSITY
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🎚️ SCENARIO INTENSITY
+</div>
+
+<div class="muted">
+Deterministic scenario intensity from 0% to 100%.
+</div>
+
+<br>
+
+<input
+id="scenarioIntensity"
+type="range"
+min="0"
+max="100"
+step="1"
+value="50"
+oninput="updateIntensity()"
+>
+
+<div>
+Intensity:
+<span
+class="intensity-value"
+id="intensityValue">
+50%
+</span>
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     SCENARIO PANEL
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧪 SCENARIO PANEL
+</div>
+
+<pre id="scenarioPanel">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     RAW SYSTEM STATE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+📊 RAW SYSTEM STATE
+</div>
+
+<pre id="state">
+{
+  "fx": 0,
+  "energy": 0,
+  "infrastructure": 0
+}
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     GOLDEN RULE ENGINE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🛰️ GOLDEN RULE ENGINE
+</div>
+
+<div class="pipeline">
+
+<span class="stage" id="stageOBSERVE">
+OBSERVE
+</span>
+
+→
+
+<span class="stage" id="stageVERIFY">
+VERIFY
+</span>
+
+→
+
+<span class="stage" id="stageASSESS">
+ASSESS
+</span>
+
+→
+
+<span class="stage" id="stageDECIDE">
+DECIDE
+</span>
+
+→
+
+<span class="stage" id="stageACT">
+ACT
+</span>
+
+→
+
+<span class="stage" id="stageUPDATE">
+UPDATE
+</span>
+
+</div>
+
+<pre id="pipeline">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+⚠️ SYSTEM ASSESSMENT
+</div>
+
+<pre id="assessment">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     DOMAIN ASSESSMENT
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🔌 DOMAIN ASSESSMENT
+</div>
+
+<pre id="domainAssessment">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     RISK
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🚨 RISK PANEL
+</div>
+
+<pre id="riskPanel">{
+  "risk": "UNKNOWN",
+  "resilienceScore": "N/A",
+  "goldenScore": "N/A"
+}</pre>
+
+</div>
+
+
+<!-- ============================================================
+     DECISION
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧠 CAPTAIN AI LENA DECISION
+</div>
+
+<pre id="decision">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     SOLUTION OPTIONS
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+💡 SOLUTION OPTIONS
+</div>
+
+<div class="solution"
+id="solutionOptions">
+Waiting for system assessment...
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     ACTION SEQUENCE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🚨 ACTION SEQUENCE
+</div>
+
+<pre id="actions">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     EXECUTION GATE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🔒 HUMAN EXECUTION GATE
+</div>
+
+<pre id="executionGate">
+HUMAN AUTHORIZATION REQUIRED.
+NO RECOVERY ACTION EXECUTED.
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     MEMORY CORE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧠 MEMORY CORE
+</div>
+
+<pre id="memoryCore">
+Memory Core Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     AUDIT
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧾 SPD AUDIT RECORD
+</div>
+
+<pre id="audit">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     PIPELINE LOG
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+📜 PIPELINE LOG
+</div>
+
+<pre id="pipelineLog">
+Waiting...
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     VALIDATION
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧪 VALIDATION
+</div>
+
+<pre id="selfTest">
+SELF-TEST
+Waiting...
+</pre>
+
+<pre id="selfTestInterpretation">
+SELF-TEST INTERPRETATION
+Waiting...
+</pre>
+
+<pre id="faultIdentification">
+FAULT IDENTIFICATION
+Waiting...
+</pre>
+
+<pre id="correctiveAction">
+CORRECTIVE ACTION ASSESSMENT
+Waiting...
+</pre>
+
+<pre id="retest">
+RE-TEST
+Waiting...
+</pre>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   SPD v13.1 — ANTIPODEAN RESILIENCE COCKPIT
+   LOCAL DETERMINISTIC SIMULATOR CORE
+
+   CLIENT-SPECIFIC DOMAIN:
+   FIN = PRIMARY
+   ENERGY = SUPPORTING
+   INFRA = SUPPORTING
+
+   NO BACKEND CONNECTION
+   NO AUTOMATIC PHYSICAL EXECUTION
+   HUMAN AUTHORIZATION REQUIRED
+============================================================ */
+
+const PHI = 1.618033988749895;
+
+let scenarioIntensity = 50;
+
+let currentScenario = "NORMAL";
+
+let currentState = {
+  fx:0,
+  energy:0,
+  infrastructure:0
+};
+
+let currentAssessment = null;
+
+let memory = {
+  lastScenario:null,
+  lastDecision:null,
+  lastRecovery:null,
+  lastSeverity:null,
+  timestamp:null
+};
+
+let auditRecords = [];
+
+let pipelineLog = [];
+
+
+/* ============================================================
+   ANTIPODEAN SCENARIO PROFILES
+============================================================ */
+
+const scenarioProfiles = {
+
+  NORMAL:{
+    fx:0,
+    energy:0,
+    infrastructure:0
+  },
+
+  FX_STRESS:{
+    fx:90,
+    energy:20,
+    infrastructure:20
+  },
+
+  BANKING_STRESS:{
+    fx:65,
+    energy:20,
+    infrastructure:25
+  },
+
+  LIQUIDITY_CRISIS:{
+    fx:75,
+    energy:25,
+    infrastructure:30
+  },
+
+  CREDIT_STRESS:{
+    fx:60,
+    energy:20,
+    infrastructure:35
+  },
+
+  SOVEREIGN_DEBT:{
+    fx:80,
+    energy:25,
+    infrastructure:40
+  },
+
+  ENERGY_SPIKE:{
+    fx:20,
+    energy:90,
+    infrastructure:30
+  },
+
+  ENERGY_SUPPLY_STRESS:{
+    fx:20,
+    energy:85,
+    infrastructure:50
+  },
+
+  BIODIESEL_SHORTAGE:{
+    fx:25,
+    energy:95,
+    infrastructure:70
+  },
+
+  FUEL_SUPPLY_DISRUPTION:{
+    fx:30,
+    energy:90,
+    infrastructure:75
+  },
+
+  ENERGY_PRICE_SHOCK:{
+    fx:60,
+    energy:85,
+    infrastructure:30
+  },
+
+  INFRASTRUCTURE_STRAIN:{
+    fx:25,
+    energy:60,
+    infrastructure:85
+  },
+
+  CRITICAL_INFRASTRUCTURE_FAILURE:{
+    fx:30,
+    energy:80,
+    infrastructure:100
+  },
+
+  SUPPLY_CHAIN_DISRUPTION:{
+    fx:45,
+    energy:70,
+    infrastructure:90
+  }
+
+};
+
+
+/* ============================================================
+   DOM HELPERS
+============================================================ */
+
+function setText(id,value){
+
+  const el =
+    document.getElementById(id);
+
+  if(el){
+    el.textContent = value;
+  }
+
+}
+
+
+function setJSON(id,value){
+
+  const el =
+    document.getElementById(id);
+
+  if(el){
+
+    el.textContent =
+      JSON.stringify(
+        value,
+        null,
+        2
+      );
+
+  }
+
+}
+
+
+function nowISO(){
+
+  return new Date().toISOString();
+
+}
+
+
+/* ============================================================
+   INTENSITY CONTROL
+============================================================ */
+
+function updateIntensity(){
+
+  const slider =
+    document.getElementById(
+      "scenarioIntensity"
+    );
+
+  scenarioIntensity =
+    Number(slider.value);
+
+  setText(
+    "intensityValue",
+    scenarioIntensity + "%"
+  );
+
+  if(
+    currentScenario !== "NORMAL"
+  ){
+
+    applyScenario(
+      currentScenario,
+      false
+    );
+
+  }
+
+  addPipelineLog(
+    "Scenario intensity changed to "
+    + scenarioIntensity
+    + "%"
+  );
+
+}
+
+
+/* ============================================================
+   SCENARIO ENGINE
+============================================================ */
+
+function activateScenario(name){
+
+  currentScenario = name;
+
+  applyScenario(
+    name,
+    true
+  );
+
+  addPipelineLog(
+    "Scenario activated: "
+    + name
+  );
+
+}
+
+
+function applyScenario(
+  name,
+  runPipeline
+){
+
+  const profile =
+    scenarioProfiles[name] ||
+    scenarioProfiles.NORMAL;
+
+  const multiplier =
+    scenarioIntensity / 100;
+
+  currentState = {
+
+    fx:
+      Math.round(
+        profile.fx *
+        multiplier
+      ),
+
+    energy:
+      Math.round(
+        profile.energy *
+        multiplier
+      ),
+
+    infrastructure:
+      Math.round(
+        profile.infrastructure *
+        multiplier
+      )
+
+  };
+
+  updateMonitor();
+
+  setJSON(
+    "scenarioPanel",
+    {
+      client:
+        "ANTIPODEAN",
+
+      scenario:name,
+
+      intensity:
+        scenarioIntensity,
+
+      primaryDomain:
+        "FINANCIAL RESILIENCE",
+
+      supportingDomains:[
+        "ENERGY RESILIENCE",
+        "INFRASTRUCTURE RESILIENCE"
+      ],
+
+      mode:
+        "LOCAL_DETERMINISTIC_SIMULATOR",
+
+      backendConnection:
+        false
+    }
+  );
+
+  setJSON(
+    "state",
+    currentState
+  );
+
+  if(runPipeline){
+
+    runGoldenRulePipeline();
+
+  }
+
+}
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+function resetScenario(){
+
+  currentScenario =
+    "NORMAL";
+
+  scenarioIntensity =
+    50;
+
+  document.getElementById(
+    "scenarioIntensity"
+  ).value = 50;
+
+  setText(
+    "intensityValue",
+    "50%"
+  );
+
+  currentState = {
+    fx:0,
+    energy:0,
+    infrastructure:0
+  };
+
+  updateMonitor();
+
+  setText(
+    "scenarioPanel",
+    "Scenario reset."
+  );
+
+  setJSON(
+    "state",
+    currentState
+  );
+
+  setText(
+    "assessment",
+    "Waiting..."
+  );
+
+  setText(
+    "domainAssessment",
+    "Waiting..."
+  );
+
+  setText(
+    "decision",
+    "Waiting..."
+  );
+
+  setText(
+    "pipeline",
+    "Waiting..."
+  );
+
+  setText(
+    "actions",
+    "Waiting..."
+  );
+
+  setJSON(
+    "riskPanel",
+    {
+      risk:"UNKNOWN",
+      resilienceScore:"N/A",
+      goldenScore:"N/A"
+    }
+  );
+
+  setText(
+    "executionGate",
+    "HUMAN AUTHORIZATION REQUIRED.\n"
+    + "NO RECOVERY ACTION EXECUTED."
+  );
+
+  addPipelineLog(
+    "Antipodean simulator reset."
+  );
+
+}
+
+
+/* ============================================================
+   DOMAIN MONITOR
+============================================================ */
+
+function updateMonitor(){
+
+  setText(
+    "domainFX",
+    currentState.fx
+  );
+
+  setText(
+    "domainEN",
+    currentState.energy
+  );
+
+  setText(
+    "domainINF",
+    currentState.infrastructure
+  );
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE STAGES
+============================================================ */
+
+function activateStage(stage){
+
+  [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+  ].forEach(
+
+    name=>{
+
+      const el =
+        document.getElementById(
+          "stage" + name
+        );
+
+      if(el){
+
+        el.classList.toggle(
+          "active",
+          name === stage
+        );
+
+      }
+
+    }
+
+  );
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+function runGoldenRulePipeline(){
+
+  activateStage(
+    "OBSERVE"
+  );
+
+  const observed =
+    {...currentState};
+
+
+  activateStage(
+    "VERIFY"
+  );
+
+  const verification = {
+
+    verified:true,
+
+    deterministic:true,
+
+    backendConnected:false,
+
+    client:
+      "ANTIPODEAN",
+
+    scenario:
+      currentScenario
+
+  };
+
+
+  activateStage(
+    "ASSESS"
+  );
+
+  currentAssessment =
+    calculateAssessment(
+      observed
+    );
+
+
+  activateStage(
+    "DECIDE"
+  );
+
+  const decision =
+    generateDecision(
+      currentAssessment
+    );
+
+
+  activateStage(
+    "ACT"
+  );
+
+  const actionPrompt =
+    generateActionPrompt(
+      currentAssessment,
+      decision
+    );
+
+
+  activateStage(
+    "UPDATE"
+  );
+
+  updateMemory(
+    decision,
+    currentAssessment
+  );
+
+
+  const result = {
+
+    pipeline:
+      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+
+    client:
+      "ANTIPODEAN",
+
+    primaryDomain:
+      "FINANCIAL RESILIENCE",
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    observed,
+
+    verification,
+
+    assessment:
+      currentAssessment,
+
+    decision,
+
+    actionPrompt,
+
+    execution:
+      "HUMAN AUTHORIZATION REQUIRED"
+
+  };
+
+
+  setJSON(
+    "pipeline",
+    result
+  );
+
+  setJSON(
+    "assessment",
+    currentAssessment
+  );
+
+  setJSON(
+    "decision",
+    decision
+  );
+
+  setText(
+    "actions",
+    actionPrompt
+  );
+
+
+  setText(
+    "solutionOptions",
+    generateSolutionOptions(
+      currentAssessment
+    )
+  );
+
+
+  updateAudit(
+    "GOLDEN_RULE_PIPELINE_COMPLETE",
+    result
+  );
+
+
+  addPipelineLog(
+    "Golden Rule pipeline completed."
+  );
+
+}
+
+
+/* ============================================================
+   ASSESSMENT
+============================================================ */
+
+function calculateAssessment(state){
+
+  /*
+    FIN remains the primary weighting.
+
+    FIN / FX       = 40%
+    ENERGY         = 30%
+    INFRASTRUCTURE = 30%
+  */
+
+  const rawStress =
+    (
+      state.fx * 0.40 +
+      state.energy * 0.30 +
+      state.infrastructure * 0.30
+    );
+
+
+  const goldenScore =
+    rawStress *
+    (1 / PHI);
+
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+
+  let risk;
+
+
+  if(
+    goldenScore < 30
+  ){
+
+    risk = "LOW";
+
+  }
+  else if(
+    goldenScore < 50
+  ){
+
+    risk = "MEDIUM";
+
+  }
+  else{
+
+    risk = "HIGH";
+
+  }
+
+
+  const severity =
+    risk === "HIGH"
+      ? "HIGH"
+      : risk === "MEDIUM"
+        ? "MEDIUM"
+        : "LOW";
+
+
+  const result = {
+
+    rawStress:
+      Number(
+        rawStress.toFixed(3)
+      ),
+
+    goldenScore:
+      Number(
+        goldenScore.toFixed(3)
+      ),
+
+    resilienceScore:
+      Number(
+        resilienceScore.toFixed(3)
+      ),
+
+    risk,
+
+    severity
+
+  };
+
+
+  setJSON(
+    "riskPanel",
+    {
+      risk,
+      resilienceScore:
+        result.resilienceScore,
+      goldenScore:
+        result.goldenScore
+    }
+  );
+
+
+  setJSON(
+    "domainAssessment",
+    calculateDomainAssessment(
+      state
+    )
+  );
+
+
+  return result;
+
+}
+
+
+/* ============================================================
+   DOMAIN ASSESSMENT
+============================================================ */
+
+function calculateDomainAssessment(
+  state
+){
+
+  const domains = [
+
+    {
+      domain:
+        "FINANCIAL / FX",
+      value:
+        state.fx
+    },
+
+    {
+      domain:
+        "ENERGY",
+      value:
+        state.energy
+    },
+
+    {
+      domain:
+        "INFRASTRUCTURE",
+      value:
+        state.infrastructure
+    }
+
+  ];
+
+
+  domains.sort(
+    (a,b)=>
+      b.value - a.value
+  );
+
+
+  return {
+
+    client:
+      "ANTIPODEAN",
+
+    primaryDomain:
+      "FINANCIAL RESILIENCE",
+
+    dominantDomain:
+      domains[0].domain,
+
+    dominantStress:
+      domains[0].value,
+
+    domainRanking:
+      domains,
+
+    engine:
+      "LOCAL ANTIPODEAN DOMAIN RULE ENGINE",
+
+    result:
+      "DOMAIN ASSESSMENT COMPLETE"
+
+  };
+
+}
+
+
+/* ============================================================
+   DECISION CORE
+============================================================ */
+
+function generateDecision(
+  assessment
+){
+
+  let action;
+  let recovery;
+
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    action =
+      "INITIATE_RECOVERY_SEQUENCE";
+
+    recovery =
+      "STABILIZE_SYSTEM_AND_ESCALATE";
+
+  }
+
+  else if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    action =
+      "INITIATE_PROTECTIVE_RESPONSE";
+
+    recovery =
+      "MAINTAIN_STABILIZATION_AND_MONITOR";
+
+  }
+
+  else{
+
+    action =
+      "MAINTAIN_SAFE_STATE";
+
+    recovery =
+      "CONTINUE_MONITORING";
+
+  }
+
+
+  return {
+
+    agent:
+      "Captain AI Lena",
+
+    client:
+      "ANTIPODEAN",
+
+    decision:
+      action,
+
+    recommendedRecovery:
+      recovery,
+
+    authority:
+      "HUMAN OPERATOR",
+
+    execution:
+      "NOT AUTHORIZED AUTOMATICALLY"
+
+  };
+
+}
+
+
+/* ============================================================
+   SOLUTION OPTIONS
+============================================================ */
+
+function generateSolutionOptions(
+  assessment
+){
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    return [
+      "1. Stabilize financial exposure.",
+      "2. Protect energy continuity.",
+      "3. Protect critical infrastructure.",
+      "4. Escalate to mission authority.",
+      "5. Human authorization required before execution."
+    ].join("\n");
+
+  }
+
+
+  if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    return [
+      "1. Maintain stabilization.",
+      "2. Increase monitoring.",
+      "3. Review financial exposure.",
+      "4. Verify energy and infrastructure dependencies.",
+      "5. Human operator retains final authority."
+    ].join("\n");
+
+  }
+
+
+  return [
+    "1. Maintain safe state.",
+    "2. Continue monitoring.",
+    "3. No recovery action required.",
+    "4. Human operator retains final authority."
+  ].join("\n");
+
+}
+
+
+/* ============================================================
+   ACTION PROMPT
+============================================================ */
+
+function generateActionPrompt(
+  assessment,
+  decision
+){
+
+  return [
+
+    "ACTION SEQUENCE",
+
+    "",
+
+    "Client: ANTIPODEAN",
+
+    "Scenario: "
+      + currentScenario,
+
+    "Risk: "
+      + assessment.risk,
+
+    "Severity: "
+      + assessment.severity,
+
+    "",
+
+    "AI Recommendation:",
+
+    decision.decision,
+
+    "",
+
+    "Recommended Recovery:",
+
+    decision.recommendedRecovery,
+
+    "",
+
+    "EXECUTION GATE:",
+
+    "HUMAN AUTHORIZATION REQUIRED.",
+
+    "NO AUTOMATIC RECOVERY ACTION EXECUTED."
+
+  ].join("\n");
+
+}
+
+
+/* ============================================================
+   MEMORY CORE
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+){
+
+  memory = {
+
+    client:
+      "ANTIPODEAN",
+
+    lastScenario:
+      currentScenario,
+
+    lastDecision:
+      decision.decision,
+
+    lastRecovery:
+      decision.recommendedRecovery,
+
+    lastSeverity:
+      assessment.severity,
+
+    timestamp:
+      nowISO()
+
+  };
+
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+
+  addPipelineLog(
+    "Memory Core updated."
+  );
+
+}
+
+
+/* ============================================================
+   AUDIT CORE
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+){
+
+  const record = {
+
+    id:
+      auditRecords.length + 1,
+
+    timestamp:
+      nowISO(),
+
+    client:
+      "ANTIPODEAN",
+
+    event,
+
+    scenario:
+      currentScenario,
+
+    intensity:
+      scenarioIntensity,
+
+    data
+
+  };
+
+
+  auditRecords.push(
+    record
+  );
+
+
+  setJSON(
+    "audit",
+    auditRecords
+  );
+
+}
+
+
+function addPipelineLog(
+  message
+){
+
+  pipelineLog.push({
+
+    timestamp:
+      nowISO(),
+
+    message
+
+  });
+
+
+  if(
+    pipelineLog.length > 100
+  ){
+
+    pipelineLog.shift();
+
+  }
+
+
+  setJSON(
+    "pipelineLog",
+    pipelineLog
+  );
+
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+============================================================ */
+
+function recordHumanDecision(
+  decision,
+  status
+){
+
+  const record = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    client:
+      "ANTIPODEAN",
+
+    status,
+
+    decision,
+
+    executionGate:
+
+      status === "AUTHORIZED"
+
+        ? "HUMAN_AUTHORIZATION_GRANTED"
+
+        : "HUMAN_AUTHORIZATION_REQUIRED",
+
+    timestamp:
+      nowISO()
+
+  };
+
+
+  setJSON(
+    "humanDecisionAuthority",
+    record
+  );
+
+
+  setText(
+    "executionGate",
+
+    status === "AUTHORIZED"
+
+      ? "HUMAN AUTHORIZATION GRANTED.\n"
+        + "AUTHORIZED DECISION: "
+        + decision
+
+      : "HUMAN AUTHORIZATION REQUIRED.\n"
+        + "NO RECOVERY ACTION EXECUTED."
+
+  );
+
+
+  updateAudit(
+    "HUMAN_DECISION",
+    record
+  );
+
+
+  addPipelineLog(
+    "Human decision recorded: "
+    + decision
+  );
+
+}
+
+
+function authorizeRecovery(){
+
+  recordHumanDecision(
+    "AUTHORIZE_RECOVERY",
+    "AUTHORIZED"
+  );
+
+
+  setText(
+    "actions",
+
+    "HUMAN AUTHORIZATION GRANTED.\n"
+    + "SIMULATED RECOVERY ACTION MAY PROCEED "
+    + "WITHIN LOCAL SIMULATOR CONSTRAINTS."
+  );
+
+}
+
+
+function maintainSafeState(){
+
+  recordHumanDecision(
+    "MAINTAIN_SAFE_STATE",
+    "AUTHORIZED"
+  );
+
+
+  setText(
+    "actions",
+
+    "MISSION CONTROLLER AUTHORIZED "
+    + "MAINTAIN SAFE STATE."
+  );
+
+}
+
+
+function requestDiagnostics(){
+
+  recordHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS",
+    "AUTHORIZED"
+  );
+
+
+  runTrialDiagnostics();
+
+}
+
+
+function abortRecovery(){
+
+  recordHumanDecision(
+    "ABORT_RECOVERY",
+    "AUTHORIZED"
+  );
+
+
+  setText(
+    "actions",
+
+    "RECOVERY ABORTED BY MISSION CONTROLLER.\n"
+    + "SAFE STATE MAINTAINED."
+  );
+
+}
+
+
+function escalateMissionAuthority(){
+
+  recordHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY",
+    "AUTHORIZED"
+  );
+
+
+  setText(
+    "actions",
+
+    "ESCALATED TO MISSION AUTHORITY."
+  );
+
+}
+
+
+/* ============================================================
+   DIAGNOSTICS
+============================================================ */
+
+function runTrialDiagnostics(){
+
+  const diagnostics = {
+
+    mode:
+      "LOCAL DETERMINISTIC DIAGNOSTICS",
+
+    client:
+      "ANTIPODEAN",
+
+    scenario:
+      currentScenario,
+
+    state:
+      {...currentState},
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    result:
+      "DIAGNOSTICS COMPLETE"
+
+  };
+
+
+  setText(
+    "actions",
+    JSON.stringify(
+      diagnostics,
+      null,
+      2
+    )
+  );
+
+
+  updateAudit(
+    "ADDITIONAL_DIAGNOSTICS",
+    diagnostics
+  );
+
+
+  addPipelineLog(
+    "Additional diagnostics completed."
+  );
+
+}
+
+
+/* ============================================================
+   SYSTEM RUN
+============================================================ */
+
+function runLiveSystem(){
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: 🟡 RUNNING — LOCAL SIMULATOR"
+  );
+
+
+  activateScenario(
+    currentScenario || "NORMAL"
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: 🟢 READY — SIMULATION COMPLETE"
+  );
+
+
+  updateAudit(
+    "SYSTEM_RUN_COMPLETE",
+    {
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity
+    }
+  );
+
+}
+
+
+/* ============================================================
+   SELF TEST
+============================================================ */
+
+function runAuthoritativeSelfTest(){
+
+  const tests = [];
+
+
+  tests.push({
+
+    test:
+      "DOM ELEMENTS",
+
+    result:
+      document.getElementById(
+        "scenarioIntensity"
+      )
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  tests.push({
+
+    test:
+      "INTENSITY LEVER",
+
+    result:
+      typeof updateIntensity ===
+      "function"
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  tests.push({
+
+    test:
+      "GOLDEN RULE ENGINE",
+
+    result:
+      typeof runGoldenRulePipeline ===
+      "function"
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  tests.push({
+
+    test:
+      "ANTIPODEAN DOMAIN ENGINE",
+
+    result:
+      Object.keys(
+        scenarioProfiles
+      ).length > 0
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  tests.push({
+
+    test:
+      "AUDIT CORE",
+
+    result:
+      typeof updateAudit ===
+      "function"
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  tests.push({
+
+    test:
+      "HUMAN AUTHORITY",
+
+    result:
+      typeof recordHumanDecision ===
+      "function"
+        ? "PASS"
+        : "FAIL"
+
+  });
+
+
+  const passed =
+    tests.filter(
+      t =>
+        t.result === "PASS"
+    ).length;
+
+
+  const failed =
+    tests.length -
+    passed;
+
+
+  const result = {
+
+    testType:
+      "SPD v13.1 ANTIPODEAN AUTHORITATIVE LOCAL SELF-TEST",
+
+    timestamp:
+      nowISO(),
+
+    passed,
+
+    failed,
+
+    status:
+      failed === 0
+        ? "PASS"
+        : "FAIL",
+
+    tests
+
+  };
+
+
+  setJSON(
+    "selfTest",
+    result
+  );
+
+
+  setText(
+    "selfTestInterpretation",
+
+    failed === 0
+
+      ? "SELF-TEST PASS — "
+        + "ANTIPODEAN CORE SIMULATOR FUNCTIONS AVAILABLE."
+
+      : "SELF-TEST FAIL — "
+        + "ONE OR MORE CORE FUNCTIONS UNAVAILABLE."
+
+  );
+
+
+  setJSON(
+    "faultIdentification",
+
+    failed === 0
+
+      ? {
+
+          fault:false,
+
+          message:
+            "No simulator fault identified."
+
+        }
+
+      : {
+
+          fault:true,
+
+          failedTests:
+            tests.filter(
+              t =>
+                t.result ===
+                "FAIL"
+            )
+
+        }
+
+  );
+
+
+  updateAudit(
+    "SELF_TEST",
+    result
+  );
+
+
+  addPipelineLog(
+    "Antipodean authoritative self-test: "
+    + result.status
+  );
+
+
+  return result;
+
+}
+
+
+/* ============================================================
+   SELF TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestAndCorrect(){
+
+  const result =
+    runAuthoritativeSelfTest();
+
+
+  if(
+    result.status === "PASS"
+  ){
+
+    setText(
+      "correctiveAction",
+
+      "NO CORRECTIVE ACTION REQUIRED.\n"
+      + "ANTIPODEAN SIMULATOR CORE VALIDATED."
+    );
+
+
+    runReTest();
+
+
+    return;
+
+  }
+
+
+  setText(
+    "correctiveAction",
+
+    "CORRECTIVE ACTION:\n"
+    + "REINITIALIZE LOCAL ANTIPODEAN SIMULATOR STATE."
+  );
+
+
+  resetScenario();
+
+
+  runReTest();
+
+}
+
+
+/* ============================================================
+   RE-TEST
+============================================================ */
+
+function runReTest(){
+
+  const result =
+    runAuthoritativeSelfTest();
+
+
+  const retest = {
+
+    timestamp:
+      nowISO(),
+
+    status:
+
+      result.status === "PASS"
+
+        ? "RE-TEST PASS"
+
+        : "RE-TEST FAIL",
+
+    passed:
+      result.passed,
+
+    failed:
+      result.failed
+
+  };
+
+
+  setJSON(
+    "retest",
+    retest
+  );
+
+
+  updateAudit(
+    "RETEST_VALIDATION",
+    retest
+  );
+
+
+  addPipelineLog(
+    "Re-test validation: "
+    + retest.status
+  );
+
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION TEST
+============================================================ */
+
+function runDomainIntegrationTest(){
+
+  const result = {
+
+    client:
+      "ANTIPODEAN",
+
+    cockpit:
+      "CONNECTED",
+
+    domainIntegration:
+      "LOCAL",
+
+    primaryDomain:
+      "FINANCIAL RESILIENCE",
+
+    FINRuleEngine:
+      "AVAILABLE",
+
+    EnergyRuleEngine:
+      "AVAILABLE",
+
+    INFRARuleEngine:
+      "AVAILABLE",
+
+    decisionCore:
+      "AVAILABLE",
+
+    goldenRuleEngine:
+      "AVAILABLE",
+
+    memoryCore:
+      "AVAILABLE",
+
+    auditCore:
+      "AVAILABLE",
+
+    backend:
+      "NOT CONNECTED",
+
+    automaticExecution:
+      "DISABLED",
+
+    humanAuthorization:
+      "REQUIRED",
+
+    status:
+      "PASS"
+
+  };
+
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    result
+  );
+
+
+  addPipelineLog(
+    "Antipodean domain integration test PASS."
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    updateMonitor();
+
+
+    setText(
+      "intensityValue",
+      scenarioIntensity + "%"
+    );
+
+
+    setText(
+      "systemStatus",
+      "SYSTEM STATUS: 🟢 READY — LOCAL DETERMINISTIC SIMULATOR"
+    );
+
+
+    addPipelineLog(
+      "SPD v13.1 Antipodean local simulator initialized."
+    );
+
+
+    updateAudit(
+      "SIMULATOR_INITIALIZED",
+      {
+
+        client:
+          "ANTIPODEAN",
+
+        primaryDomain:
+          "FINANCIAL RESILIENCE",
+
+        supportingDomains:[
+          "ENERGY RESILIENCE",
+          "INFRASTRUCTURE RESILIENCE"
+        ],
+
+        backendConnection:
+          false,
+
+        deterministic:
+          true
+
+      }
+    );
+
+  }
+);
+
+</script>
+
+</body>
+</html>
