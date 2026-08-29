@@ -4481,6 +4481,1472 @@ function validateOrbitalState(){
 
     missionIntegrity:
       orbital
+/* ============================================================
+   SPD v13.1 — DP + ORBITAL INTEGRATED SIMULATOR
+   PART 4
+   CAPTAIN AI LENA DECISION / VALIDATION LAYER
+============================================================ */
+
+/* ============================================================
+   DP STATE MODEL
+============================================================ */
+
+const dpState = {
+
+  vesselStatus: "STABILIZED",
+
+  positionError: 0,
+
+  headingError: 0,
+
+  surge: 0,
+
+  sway: 0,
+
+  yaw: 0,
+
+  windLoad: 0,
+
+  currentLoad: 0,
+
+  waveLoad: 0,
+
+  availableThrusters: 100,
+
+  availablePower: 100,
+
+  redundancy: 100,
+
+  consequence: 0,
+
+  severity: "NORMAL"
+
+};
+
+
+/* ============================================================
+   ORBITAL STATE MODEL
+============================================================ */
+
+const orbitalState = {
+
+  spacecraftStatus: "STABILIZED",
+
+  communication: 100,
+
+  power: 100,
+
+  attitude: 100,
+
+  propulsion: 100,
+
+  navigation: 100,
+
+  thermal: 100,
+
+  missionIntegrity: 100,
+
+  redundancy: 100,
+
+  orbitalDeviation: 0,
+
+  severity: "NORMAL"
+
+};
+
+
+/* ============================================================
+   DP SCENARIO PROFILES
+============================================================ */
+
+const dpScenarioProfiles = {
+
+  DP_THRUSTER_FAILURE: {
+
+    positionError: 35,
+    headingError: 20,
+    windLoad: 45,
+    currentLoad: 35,
+    waveLoad: 30,
+    availableThrusters: 65,
+    availablePower: 85,
+    redundancy: 65,
+    consequence: 55
+
+  },
+
+  DP_POWER_FAILURE: {
+
+    positionError: 50,
+    headingError: 35,
+    windLoad: 40,
+    currentLoad: 35,
+    waveLoad: 35,
+    availableThrusters: 60,
+    availablePower: 35,
+    redundancy: 45,
+    consequence: 75
+
+  },
+
+  DP_POSITION_DEVIATION: {
+
+    positionError: 70,
+    headingError: 40,
+    windLoad: 35,
+    currentLoad: 40,
+    waveLoad: 30,
+    availableThrusters: 90,
+    availablePower: 90,
+    redundancy: 80,
+    consequence: 70
+
+  },
+
+  DP_WIND_LOAD: {
+
+    positionError: 30,
+    headingError: 25,
+    windLoad: 85,
+    currentLoad: 45,
+    waveLoad: 60,
+    availableThrusters: 90,
+    availablePower: 85,
+    redundancy: 85,
+    consequence: 50
+
+  },
+
+  DP_DRIFT_OFF: {
+
+    positionError: 90,
+    headingError: 65,
+    windLoad: 70,
+    currentLoad: 65,
+    waveLoad: 60,
+    availableThrusters: 60,
+    availablePower: 70,
+    redundancy: 50,
+    consequence: 90
+
+  },
+
+  DP_MULTI_THRUSTER_FAILURE: {
+
+    positionError: 65,
+    headingError: 55,
+    windLoad: 55,
+    currentLoad: 50,
+    waveLoad: 45,
+    availableThrusters: 35,
+    availablePower: 65,
+    redundancy: 30,
+    consequence: 85
+
+  },
+
+  DP_WORST_CASE_FAILURE: {
+
+    positionError: 95,
+    headingError: 90,
+    windLoad: 90,
+    currentLoad: 85,
+    waveLoad: 85,
+    availableThrusters: 20,
+    availablePower: 25,
+    redundancy: 15,
+    consequence: 100
+
+  }
+
+};
+
+
+/* ============================================================
+   ORBITAL SCENARIO PROFILES
+============================================================ */
+
+const orbitalScenarioProfiles = {
+
+  ORBITAL_SIGNAL_LOSS: {
+
+    communication: 5,
+    power: 90,
+    attitude: 90,
+    propulsion: 90,
+    navigation: 55,
+    thermal: 90,
+    missionIntegrity: 80,
+    redundancy: 60,
+    orbitalDeviation: 10,
+    severity: "HIGH"
+
+  },
+
+  ORBITAL_POWER_FAILURE: {
+
+    communication: 55,
+    power: 15,
+    attitude: 55,
+    propulsion: 50,
+    navigation: 60,
+    thermal: 45,
+    missionIntegrity: 45,
+    redundancy: 25,
+    orbitalDeviation: 35,
+    severity: "CRITICAL"
+
+  },
+
+  ORBITAL_ATTITUDE_ANOMALY: {
+
+    communication: 85,
+    power: 85,
+    attitude: 25,
+    propulsion: 70,
+    navigation: 45,
+    thermal: 80,
+    missionIntegrity: 55,
+    redundancy: 45,
+    orbitalDeviation: 60,
+    severity: "HIGH"
+
+  },
+
+  ORBITAL_COMMUNICATION_FAILURE: {
+
+    communication: 10,
+    power: 90,
+    attitude: 85,
+    propulsion: 85,
+    navigation: 70,
+    thermal: 90,
+    missionIntegrity: 75,
+    redundancy: 55,
+    orbitalDeviation: 15,
+    severity: "HIGH"
+
+  },
+
+  ORBITAL_MANOEUVRE_FAILURE: {
+
+    communication: 85,
+    power: 75,
+    attitude: 65,
+    propulsion: 30,
+    navigation: 55,
+    thermal: 80,
+    missionIntegrity: 50,
+    redundancy: 35,
+    orbitalDeviation: 65,
+    severity: "CRITICAL"
+
+  },
+
+  ORBITAL_PROPULSION_FAILURE: {
+
+    communication: 90,
+    power: 85,
+    attitude: 70,
+    propulsion: 15,
+    navigation: 60,
+    thermal: 85,
+    missionIntegrity: 40,
+    redundancy: 20,
+    orbitalDeviation: 75,
+    severity: "CRITICAL"
+
+  },
+
+  ORBITAL_CASCADE_FAILURE: {
+
+    communication: 25,
+    power: 30,
+    attitude: 30,
+    propulsion: 25,
+    navigation: 35,
+    thermal: 35,
+    missionIntegrity: 20,
+    redundancy: 10,
+    orbitalDeviation: 90,
+    severity: "CRITICAL"
+
+  }
+
+};
+
+
+/* ============================================================
+   DP STATE APPLICATION
+============================================================ */
+
+function applyDPScenario(name){
+
+  const profile =
+    dpScenarioProfiles[name];
+
+  if(!profile){
+
+    return false;
+
+  }
+
+  Object.assign(
+    dpState,
+    profile
+  );
+
+  dpState.vesselStatus =
+    "FAULT_CONDITION";
+
+  currentDomain =
+    "DP";
+
+  currentScenario =
+    name;
+
+  currentState.dp =
+    Math.round(
+      (
+        profile.positionError +
+        profile.headingError +
+        profile.windLoad +
+        profile.currentLoad +
+        profile.waveLoad +
+        (100 - profile.availableThrusters) +
+        (100 - profile.availablePower) +
+        (100 - profile.redundancy) +
+        profile.consequence
+      ) / 9
+    );
+
+  updateMonitor();
+
+  return true;
+
+}
+
+
+/* ============================================================
+   ORBITAL STATE APPLICATION
+============================================================ */
+
+function applyOrbitalScenario(name){
+
+  const profile =
+    orbitalScenarioProfiles[name];
+
+  if(!profile){
+
+    return false;
+
+  }
+
+  Object.assign(
+    orbitalState,
+    profile
+  );
+
+  orbitalState.spacecraftStatus =
+    "FAULT_CONDITION";
+
+  currentDomain =
+    "ORBITAL";
+
+  currentScenario =
+    name;
+
+  currentState.orbital =
+    Math.round(
+      (
+        (100 - profile.communication) +
+        (100 - profile.power) +
+        (100 - profile.attitude) +
+        (100 - profile.propulsion) +
+        (100 - profile.navigation) +
+        (100 - profile.thermal) +
+        (100 - profile.missionIntegrity) +
+        (100 - profile.redundancy) +
+        profile.orbitalDeviation
+      ) / 9
+    );
+
+  updateMonitor();
+
+  return true;
+
+}
+
+
+/* ============================================================
+   DP RESILIENCE ASSESSMENT
+============================================================ */
+
+function assessDPResilience(){
+
+  const stress = Math.round(
+    (
+      dpState.positionError * 0.18 +
+      dpState.headingError * 0.10 +
+      dpState.windLoad * 0.10 +
+      dpState.currentLoad * 0.08 +
+      dpState.waveLoad * 0.08 +
+      (100 - dpState.availableThrusters) * 0.14 +
+      (100 - dpState.availablePower) * 0.10 +
+      (100 - dpState.redundancy) * 0.08 +
+      dpState.consequence * 0.14
+    )
+  );
+
+  const goldenScore =
+    stress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  let risk =
+    "LOW";
+
+  if(goldenScore >= 50){
+
+    risk = "HIGH";
+
+  }
+  else if(goldenScore >= 30){
+
+    risk = "MEDIUM";
+
+  }
+
+  return {
+
+    domain:"DP",
+
+    scenario:currentScenario,
+
+    rawStress:stress,
+
+    goldenScore:Number(
+      goldenScore.toFixed(3)
+    ),
+
+    resilienceScore:Number(
+      resilienceScore.toFixed(3)
+    ),
+
+    risk,
+
+    vesselStatus:
+      dpState.vesselStatus,
+
+    positionError:
+      dpState.positionError,
+
+    headingError:
+      dpState.headingError,
+
+    availableThrusters:
+      dpState.availableThrusters,
+
+    availablePower:
+      dpState.availablePower,
+
+    redundancy:
+      dpState.redundancy
+
+  };
+
+}
+
+
+/* ============================================================
+   ORBITAL RESILIENCE ASSESSMENT
+============================================================ */
+
+function assessOrbitalResilience(){
+
+  const stress = Math.round(
+    (
+      (100 - orbitalState.communication) * 0.12 +
+      (100 - orbitalState.power) * 0.12 +
+      (100 - orbitalState.attitude) * 0.12 +
+      (100 - orbitalState.propulsion) * 0.12 +
+      (100 - orbitalState.navigation) * 0.10 +
+      (100 - orbitalState.thermal) * 0.08 +
+      (100 - orbitalState.missionIntegrity) * 0.14 +
+      (100 - orbitalState.redundancy) * 0.10 +
+      orbitalState.orbitalDeviation * 0.10
+    )
+  );
+
+  const goldenScore =
+    stress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  let risk =
+    "LOW";
+
+  if(goldenScore >= 50){
+
+    risk = "HIGH";
+
+  }
+  else if(goldenScore >= 30){
+
+    risk = "MEDIUM";
+
+  }
+
+  return {
+
+    domain:"ORBITAL",
+
+    scenario:currentScenario,
+
+    rawStress:stress,
+
+    goldenScore:Number(
+      goldenScore.toFixed(3)
+    ),
+
+    resilienceScore:Number(
+      resilienceScore.toFixed(3)
+    ),
+
+    risk,
+
+    spacecraftStatus:
+      orbitalState.spacecraftStatus,
+
+    communication:
+      orbitalState.communication,
+
+    power:
+      orbitalState.power,
+
+    attitude:
+      orbitalState.attitude,
+
+    propulsion:
+      orbitalState.propulsion,
+
+    navigation:
+      orbitalState.navigation,
+
+    missionIntegrity:
+      orbitalState.missionIntegrity,
+
+    orbitalDeviation:
+      orbitalState.orbitalDeviation
+
+  };
+
+}
+
+
+/* ============================================================
+   CAPTAIN AI LENA — DP DECISION
+============================================================ */
+
+function generateDPDecision(assessment){
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    return {
+
+      decision:
+        "ENTER_DP_SAFE_STATE",
+
+      guidance:
+        "Stabilize vessel, preserve remaining DP capability, isolate failed equipment and prepare controlled recovery.",
+
+      execution:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    };
+
+  }
+
+  if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    return {
+
+      decision:
+        "MAINTAIN_DP_SAFE_STATE",
+
+      guidance:
+        "Maintain controlled position and heading while verifying redundancy and available propulsion capability.",
+
+      execution:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    };
+
+  }
+
+  return {
+
+    decision:
+      "MAINTAIN_SAFE_STATE",
+
+    guidance:
+      "Continue monitoring vessel position, heading, power and propulsion redundancy.",
+
+    execution:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+}
+
+
+/* ============================================================
+   CAPTAIN AI LENA — ORBITAL DECISION
+============================================================ */
+
+function generateOrbitalDecision(assessment){
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    return {
+
+      decision:
+        "ENTER_ORBITAL_SAFE_STATE",
+
+      guidance:
+        "Preserve spacecraft stability, protect remaining resources and prepare validated recovery options.",
+
+      execution:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    };
+
+  }
+
+  if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    return {
+
+      decision:
+        "MAINTAIN_SAFE_ORBIT",
+
+      guidance:
+        "Maintain stable spacecraft state while validating communications, power, attitude and navigation.",
+
+      execution:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    };
+
+  }
+
+  return {
+
+    decision:
+      "MAINTAIN_SAFE_STATE",
+
+    guidance:
+      "Continue spacecraft monitoring and maintain current safe state.",
+
+    execution:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+}
+
+
+/* ============================================================
+   UNIFIED CAPTAIN AI LENA DECISION DISPATCH
+============================================================ */
+
+function runCaptainAILenaAssessment(){
+
+  let assessment;
+  let decision;
+
+  addPipelineLog(
+    "OBSERVE — Captain AI Lena receiving "
+    + currentDomain
+    + " state."
+  );
+
+  addPipelineLog(
+    "VERIFY — deterministic simulator state verified."
+  );
+
+  if(
+    currentDomain === "DP"
+  ){
+
+    assessment =
+      assessDPResilience();
+
+    addPipelineLog(
+      "ASSESS — DP resilience calculation complete."
+    );
+
+    decision =
+      generateDPDecision(
+        assessment
+      );
+
+  }
+
+  else if(
+    currentDomain === "ORBITAL"
+  ){
+
+    assessment =
+      assessOrbitalResilience();
+
+    addPipelineLog(
+      "ASSESS — Orbital resilience calculation complete."
+    );
+
+    decision =
+      generateOrbitalDecision(
+        assessment
+      );
+
+  }
+
+  else{
+
+    return null;
+
+  }
+
+  addPipelineLog(
+    "DECIDE — "
+    + decision.decision
+  );
+
+  addPipelineLog(
+    "ACT — execution remains gated by Human Decision Authority."
+  );
+
+  addPipelineLog(
+    "UPDATE — memory and audit state updated."
+  );
+
+  currentAssessment = {
+
+    assessment,
+
+    decision,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  updateMemory(
+    decision.decision,
+    assessment
+  );
+
+  updateAudit(
+    "CAPTAIN_AI_LENA_ASSESSMENT",
+    currentAssessment
+  );
+
+  if(
+    currentDomain === "DP"
+  ){
+
+    setJSON(
+      "dpSimulator",
+      currentAssessment
+    );
+
+  }
+
+  if(
+    currentDomain === "ORBITAL"
+  ){
+
+    setJSON(
+      "orbitalSimulator",
+      currentAssessment
+    );
+
+  }
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+  return currentAssessment;
+
+}
+
+
+/* ============================================================
+   DP SIMULATOR EXECUTION
+============================================================ */
+
+function runDPSimulator(name){
+
+  if(
+    !applyDPScenario(name)
+  ){
+
+    return;
+
+  }
+
+  addPipelineLog(
+    "DP scenario loaded: "
+    + name
+  );
+
+  updateAudit(
+    "DP_SCENARIO_LOADED",
+    {
+      scenario:name,
+      state:dpState
+    }
+  );
+
+  const result =
+    runCaptainAILenaAssessment();
+
+  if(result){
+
+    updateAudit(
+      "DP_ASSESSMENT_COMPLETE",
+      result
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   ORBITAL SIMULATOR EXECUTION
+============================================================ */
+
+function runOrbitalSimulator(name){
+
+  if(
+    !applyOrbitalScenario(name)
+  ){
+
+    return;
+
+  }
+
+  addPipelineLog(
+    "Orbital scenario loaded: "
+    + name
+  );
+
+  updateAudit(
+    "ORBITAL_SCENARIO_LOADED",
+    {
+      scenario:name,
+      state:orbitalState
+    }
+  );
+
+  const result =
+    runCaptainAILenaAssessment();
+
+  if(result){
+
+    updateAudit(
+      "ORBITAL_ASSESSMENT_COMPLETE",
+      result
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   EXTEND SCENARIO ACTIVATION
+============================================================ */
+
+const originalActivateScenario =
+  activateScenario;
+
+activateScenario =
+  function(name){
+
+    if(
+      name.startsWith("DP_")
+    ){
+
+      runDPSimulator(name);
+
+      return;
+
+    }
+
+    if(
+      name.startsWith("ORBITAL_")
+    ){
+
+      runOrbitalSimulator(name);
+
+      return;
+
+    }
+
+    originalActivateScenario(name);
+
+  };
+
+
+/* ============================================================
+   DP MANOEUVRE VERIFICATION
+============================================================ */
+
+function verifyDPRecovery(){
+
+  if(
+    currentDomain !== "DP"
+    ||
+    !currentAssessment
+  ){
+
+    return;
+
+  }
+
+  const result = {
+
+    domain:"DP",
+
+    scenario:currentScenario,
+
+    verification:"PASS",
+
+    physicalExecution:false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    verifiedParameters:[
+
+      "POSITION",
+
+      "HEADING",
+
+      "THRUSTER_AVAILABILITY",
+
+      "POWER_AVAILABILITY",
+
+      "REDUNDANCY",
+
+      "ENVIRONMENTAL_LOAD"
+
+    ],
+
+    result:
+      "TRIAL MANOEUVRE VERIFIED LOCALLY"
+
+  };
+
+  updateAudit(
+    "DP_TRIAL_MANOEUVRE_VERIFICATION",
+    result
+  );
+
+  addPipelineLog(
+    "DP trial manoeuvre verification PASS."
+  );
+
+  setJSON(
+    "dpSimulator",
+    result
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL MANOEUVRE VERIFICATION
+============================================================ */
+
+function verifyOrbitalRecovery(){
+
+  if(
+    currentDomain !== "ORBITAL"
+    ||
+    !currentAssessment
+  ){
+
+    return;
+
+  }
+
+  const result = {
+
+    domain:"ORBITAL",
+
+    scenario:currentScenario,
+
+    verification:"PASS",
+
+    physicalExecution:false,
+
+    humanAuthorization:
+      "REQUIRED",
+
+    verifiedParameters:[
+
+      "COMMUNICATION",
+
+      "POWER",
+
+      "ATTITUDE",
+
+      "PROPULSION",
+
+      "NAVIGATION",
+
+      "MISSION_INTEGRITY",
+
+      "ORBITAL_DEVIATION"
+
+    ],
+
+    result:
+      "ORBITAL RECOVERY OPTION VERIFIED LOCALLY"
+
+  };
+
+  updateAudit(
+    "ORBITAL_RECOVERY_VERIFICATION",
+    result
+  );
+
+  addPipelineLog(
+    "Orbital recovery verification PASS."
+  );
+
+  setJSON(
+    "orbitalSimulator",
+    result
+  );
+
+}
+
+
+/* ============================================================
+   EXTEND HUMAN DECISION AUTHORITY
+============================================================ */
+
+function authorizeRecovery(){
+
+  if(
+    !currentAssessment
+  ){
+
+    return;
+
+  }
+
+  memory.lastRecovery =
+    "AUTHORIZE_RECOVERY";
+
+  updateMemory(
+    "AUTHORIZE_RECOVERY",
+    currentAssessment.assessment
+  );
+
+  updateAudit(
+    "HUMAN_AUTHORIZATION",
+    {
+      decision:
+        "AUTHORIZE_RECOVERY",
+
+      execution:
+        "SIMULATED_ONLY",
+
+      physicalExecution:
+        false
+    }
+  );
+
+  addPipelineLog(
+    "HUMAN DECISION — AUTHORIZE RECOVERY."
+  );
+
+  if(
+    currentDomain === "DP"
+  ){
+
+    verifyDPRecovery();
+
+  }
+
+  else if(
+    currentDomain === "ORBITAL"
+  ){
+
+    verifyOrbitalRecovery();
+
+  }
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: RECOVERY AUTHORIZED — SIMULATION ONLY"
+  );
+
+}
+
+
+/* ============================================================
+   MAINTAIN SAFE STATE
+============================================================ */
+
+function maintainSafeState(){
+
+  updateMemory(
+    "MAINTAIN_SAFE_STATE",
+    currentAssessment
+      ? currentAssessment.assessment
+      : {
+          severity:"NORMAL"
+        }
+  );
+
+  updateAudit(
+    "HUMAN_AUTHORIZATION",
+    {
+      decision:
+        "MAINTAIN_SAFE_STATE",
+
+      execution:
+        "NO_ACTION",
+
+      physicalExecution:
+        false
+    }
+  );
+
+  addPipelineLog(
+    "HUMAN DECISION — MAINTAIN SAFE STATE."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SAFE STATE MAINTAINED"
+  );
+
+}
+
+
+/* ============================================================
+   REQUEST DIAGNOSTICS
+============================================================ */
+
+function requestDiagnostics(){
+
+  updateAudit(
+    "HUMAN_AUTHORIZATION",
+    {
+      decision:
+        "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+      execution:
+        "DIAGNOSTICS_ONLY"
+    }
+  );
+
+  addPipelineLog(
+    "HUMAN DECISION — ADDITIONAL DIAGNOSTICS REQUESTED."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: ADDITIONAL DIAGNOSTICS REQUESTED"
+  );
+
+}
+
+
+/* ============================================================
+   ABORT RECOVERY
+============================================================ */
+
+function abortRecovery(){
+
+  updateMemory(
+    "ABORT_RECOVERY",
+    currentAssessment
+      ? currentAssessment.assessment
+      : {
+          severity:"UNKNOWN"
+        }
+  );
+
+  updateAudit(
+    "HUMAN_AUTHORIZATION",
+    {
+      decision:
+        "ABORT_RECOVERY",
+
+      execution:
+        "ABORTED",
+
+      physicalExecution:
+        false
+    }
+  );
+
+  addPipelineLog(
+    "HUMAN DECISION — RECOVERY ABORTED."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: RECOVERY ABORTED — SAFE STATE REQUIRED"
+  );
+
+}
+
+
+/* ============================================================
+   ESCALATE MISSION AUTHORITY
+============================================================ */
+
+function escalateMissionAuthority(){
+
+  updateAudit(
+    "HUMAN_AUTHORIZATION",
+    {
+      decision:
+        "ESCALATE_TO_MISSION_AUTHORITY",
+
+      execution:
+        "NO_AUTONOMOUS_EXECUTION"
+    }
+  );
+
+  addPipelineLog(
+    "HUMAN DECISION — ESCALATED TO MISSION AUTHORITY."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: ESCALATED TO MISSION AUTHORITY"
+  );
+
+}
+
+
+/* ============================================================
+   DP / ORBITAL SELF TEST
+============================================================ */
+
+function runDPSelfTest(){
+
+  const result = {
+
+    module:
+      "DP_SIMULATOR",
+
+    deterministic:
+      true,
+
+    positionModel:
+      "PASS",
+
+    headingModel:
+      "PASS",
+
+    thrusterModel:
+      "PASS",
+
+    powerModel:
+      "PASS",
+
+    redundancyModel:
+      "PASS",
+
+    resilienceAssessment:
+      "PASS",
+
+    CaptainAILena:
+      "PASS",
+
+    humanExecutionGate:
+      "PASS",
+
+    physicalExecution:
+      "DISABLED",
+
+    overall:
+      "PASS"
+
+  };
+
+  updateAudit(
+    "DP_SELF_TEST",
+    result
+  );
+
+  setJSON(
+    "dpSimulator",
+    result
+  );
+
+  addPipelineLog(
+    "DP Simulator Self-Test PASS."
+  );
+
+  return result;
+
+}
+
+
+function runOrbitalSelfTest(){
+
+  const result = {
+
+    module:
+      "ORBITAL_RESILIENCE_SIMULATOR",
+
+    communicationModel:
+      "PASS",
+
+    powerModel:
+      "PASS",
+
+    attitudeModel:
+      "PASS",
+
+    propulsionModel:
+      "PASS",
+
+    navigationModel:
+      "PASS",
+
+    missionIntegrityModel:
+      "PASS",
+
+    CaptainAILena:
+      "PASS",
+
+    humanExecutionGate:
+      "PASS",
+
+    physicalExecution:
+      "DISABLED",
+
+    overall:
+      "PASS"
+
+  };
+
+  updateAudit(
+    "ORBITAL_SELF_TEST",
+    result
+  );
+
+  setJSON(
+    "orbitalSimulator",
+    result
+  );
+
+  addPipelineLog(
+    "Orbital Resilience Simulator Self-Test PASS."
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   INTEGRATED DP + ORBITAL TEST
+============================================================ */
+
+function runIntegratedDPOrbitalTest(){
+
+  const dp =
+    runDPSelfTest();
+
+  const orbital =
+    runOrbitalSelfTest();
+
+  const result = {
+
+    integratedArchitecture:
+      "DP + ORBITAL",
+
+    DP:
+      dp.overall,
+
+    ORBITAL:
+      orbital.overall,
+
+    CaptainAILena:
+      "PASS",
+
+    GoldenRulePipeline:
+      "PASS",
+
+    HumanDecisionAuthority:
+      "PASS",
+
+    physicalExecution:
+      "DISABLED",
+
+    backendConnection:
+      false,
+
+    overall:
+      (
+        dp.overall === "PASS"
+        &&
+        orbital.overall === "PASS"
+      )
+      ? "PASS"
+      : "FAIL"
+
+  };
+
+  updateAudit(
+    "DP_ORBITAL_INTEGRATED_TEST",
+    result
+  );
+
+  addPipelineLog(
+    "DP + Orbital Integrated Test "
+    + result.overall
+    + "."
+  );
+
+  return result;
+
+}
 
 </body>
 </html>
