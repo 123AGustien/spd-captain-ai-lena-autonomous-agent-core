@@ -1833,6 +1833,1844 @@ document.addEventListener(
 );
 
 </script>
+<!-- ============================================================
+     SPD v13.1 — PART 2
+     DP + ORBITAL RESILIENCE ENGINES
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   DP SIMULATOR ENGINE
+============================================================ */
+
+const DP_ENGINE_VERSION = "DP-ResilienceEngineV1.0.0";
+
+const dpState = {
+
+  vesselStatus: "STABLE",
+
+  positionError: 0,
+  headingError: 0,
+
+  windLoad: 0,
+  currentLoad: 0,
+  waveLoad: 0,
+
+  powerAvailable: 100,
+
+  thrusters: {
+
+    T1: true,
+    T2: true,
+    T3: true,
+    T4: true,
+    T5: true,
+    T6: true
+
+  },
+
+  consequenceLevel: 0,
+
+  redundancy: 100,
+
+  driftRate: 0,
+
+  scenario: "NORMAL",
+
+  severity: "LOW",
+
+  recoveryProfile: null,
+
+  verificationStatus: "NOT_RUN"
+
+};
+
+
+/* ============================================================
+   DP SCENARIO PROFILES
+============================================================ */
+
+const dpScenarioProfiles = {
+
+  DP_THRUSTER_FAILURE: {
+
+    name: "THRUSTER FAILURE",
+
+    positionError: 18,
+
+    headingError: 8,
+
+    windLoad: 35,
+
+    currentLoad: 25,
+
+    waveLoad: 20,
+
+    powerAvailable: 85,
+
+    failedThrusters: ["T3"],
+
+    driftRate: 12
+
+  },
+
+  DP_POWER_FAILURE: {
+
+    name: "POWER FAILURE",
+
+    positionError: 25,
+
+    headingError: 12,
+
+    windLoad: 30,
+
+    currentLoad: 30,
+
+    waveLoad: 25,
+
+    powerAvailable: 45,
+
+    failedThrusters: [],
+
+    driftRate: 18
+
+  },
+
+  DP_POSITION_DEVIATION: {
+
+    name: "POSITION DEVIATION",
+
+    positionError: 40,
+
+    headingError: 10,
+
+    windLoad: 25,
+
+    currentLoad: 30,
+
+    waveLoad: 20,
+
+    powerAvailable: 90,
+
+    failedThrusters: [],
+
+    driftRate: 20
+
+  },
+
+  DP_WIND_LOAD: {
+
+    name: "EXTREME WIND LOAD",
+
+    positionError: 20,
+
+    headingError: 15,
+
+    windLoad: 85,
+
+    currentLoad: 35,
+
+    waveLoad: 40,
+
+    powerAvailable: 90,
+
+    failedThrusters: [],
+
+    driftRate: 15
+
+  },
+
+  DP_DRIFT_OFF: {
+
+    name: "DRIFT OFF",
+
+    positionError: 65,
+
+    headingError: 25,
+
+    windLoad: 60,
+
+    currentLoad: 60,
+
+    waveLoad: 50,
+
+    powerAvailable: 70,
+
+    failedThrusters: [],
+
+    driftRate: 45
+
+  },
+
+  DP_MULTI_THRUSTER_FAILURE: {
+
+    name: "MULTI THRUSTER FAILURE",
+
+    positionError: 50,
+
+    headingError: 25,
+
+    windLoad: 45,
+
+    currentLoad: 40,
+
+    waveLoad: 35,
+
+    powerAvailable: 65,
+
+    failedThrusters: ["T2","T4","T5"],
+
+    driftRate: 35
+
+  },
+
+  DP_WORST_CASE_FAILURE: {
+
+    name: "WORST CASE FAILURE",
+
+    positionError: 85,
+
+    headingError: 40,
+
+    windLoad: 90,
+
+    currentLoad: 80,
+
+    waveLoad: 75,
+
+    powerAvailable: 35,
+
+    failedThrusters: ["T1","T3","T5"],
+
+    driftRate: 70
+
+  }
+
+};
+
+
+/* ============================================================
+   DP RESET
+============================================================ */
+
+function resetDPState(){
+
+  dpState.vesselStatus = "STABLE";
+
+  dpState.positionError = 0;
+  dpState.headingError = 0;
+
+  dpState.windLoad = 0;
+  dpState.currentLoad = 0;
+  dpState.waveLoad = 0;
+
+  dpState.powerAvailable = 100;
+
+  dpState.thrusters = {
+
+    T1:true,
+    T2:true,
+    T3:true,
+    T4:true,
+    T5:true,
+    T6:true
+
+  };
+
+  dpState.consequenceLevel = 0;
+
+  dpState.redundancy = 100;
+
+  dpState.driftRate = 0;
+
+  dpState.scenario = "NORMAL";
+
+  dpState.severity = "LOW";
+
+  dpState.recoveryProfile = null;
+
+  dpState.verificationStatus = "NOT_RUN";
+
+}
+
+
+/* ============================================================
+   DP SCENARIO LOAD
+============================================================ */
+
+function loadDPScenario(
+  scenarioName
+){
+
+  const profile =
+    dpScenarioProfiles[scenarioName];
+
+  if(!profile){
+
+    return null;
+
+  }
+
+  resetDPState();
+
+  dpState.scenario =
+    scenarioName;
+
+  dpState.positionError =
+    profile.positionError;
+
+  dpState.headingError =
+    profile.headingError;
+
+  dpState.windLoad =
+    profile.windLoad;
+
+  dpState.currentLoad =
+    profile.currentLoad;
+
+  dpState.waveLoad =
+    profile.waveLoad;
+
+  dpState.powerAvailable =
+    profile.powerAvailable;
+
+  dpState.driftRate =
+    profile.driftRate;
+
+  profile.failedThrusters.forEach(
+    function(thruster){
+
+      dpState.thrusters[thruster] =
+        false;
+
+    }
+  );
+
+  const availableThrusters =
+    Object.values(
+      dpState.thrusters
+    ).filter(Boolean).length;
+
+  dpState.redundancy =
+    Math.round(
+      (availableThrusters / 6) * 100
+    );
+
+  dpState.consequenceLevel =
+    Math.min(
+      100,
+      Math.round(
+        (
+          dpState.positionError * 0.25
+          +
+          dpState.headingError * 0.10
+          +
+          dpState.windLoad * 0.15
+          +
+          dpState.currentLoad * 0.10
+          +
+          dpState.waveLoad * 0.10
+          +
+          (100 - dpState.powerAvailable) * 0.15
+          +
+          (100 - dpState.redundancy) * 0.10
+          +
+          dpState.driftRate * 0.15
+        )
+      )
+    );
+
+  return dpState;
+
+}
+
+
+/* ============================================================
+   DP ASSESSMENT
+============================================================ */
+
+function assessDPResilience(){
+
+  const stress =
+    dpState.consequenceLevel;
+
+  let severity =
+    "LOW";
+
+  if(stress >= 70){
+
+    severity =
+      "CRITICAL";
+
+  }
+  else if(stress >= 50){
+
+    severity =
+      "HIGH";
+
+  }
+  else if(stress >= 30){
+
+    severity =
+      "MEDIUM";
+
+  }
+
+  dpState.severity =
+    severity;
+
+  let decision =
+    "MAINTAIN_SAFE_STATE";
+
+  let recoveryProfile =
+    "NONE";
+
+  if(severity === "MEDIUM"){
+
+    decision =
+      "REQUEST_ADDITIONAL_DIAGNOSTICS";
+
+    recoveryProfile =
+      "DP_STABILIZATION_PROFILE";
+
+  }
+
+  if(severity === "HIGH"){
+
+    decision =
+      "PREPARE_RECOVERY";
+
+    recoveryProfile =
+      "DP_CONTROLLED_POSITION_RECOVERY";
+
+  }
+
+  if(severity === "CRITICAL"){
+
+    decision =
+      "ESCALATE_TO_MISSION_AUTHORITY";
+
+    recoveryProfile =
+      "DP_EMERGENCY_SAFE_STATE";
+
+  }
+
+  dpState.recoveryProfile =
+    recoveryProfile;
+
+  const assessment = {
+
+    engine:
+      DP_ENGINE_VERSION,
+
+    simulator:
+      "DP",
+
+    scenario:
+      dpState.scenario,
+
+    vesselStatus:
+      dpState.vesselStatus,
+
+    positionError:
+      dpState.positionError,
+
+    headingError:
+      dpState.headingError,
+
+    windLoad:
+      dpState.windLoad,
+
+    currentLoad:
+      dpState.currentLoad,
+
+    waveLoad:
+      dpState.waveLoad,
+
+    powerAvailable:
+      dpState.powerAvailable,
+
+    thrusterAvailability:
+      dpState.thrusters,
+
+    redundancy:
+      dpState.redundancy,
+
+    driftRate:
+      dpState.driftRate,
+
+    consequenceLevel:
+      stress,
+
+    severity,
+
+    recommendedDecision:
+      decision,
+
+    recoveryProfile,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  currentAssessment =
+    assessment;
+
+  currentDomain =
+    "DP";
+
+  updateDPDisplay(
+    assessment
+  );
+
+  updateMemory(
+    decision,
+    {
+      severity,
+      simulator:"DP",
+      recoveryProfile
+    }
+  );
+
+  updateAudit(
+    "DP_RESILIENCE_ASSESSMENT",
+    assessment
+  );
+
+  addPipelineLog(
+    "DP resilience assessment completed: "
+    + severity
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   DP CAPTAIN AI LENA DECISION
+============================================================ */
+
+function runDPScenario(
+  scenarioName
+){
+
+  currentScenario =
+    scenarioName;
+
+  currentDomain =
+    "DP";
+
+  addPipelineLog(
+    "DP scenario received by Captain AI Lena: "
+    + scenarioName
+  );
+
+  updateAudit(
+    "DP_SCENARIO_INPUT",
+    {
+      scenario:scenarioName,
+      source:"DP_SIMULATOR",
+      deterministic:true
+    }
+  );
+
+  loadDPScenario(
+    scenarioName
+  );
+
+  addPipelineLog(
+    "DP OBSERVE stage complete."
+  );
+
+  addPipelineLog(
+    "DP VERIFY stage complete."
+  );
+
+  addPipelineLog(
+    "DP ASSESS stage initiated."
+  );
+
+  const assessment =
+    assessDPResilience();
+
+  addPipelineLog(
+    "Captain AI Lena DP decision: "
+    + assessment.recommendedDecision
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: DP ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+  updateAudit(
+    "DP_CAPTAIN_AI_DECISION",
+    assessment
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   DP DISPLAY
+============================================================ */
+
+function updateDPDisplay(
+  assessment
+){
+
+  setJSON(
+    "dpSimulator",
+    {
+
+      engine:
+        DP_ENGINE_VERSION,
+
+      status:
+        "DP SIMULATOR ONLINE",
+
+      scenario:
+        assessment.scenario,
+
+      vesselState:{
+
+        positionError:
+          assessment.positionError,
+
+        headingError:
+          assessment.headingError,
+
+        driftRate:
+          assessment.driftRate,
+
+        powerAvailable:
+          assessment.powerAvailable
+
+      },
+
+      environment:{
+
+        windLoad:
+          assessment.windLoad,
+
+        currentLoad:
+          assessment.currentLoad,
+
+        waveLoad:
+          assessment.waveLoad
+
+      },
+
+      redundancy:
+        assessment.redundancy,
+
+      consequenceLevel:
+        assessment.consequenceLevel,
+
+      severity:
+        assessment.severity,
+
+      CaptainAILena:{
+        decision:
+          assessment.recommendedDecision,
+
+        recoveryProfile:
+          assessment.recoveryProfile
+
+      },
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      physicalExecution:
+        false
+
+    }
+
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL SIMULATOR ENGINE
+============================================================ */
+
+const ORBITAL_ENGINE_VERSION =
+  "OrbitalEngineV1.0.0";
+
+
+const orbitalState = {
+
+  spacecraftStatus:
+    "STABLE",
+
+  communication:
+    100,
+
+  power:
+    100,
+
+  attitude:
+    100,
+
+  propulsion:
+    100,
+
+  navigation:
+    100,
+
+  thermal:
+    100,
+
+  missionIntegrity:
+    100,
+
+  orbitStability:
+    100,
+
+  signalLoss:
+    false,
+
+  recoveryProfile:
+    null,
+
+  severity:
+    "LOW",
+
+  verificationStatus:
+    "NOT_RUN"
+
+};
+
+
+/* ============================================================
+   ORBITAL SCENARIO PROFILES
+============================================================ */
+
+const orbitalScenarioProfiles = {
+
+  ORBITAL_SIGNAL_LOSS:{
+
+    communication:0,
+    power:90,
+    attitude:95,
+    propulsion:100,
+    navigation:75,
+    thermal:95,
+    missionIntegrity:80,
+    orbitStability:95
+
+  },
+
+  ORBITAL_POWER_FAILURE:{
+
+    communication:50,
+    power:15,
+    attitude:70,
+    propulsion:60,
+    navigation:70,
+    thermal:65,
+    missionIntegrity:55,
+    orbitStability:75
+
+  },
+
+  ORBITAL_ATTITUDE_ANOMALY:{
+
+    communication:90,
+    power:90,
+    attitude:20,
+    propulsion:75,
+    navigation:45,
+    thermal:90,
+    missionIntegrity:60,
+    orbitStability:40
+
+  },
+
+  ORBITAL_COMMUNICATION_FAILURE:{
+
+    communication:5,
+    power:90,
+    attitude:95,
+    propulsion:95,
+    navigation:60,
+    thermal:95,
+    missionIntegrity:75,
+    orbitStability:95
+
+  },
+
+  ORBITAL_MANOEUVRE_FAILURE:{
+
+    communication:90,
+    power:85,
+    attitude:70,
+    propulsion:25,
+    navigation:50,
+    thermal:90,
+    missionIntegrity:55,
+    orbitStability:45
+
+  },
+
+  ORBITAL_PROPULSION_FAILURE:{
+
+    communication:90,
+    power:85,
+    attitude:80,
+    propulsion:10,
+    navigation:55,
+    thermal:90,
+    missionIntegrity:50,
+    orbitStability:35
+
+  },
+
+  ORBITAL_CASCADE_FAILURE:{
+
+    communication:35,
+    power:30,
+    attitude:30,
+    propulsion:25,
+    navigation:30,
+    thermal:45,
+    missionIntegrity:25,
+    orbitStability:20
+
+  }
+
+};
+
+
+/* ============================================================
+   ORBITAL SCENARIO LOAD
+============================================================ */
+
+function loadOrbitalScenario(
+  scenarioName
+){
+
+  const profile =
+    orbitalScenarioProfiles[
+      scenarioName
+    ];
+
+  if(!profile){
+
+    return null;
+
+  }
+
+  Object.keys(profile).forEach(
+    function(key){
+
+      orbitalState[key] =
+        profile[key];
+
+    }
+  );
+
+  orbitalState.spacecraftStatus =
+    "ANOMALY_DETECTED";
+
+  orbitalState.signalLoss =
+    orbitalState.communication < 20;
+
+  return orbitalState;
+
+}
+
+
+/* ============================================================
+   ORBITAL ASSESSMENT
+============================================================ */
+
+function assessOrbitalResilience(){
+
+  const weaknesses = [
+
+    100 - orbitalState.communication,
+    100 - orbitalState.power,
+    100 - orbitalState.attitude,
+    100 - orbitalState.propulsion,
+    100 - orbitalState.navigation,
+    100 - orbitalState.thermal,
+    100 - orbitalState.missionIntegrity,
+    100 - orbitalState.orbitStability
+
+  ];
+
+  const rawStress =
+    weaknesses.reduce(
+      function(total,value){
+
+        return total + value;
+
+      },
+      0
+    )
+    /
+    weaknesses.length;
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  let severity =
+    "LOW";
+
+  if(resilienceScore < 30){
+
+    severity =
+      "CRITICAL";
+
+  }
+  else if(resilienceScore < 50){
+
+    severity =
+      "HIGH";
+
+  }
+  else if(resilienceScore < 70){
+
+    severity =
+      "MEDIUM";
+
+  }
+
+  orbitalState.severity =
+    severity;
+
+  let decision =
+    "MAINTAIN_SAFE_STATE";
+
+  let recoveryProfile =
+    "NONE";
+
+  if(
+    orbitalState.communication < 20
+  ){
+
+    recoveryProfile =
+      "BACKUP_COMMUNICATION_PATH";
+
+    decision =
+      "REQUEST_ADDITIONAL_DIAGNOSTICS";
+
+  }
+
+  if(
+    orbitalState.power < 30
+  ){
+
+    recoveryProfile =
+      "ENERGY_RECOVERY_MANOEUVRE";
+
+    decision =
+      "PREPARE_POWER_RECOVERY";
+
+  }
+
+  if(
+    orbitalState.attitude < 40
+  ){
+
+    recoveryProfile =
+      "ATTITUDE_STABILIZATION";
+
+    decision =
+      "PREPARE_ATTITUDE_RECOVERY";
+
+  }
+
+  if(
+    orbitalState.propulsion < 30
+  ){
+
+    recoveryProfile =
+      "PROPULSION_SAFE_STATE";
+
+    decision =
+      "ESCALATE_TO_MISSION_AUTHORITY";
+
+  }
+
+  if(
+    severity === "CRITICAL"
+  ){
+
+    decision =
+      "ESCALATE_TO_MISSION_AUTHORITY";
+
+  }
+
+  orbitalState.recoveryProfile =
+    recoveryProfile;
+
+  const assessment = {
+
+    engine:
+      ORBITAL_ENGINE_VERSION,
+
+    simulator:
+      "ORBITAL",
+
+    scenario:
+      currentScenario,
+
+    spacecraftStatus:
+      orbitalState.spacecraftStatus,
+
+    communication:
+      orbitalState.communication,
+
+    power:
+      orbitalState.power,
+
+    attitude:
+      orbitalState.attitude,
+
+    propulsion:
+      orbitalState.propulsion,
+
+    navigation:
+      orbitalState.navigation,
+
+    thermal:
+      orbitalState.thermal,
+
+    missionIntegrity:
+      orbitalState.missionIntegrity,
+
+    orbitStability:
+      orbitalState.orbitStability,
+
+    rawStress:
+      Number(
+        rawStress.toFixed(3)
+      ),
+
+    goldenScore:
+      Number(
+        goldenScore.toFixed(3)
+      ),
+
+    resilienceScore:
+      Number(
+        resilienceScore.toFixed(3)
+      ),
+
+    severity,
+
+    recommendedDecision:
+      decision,
+
+    recoveryProfile,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  currentAssessment =
+    assessment;
+
+  currentDomain =
+    "ORBITAL";
+
+  updateOrbitalDisplay(
+    assessment
+  );
+
+  updateMemory(
+    decision,
+    {
+      severity,
+      simulator:"ORBITAL",
+      recoveryProfile
+    }
+  );
+
+  updateAudit(
+    "ORBITAL_RESILIENCE_ASSESSMENT",
+    assessment
+  );
+
+  addPipelineLog(
+    "Orbital resilience assessment completed: "
+    + severity
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   ORBITAL CAPTAIN AI LENA DECISION
+============================================================ */
+
+function runOrbitalScenario(
+  scenarioName
+){
+
+  currentScenario =
+    scenarioName;
+
+  currentDomain =
+    "ORBITAL";
+
+  addPipelineLog(
+    "Orbital scenario received by Captain AI Lena: "
+    + scenarioName
+  );
+
+  updateAudit(
+    "ORBITAL_SCENARIO_INPUT",
+    {
+      scenario:scenarioName,
+      source:"ORBITAL_RESILIENCE_SIMULATOR",
+      deterministic:true
+    }
+  );
+
+  loadOrbitalScenario(
+    scenarioName
+  );
+
+  addPipelineLog(
+    "ORBITAL OBSERVE stage complete."
+  );
+
+  addPipelineLog(
+    "ORBITAL VERIFY stage complete."
+  );
+
+  addPipelineLog(
+    "ORBITAL ASSESS stage initiated."
+  );
+
+  const assessment =
+    assessOrbitalResilience();
+
+  addPipelineLog(
+    "Captain AI Lena orbital decision: "
+    + assessment.recommendedDecision
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: ORBITAL ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+  updateAudit(
+    "ORBITAL_CAPTAIN_AI_DECISION",
+    assessment
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   ORBITAL DISPLAY
+============================================================ */
+
+function updateOrbitalDisplay(
+  assessment
+){
+
+  setJSON(
+    "orbitalSimulator",
+    {
+
+      engine:
+        ORBITAL_ENGINE_VERSION,
+
+      status:
+        "ORBITAL RESILIENCE ENGINE ONLINE",
+
+      scenario:
+        assessment.scenario,
+
+      spacecraftState:{
+
+        communication:
+          assessment.communication,
+
+        power:
+          assessment.power,
+
+        attitude:
+          assessment.attitude,
+
+        propulsion:
+          assessment.propulsion,
+
+        navigation:
+          assessment.navigation,
+
+        thermal:
+          assessment.thermal,
+
+        missionIntegrity:
+          assessment.missionIntegrity,
+
+        orbitStability:
+          assessment.orbitStability
+
+      },
+
+      assessment:{
+
+        rawStress:
+          assessment.rawStress,
+
+        goldenScore:
+          assessment.goldenScore,
+
+        resilienceScore:
+          assessment.resilienceScore,
+
+        severity:
+          assessment.severity
+
+      },
+
+      CaptainAILena:{
+
+        decision:
+          assessment.recommendedDecision,
+
+        recoveryProfile:
+          assessment.recoveryProfile
+
+      },
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      physicalExecution:
+        false
+
+    }
+
+  );
+
+}
+
+
+/* ============================================================
+   UNIFIED DP / ORBITAL GOLDEN RULE PIPELINE
+============================================================ */
+
+function runSimulatorPipeline(
+  simulator,
+  scenario
+){
+
+  currentDomain =
+    simulator;
+
+  currentScenario =
+    scenario;
+
+  addPipelineLog(
+    simulator
+    + " pipeline initiated."
+  );
+
+  updateAudit(
+    "PIPELINE_STARTED",
+    {
+      simulator,
+      scenario,
+      pipeline:
+        [
+          "OBSERVE",
+          "VERIFY",
+          "ASSESS",
+          "DECIDE",
+          "ACT",
+          "UPDATE"
+        ]
+    }
+  );
+
+  let assessment;
+
+  if(simulator === "DP"){
+
+    assessment =
+      runDPScenario(
+        scenario
+      );
+
+  }
+
+  if(simulator === "ORBITAL"){
+
+    assessment =
+      runOrbitalScenario(
+        scenario
+      );
+
+  }
+
+  addPipelineLog(
+    simulator
+    + " pipeline reached HUMAN DECISION AUTHORITY."
+  );
+
+  updateAudit(
+    "PIPELINE_HUMAN_AUTHORIZATION_GATE",
+    {
+      simulator,
+      scenario,
+      authorizationRequired:true,
+      physicalExecution:false
+    }
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE SIMULATION
+   NO PHYSICAL EXECUTION
+============================================================ */
+
+function simulateTrialManoeuvre(){
+
+  if(!currentAssessment){
+
+    addPipelineLog(
+      "Trial manoeuvre unavailable: no assessment."
+    );
+
+    return;
+
+  }
+
+  const simulator =
+    currentAssessment.simulator;
+
+  const profile =
+    currentAssessment.recoveryProfile;
+
+  const trial = {
+
+    simulator,
+
+    scenario:
+      currentAssessment.scenario,
+
+    recoveryProfile:
+      profile,
+
+    executionMode:
+      "SIMULATION_ONLY",
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "NOT_GRANTED",
+
+    predictedResult:
+      "TRIAL MANOEUVRE SIMULATED",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  if(simulator === "DP"){
+
+    setJSON(
+      "dpSimulator",
+      {
+
+        trialManoeuvre:
+          trial,
+
+        verification:
+          "PENDING"
+
+      }
+
+    );
+
+  }
+
+  if(simulator === "ORBITAL"){
+
+    setJSON(
+      "orbitalSimulator",
+      {
+
+        trialManoeuvre:
+          trial,
+
+        verification:
+          "PENDING"
+
+      }
+
+    );
+
+  }
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_SIMULATED",
+    trial
+  );
+
+  addPipelineLog(
+    simulator
+    + " trial manoeuvre simulated — no physical execution."
+  );
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE VERIFICATION
+============================================================ */
+
+function verifyTrialManoeuvre(){
+
+  if(!currentAssessment){
+
+    return;
+
+  }
+
+  const verification = {
+
+    simulator:
+      currentAssessment.simulator,
+
+    scenario:
+      currentAssessment.scenario,
+
+    verification:
+      "PASS",
+
+    deterministic:
+      true,
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED_BEFORE_EXECUTION",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  if(
+    currentAssessment.simulator === "DP"
+  ){
+
+    dpState.verificationStatus =
+      "PASS";
+
+    setJSON(
+      "dpSimulator",
+      {
+
+        verification,
+
+        status:
+          "TRIAL MANOEUVRE VERIFICATION PASS"
+
+      }
+
+    );
+
+  }
+
+  if(
+    currentAssessment.simulator === "ORBITAL"
+  ){
+
+    orbitalState.verificationStatus =
+      "PASS";
+
+    setJSON(
+      "orbitalSimulator",
+      {
+
+        verification,
+
+        status:
+          "TRIAL MANOEUVRE VERIFICATION PASS"
+
+      }
+
+    );
+
+  }
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_VERIFICATION",
+    verification
+  );
+
+  addPipelineLog(
+    currentAssessment.simulator
+    + " trial manoeuvre verification PASS."
+  );
+
+}
+
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY — INTEGRATED
+============================================================ */
+
+function authorizeRecovery(){
+
+  if(!currentAssessment){
+
+    addPipelineLog(
+      "Authorization denied: no active assessment."
+    );
+
+    return;
+
+  }
+
+  const decision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "AUTHORIZED",
+
+    decision:
+      "AUTHORIZE_RECOVERY",
+
+    simulator:
+      currentAssessment.simulator,
+
+    scenario:
+      currentAssessment.scenario,
+
+    recoveryProfile:
+      currentAssessment.recoveryProfile,
+
+    executionGate:
+      "HUMAN_AUTHORIZED",
+
+    physicalExecution:
+      false,
+
+    actionMode:
+      "SIMULATION_ONLY",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    decision
+  );
+
+  updateAudit(
+    "HUMAN_RECOVERY_AUTHORIZATION",
+    decision
+  );
+
+  addPipelineLog(
+    "Human authorization received — simulated recovery permitted."
+  );
+
+}
+
+
+function maintainSafeState(){
+
+  const decision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "AUTHORIZED",
+
+    decision:
+      "MAINTAIN_SAFE_STATE",
+
+    executionGate:
+      "SAFE_STATE_MAINTAINED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    decision
+  );
+
+  updateAudit(
+    "HUMAN_SAFE_STATE_DECISION",
+    decision
+  );
+
+  addPipelineLog(
+    "Human decision: MAINTAIN SAFE STATE."
+  );
+
+}
+
+
+function requestDiagnostics(){
+
+  const decision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "AUTHORIZED",
+
+    decision:
+      "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+    executionGate:
+      "DIAGNOSTICS_ONLY",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    decision
+  );
+
+  updateAudit(
+    "HUMAN_DIAGNOSTICS_REQUEST",
+    decision
+  );
+
+  addPipelineLog(
+    "Human decision: additional diagnostics requested."
+  );
+
+}
+
+
+function abortRecovery(){
+
+  const decision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "AUTHORIZED",
+
+    decision:
+      "ABORT_RECOVERY",
+
+    executionGate:
+      "RECOVERY_ABORTED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    decision
+  );
+
+  updateAudit(
+    "HUMAN_RECOVERY_ABORT",
+    decision
+  );
+
+  addPipelineLog(
+    "Human decision: recovery aborted."
+  );
+
+}
+
+
+function escalateMissionAuthority(){
+
+  const decision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    status:
+      "ESCALATED",
+
+    decision:
+      "ESCALATE_TO_MISSION_AUTHORITY",
+
+    executionGate:
+      "MISSION_AUTHORITY_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "humanDecisionAuthority",
+    decision
+  );
+
+  updateAudit(
+    "MISSION_AUTHORITY_ESCALATION",
+    decision
+  );
+
+  addPipelineLog(
+    "Scenario escalated to mission authority."
+  );
+
+}
+
+
+/* ============================================================
+   DP BUTTON ROUTING
+============================================================ */
+
+function activateDPScenario(
+  scenario
+){
+
+  return runSimulatorPipeline(
+    "DP",
+    scenario
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL BUTTON ROUTING
+============================================================ */
+
+function activateOrbitalScenario(
+  scenario
+){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    scenario
+  );
+
+}
+
+
+/* ============================================================
+   OVERRIDE GENERIC SCENARIO ROUTER
+   DP + ORBITAL ONLY
+============================================================ */
+
+function routeSimulatorScenario(
+  scenario
+){
+
+  if(
+    scenario.startsWith("DP_")
+  ){
+
+    return activateDPScenario(
+      scenario
+    );
+
+  }
+
+  if(
+    scenario.startsWith("ORBITAL_")
+  ){
+
+    return activateOrbitalScenario(
+      scenario
+    );
+
+  }
+
+  addPipelineLog(
+    "Scenario rejected by DP/Orbital simulator boundary: "
+    + scenario
+  );
+
+  updateAudit(
+    "SCENARIO_BOUNDARY_REJECTION",
+    {
+      scenario,
+      allowedDomains:[
+        "DP",
+        "ORBITAL"
+      ]
+    }
+  );
+
+}
+
+
+/* ============================================================
+   END PART 2
+============================================================ */
+
+</script>
 
 </body>
 </html>
