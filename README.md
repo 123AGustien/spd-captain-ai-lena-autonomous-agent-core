@@ -1,3 +1,5 @@
+Your site is live at https://123agustien.github.io/spd-captain-ai-lena-autonomous-agent-core/
+
 🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
 
 UMV / DP Resilience Simulator
