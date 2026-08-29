@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+DP + ORBITAL INTEGRATED SIMULATOR
+</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  background:#0b0f14;
+  color:#00ff88;
+  font-family:Arial,sans-serif;
+  padding:20px;
+  margin:0;
+}
+
+h1{
+  color:#fff;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  color:#aaa;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+.simulator-banner{
+  border:2px solid #00ff88;
+  background:#080d11;
+  color:#00ff88;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.integration-banner{
+  border:2px solid #00bfff;
+  background:#080d11;
+  color:#00bfff;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.panel{
+  border:1px solid #00ff88;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  background:#10161d;
+}
+
+.title{
+  font-size:18px;
+  margin-bottom:15px;
+  color:#fff;
+  font-weight:bold;
+}
+
+.status{
+  font-size:20px;
+  font-weight:bold;
+  padding:12px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  margin-bottom:15px;
+  background:#080d11;
+}
+
+.control-buttons,
+.scenario-controls,
+.fin-controls,
+.bhr-controls,
+.dc-controls,
+.cyb-controls,
+.dp-controls,
+.orbital-controls,
+.authority-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  width:100%;
+}
+
+button{
+  display:inline-block;
+  visibility:visible;
+  opacity:1;
+  background:#00ff88;
+  color:#000;
+  border:2px solid #00ff88;
+  padding:14px 20px;
+  border-radius:6px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  min-height:48px;
+}
+
+button:hover{
+  opacity:.85;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+button:focus{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+
+.self-test-button{
+  background:#1b2730;
+  color:#00ff88;
+  border:2px solid #00ff88;
+}
+
+.corrective-button{
+  background:#ffb000;
+  color:#000;
+  border:2px solid #ffb000;
+}
+
+.danger{
+  background:#ff5555;
+  color:#fff;
+  border:2px solid #ff5555;
+}
+
+.scenario-button{
+  background:#1b2730;
+  color:#00ff88;
+  border:1px solid #00ff88;
+}
+
+.fin-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00bfff;
+}
+
+.bhr-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #ffb000;
+}
+
+.dc-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00ff88;
+}
+
+.cyb-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #ff5555;
+}
+
+.dp-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00ff88;
+}
+
+.orbital-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00bfff;
+}
+
+.authority-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #fff;
+}
+
+.integration-button{
+  background:#17242c;
+  color:#fff;
+  border:1px solid #00bfff;
+}
+
+.fin-label,
+.bhr-label,
+.dc-label,
+.cyb-label,
+.dp-label,
+.orbital-label{
+  width:100%;
+  font-size:14px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.fin-label{color:#00bfff}
+.bhr-label{color:#ffb000}
+.dc-label{color:#00ff88}
+.cyb-label{color:#ff5555}
+.dp-label{color:#00ff88}
+.orbital-label{color:#00bfff}
+
+.monitor{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+}
+
+.domain{
+  border:1px solid #00ff88;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+  text-align:center;
+}
+
+.domain-name{
+  color:#aaa;
+  font-size:13px;
+}
+
+.domain-value{
+  color:#fff;
+  font-size:24px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.integration-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+.integration-node{
+  border:1px solid #00bfff;
+  padding:15px;
+  border-radius:8px;
+  background:#080d11;
+  text-align:center;
+}
+
+.integration-node strong{
+  display:block;
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.integration-node span{
+  color:#00bfff;
+  font-weight:bold;
+}
+
+.pipeline{
+  font-size:16px;
+  color:#fff;
+  padding:10px;
+  border:1px solid #00ff88;
+  border-radius:6px;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.stage{
+  display:inline-block;
+  padding:8px;
+  margin:3px;
+  border:1px solid #00ff88;
+  border-radius:4px;
+}
+
+.stage.active{
+  background:#00ff88;
+  color:#000;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:#00ff88;
+  cursor:pointer;
+  min-height:30px;
+}
+
+.intensity-value{
+  color:#fff;
+  font-weight:bold;
+  font-size:18px;
+}
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  overflow-x:auto;
+  color:#00ff88;
+  line-height:1.5;
+}
+
+.muted{
+  color:#aaa;
+  font-size:13px;
+}
+
+.solution{
+  border-left:3px solid #00ff88;
+  padding:10px;
+  margin-top:8px;
+  background:#080d11;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+
+.authority-box{
+  border:2px solid #fff;
+  padding:15px;
+  border-radius:8px;
+  background:#080d11;
+}
+
+.human-decision{
+  border:1px solid #fff;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+}
+
+.execution-gate{
+  border:1px solid #ffb000;
+  padding:12px;
+  border-radius:6px;
+  background:#080d11;
+  color:#ffb000;
+  line-height:1.6;
+}
+
+.domain-integration{
+  border:1px solid #00bfff;
+  background:#080d11;
+}
+
+.system-architecture{
+  border:2px solid #00ff88;
+  background:#080d11;
+  padding:15px;
+  border-radius:8px;
+  line-height:1.8;
+  color:#fff;
+}
+
+.architecture-line{
+  text-align:center;
+  padding:5px;
+}
+
+.architecture-highlight{
+  color:#00bfff;
+  font-weight:bold;
+}
+
+.architecture-human{
+  color:#ffb000;
+  font-weight:bold;
+}
+
+.module-status{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  border-bottom:1px solid #1d2933;
+}
+
+.module-status:last-child{
+  border-bottom:none;
+}
+
+.module-online{
+  color:#00ff88;
+  font-weight:bold;
+}
+
+.module-local{
+  color:#00bfff;
+  font-weight:bold;
+}
+
+@media(max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  h1{
+    font-size:22px;
+  }
+
+  .panel{
+    padding:12px;
+  }
+
+  .title{
+    font-size:16px;
+  }
+
+  .control-buttons,
+  .scenario-controls,
+  .fin-controls,
+  .bhr-controls,
+  .dc-controls,
+  .cyb-controls,
+  .dp-controls,
+  .orbital-controls,
+  .authority-controls{
+    flex-direction:column;
+  }
+
+  .control-buttons button,
+  .scenario-controls button,
+  .fin-controls button,
+  .bhr-controls button,
+  .dc-controls button,
+  .cyb-controls button,
+  .dp-controls button,
+  .orbital-controls button,
+  .authority-controls button{
+    width:100%;
+    min-height:52px;
+  }
+
+  .pipeline{
+    white-space:normal;
+    line-height:2;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>
+🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+</h1>
+
+<div class="subtitle">
+
+<strong>
+Captain AI Lena Autonomous Agent Core
+</strong>
+
+<br>
+
+DATA → ALGORITHMS → COMPUTE
+
+<br>
+
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+
+<br>
+
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+
+</div>
+
+<div class="simulator-banner">
+
+🧪 SELF-CONTAINED SIMULATOR
+
+—
+
+LOCAL DETERMINISTIC EXECUTION
+
+—
+
+NO BACKEND CONNECTION
+
+</div>
+
+<div class="integration-banner">
+
+🔗 INTEGRATED MULTI-DOMAIN RESILIENCE ARCHITECTURE
+
+<br>
+
+FIN + BHR + DC + CYB + DP + ORBITAL
+
+</div>
+
+<div class="status" id="systemStatus">
+
+SYSTEM STATUS: READY — LOCAL SIMULATOR
+
+</div>
+
+
+<!-- ============================================================
+     INTEGRATED ARCHITECTURE
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧭 SEXTANT INTEGRATED ARCHITECTURE
+</div>
+
+<div class="system-architecture">
+
+<div class="architecture-line">
+ENVIRONMENT
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line architecture-highlight">
+DOMAIN / VEHICLE / ORBITAL INPUT
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+PRIMARY AI
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+SECONDARY AI
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+STABILIZER
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line architecture-highlight">
+CAPTAIN AI LENA
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+GOLDEN RULE ENGINE
+</div>
+
+<div class="architecture-line">
+OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line architecture-human">
+HUMAN DECISION AUTHORITY
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+SIMULATED ACTION / TRIAL MANOEUVRE
+</div>
+
+<div class="architecture-line">
+↓
+</div>
+
+<div class="architecture-line">
+MEMORY CORE + AUDIT CORE
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     INTEGRATED MODULE STATUS
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🔌 INTEGRATED MODULE STATUS
+</div>
+
+<div class="module-status">
+<span>SPD v13.1 Core</span>
+<span class="module-online">
+● ONLINE
+</span>
+</div>
+
+<div class="module-status">
+<span>Captain AI Lena Decision Core</span>
+<span class="module-online">
+● ONLINE
+</span>
+</div>
+
+<div class="module-status">
+<span>Golden Rule Engine</span>
+<span class="module-online">
+● ACTIVE
+</span>
+</div>
+
+<div class="module-status">
+<span>FIN Domain</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+<div class="module-status">
+<span>BHR Domain</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+<div class="module-status">
+<span>DC Domain</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+<div class="module-status">
+<span>CYB Domain</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+<div class="module-status">
+<span>DP Simulator</span>
+<span class="module-local">
+● INTEGRATION READY
+</span>
+</div>
+
+<div class="module-status">
+<span>Orbital Resilience Simulator</span>
+<span class="module-local">
+● INTEGRATION READY
+</span>
+</div>
+
+<div class="module-status">
+<span>Human Decision Authority</span>
+<span class="module-online">
+● ACTIVE
+</span>
+</div>
+
+<div class="module-status">
+<span>Memory Core</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+<div class="module-status">
+<span>Audit Core</span>
+<span class="module-online">
+● CONNECTED
+</span>
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     SYSTEM CONTROLS
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🎛️ SYSTEM CONTROLS
+</div>
+
+<div class="control-buttons">
+
+<button type="button"
+onclick="runLiveSystem()">
+▶ RUN SYSTEM
+</button>
+
+<button type="button"
+class="self-test-button"
+onclick="runAuthoritativeSelfTest()">
+🧪 RUN SELF-TEST
+</button>
+
+<button type="button"
+class="corrective-button"
+onclick="runSelfTestAndCorrect()">
+🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+</button>
+
+<button type="button"
+onclick="runDomainIntegrationTest()">
+🔌 RUN DOMAIN INTEGRATION TEST
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     HUMAN DECISION AUTHORITY
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🧑‍✈️ HUMAN DECISION AUTHORITY
+</div>
+
+<div class="authority-box">
+
+<strong>
+AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+</strong>
+
+<br><br>
+
+<div class="execution-gate">
+
+🔒 EXECUTION GATE
+
+<br>
+
+No recovery or execution action is authorized automatically.
+
+<br>
+
+HUMAN AUTHORIZATION REQUIRED.
+
+</div>
+
+<br>
+
+<div class="human-decision">
+
+<pre id="humanDecisionAuthority">{
+  "authority": "MISSION_CONTROLLER",
+  "status": "PENDING",
+  "decision": null,
+  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+}</pre>
+
+<div class="authority-controls">
+
+<button type="button"
+class="authority-button"
+onclick="authorizeRecovery()">
+AUTHORIZE RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="maintainSafeState()">
+MAINTAIN SAFE STATE
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="requestDiagnostics()">
+REQUEST DIAGNOSTICS
+</button>
+
+<button type="button"
+class="danger"
+onclick="abortRecovery()">
+ABORT RECOVERY
+</button>
+
+<button type="button"
+class="authority-button"
+onclick="escalateMissionAuthority()">
+ESCALATE TO MISSION AUTHORITY
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     UNIFIED DOMAIN MONITOR
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+📊 UNIFIED SYSTEM DOMAIN MONITOR
+</div>
+
+<div class="monitor">
+
+<div class="domain">
+<div class="domain-name">FX</div>
+<div class="domain-value" id="domainFX">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">DC</div>
+<div class="domain-value" id="domainDC">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">CYB</div>
+<div class="domain-value" id="domainCYB">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">INF</div>
+<div class="domain-value" id="domainINF">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">EN / ENERGY</div>
+<div class="domain-value" id="domainEN">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">DP</div>
+<div class="domain-value" id="domainDP">0</div>
+</div>
+
+<div class="domain">
+<div class="domain-name">ORBITAL</div>
+<div class="domain-value" id="domainOrbital">0</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================================================
+     UNIFIED DOMAIN INTEGRATION
+============================================================ -->
+
+<div class="panel domain-integration">
+
+<div class="title">
+🔌 UNIFIED DOMAIN INTEGRATION LAYER
+</div>
+
+<pre id="unifiedIntegrationStatus">
+
+COCKPIT
+↓
+LOCAL DOMAIN INTEGRATION
+↓
+FIN / BHR / DC / CYB
+↓
+DP SIMULATOR
+↓
+ORBITAL RESILIENCE SIMULATOR
+↓
+CAPTAIN AI LENA DECISION CORE
+↓
+GOLDEN RULE PIPELINE
+↓
+HUMAN DECISION AUTHORITY
+↓
+RESULT / MEMORY / AUDIT
+
+</pre>
+
+<div class="integration-grid">
+
+<div class="integration-node">
+
+<strong>
+FIN
+</strong>
+
+<span>
+FINRuleEngine
+</span>
+
+</div>
+
+<div class="integration-node">
+
+<strong>
+BHR
+</strong>
+
+<span>
+BHRRuleEngine
+</span>
+
+</div>
+
+<div class="integration-node">
+
+<strong>
+DC
+</strong>
+
+<span>
+DCRuleEngine
+</span>
+
+</div>
+
+<div class="integration-node">
+
+<strong>
+CYB
+</strong>
+
+<span>
+CYBRuleEngine
+</span>
+
+</div>
+
+<div class="integration-node">
+
+<strong>
+DP
+</strong>
+
+<span>
+DP Simulator Engine
+</span>
+
+</div>
+
+<div class="integration-node">
+
+<strong>
+ORBITAL
+</strong>
+
+<span>
+Orbital Resilience Engine
+</span>
+
+</div>
+
+</div>
+
+<br>
+
+<pre id="domainIntegrationStatus">
+Unified domain integration test not executed.
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     PLACEHOLDER FOR PART 2
+     DP SIMULATOR
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+⚓ DP — DYNAMIC POSITIONING RESILIENCE SIMULATOR
+</div>
+
+<div class="muted">
+
+DP Simulator integration module.
+
+<br>
+
+The DP engine will feed validated vessel-state,
+thruster, position, heading, power and environmental
+conditions into the unified Captain AI Lena decision layer.
+
+<br>
+
+No physical vessel control.
+No external backend.
+Local deterministic simulation only.
+
+</div>
+
+<br>
+
+<div class="dp-controls">
+
+<div class="dp-label">
+DP SCENARIOS
+</div>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_THRUSTER_FAILURE')">
+DP — THRUSTER FAILURE
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_POWER_FAILURE')">
+DP — POWER FAILURE
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_POSITION_DEVIATION')">
+DP — POSITION DEVIATION
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_WIND_LOAD')">
+DP — WIND LOAD
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_DRIFT_OFF')">
+DP — DRIFT OFF
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_MULTI_THRUSTER_FAILURE')">
+DP — MULTI THRUSTER FAILURE
+</button>
+
+<button type="button"
+class="dp-button"
+onclick="activateScenario('DP_WORST_CASE_FAILURE')">
+DP — WORST CASE FAILURE
+</button>
+
+</div>
+
+<br>
+
+<pre id="dpSimulator">
+DP Simulator awaiting integration module.
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     PLACEHOLDER FOR PART 3
+     ORBITAL SIMULATOR
+============================================================ -->
+
+<div class="panel">
+
+<div class="title">
+🛰️ ORBITAL RESILIENCE SIMULATOR
+</div>
+
+<div class="muted">
+
+Orbital Resilience Engine integration module.
+
+<br>
+
+The orbital engine will feed validated spacecraft
+state, communications, power, attitude, manoeuvre and
+mission conditions into Captain AI Lena.
+
+<br>
+
+Human decision authority remains mandatory.
+
+<br>
+
+No physical spacecraft execution.
+No backend connection.
+Local deterministic simulation only.
+
+</div>
+
+<br>
+
+<div class="orbital-controls">
+
+<div class="orbital-label">
+ORBITAL SCENARIOS
+</div>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_SIGNAL_LOSS')">
+ORBITAL — SIGNAL LOSS
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_POWER_FAILURE')">
+ORBITAL — POWER FAILURE
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_ATTITUDE_ANOMALY')">
+ORBITAL — ATTITUDE ANOMALY
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_COMMUNICATION_FAILURE')">
+ORBITAL — COMMUNICATION FAILURE
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_MANOEUVRE_FAILURE')">
+ORBITAL — MANOEUVRE FAILURE
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_PROPULSION_FAILURE')">
+ORBITAL — PROPULSION FAILURE
+</button>
+
+<button type="button"
+class="orbital-button"
+onclick="activateScenario('ORBITAL_CASCADE_FAILURE')">
+ORBITAL — CASCADE FAILURE
+</button>
+
+</div>
+
+<br>
+
+<pre id="orbitalSimulator">
+Orbital Resilience Simulator awaiting integration module.
+</pre>
+
+</div>
+
+
+<!-- ============================================================
+     IMPORTANT
+     PART 2 CONTINUES HERE
+============================================================ -->
+
+<!--
+===============================================================
+PART 1 END
+
+PART 2 WILL ADD:
+
+1. DP state model
+2. DP scenario profiles
+3. Thruster failure logic
+4. DP position/heading state
+5. DP resilience assessment
+6. DP manoeuvre planning
+7. DP verification
+
+PART 3 WILL ADD:
+
+1. Orbital state model
+2. Signal-loss scenarios
+3. Power-failure scenarios
+4. Attitude scenarios
+5. Manoeuvre engine
+6. Orbital validation
+7. Human-authorized recovery options
+
+DO NOT CLOSE THE MASTER FILE HERE.
+===============================================================
+-->
+
+<script>
+
+/* ============================================================
+   SPD v13.1 — INTEGRATED FOUNDATION
+   PART 1
+============================================================ */
+
+const PHI = 1.618033988749895;
+
+let scenarioIntensity = 50;
+
+let currentScenario = "NORMAL";
+
+let currentDomain = "CORE";
+
+let currentState = {
+
+  fx:0,
+  dc:0,
+  cyb:0,
+  inf:0,
+  energy:0,
+
+  dp:0,
+  orbital:0
+
+};
+
+let currentAssessment = null;
+
+let memory = {
+
+  lastScenario:null,
+  lastDomain:null,
+  lastDecision:null,
+  lastRecovery:null,
+  lastSeverity:null,
+  timestamp:null
+
+};
+
+let auditRecords = [];
+
+let pipelineLog = [];
+
+
+/* ============================================================
+   BASIC SCENARIO PROFILES
+   Existing SPD domains remain deterministic.
+============================================================ */
+
+const scenarioProfiles = {
+
+  NORMAL:{
+    domain:"CORE",
+    fx:0,
+    dc:0,
+    cyb:0,
+    inf:0,
+    energy:0,
+    dp:0,
+    orbital:0
+  },
+
+  FX_SHOCK:{
+    domain:"FIN",
+    fx:90,
+    dc:20,
+    cyb:10,
+    inf:20,
+    energy:10,
+    dp:0,
+    orbital:0
+  },
+
+  ENERGY_SPIKE:{
+    domain:"ENERGY",
+    fx:10,
+    dc:30,
+    cyb:10,
+    inf:20,
+    energy:90,
+    dp:0,
+    orbital:0
+  },
+
+  CYBER_EVENT:{
+    domain:"CYB",
+    fx:10,
+    dc:20,
+    cyb:90,
+    inf:40,
+    energy:10,
+    dp:0,
+    orbital:0
+  },
+
+  INFRASTRUCTURE_STRESS:{
+    domain:"DC",
+    fx:20,
+    dc:80,
+    cyb:20,
+    inf:85,
+    energy:60,
+    dp:0,
+    orbital:0
+  },
+
+  BIODIESEL_SHORTAGE:{
+    domain:"ENERGY",
+    fx:20,
+    dc:30,
+    cyb:10,
+    inf:60,
+    energy:90,
+    dp:0,
+    orbital:0
+  }
+
+};
+
+
+/* ============================================================
+   DOM HELPERS
+============================================================ */
+
+function setText(id,value){
+
+  const el =
+    document.getElementById(id);
+
+  if(el){
+    el.textContent = value;
+  }
+
+}
+
+
+function setJSON(id,value){
+
+  const el =
+    document.getElementById(id);
+
+  if(el){
+
+    el.textContent =
+      JSON.stringify(
+        value,
+        null,
+        2
+      );
+
+  }
+
+}
+
+
+function nowISO(){
+
+  return new Date().toISOString();
+
+}
+
+
+/* ============================================================
+   MONITOR
+============================================================ */
+
+function updateMonitor(){
+
+  setText(
+    "domainFX",
+    currentState.fx
+  );
+
+  setText(
+    "domainDC",
+    currentState.dc
+  );
+
+  setText(
+    "domainCYB",
+    currentState.cyb
+  );
+
+  setText(
+    "domainINF",
+    currentState.inf
+  );
+
+  setText(
+    "domainEN",
+    currentState.energy
+  );
+
+  setText(
+    "domainDP",
+    currentState.dp
+  );
+
+  setText(
+    "domainOrbital",
+    currentState.orbital
+  );
+
+}
+
+
+/* ============================================================
+   PIPELINE LOG
+============================================================ */
+
+function addPipelineLog(message){
+
+  pipelineLog.push({
+
+    timestamp:nowISO(),
+
+    message
+
+  });
+
+  if(
+    pipelineLog.length > 100
+  ){
+
+    pipelineLog.shift();
+
+  }
+
+  setJSON(
+    "pipelineLog",
+    pipelineLog
+  );
+
+}
+
+
+/* ============================================================
+   AUDIT CORE FOUNDATION
+============================================================ */
+
+function updateAudit(
+  event,
+  data
+){
+
+  const record = {
+
+    id:
+      auditRecords.length + 1,
+
+    timestamp:
+      nowISO(),
+
+    event,
+
+    scenario:
+      currentScenario,
+
+    domain:
+      currentDomain,
+
+    intensity:
+      scenarioIntensity,
+
+    data
+
+  };
+
+  auditRecords.push(record);
+
+  setJSON(
+    "audit",
+    auditRecords
+  );
+
+}
+
+
+/* ============================================================
+   MEMORY FOUNDATION
+============================================================ */
+
+function updateMemory(
+  decision,
+  assessment
+){
+
+  memory = {
+
+    lastScenario:
+      currentScenario,
+
+    lastDomain:
+      currentDomain,
+
+    lastDecision:
+      decision,
+
+    lastRecovery:
+      assessment,
+
+    lastSeverity:
+      assessment.severity,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+}
+
+
+/* ============================================================
+   SCENARIO INTENSITY
+============================================================ */
+
+function updateIntensity(){
+
+  const slider =
+    document.getElementById(
+      "scenarioIntensity"
+    );
+
+  if(!slider){
+    return;
+  }
+
+  scenarioIntensity =
+    Number(slider.value);
+
+  setText(
+    "intensityValue",
+    scenarioIntensity + "%"
+  );
+
+  addPipelineLog(
+    "Scenario intensity changed to "
+    + scenarioIntensity
+    + "%"
+  );
+
+}
+
+
+/* ============================================================
+   UNIFIED DOMAIN PLACEHOLDER
+============================================================ */
+
+function getScenarioDomain(
+  name
+){
+
+  if(
+    name.startsWith("DP_")
+  ){
+
+    return "DP";
+
+  }
+
+  if(
+    name.startsWith("ORBITAL_")
+  ){
+
+    return "ORBITAL";
+
+  }
+
+  if(
+    name.startsWith("FIN_")
+    ||
+    name === "BANKING_STRESS"
+    ||
+    name === "LIQUIDITY_CRISIS"
+    ||
+    name === "CREDIT_STRESS"
+    ||
+    name === "SOVEREIGN_DEBT"
+  ){
+
+    return "FIN";
+
+  }
+
+  if(
+    name.startsWith("BHR_")
+    ||
+    [
+      "FORCED_LABOUR",
+      "CHILD_LABOUR",
+      "DISCRIMINATION",
+      "MODERN_SLAVERY",
+      "COMMUNITY_IMPACT",
+      "INDIGENOUS_RIGHTS",
+      "SUPPLY_CHAIN_RISK",
+      "GRIEVANCE_MECHANISM"
+    ].includes(name)
+  ){
+
+    return "BHR";
+
+  }
+
+  if(
+    name.startsWith("COOLING_")
+    ||
+    name.startsWith("POWER_")
+    ||
+    name.startsWith("NETWORK_")
+    ||
+    name.startsWith("COMPUTE_")
+    ||
+    name.startsWith("BLACKOUT_")
+    ||
+    name.startsWith("STORAGE_") ||
+    name === "MULTI_SYSTEM_CASCADE"
+  ){
+
+    return "DC";
+
+  }
+
+  if(
+    name.startsWith("DATA_BREACH")
+    ||
+    name === "DDOS"
+    ||
+    name === "INSIDER_THREAT"
+    ||
+    name.startsWith("API_")
+    ||
+    name.startsWith("SUPPLY_CHAIN_CYBER")
+    ||
+    name.startsWith("CLOUD_")
+    ||
+    name.startsWith("IDENTITY_")
+    ||
+    name.startsWith("MULTI_VECTOR")
+  ){
+
+    return "CYB";
+
+  }
+
+  return "CORE";
+
+}
+
+
+/* ============================================================
+   SCENARIO ACTIVATION FOUNDATION
+============================================================ */
+
+function activateScenario(
+  name
+){
+
+  currentScenario =
+    name;
+
+  currentDomain =
+    getScenarioDomain(name);
+
+  addPipelineLog(
+    "Scenario activated: "
+    + name
+    + " | Domain: "
+    + currentDomain
+  );
+
+  updateAudit(
+    "SCENARIO_ACTIVATED",
+    {
+      scenario:name,
+      domain:currentDomain
+    }
+  );
+
+}
+
+
+/* ============================================================
+   INTEGRATION TEST FOUNDATION
+============================================================ */
+
+function runDomainIntegrationTest(){
+
+  const result = {
+
+    cockpit:
+      "CONNECTED",
+
+    localDomainIntegration:
+      "AVAILABLE",
+
+    FINRuleEngine:
+      "AVAILABLE",
+
+    BHRRuleEngine:
+      "AVAILABLE",
+
+    DCRuleEngine:
+      "AVAILABLE",
+
+    CYBRuleEngine:
+      "AVAILABLE",
+
+    DPSimulator:
+      "INTEGRATION_READY",
+
+    OrbitalResilienceEngine:
+      "INTEGRATION_READY",
+
+    CaptainAILena:
+      "AVAILABLE",
+
+    GoldenRuleEngine:
+      "AVAILABLE",
+
+    HumanDecisionAuthority:
+      "ACTIVE",
+
+    MemoryCore:
+      "AVAILABLE",
+
+    AuditCore:
+      "AVAILABLE",
+
+    backend:
+      "NOT_CONNECTED",
+
+    physicalExecution:
+      "DISABLED",
+
+    status:
+      "PASS"
+
+  };
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+  updateAudit(
+    "DOMAIN_INTEGRATION_TEST",
+    result
+  );
+
+  addPipelineLog(
+    "Unified domain integration test PASS."
+  );
+
+}
+
+
+/* ============================================================
+   SYSTEM RUN FOUNDATION
+============================================================ */
+
+function runLiveSystem(){
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: RUNNING — INTEGRATED LOCAL SIMULATOR"
+  );
+
+  addPipelineLog(
+    "Integrated system run initiated."
+  );
+
+  updateAudit(
+    "SYSTEM_RUN_INITIATED",
+    {
+      scenario:currentScenario,
+      domain:currentDomain,
+      backend:false,
+      physicalExecution:false
+    }
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    updateMonitor();
+
+    addPipelineLog(
+      "SPD v13.1 integrated foundation initialized."
+    );
+
+    updateAudit(
+      "SIMULATOR_INITIALIZED",
+      {
+        deterministic:true,
+        backendConnection:false,
+        dpIntegration:true,
+        orbitalIntegration:true,
+        humanAuthorizationRequired:true
+      }
+    );
+
+  }
+);
+
+</script>
+
+</body>
+</html>
