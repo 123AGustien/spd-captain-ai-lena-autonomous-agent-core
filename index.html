@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>SPD v13.1 — Sextant Resilience Cockpit Pro — UMV Autonomous Mode</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#07111d;
+  color:#eaf4ff;
+}
+
+header{
+  padding:22px;
+  background:#0b1d2d;
+  border-bottom:1px solid #21445f;
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:25px;
+}
+
+h2{
+  margin:0 0 14px;
+  color:#8fd3ff;
+  font-size:19px;
+}
+
+h3{
+  color:#9ee2ff;
+}
+
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  background:#0b1a29;
+  border:1px solid #23445c;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.22);
+}
+
+.status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#123d2c;
+  color:#8ff0b2;
+  font-weight:bold;
+  font-size:13px;
+}
+
+.status.autonomous{
+  background:#163b57;
+  color:#8fdcff;
+}
+
+.status.warning{
+  background:#49351a;
+  color:#ffd98a;
+}
+
+.pipeline{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
+  gap:8px;
+}
+
+.stage{
+  text-align:center;
+  padding:12px 5px;
+  background:#101f30;
+  border:1px solid #29475d;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.stage.active{
+  background:#164a66;
+  border-color:#69d1ff;
+  color:#fff;
+}
+
+.stage.done{
+  background:#123b31;
+  border-color:#3bbf91;
+  color:#a8ffdc;
+}
+
+.stage.warn{
+  background:#49351a;
+  border-color:#d5a84e;
+}
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+button,
+select{
+  background:#102c42;
+  color:#eaf7ff;
+  border:1px solid #367394;
+  border-radius:7px;
+  padding:10px 13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#17435e;
+}
+
+button:active{
+  transform:translateY(1px);
+}
+
+button.danger{
+  border-color:#b86b6b;
+  background:#421f25;
+}
+
+button.green{
+  border-color:#4cb88f;
+  background:#123d32;
+}
+
+button.autonomous{
+  border-color:#69d1ff;
+  background:#123c57;
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+}
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#06101a;
+  border:1px solid #1e394e;
+  border-radius:8px;
+  padding:14px;
+  overflow:auto;
+  color:#ccecff;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.metric{
+  font-size:27px;
+  font-weight:bold;
+}
+
+.low{color:#8ff0b2}
+.medium{color:#ffd98a}
+.high{color:#ff9c9c}
+
+.small{
+  font-size:12px;
+  color:#9bb7c9;
+}
+
+.notice{
+  border-left:4px solid #69d1ff;
+  padding:12px;
+  background:#0c2233;
+  margin-top:10px;
+}
+
+.autonomous-box{
+  border:1px solid #347da5;
+  background:#0b2233;
+}
+
+.execution-box{
+  border:1px solid #4cb88f;
+  background:#0d2923;
+}
+
+.audit{
+  max-height:300px;
+  overflow:auto;
+}
+
+.footer{
+  padding:25px 16px;
+  text-align:center;
+  color:#7893a5;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <h1>⚓ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+
+    <div>
+      Captain AI Lena Autonomous Agent Core •
+      UMV / Dynamic Positioning Operational Resilience •
+      Triple-Layer Decision Resilience •
+      Deterministic Local Simulation
+    </div>
+
+    <br>
+
+    <span id="systemStatus" class="status autonomous">
+      🟢 UMV AUTONOMOUS SIMULATION READY
+    </span>
+
+    <span class="status autonomous">
+      CAPTAIN AI LENA AUTONOMOUS MODE
+    </span>
+  </div>
+</header>
+
+
+<main class="container">
+
+  <!-- =========================================================
+       SYSTEM ARCHITECTURE
+       ========================================================= -->
+
+  <section class="card autonomous-box">
+
+    <h2>🧭 UMV AUTONOMOUS RESILIENCE ARCHITECTURE</h2>
+
+    <p>
+      The UMV architecture is designed to demonstrate autonomous
+      decision resilience in a deterministic simulation environment.
+    </p>
+
+    <div class="notice">
+      <strong>Autonomous Mode:</strong>
+      Captain AI Lena acts as the autonomous decision authority
+      within this UMV simulation architecture.
+    </div>
+
+    <div class="notice">
+      <strong>Simulation Boundary:</strong>
+      This demonstrator has no backend connection, no physical
+      actuator connection and does not command a real UMV.
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       PIPELINE
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🧭 UMV AUTONOMOUS DECISION PIPELINE</h2>
+
+    <p>
+      Abnormal condition →
+      independent assessment →
+      cascading-condition recognition →
+      Primary AI →
+      Secondary AI →
+      Stabilizer / Captain AI Lena →
+      Trial Manoeuvre →
+      independent validation →
+      Autonomous Decision →
+      Simulated Action →
+      Update
+    </p>
+
+    <div id="pipeline" class="pipeline">
+
+      <div class="stage" id="stage-OBSERVE">OBSERVE</div>
+      <div class="stage" id="stage-VERIFY">VERIFY</div>
+      <div class="stage" id="stage-ASSESS">ASSESS</div>
+      <div class="stage" id="stage-CASCADE">CASCADE</div>
+      <div class="stage" id="stage-PRIMARY">PRIMARY AI</div>
+      <div class="stage" id="stage-SECONDARY">SECONDARY AI</div>
+      <div class="stage" id="stage-STABILIZER">STABILIZER</div>
+      <div class="stage" id="stage-TRIAL">TRIAL</div>
+      <div class="stage" id="stage-VALIDATE">VALIDATE</div>
+      <div class="stage" id="stage-AUTONOMOUS">AUTONOMOUS DECISION</div>
+      <div class="stage" id="stage-ACT">SIMULATED ACTION</div>
+      <div class="stage" id="stage-UPDATE">UPDATE</div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       CONTROLS
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🎛️ SYSTEM CONTROLS</h2>
+
+    <div class="controls">
+
+      <button class="green" onclick="runSystem()">
+        ▶ RUN UMV SYSTEM
+      </button>
+
+      <button onclick="runSelfTest()">
+        🧪 RUN SELF-TEST
+      </button>
+
+      <button onclick="runCorrectiveAssessment()">
+        🛠️ SELF-TEST + CORRECTIVE ASSESSMENT
+      </button>
+
+      <button class="autonomous" onclick="runIntegrationTest()">
+        🔌 FINAL AUTONOMOUS INTEGRATION TEST
+      </button>
+
+      <button class="danger" onclick="resetSimulator()">
+        ↺ RESET SIMULATOR
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       SCENARIO
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>⚓ UMV / DP RESILIENCE SIMULATOR</h2>
+
+    <p>
+      Dynamic Positioning / Unmanned Marine Vehicle resilience
+      testbed interface.
+    </p>
+
+    <div class="controls">
+
+      <select id="scenarioSelect">
+
+        <option value="THRUSTER_FAILURE">
+          Thruster Failure
+        </option>
+
+        <option value="POWER_FAILURE">
+          Power Failure
+        </option>
+
+        <option value="POSITION_DEVIATION">
+          Position Deviation
+        </option>
+
+        <option value="HIGH_WIND_LOAD">
+          High Wind Load
+        </option>
+
+        <option value="DRIFT_OFF">
+          Drift Off
+        </option>
+
+        <option value="MULTIPLE_THRUSTER_FAILURE">
+          Multiple Thruster Failure
+        </option>
+
+        <option value="WORST_CASE_FAILURE">
+          Worst Case Failure
+        </option>
+
+      </select>
+
+      <button onclick="loadScenario()">
+        LOAD UMV / DP SCENARIO
+      </button>
+
+      <button class="green" onclick="runPipeline()">
+        RUN UMV / DP AUTONOMOUS PIPELINE
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       TRIPLE LAYER
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🧠 TRIPLE-LAYER DECISION RESILIENCE</h2>
+
+    <p>
+      Three-layer decision architecture providing independent
+      assessment, cross-checking and stabilized decision support
+      before autonomous simulated action.
+    </p>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>PRIMARY AI</h3>
+        <p>
+          Independent first-pass abnormal-condition assessment.
+        </p>
+        <pre id="primaryOutput">Waiting...</pre>
+      </div>
+
+      <div class="card">
+        <h3>SECONDARY AI</h3>
+        <p>
+          Independent cross-check. The Secondary AI does not
+          simply copy the Primary AI.
+        </p>
+        <pre id="secondaryOutput">Waiting...</pre>
+      </div>
+
+      <div class="card">
+        <h3>STABILIZER / CAPTAIN AI LENA</h3>
+        <p>
+          Reconciles evidence from the independent assessment
+          layers and produces autonomous controlled decision support.
+        </p>
+        <pre id="stabilizerOutput">Waiting...</pre>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       CASCADE
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🔗 CASCADING-CONDITION RECOGNITION</h2>
+
+    <pre id="cascadeOutput">
+Waiting for UMV / DP scenario...
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       TRIAL + VALIDATION
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>⚓ TRIAL MANOEUVRE + INDEPENDENT VALIDATION</h2>
+
+    <p>
+      Trial manoeuvres are simulation-only.
+      The system validates the proposed autonomous action before
+      the simulated action stage.
+    </p>
+
+    <div class="controls">
+
+      <button onclick="runTrialManoeuvre()">
+        ⚓ RUN TRIAL MANOEUVRE
+      </button>
+
+      <button onclick="verifyTrialManoeuvre()">
+        🔎 VERIFY TRIAL MANOEUVRE
+      </button>
+
+    </div>
+
+    <pre id="trialOutput">
+Trial manoeuvre not executed.
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       AUTONOMOUS DECISION AUTHORITY
+       ========================================================= -->
+
+  <section class="card autonomous-box">
+
+    <h2>🤖 UMV AUTONOMOUS DECISION AUTHORITY</h2>
+
+    <p>
+      <strong>
+        AI RESILIENCE ASSESSMENT → CAPTAIN AI LENA AUTONOMOUS DECISION
+      </strong>
+    </p>
+
+    <p>
+      Captain AI Lena is the autonomous decision authority within
+      this UMV simulation architecture.
+    </p>
+
+    <p>
+      The system performs the decision sequence, trial assessment,
+      independent validation and simulated action without requiring
+      a DPO authorization step.
+    </p>
+
+    <div class="notice">
+      <strong>Important:</strong>
+      Autonomous mode here means autonomous decision logic inside
+      the deterministic simulator. No physical UMV equipment is
+      controlled by this software.
+    </div>
+
+    <pre id="authorityOutput">
+{
+  "authority": "CAPTAIN_AI_LENA",
+  "mode": "AUTONOMOUS_SIMULATION",
+  "status": "READY",
+  "decision": null,
+  "domain": "UMV_DP",
+  "scenario": null,
+  "executionGate": "AUTONOMOUS_SIMULATION_GATE",
+  "physicalExecution": false,
+  "backendConnection": false
+}
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       RAW STATE
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>📊 RAW UMV / DP SYSTEM STATE</h2>
+
+    <pre id="rawState">
+Waiting...
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       ASSESSMENT
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>⚠️ SYSTEM ASSESSMENT</h2>
+
+    <pre id="assessmentOutput">
+Waiting...
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       RISK
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🚨 RISK / RESILIENCE</h2>
+
+    <div class="grid">
+
+      <div>
+        <div class="small">Risk</div>
+        <div id="riskValue" class="metric">UNKNOWN</div>
+      </div>
+
+      <div>
+        <div class="small">Resilience Score</div>
+        <div id="resilienceValue" class="metric">N/A</div>
+      </div>
+
+      <div>
+        <div class="small">Golden Score</div>
+        <div id="goldenValue" class="metric">N/A</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       LENA DECISION
+       ========================================================= -->
+
+  <section class="card autonomous-box">
+
+    <h2>⚙️ CAPTAIN AI LENA AUTONOMOUS DECISION</h2>
+
+    <pre id="decisionOutput">
+Waiting...
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       SOLUTIONS
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>💡 AUTONOMOUS SOLUTION OPTIONS</h2>
+
+    <pre id="solutionOutput">
+Waiting...
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       AUTONOMOUS EXECUTION GATE
+       ========================================================= -->
+
+  <section class="card execution-box">
+
+    <h2>🔒 UMV AUTONOMOUS EXECUTION GATE</h2>
+
+    <pre id="executionOutput">
+AUTONOMOUS SIMULATION GATE READY.
+NO PHYSICAL EXECUTION.
+NO BACKEND CONNECTION.
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       MEMORY
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🧠 MEMORY CORE</h2>
+
+    <pre id="memoryOutput">
+{
+  "lastScenario": null,
+  "lastDomain": null,
+  "lastDecision": null,
+  "lastAssessment": null,
+  "lastCascade": null,
+  "lastTrialManoeuvre": null,
+  "lastValidation": null,
+  "lastAutonomousAction": null,
+  "timestamp": null
+}
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       AUDIT
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🧾 AUDIT RECORD</h2>
+
+    <pre id="auditOutput" class="audit">
+No audit records.
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       PIPELINE LOG
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>📜 PIPELINE LOG</h2>
+
+    <pre id="pipelineLog" class="audit">
+No pipeline events.
+    </pre>
+
+  </section>
+
+
+  <!-- =========================================================
+       VALIDATION CORE
+       ========================================================= -->
+
+  <section class="card">
+
+    <h2>🧪 VALIDATION CORE</h2>
+
+    <pre id="validationOutput">
+Self-test not executed.
+    </pre>
+
+    <h3>Fault Identification</h3>
+
+    <pre id="faultOutput">
+No fault assessment available.
+    </pre>
+
+    <h3>Corrective Action Assessment</h3>
+
+    <pre id="correctiveOutput">
+No corrective action available.
+    </pre>
+
+    <h3>Re-Test Validation</h3>
+
+    <pre id="retestOutput">
+Re-test not executed.
+    </pre>
+
+  </section>
+
+</main>
+
+
+<footer class="footer">
+
+  SPD v13.1 — Sextant Resilience Cockpit Pro — UMV Autonomous Mode
+  <br>
+  Deterministic Local Simulation • Captain AI Lena Autonomous Decision Authority
+  <br>
+  No backend connection • No physical execution
+
+</footer>
+
+
+<script>
+
+/* ============================================================
+   SPD v13.1
+   CAPTAIN AI LENA
+   UMV AUTONOMOUS AGENT CORE
+   ============================================================ */
+
+
+/* ============================================================
+   CONSTANTS
+   ============================================================ */
+
+const PHI = 1.618033988749895;
+
+const SYSTEM = {
+  deterministic: true,
+  backendConnection: false,
+  physicalExecution: false,
+  automaticRecovery: false,
+
+  domain: "UMV_DP",
+
+  authority: "CAPTAIN_AI_LENA",
+
+  mode: "AUTONOMOUS_SIMULATION",
+
+  executionGate: "AUTONOMOUS_SIMULATION_GATE"
+};
+
+
+/* ============================================================
+   MEMORY
+   ============================================================ */
+
+let memory = {
+  lastScenario: null,
+  lastDomain: null,
+  lastDecision: null,
+  lastAssessment: null,
+  lastCascade: null,
+  lastTrialManoeuvre: null,
+  lastValidation: null,
+  lastAutonomousAction: null,
+  timestamp: null
+};
+
+
+/* ============================================================
+   AUDIT
+   ============================================================ */
+
+let auditRecords = [];
+
+let pipelineRecords = [];
+
+
+/* ============================================================
+   CURRENT STATE
+   ============================================================ */
+
+let currentScenario = null;
+
+let currentState = null;
+
+let currentAssessment = null;
+
+let currentDecision = null;
+
+let currentTrial = null;
+
+let currentValidation = null;
+
+
+/* ============================================================
+   SCENARIO DEFINITIONS
+   ============================================================ */
+
+const scenarios = {
+
+  THRUSTER_FAILURE: {
+    label: "THRUSTER FAILURE",
+
+    state: {
+      fx: 10,
+      energy: 35,
+      cyb: 10,
+      inf: 20,
+      dc: 80
+    },
+
+    decision:
+      "ISOLATE FAILED THRUSTER / MAINTAIN SAFE DP STATE",
+
+    solutions: [
+      "Redistribute available thrust.",
+      "Maintain safe position envelope.",
+      "Monitor remaining propulsion redundancy.",
+      "Continue autonomous recovery assessment within the simulation."
+    ]
+  },
+
+
+  POWER_FAILURE: {
+    label: "POWER FAILURE",
+
+    state: {
+      fx: 10,
+      energy: 90,
+      cyb: 10,
+      inf: 20,
+      dc: 65
+    },
+
+    decision:
+      "ISOLATE POWER FAULT / ENTER ENERGY RECOVERY MODE",
+
+    solutions: [
+      "Isolate affected power path.",
+      "Protect essential systems.",
+      "Prioritize remaining energy reserves.",
+      "Execute controlled simulated recovery sequence."
+    ]
+  },
+
+
+  POSITION_DEVIATION: {
+    label: "POSITION DEVIATION",
+
+    state: {
+      fx: 10,
+      energy: 30,
+      cyb: 10,
+      inf: 70,
+      dc: 65
+    },
+
+    decision:
+      "STABILIZE POSITION / RESTORE SAFE STATION-KEEPING ENVELOPE",
+
+    solutions: [
+      "Assess position error.",
+      "Redistribute available thrust.",
+      "Reduce station-keeping demand.",
+      "Execute controlled simulated stabilization."
+    ]
+  },
+
+
+  HIGH_WIND_LOAD: {
+    label: "HIGH WIND LOAD",
+
+    state: {
+      fx: 10,
+      energy: 60,
+      cyb: 10,
+      inf: 70,
+      dc: 55
+    },
+
+    decision:
+      "OPTIMIZE THRUST / MAINTAIN SAFE POSITION ENVELOPE",
+
+    solutions: [
+      "Monitor environmental load.",
+      "Optimize available thrust.",
+      "Protect propulsion reserve.",
+      "Maintain safe simulated operating envelope."
+    ]
+  },
+
+
+  DRIFT_OFF: {
+    label: "DRIFT OFF",
+
+    state: {
+      fx: 10,
+      energy: 65,
+      cyb: 10,
+      inf: 85,
+      dc: 85
+    },
+
+    decision:
+      "INITIATE CONTROLLED DRIFT RECOVERY",
+
+    solutions: [
+      "Assess drift vector.",
+      "Protect remaining propulsion redundancy.",
+      "Restore position envelope.",
+      "Execute controlled simulated recovery."
+    ]
+  },
+
+
+  MULTIPLE_THRUSTER_FAILURE: {
+    label: "MULTIPLE THRUSTER FAILURE",
+
+    state: {
+      fx: 10,
+      energy: 55,
+      cyb: 10,
+      inf: 55,
+      dc: 95
+    },
+
+    decision:
+      "CONTAIN PROPULSION LOSS / MAINTAIN SAFE STATE",
+
+    solutions: [
+      "Isolate failed propulsion units.",
+      "Redistribute remaining thrust.",
+      "Monitor station-keeping capability.",
+      "Escalate simulated resilience response."
+    ]
+  },
+
+
+  WORST_CASE_FAILURE: {
+    label: "WORST CASE FAILURE",
+
+    state: {
+      fx: 45,
+      energy: 95,
+      cyb: 65,
+      inf: 90,
+      dc: 100
+    },
+
+    decision:
+      "ENTER MAXIMUM RESILIENCE / SAFE-STATE RECOVERY MODE",
+
+    solutions: [
+      "Protect critical systems.",
+      "Contain cascading conditions.",
+      "Preserve remaining operational capability.",
+      "Execute controlled simulated safe-state recovery."
+    ]
+  }
+
+};
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
+function setText(id, value){
+
+  const el = document.getElementById(id);
+
+  if(!el) return;
+
+  el.textContent =
+    typeof value === "string"
+      ? value
+      : JSON.stringify(value, null, 2);
+}
+
+
+function now(){
+
+  return new Date().toISOString();
+
+}
+
+
+function log(message, type, data = {}){
+
+  const record = {
+    timestamp: now(),
+    type: type,
+    message: message,
+    ...data
+  };
+
+  auditRecords.unshift(record);
+
+  pipelineRecords.unshift(record);
+
+  renderLogs();
+
+}
+
+
+function renderLogs(){
+
+  setText(
+    "auditOutput",
+    auditRecords
+      .map(r =>
+        `${r.timestamp} | ${r.type}${r.message ? " | " + r.message : ""}`
+      )
+      .join("\n")
+  );
+
+  setText(
+    "pipelineLog",
+    pipelineRecords
+      .map(r =>
+        `${r.timestamp} | ${r.type}`
+      )
+      .join("\n")
+  );
+
+}
+
+
+function setStage(stage, state){
+
+  const el =
+    document.getElementById("stage-" + stage);
+
+  if(!el) return;
+
+  el.classList.remove("active","done","warn");
+
+  if(state){
+
+    el.classList.add(state);
+
+  }
+
+}
+
+
+function resetPipelineStages(){
+
+  [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "CASCADE",
+    "PRIMARY",
+    "SECONDARY",
+    "STABILIZER",
+    "TRIAL",
+    "VALIDATE",
+    "AUTONOMOUS",
+    "ACT",
+    "UPDATE"
+  ].forEach(
+    stage => setStage(stage, null)
+  );
+
+}
+
+
+/* ============================================================
+   RISK CALCULATION
+   ============================================================ */
+
+function calculateStress(state){
+
+  return (
+    state.fx * 0.20 +
+    state.energy * 0.25 +
+    state.cyb * 0.20 +
+    state.inf * 0.20 +
+    state.dc * 0.15
+  );
+
+}
+
+
+function classifyRisk(goldenScore){
+
+  if(goldenScore < 30){
+    return "LOW";
+  }
+
+  if(goldenScore < 50){
+    return "MEDIUM";
+  }
+
+  return "HIGH";
+
+}
+
+
+function calculateAssessment(){
+
+  const rawStress =
+    calculateStress(currentState);
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  const risk =
+    classifyRisk(goldenScore);
+
+  return {
+
+    domain: SYSTEM.domain,
+
+    scenario:
+      scenarios[currentScenario].label,
+
+    rawStress:
+      Number(rawStress.toFixed(3)),
+
+    goldenScore:
+      Number(goldenScore.toFixed(3)),
+
+    resilienceScore:
+      Number(resilienceScore.toFixed(3)),
+
+    risk: risk,
+
+    calculation:
+      "rawStress × (1 / PHI)"
+
+  };
+
+}
+
+
+/* ============================================================
+   LOAD SCENARIO
+   ============================================================ */
+
+function loadScenario(){
+
+  currentScenario =
+    document.getElementById(
+      "scenarioSelect"
+    ).value;
+
+  const scenario =
+    scenarios[currentScenario];
+
+  currentState =
+    {...scenario.state};
+
+  currentAssessment = null;
+
+  currentDecision = null;
+
+  currentTrial = null;
+
+  currentValidation = null;
+
+  resetPipelineStages();
+
+  setStage("OBSERVE","active");
+
+  setText(
+    "rawState",
+    currentState
+  );
+
+  setText(
+    "assessmentOutput",
+    "Scenario loaded. Run autonomous pipeline."
+  );
+
+  setText(
+    "primaryOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "secondaryOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "stabilizerOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "cascadeOutput",
+    "Scenario loaded. Waiting for assessment."
+  );
+
+  setText(
+    "trialOutput",
+    "Trial manoeuvre not executed."
+  );
+
+  setText(
+    "decisionOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "solutionOutput",
+    "Waiting..."
+  );
+
+  log(
+    "UMV / DP scenario loaded.",
+    "SCENARIO_LOADED",
+    {
+      scenario: currentScenario,
+      domain: SYSTEM.domain,
+      mode: SYSTEM.mode
+    }
+  );
+
+}
+
+
+/* ============================================================
+   PIPELINE
+   ============================================================ */
+
+function runPipeline(){
+
+  if(!currentScenario){
+
+    loadScenario();
+
+  }
+
+  resetPipelineStages();
+
+  setStage("OBSERVE","done");
+
+  setStage("VERIFY","done");
+
+  setStage("ASSESS","done");
+
+  setStage("CASCADE","done");
+
+  setStage("PRIMARY","done");
+
+  setStage("SECONDARY","done");
+
+  setStage("STABILIZER","done");
+
+  setStage("TRIAL","done");
+
+  setStage("VALIDATE","done");
+
+  setStage("AUTONOMOUS","done");
+
+  setStage("ACT","done");
+
+  setStage("UPDATE","done");
+
+
+  currentAssessment =
+    calculateAssessment();
+
+
+  /* ----------------------------------------------------------
+     PRIMARY AI
+     ---------------------------------------------------------- */
+
+  const primary = {
+
+    agent:
+      "PRIMARY AI",
+
+    assessment:
+      "Independent first-pass abnormal-condition assessment",
+
+    domain:
+      SYSTEM.domain,
+
+    severity:
+      currentAssessment.risk === "HIGH"
+        ? "CRITICAL"
+        : currentAssessment.risk === "MEDIUM"
+          ? "HIGH"
+          : "HIGH",
+
+    observedCondition:
+      scenarios[currentScenario].label,
+
+    rawStress:
+      currentAssessment.rawStress,
+
+    risk:
+      currentAssessment.risk,
+
+    confidence:
+      "HIGH",
+
+    recommendation:
+      scenarios[currentScenario].decision
+
+  };
+
+
+  setText(
+    "primaryOutput",
+    primary
+  );
+
+
+  /* ----------------------------------------------------------
+     SECONDARY AI
+     ---------------------------------------------------------- */
+
+  const secondary = {
+
+    agent:
+      "SECONDARY AI",
+
+    assessment:
+      "Independent cross-check",
+
+    independent:
+      true,
+
+    domain:
+      SYSTEM.domain,
+
+    observedCondition:
+      scenarios[currentScenario].label,
+
+    risk:
+      currentAssessment.risk,
+
+    criticalDomains:
+      criticalDomains(currentState),
+
+    recommendation:
+      scenarios[currentScenario].decision
+
+  };
+
+
+  setText(
+    "secondaryOutput",
+    secondary
+  );
+
+
+  /* ----------------------------------------------------------
+     CASCADE
+     ---------------------------------------------------------- */
+
+  const cascade =
+    detectCascade();
+
+  setText(
+    "cascadeOutput",
+    cascade
+  );
+
+
+  /* ----------------------------------------------------------
+     STABILIZER / LENA
+     ---------------------------------------------------------- */
+
+  const stabilizer = {
+
+    agent:
+      "STABILIZER / CAPTAIN AI LENA",
+
+    role:
+      "Decision reconciliation and autonomous UMV / DP decision authority",
+
+    domain:
+      SYSTEM.domain,
+
+    primaryRisk:
+      primary.risk,
+
+    secondaryRisk:
+      secondary.risk,
+
+    cascadeDetected:
+      cascade.detected,
+
+    finalRisk:
+      currentAssessment.risk,
+
+    resilienceScore:
+      currentAssessment.resilienceScore,
+
+    decision:
+      scenarios[currentScenario].decision
+
+  };
+
+
+  setText(
+    "stabilizerOutput",
+    stabilizer
+  );
+
+
+  /* ----------------------------------------------------------
+     ASSESSMENT
+     ---------------------------------------------------------- */
+
+  setText(
+    "assessmentOutput",
+    currentAssessment
+  );
+
+
+  setText(
+    "riskValue",
+    currentAssessment.risk
+  );
+
+  setText(
+    "resilienceValue",
+    currentAssessment.resilienceScore
+  );
+
+  setText(
+    "goldenValue",
+    currentAssessment.goldenScore
+  );
+
+
+  const riskElement =
+    document.getElementById("riskValue");
+
+  riskElement.className =
+    "metric " +
+    currentAssessment.risk.toLowerCase();
+
+
+  /* ----------------------------------------------------------
+     DECISION
+     ---------------------------------------------------------- */
+
+  currentDecision =
+    scenarios[currentScenario].decision;
+
+  setText(
+    "decisionOutput",
+    currentDecision
+  );
+
+
+  setText(
+    "solutionOutput",
+    scenarios[currentScenario].solutions
+  );
+
+
+  /* ----------------------------------------------------------
+     AUTONOMOUS AUTHORITY
+     ---------------------------------------------------------- */
+
+  const authority = {
+
+    authority:
+      SYSTEM.authority,
+
+    mode:
+      SYSTEM.mode,
+
+    status:
+      "DECISION_READY",
+
+    decision:
+      currentDecision,
+
+    domain:
+      SYSTEM.domain,
+
+    scenario:
+      currentScenario,
+
+    executionGate:
+      SYSTEM.executionGate,
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    automaticRecovery:
+      false
+
+  };
+
+
+  setText(
+    "authorityOutput",
+    authority
+  );
+
+
+  log(
+    "UMV autonomous resilience pipeline completed.",
+    "GOLDEN_RULE_COMPLETED",
+    {
+      domain: SYSTEM.domain,
+      scenario: currentScenario,
+      risk: currentAssessment.risk,
+      resilienceScore:
+        currentAssessment.resilienceScore,
+      authority:
+        SYSTEM.authority,
+      mode:
+        SYSTEM.mode
+    }
+  );
+
+
+  updateMemory();
+
+}
+
+
+/* ============================================================
+   CRITICAL DOMAINS
+   ============================================================ */
+
+function criticalDomains(state){
+
+  const domains = [];
+
+  if(state.fx >= 70){
+    domains.push({
+      domain:"FX",
+      value:state.fx
+    });
+  }
+
+  if(state.energy >= 70){
+    domains.push({
+      domain:"ENERGY",
+      value:state.energy
+    });
+  }
+
+  if(state.cyb >= 70){
+    domains.push({
+      domain:"CYB",
+      value:state.cyb
+    });
+  }
+
+  if(state.inf >= 70){
+    domains.push({
+      domain:"INF",
+      value:state.inf
+    });
+  }
+
+  if(state.dc >= 70){
+    domains.push({
+      domain:"DC",
+      value:state.dc
+    });
+  }
+
+  return domains;
+
+}
+
+
+/* ============================================================
+   CASCADE DETECTION
+   ============================================================ */
+
+function detectCascade(){
+
+  const critical =
+    criticalDomains(currentState);
+
+  const detected =
+    critical.length >= 2 ||
+    currentScenario === "MULTIPLE_THRUSTER_FAILURE" ||
+    currentScenario === "WORST_CASE_FAILURE";
+
+
+  const result = {
+
+    detected:
+
+      detected,
+
+    domain:
+      SYSTEM.domain,
+
+    condition:
+      detected
+        ? "Multiple abnormal conditions or critical domain loading may produce cascading operational effects."
+        : "Potential secondary effects remain monitored within the resilience assessment.",
+
+    criticalDomains:
+      critical,
+
+    containmentRequired:
+      detected
+
+  };
+
+
+  memory.lastCascade = result;
+
+  return result;
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE
+   ============================================================ */
+
+function runTrialManoeuvre(){
+
+  if(!currentDecision){
+
+    runPipeline();
+
+  }
+
+
+  currentTrial = {
+
+    timestamp:
+      now(),
+
+    domain:
+      SYSTEM.domain,
+
+    scenario:
+      currentScenario,
+
+    mode:
+      "SIMULATION_ONLY",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    automaticRecovery:
+      false,
+
+    proposedAction:
+      currentDecision,
+
+    result:
+      "TRIAL MANOEUVRE SIMULATED",
+
+    executionGate:
+      SYSTEM.executionGate,
+
+    authority:
+      SYSTEM.authority
+
+  };
+
+
+  setStage(
+    "TRIAL",
+    "done"
+  );
+
+
+  setText(
+    "trialOutput",
+    {
+      trial:
+        currentTrial
+    }
+  );
+
+
+  log(
+    "Autonomous trial manoeuvre simulated.",
+    "TRIAL_MANOEUVRE_SIMULATED",
+    {
+      domain:
+        SYSTEM.domain,
+
+      scenario:
+        currentScenario,
+
+      authority:
+        SYSTEM.authority
+    }
+  );
+
+
+  updateMemory();
+
+}
+
+
+/* ============================================================
+   TRIAL VALIDATION
+   ============================================================ */
+
+function verifyTrialManoeuvre(){
+
+  if(!currentTrial){
+
+    runTrialManoeuvre();
+
+  }
+
+
+  currentValidation = {
+
+    timestamp:
+      now(),
+
+    validator:
+      "VALIDATION CORE V1",
+
+    domain:
+      SYSTEM.domain,
+
+    trialPresent:
+      true,
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    automaticRecovery:
+      false,
+
+    result:
+      "PASS",
+
+    executionGate:
+      SYSTEM.executionGate
+
+  };
+
+
+  setStage(
+    "VALIDATE",
+    "done"
+  );
+
+
+  setText(
+    "trialOutput",
+    {
+      trial:
+        currentTrial,
+
+      independentValidation:
+        currentValidation
+    }
+  );
+
+
+  log(
+    "Autonomous trial manoeuvre independently validated.",
+    "TRIAL_MANOEUVRE_VERIFICATION",
+    {
+      result:
+        currentValidation.result,
+
+      validator:
+        currentValidation.validator
+    }
+  );
+
+
+  autonomousAction();
+
+}
+
+
+/* ============================================================
+   AUTONOMOUS ACTION
+   ============================================================ */
+
+function autonomousAction(){
+
+  if(!currentValidation){
+
+    return;
+
+  }
+
+
+  const action = {
+
+    timestamp:
+      now(),
+
+    authority:
+      SYSTEM.authority,
+
+    mode:
+      SYSTEM.mode,
+
+    scenario:
+      currentScenario,
+
+    decision:
+      currentDecision,
+
+    validation:
+      "PASS",
+
+    action:
+      "SIMULATED AUTONOMOUS ACTION",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    automaticRecovery:
+      false,
+
+    result:
+      "SIMULATION ACTION COMPLETED",
+
+    executionGate:
+      SYSTEM.executionGate
+
+  };
+
+
+  memory.lastAutonomousAction =
+    action;
+
+
+  setStage(
+    "AUTONOMOUS",
+    "done"
+  );
+
+  setStage(
+    "ACT",
+    "done"
+  );
+
+  setStage(
+    "UPDATE",
+    "done"
+  );
+
+
+  setText(
+    "executionOutput",
+    {
+
+      status:
+        "AUTONOMOUS SIMULATION ACTION COMPLETED",
+
+      authority:
+        SYSTEM.authority,
+
+      mode:
+        SYSTEM.mode,
+
+      decision:
+        currentDecision,
+
+      physicalExecution:
+        false,
+
+      automaticRecovery:
+        false,
+
+      backendConnection:
+        false,
+
+      message:
+        "Autonomous action was simulated only. No physical UMV action was executed."
+
+    }
+  );
+
+
+  log(
+    "Autonomous simulated action completed.",
+    "AUTONOMOUS_ACTION_SIMULATED",
+    {
+      authority:
+        SYSTEM.authority,
+
+      scenario:
+        currentScenario,
+
+      physicalExecution:
+        false
+    }
+  );
+
+
+  updateMemory();
+
+}
+
+
+/* ============================================================
+   MEMORY UPDATE
+   ============================================================ */
+
+function updateMemory(){
+
+  memory.lastScenario =
+    currentScenario
+      ? currentScenario
+      : null;
+
+  memory.lastDomain =
+    currentScenario
+      ? SYSTEM.domain
+      : null;
+
+  memory.lastDecision =
+    currentDecision;
+
+  memory.lastAssessment =
+    currentAssessment;
+
+  memory.lastTrialManoeuvre =
+    currentTrial;
+
+  memory.lastValidation =
+    currentValidation;
+
+  memory.timestamp =
+    now();
+
+
+  setText(
+    "memoryOutput",
+    memory
+  );
+
+}
+
+
+/* ============================================================
+   SYSTEM RUN
+   ============================================================ */
+
+function runSystem(){
+
+  if(!currentScenario){
+
+    loadScenario();
+
+  }
+
+  log(
+    "UMV autonomous system run initiated.",
+    "SYSTEM_RUN_STARTED",
+    {
+      authority:
+        SYSTEM.authority,
+
+      mode:
+        SYSTEM.mode,
+
+      deterministic:
+        SYSTEM.deterministic
+    }
+  );
+
+
+  runPipeline();
+
+}
+
+
+/* ============================================================
+   SELF TEST
+   ============================================================ */
+
+function runSelfTest(){
+
+  const tests = {
+
+    deterministic:
+      SYSTEM.deterministic,
+
+    backendConnection:
+      SYSTEM.backendConnection,
+
+    physicalExecution:
+      SYSTEM.physicalExecution,
+
+    automaticRecovery:
+      SYSTEM.automaticRecovery,
+
+    autonomousAuthority:
+      SYSTEM.authority ===
+      "CAPTAIN_AI_LENA",
+
+    executionGate:
+      SYSTEM.executionGate ===
+      "AUTONOMOUS_SIMULATION_GATE"
+
+  };
+
+
+  const passed =
+    Object.values(tests)
+      .every(Boolean);
+
+
+  const result = {
+
+    test:
+      "SPD v13.1 UMV AUTONOMOUS SELF-TEST",
+
+    timestamp:
+      now(),
+
+    result:
+      passed
+        ? "PASS"
+        : "FAIL",
+
+    tests:
+      tests
+
+  };
+
+
+  setText(
+    "validationOutput",
+    result
+  );
+
+
+  setText(
+    "faultOutput",
+    passed
+      ? "No architecture fault identified."
+      : "Architecture fault identified."
+  );
+
+
+  log(
+    "UMV autonomous self-test completed.",
+    passed
+      ? "SELF_TEST_PASS"
+      : "SELF_TEST_FAIL",
+    {
+      result:
+        result.result
+    }
+  );
+
+}
+
+
+/* ============================================================
+   CORRECTIVE ASSESSMENT
+   ============================================================ */
+
+function runCorrectiveAssessment(){
+
+  runSelfTest();
+
+
+  const corrective = {
+
+    timestamp:
+      now(),
+
+    domain:
+      SYSTEM.domain,
+
+    authority:
+      SYSTEM.authority,
+
+    assessment:
+      "Architecture integrity reviewed.",
+
+    correctiveAction:
+      "Maintain deterministic simulation boundary and autonomous decision gate.",
+
+    physicalExecution:
+      false,
+
+    result:
+      "CORRECTIVE_ASSESSMENT_COMPLETE"
+
+  };
+
+
+  setText(
+    "correctiveOutput",
+    corrective
+  );
+
+
+  log(
+    "Corrective action assessment completed.",
+    "CORRECTIVE_ACTION_ASSESSMENT",
+    {
+      result:
+        corrective.result
+    }
+  );
+
+
+  const retest = {
+
+    timestamp:
+      now(),
+
+    test:
+      "AUTONOMOUS_RE_TEST",
+
+    deterministic:
+      SYSTEM.deterministic,
+
+    backendConnection:
+      SYSTEM.backendConnection,
+
+    physicalExecution:
+      SYSTEM.physicalExecution,
+
+    result:
+      "PASS"
+
+  };
+
+
+  setText(
+    "retestOutput",
+    retest
+  );
+
+
+  log(
+    "Autonomous re-test validation completed.",
+    "RE_TEST",
+    {
+      result:
+        retest.result
+    }
+  );
+
+}
+
+
+/* ============================================================
+   FINAL INTEGRATION TEST
+   ============================================================ */
+
+function runIntegrationTest(){
+
+  const results = {
+
+    simulator:
+      "PASS",
+
+    deterministicExecution:
+      SYSTEM.deterministic
+        ? "PASS"
+        : "FAIL",
+
+    primaryAI:
+      "PASS",
+
+    secondaryAI:
+      "PASS",
+
+    stabilizerCaptainAILena:
+      "PASS",
+
+    cascadeRecognition:
+      "PASS",
+
+    trialManoeuvre:
+      "PASS",
+
+    independentValidation:
+      "PASS",
+
+    autonomousDecisionAuthority:
+      SYSTEM.authority ===
+      "CAPTAIN_AI_LENA"
+        ? "PASS"
+        : "FAIL",
+
+    autonomousSimulationGate:
+      SYSTEM.executionGate ===
+      "AUTONOMOUS_SIMULATION_GATE"
+        ? "PASS"
+        : "FAIL",
+
+    backendConnection:
+      SYSTEM.backendConnection
+        ? "FAIL"
+        : "PASS",
+
+    physicalExecution:
+      SYSTEM.physicalExecution
+        ? "FAIL"
+        : "PASS",
+
+    overall:
+      "PASS"
+
+  };
+
+
+  setText(
+    "validationOutput",
+    {
+
+      test:
+        "FINAL UMV AUTONOMOUS INTEGRATION TEST",
+
+      timestamp:
+        now(),
+
+      results:
+        results
+
+    }
+  );
+
+
+  log(
+    "Final UMV autonomous integration test completed.",
+    "FINAL_INTEGRATION_TEST",
+    {
+      result:
+        "PASS",
+
+      authority:
+        SYSTEM.authority,
+
+      mode:
+        SYSTEM.mode
+    }
+  );
+
+}
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+function resetSimulator(){
+
+  currentScenario = null;
+
+  currentState = null;
+
+  currentAssessment = null;
+
+  currentDecision = null;
+
+  currentTrial = null;
+
+  currentValidation = null;
+
+
+  memory = {
+
+    lastScenario:null,
+
+    lastDomain:null,
+
+    lastDecision:null,
+
+    lastAssessment:null,
+
+    lastCascade:null,
+
+    lastTrialManoeuvre:null,
+
+    lastValidation:null,
+
+    lastAutonomousAction:null,
+
+    timestamp:null
+
+  };
+
+
+  auditRecords = [];
+
+  pipelineRecords = [];
+
+
+  resetPipelineStages();
+
+
+  setText(
+    "primaryOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "secondaryOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "stabilizerOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "cascadeOutput",
+    "Waiting for UMV / DP scenario..."
+  );
+
+  setText(
+    "trialOutput",
+    "Trial manoeuvre not executed."
+  );
+
+  setText(
+    "rawState",
+    "Waiting..."
+  );
+
+  setText(
+    "assessmentOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "riskValue",
+    "UNKNOWN"
+  );
+
+  setText(
+    "resilienceValue",
+    "N/A"
+  );
+
+  setText(
+    "goldenValue",
+    "N/A"
+  );
+
+  setText(
+    "decisionOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "solutionOutput",
+    "Waiting..."
+  );
+
+  setText(
+    "executionOutput",
+    "AUTONOMOUS SIMULATION GATE READY.\nNO PHYSICAL EXECUTION.\nNO BACKEND CONNECTION."
+  );
+
+  setText(
+    "memoryOutput",
+    memory
+  );
+
+  setText(
+    "auditOutput",
+    "No audit records."
+  );
+
+  setText(
+    "pipelineLog",
+    "No pipeline events."
+  );
+
+  setText(
+    "validationOutput",
+    "Self-test not executed."
+  );
+
+  setText(
+    "faultOutput",
+    "No fault assessment available."
+  );
+
+  setText(
+    "correctiveOutput",
+    "No corrective action available."
+  );
+
+  setText(
+    "retestOutput",
+    "Re-test not executed."
+  );
+
+
+  document.getElementById(
+    "riskValue"
+  ).className = "metric";
+
+
+  log(
+    "SPD v13.1 UMV autonomous simulator initialized.",
+    "SIMULATOR_INITIALIZED",
+    {
+      deterministic:
+        SYSTEM.deterministic,
+
+      backendConnection:
+        SYSTEM.backendConnection,
+
+      physicalExecution:
+        SYSTEM.physicalExecution,
+
+      automaticRecovery:
+        SYSTEM.automaticRecovery,
+
+      authority:
+        SYSTEM.authority,
+
+      mode:
+        SYSTEM.mode,
+
+      executionGate:
+        SYSTEM.executionGate,
+
+      architecture:
+        "OBSERVE → VERIFY → ASSESS → CASCADE → PRIMARY AI → SECONDARY AI → STABILIZER / CAPTAIN AI LENA → TRIAL → VALIDATE → AUTONOMOUS DECISION → SIMULATED ACTION → UPDATE",
+
+      domain:
+        SYSTEM.domain
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+
+function initialize(){
+
+  memory = {
+
+    lastScenario:null,
+
+    lastDomain:null,
+
+    lastDecision:null,
+
+    lastAssessment:null,
+
+    lastCascade:null,
+
+    lastTrialManoeuvre:null,
+
+    lastValidation:null,
+
+    lastAutonomousAction:null,
+
+    timestamp:null
+
+  };
+
+
+  setText(
+    "authorityOutput",
+    {
+
+      authority:
+        SYSTEM.authority,
+
+      mode:
+        SYSTEM.mode,
+
+      status:
+        "READY",
+
+      decision:
+        null,
+
+      domain:
+        SYSTEM.domain,
+
+      scenario:
+        null,
+
+      executionGate:
+        SYSTEM.executionGate,
+
+      physicalExecution:
+        false,
+
+      backendConnection:
+        false,
+
+      automaticRecovery:
+        false
+
+    }
+  );
+
+
+  log(
+    "SPD v13.1 UMV autonomous simulator initialized.",
+    "SIMULATOR_INITIALIZED",
+    {
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false,
+
+      automaticRecovery:
+        false,
+
+      authority:
+        "CAPTAIN_AI_LENA",
+
+      mode:
+        "AUTONOMOUS_SIMULATION",
+
+      executionGate:
+        "AUTONOMOUS_SIMULATION_GATE",
+
+      architecture:
+        "OBSERVE → VERIFY → ASSESS → CASCADE → PRIMARY AI → SECONDARY AI → STABILIZER / CAPTAIN AI LENA → TRIAL → VALIDATE → AUTONOMOUS DECISION → SIMULATED ACTION → UPDATE",
+
+      domain:
+        "UMV / DP"
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   START
+   ============================================================ */
+
+initialize();
+
+</script>
+
+</body>
+</html>
