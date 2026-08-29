@@ -2,1733 +2,1357 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
-  background:#0b0f14;
-  color:#00ff88;
-  font-family:Arial,sans-serif;
-  padding:20px;
   margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#071018;
+  color:#e8f1f7;
 }
 
-h1{color:#fff;margin-bottom:5px}
-
-.subtitle{
-  color:#aaa;
-  margin-bottom:20px;
-  line-height:1.6;
+header{
+  padding:18px;
+  background:#0c1822;
+  border-bottom:1px solid #263b49;
 }
 
-.simulator-banner{
-  border:2px solid #00ff88;
-  background:#080d11;
-  color:#00ff88;
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:8px;
-  font-weight:bold;
-  text-align:center;
+h1{
+  margin:0 0 6px;
+  font-size:22px;
 }
 
-.panel{
-  border:1px solid #00ff88;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:8px;
-  background:#10161d;
+h2{
+  font-size:17px;
+  margin:0 0 12px;
 }
 
-.title{
-  font-size:18px;
-  margin-bottom:15px;
-  color:#fff;
-  font-weight:bold;
-}
-
-.status{
-  font-size:20px;
-  font-weight:bold;
-  padding:12px;
-  border:1px solid #00ff88;
-  border-radius:6px;
-  margin-bottom:15px;
-  background:#080d11;
-}
-
-.control-buttons,
-.scenario-controls,
-.fin-controls,
-.bhr-controls,
-.dc-controls,
-.cyb-controls,
-.authority-controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  width:100%;
-}
-
-button{
-  display:inline-block;
-  visibility:visible;
-  opacity:1;
-  background:#00ff88;
-  color:#000;
-  border:2px solid #00ff88;
-  padding:14px 20px;
-  border-radius:6px;
-  font-weight:bold;
-  font-size:15px;
-  cursor:pointer;
-  min-height:48px;
-}
-
-button:hover{opacity:.85}
-button:active{transform:scale(.98)}
-button:focus{
-  outline:2px solid #fff;
-  outline-offset:2px;
-}
-
-.self-test-button{
-  background:#1b2730;
-  color:#00ff88;
-  border:2px solid #00ff88;
-}
-
-.corrective-button{
-  background:#ffb000;
-  color:#000;
-  border:2px solid #ffb000;
-}
-
-.danger{
-  background:#ff5555;
-  color:#fff;
-  border:2px solid #ff5555;
-}
-
-.scenario-button{
-  background:#1b2730;
-  color:#00ff88;
-  border:1px solid #00ff88;
-}
-
-.fin-button{
-  background:#17242c;
-  color:#fff;
-  border:1px solid #00bfff;
-}
-
-.bhr-button{
-  background:#17242c;
-  color:#fff;
-  border:1px solid #ffb000;
-}
-
-.dc-button{
-  background:#17242c;
-  color:#fff;
-  border:1px solid #00ff88;
-}
-
-.cyb-button{
-  background:#17242c;
-  color:#fff;
-  border:1px solid #ff5555;
-}
-
-.authority-button{
-  background:#17242c;
-  color:#fff;
-  border:1px solid #fff;
-}
-
-.fin-label,
-.bhr-label,
-.dc-label,
-.cyb-label{
-  width:100%;
+h3{
   font-size:14px;
-  font-weight:bold;
-  margin-top:8px;
+  margin:12px 0 8px;
 }
 
-.fin-label{color:#00bfff}
-.bhr-label{color:#ffb000}
-.dc-label{color:#00ff88}
-.cyb-label{color:#ff5555}
-
-.monitor{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:10px;
-}
-
-.domain{
-  border:1px solid #00ff88;
-  padding:12px;
-  border-radius:6px;
-  background:#080d11;
-  text-align:center;
-}
-
-.domain-name{
-  color:#aaa;
+.sub{
+  color:#91a9b8;
   font-size:13px;
 }
 
-.domain-value{
+.container{
+  padding:14px;
+  max-width:1200px;
+  margin:auto;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:#0d1b26;
+  border:1px solid #263b49;
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:14px;
+}
+
+button,
+select,
+input[type="range"]{
+  width:100%;
+  margin:5px 0;
+}
+
+button,
+select{
+  padding:11px;
+  border-radius:6px;
+  border:1px solid #39515f;
+  background:#122531;
   color:#fff;
-  font-size:24px;
+  font-size:14px;
+}
+
+button{
+  cursor:pointer;
+}
+
+button:hover{
+  background:#193544;
+}
+
+.status{
+  padding:12px;
+  border-radius:7px;
+  background:#101f2a;
+  border:1px solid #304957;
   font-weight:bold;
-  margin-top:5px;
 }
 
 .pipeline{
-  font-size:16px;
-  color:#fff;
-  padding:10px;
-  border:1px solid #00ff88;
-  border-radius:6px;
-  overflow-x:auto;
-  white-space:nowrap;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:6px;
 }
 
 .stage{
-  display:inline-block;
-  padding:8px;
-  margin:3px;
-  border:1px solid #00ff88;
-  border-radius:4px;
+  padding:9px 4px;
+  text-align:center;
+  border:1px solid #304957;
+  border-radius:5px;
+  font-size:11px;
+  color:#78909e;
 }
 
 .stage.active{
-  background:#00ff88;
-  color:#000;
-}
-
-input[type="range"]{
-  width:100%;
-  accent-color:#00ff88;
-  cursor:pointer;
-  min-height:30px;
-}
-
-.intensity-value{
+  background:#193b4d;
   color:#fff;
-  font-weight:bold;
-  font-size:18px;
+  border-color:#5b91aa;
 }
 
 pre{
   white-space:pre-wrap;
   word-break:break-word;
-  overflow-x:auto;
-  color:#00ff88;
-  line-height:1.5;
+  background:#061017;
+  border:1px solid #263b49;
+  border-radius:7px;
+  padding:12px;
+  min-height:80px;
+  max-height:420px;
+  overflow:auto;
+  font-size:12px;
 }
 
-.muted{
-  color:#aaa;
-  font-size:13px;
+.log{
+  max-height:260px;
+  overflow:auto;
+  font-family:monospace;
+  font-size:12px;
 }
 
-.solution{
-  border-left:3px solid #00ff88;
+.log div{
+  padding:4px 0;
+  border-bottom:1px solid #172a35;
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:5px;
+  background:#172c38;
+  margin:2px;
+  font-size:11px;
+}
+
+.monitor{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+
+.monitorBox{
   padding:10px;
-  margin-top:8px;
-  background:#080d11;
-  white-space:pre-wrap;
-  line-height:1.6;
-}
-
-.authority-box{
-  border:2px solid #fff;
-  padding:15px;
-  border-radius:8px;
-  background:#080d11;
-}
-
-.human-decision{
-  border:1px solid #fff;
-  padding:12px;
+  background:#101f2a;
+  border:1px solid #304957;
   border-radius:6px;
-  background:#080d11;
+  text-align:center;
 }
 
-.execution-gate{
-  border:1px solid #ffb000;
+.monitorBox strong{
+  display:block;
+  font-size:11px;
+  color:#91a9b8;
+}
+
+.monitorBox span{
+  display:block;
+  font-size:20px;
+  margin-top:4px;
+}
+
+.gate{
   padding:12px;
+  background:#101820;
+  border:1px solid #304957;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.warning{
+  padding:10px;
+  background:#17232c;
+  border:1px solid #39515f;
   border-radius:6px;
-  background:#080d11;
-  color:#ffb000;
-  line-height:1.6;
+  font-size:12px;
 }
 
-.domain-integration{
-  border:1px solid #00bfff;
-  background:#080d11;
-}
-
-@media(max-width:600px){
-  body{padding:10px}
-  h1{font-size:22px}
-  .panel{padding:12px}
-  .title{font-size:16px}
-
-  .control-buttons,
-  .scenario-controls,
-  .fin-controls,
-  .bhr-controls,
-  .dc-controls,
-  .cyb-controls,
-  .authority-controls{
-    flex-direction:column;
-  }
-
-  .control-buttons button,
-  .scenario-controls button,
-  .fin-controls button,
-  .bhr-controls button,
-  .dc-controls button,
-  .cyb-controls button,
-  .authority-controls button{
-    width:100%;
-    min-height:52px;
-  }
+@media(max-width:700px){
 
   .pipeline{
-    white-space:normal;
-    line-height:2;
+    grid-template-columns:repeat(3,1fr);
   }
+
+  .monitor{
+    grid-template-columns:repeat(2,1fr);
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<h1>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+<header>
 
-<div class="subtitle">
-<strong>Captain AI Lena Autonomous Agent Core</strong><br>
-DATA → ALGORITHMS → COMPUTE<br>
-OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE<br>
-AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
-</div>
+  <h1>
+    🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO
+  </h1>
 
-<div class="simulator-banner">
-🧪 SELF-CONTAINED SIMULATOR —
-LOCAL DETERMINISTIC EXECUTION —
-NO BACKEND CONNECTION
-</div>
+  <div class="sub">
+    Captain AI Lena Autonomous Agent Core
+    • DP + Orbital Operational Resilience
+    • Deterministic Local Simulation
+    • Human Decision Authority
+  </div>
 
-<div class="status" id="systemStatus">
-SYSTEM STATUS: READY
-</div>
+</header>
 
-<!-- SYSTEM CONTROLS -->
 
-<div class="panel">
-<div class="title">🎛️ SYSTEM CONTROLS</div>
+<div class="container">
 
-<div class="control-buttons">
 
-<button type="button" onclick="runLiveSystem()">
-▶ RUN SYSTEM
-</button>
+  <!-- ======================================================
+       SYSTEM STATUS
+  ======================================================= -->
 
-<button type="button"
-class="self-test-button"
-onclick="runAuthoritativeSelfTest()">
-🧪 RUN SELF-TEST
-</button>
+  <div class="card">
 
-<button type="button"
-class="corrective-button"
-onclick="runSelfTestAndCorrect()">
-🛠️ RUN SELF-TEST + CORRECTIVE ACTION
-</button>
+    <div id="systemStatus" class="status">
+      SYSTEM STATUS: INITIALIZING
+    </div>
 
-<button type="button"
-onclick="runDomainIntegrationTest()">
-🔌 RUN DOMAIN INTEGRATION TEST
-</button>
+  </div>
 
-</div>
-</div>
 
-<!-- HUMAN DECISION AUTHORITY -->
+  <!-- ======================================================
+       GOLDEN RULE PIPELINE
+  ======================================================= -->
 
-<div class="panel">
-<div class="title">🧑‍✈️ HUMAN DECISION AUTHORITY</div>
+  <div class="card">
 
-<div class="authority-box">
+    <h2>🛰️ Golden Rule Engine</h2>
 
-<strong>
-AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
-</strong>
+    <div class="pipeline">
 
-<br><br>
+      <div id="stage-OBSERVE" class="stage">
+        OBSERVE
+      </div>
 
-<div class="execution-gate">
-🔒 EXECUTION GATE<br>
-No recovery or execution action is authorized automatically.<br>
-HUMAN AUTHORIZATION REQUIRED.
-</div>
+      <div id="stage-VERIFY" class="stage">
+        VERIFY
+      </div>
 
-<br>
+      <div id="stage-ASSESS" class="stage">
+        ASSESS
+      </div>
 
-<div class="human-decision">
+      <div id="stage-DECIDE" class="stage">
+        DECIDE
+      </div>
 
-<pre id="humanDecisionAuthority">{
-  "authority": "MISSION_CONTROLLER",
-  "status": "PENDING",
-  "decision": null,
-  "executionGate": "HUMAN_AUTHORIZATION_REQUIRED"
+      <div id="stage-ACT" class="stage">
+        ACT
+      </div>
+
+      <div id="stage-UPDATE" class="stage">
+        UPDATE
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       SYSTEM CONTROLS
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🎛️ SYSTEM CONTROLS</h2>
+
+    <div class="grid">
+
+      <button onclick="runLiveSystem()">
+        ▶ RUN SYSTEM
+      </button>
+
+      <button onclick="runAuthoritativeSelfTest()">
+        🧪 RUN SELF-TEST
+      </button>
+
+      <button onclick="runSelfTestAndCorrect()">
+        🛠️ RUN SELF-TEST + CORRECTIVE ACTION
+      </button>
+
+      <button onclick="runFinalIntegrationTest()">
+        🔌 RUN DOMAIN INTEGRATION TEST
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       DP + ORBITAL SIMULATORS
+  ======================================================= -->
+
+  <div class="grid">
+
+
+    <!-- DP -->
+
+    <div class="card">
+
+      <h2>⚓ DP RESILIENCE SIMULATOR</h2>
+
+      <div class="sub">
+        Local deterministic Dynamic Positioning resilience simulation.
+      </div>
+
+      <select id="dpScenario">
+
+        <option value="">
+          Select DP scenario
+        </option>
+
+        <option value="DP_THRUSTER_FAILURE">
+          Thruster Failure
+        </option>
+
+        <option value="DP_POWER_FAILURE">
+          Power Failure
+        </option>
+
+        <option value="DP_POSITION_DEVIATION">
+          Position Deviation
+        </option>
+
+        <option value="DP_WIND_LOAD">
+          High Wind Load
+        </option>
+
+        <option value="DP_DRIFT_OFF">
+          Drift Off
+        </option>
+
+        <option value="DP_MULTI_THRUSTER_FAILURE">
+          Multiple Thruster Failure
+        </option>
+
+        <option value="DP_WORST_CASE_FAILURE">
+          Worst Case Failure
+        </option>
+
+      </select>
+
+
+      <button onclick="
+        activateScenario(
+          document.getElementById('dpScenario').value
+        )
+      ">
+        LOAD DP SCENARIO
+      </button>
+
+
+      <button onclick="
+        runDPOperationalPipeline()
+      ">
+        RUN DP PIPELINE
+      </button>
+
+
+      <pre id="dpSimulator">{}</pre>
+
+    </div>
+
+
+    <!-- ORBITAL -->
+
+    <div class="card">
+
+      <h2>🛰️ ORBITAL RESILIENCE SIMULATOR</h2>
+
+      <div class="sub">
+        Local deterministic orbital resilience simulation.
+      </div>
+
+      <select id="orbitalScenario">
+
+        <option value="">
+          Select orbital scenario
+        </option>
+
+        <option value="ORBITAL_SIGNAL_LOSS">
+          Signal Loss
+        </option>
+
+        <option value="ORBITAL_POWER_FAILURE">
+          Power Failure
+        </option>
+
+        <option value="ORBITAL_ATTITUDE_ANOMALY">
+          Attitude Anomaly
+        </option>
+
+        <option value="ORBITAL_COMMUNICATION_FAILURE">
+          Communication Failure
+        </option>
+
+        <option value="ORBITAL_MANOEUVRE_FAILURE">
+          Manoeuvre Failure
+        </option>
+
+        <option value="ORBITAL_PROPULSION_FAILURE">
+          Propulsion Failure
+        </option>
+
+        <option value="ORBITAL_CASCADE_FAILURE">
+          Cascade Failure
+        </option>
+
+      </select>
+
+
+      <button onclick="
+        activateScenario(
+          document.getElementById('orbitalScenario').value
+        )
+      ">
+        LOAD ORBITAL SCENARIO
+      </button>
+
+
+      <button onclick="
+        runOrbitalOperationalPipeline()
+      ">
+        RUN ORBITAL PIPELINE
+      </button>
+
+
+      <pre id="orbitalSimulator">{}</pre>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       HUMAN DECISION AUTHORITY
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🧑‍✈️ HUMAN DECISION AUTHORITY</h2>
+
+    <div class="warning">
+      <strong>
+        AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION
+      </strong>
+      <br><br>
+      Captain AI Lena provides decision support only.
+      No recovery or execution action is authorized automatically.
+    </div>
+
+    <br>
+
+    <div class="gate">
+
+      🔒 EXECUTION GATE
+      <br><br>
+
+      HUMAN AUTHORIZATION REQUIRED.
+      <br>
+
+      NO AUTOMATIC PHYSICAL EXECUTION.
+
+    </div>
+
+    <br>
+
+    <pre id="humanDecisionAuthority">{
+  "authority":"MISSION_CONTROLLER",
+  "status":"PENDING",
+  "decision":null,
+  "executionGate":"HUMAN_AUTHORIZATION_REQUIRED",
+  "physicalExecution":false
 }</pre>
 
-<div class="authority-controls">
 
-<button type="button"
-class="authority-button"
-onclick="authorizeRecovery()">
-AUTHORIZE RECOVERY
-</button>
+    <div class="grid">
 
-<button type="button"
-class="authority-button"
-onclick="maintainSafeState()">
-MAINTAIN SAFE STATE
-</button>
+      <button onclick="authorizeRecovery()">
+        AUTHORIZE RECOVERY
+      </button>
 
-<button type="button"
-class="authority-button"
-onclick="requestDiagnostics()">
-REQUEST DIAGNOSTICS
-</button>
+      <button onclick="maintainSafeState()">
+        MAINTAIN SAFE STATE
+      </button>
 
-<button type="button"
-class="danger"
-onclick="abortRecovery()">
-ABORT RECOVERY
-</button>
+      <button onclick="requestDiagnostics()">
+        REQUEST DIAGNOSTICS
+      </button>
 
-<button type="button"
-class="authority-button"
-onclick="escalateMissionAuthority()">
-ESCALATE TO MISSION AUTHORITY
-</button>
+      <button onclick="abortRecovery()">
+        ABORT RECOVERY
+      </button>
+
+      <button onclick="escalateMissionAuthority()">
+        ESCALATE TO MISSION AUTHORITY
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       DOMAIN MONITOR
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>📊 SYSTEM DOMAIN MONITOR</h2>
+
+    <div class="monitor">
+
+      <div class="monitorBox">
+        <strong>FX</strong>
+        <span id="monitorFX">0</span>
+      </div>
+
+      <div class="monitorBox">
+        <strong>DC</strong>
+        <span id="monitorDC">0</span>
+      </div>
+
+      <div class="monitorBox">
+        <strong>CYB</strong>
+        <span id="monitorCYB">0</span>
+      </div>
+
+      <div class="monitorBox">
+        <strong>INF</strong>
+        <span id="monitorINF">0</span>
+      </div>
+
+      <div class="monitorBox">
+        <strong>EN / ENERGY</strong>
+        <span id="monitorENERGY">0</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       DOMAIN INTEGRATION
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🔌 DOMAIN INTEGRATION LAYER</h2>
+
+    <div class="warning">
+
+      COCKPIT
+      ↓
+      LOCAL DOMAIN INTEGRATION
+      ↓
+      DP / ORBITAL DOMAIN ENGINE
+      ↓
+      CAPTAIN AI LENA DECISION CORE
+      ↓
+      GOLDEN RULE PIPELINE
+      ↓
+      RESULT / MEMORY / AUDIT
+
+    </div>
+
+    <br>
+
+    <pre id="domainIntegrationStatus">{
+  "status":"READY",
+  "DP":"STANDBY",
+  "ORBITAL":"STANDBY",
+  "CaptainAILena":"CONNECTED",
+  "GoldenRuleEngine":"ACTIVE",
+  "HumanDecisionAuthority":"ACTIVE",
+  "backendConnection":false,
+  "physicalExecution":false
+}</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       SCENARIO INTENSITY
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🎚️ SCENARIO INTENSITY CONTROL</h2>
+
+    <div class="sub">
+      Deterministic simulator scenario intensity from 0% to 100%.
+    </div>
+
+    <input
+      id="scenarioIntensity"
+      type="range"
+      min="0"
+      max="100"
+      value="50"
+      oninput="updateScenarioIntensity(this.value)"
+    >
+
+    <div>
+      Intensity:
+      <strong id="intensityValue">50%</strong>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       SCENARIO PANEL
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🧪 SCENARIO PANEL</h2>
+
+    <pre id="scenarioPanel">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       RAW SYSTEM STATE
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>📊 RAW SYSTEM STATE</h2>
+
+    <pre id="rawSystemState">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       SYSTEM ASSESSMENT
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>⚠️ SYSTEM ASSESSMENT</h2>
+
+    <pre id="systemAssessment">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       DOMAIN ASSESSMENT
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🔌 DOMAIN ASSESSMENT</h2>
+
+    <pre id="domainAssessment">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       RISK PANEL
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🚨 RISK PANEL</h2>
+
+    <pre id="riskPanel">{
+  "risk":"UNKNOWN",
+  "resilienceScore":"N/A",
+  "goldenScore":"N/A"
+}</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       CAPTAIN AI LENA DECISION
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>⚙️ CAPTAIN AI LENA DECISION</h2>
+
+    <pre id="captainAILena">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       SOLUTION OPTIONS
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>💡 SOLUTION OPTIONS</h2>
+
+    <pre id="solutionOptions">
+Waiting for system assessment...
+    </pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       ACTION SEQUENCE
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🚨 ACTION SEQUENCE PROMPT</h2>
+
+    <pre id="actionSequencePrompt">Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       EXECUTION GATE
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🔒 EXECUTION GATE</h2>
+
+    <div id="executionGate" class="gate">
+
+      HUMAN AUTHORIZATION REQUIRED.
+      <br>
+      NO RECOVERY ACTION EXECUTED.
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================
+       MEMORY CORE
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🧠 MEMORY CORE</h2>
+
+    <pre id="memoryCore">Memory Core Waiting...</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       AUDIT
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🧾 SPD v13.1 AUDIT RECORD</h2>
+
+    <pre id="auditRecord">[]</pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       PIPELINE LOG
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>📜 PIPELINE LOG</h2>
+
+    <div id="pipelineLog" class="log"></div>
+
+  </div>
+
+
+  <!-- ======================================================
+       TRIAL MANOEUVRE
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🛰️ TRIAL MANOEUVRE SIMULATOR</h2>
+
+    <div class="sub">
+      Local deterministic trial manoeuvre simulation.
+      No physical execution. No backend connection.
+      Human authorization remains mandatory.
+    </div>
+
+    <div class="grid">
+
+      <button onclick="runTrialManoeuvre()">
+        🛰️ RUN TRIAL MANOEUVRE
+      </button>
+
+      <button onclick="verifyTrialManoeuvre()">
+        🔎 VERIFY TRIAL MANOEUVRE
+      </button>
+
+    </div>
+
+    <pre id="trialManoeuvre">
+Trial manoeuvre not executed.
+    </pre>
+
+  </div>
+
+
+  <!-- ======================================================
+       VALIDATION
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>🧪 SPD v13.1 SELF-TEST</h2>
+
+    <pre id="selfTestResult">
+Self-test not executed.
+    </pre>
+
+    <h3>🔎 SELF-TEST INTERPRETATION</h3>
+
+    <pre id="selfTestInterpretation">
+Waiting for self-test execution...
+    </pre>
+
+    <h3>⚠️ FAULT IDENTIFICATION</h3>
+
+    <pre id="faultIdentification">
+No fault assessment available.
+    </pre>
+
+    <h3>🛠️ CAPTAIN AI LENA CORRECTIVE ACTION</h3>
+
+    <pre id="correctiveAction">
+No corrective action available.
+    </pre>
+
+    <h3>🔁 RE-TEST VALIDATION</h3>
+
+    <pre id="reTestValidation">
+Re-test not executed.
+    </pre>
+
+  </div>
+
 
 </div>
-</div>
-</div>
-</div>
 
-<!-- DOMAIN MONITOR -->
-
-<div class="panel">
-<div class="title">📊 SYSTEM DOMAIN MONITOR</div>
-
-<div class="monitor">
-
-<div class="domain">
-<div class="domain-name">FX</div>
-<div class="domain-value" id="domainFX">0</div>
-</div>
-
-<div class="domain">
-<div class="domain-name">DC</div>
-<div class="domain-value" id="domainDC">0</div>
-</div>
-
-<div class="domain">
-<div class="domain-name">CYB</div>
-<div class="domain-value" id="domainCYB">0</div>
-</div>
-
-<div class="domain">
-<div class="domain-name">INF</div>
-<div class="domain-value" id="domainINF">0</div>
-</div>
-
-<div class="domain">
-<div class="domain-name">EN / ENERGY</div>
-<div class="domain-value" id="domainEN">0</div>
-</div>
-
-</div>
-</div>
-
-<!-- DOMAIN INTEGRATION -->
-
-<div class="panel domain-integration">
-
-<div class="title">
-🔌 DOMAIN INTEGRATION LAYER
-</div>
-
-<div class="muted">
-COCKPIT<br>
-↓<br>
-LOCAL DOMAIN INTEGRATION<br>
-↓<br>
-LOCAL DOMAIN RULE ENGINE<br>
-↓<br>
-CAPTAIN AI LENA DECISION CORE<br>
-↓<br>
-GOLDEN RULE PIPELINE<br>
-↓<br>
-RESULT / MEMORY / AUDIT
-</div>
-
-<br>
-
-<pre id="domainIntegrationStatus">
-Domain integration test not executed.
-</pre>
-
-</div>
-
-<!-- BHR DOMAIN -->
-
-<div class="panel">
-
-<div class="title">
-⚖️ BHR — BUSINESS & HUMAN RIGHTS RESILIENCE
-</div>
-
-<div class="muted">
-Local simulator engine: BHRRuleEngine
-</div>
-
-<br>
-
-<div class="bhr-controls">
-
-<div class="bhr-label">BHR SCENARIOS</div>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('HUMAN_RIGHTS_DUE_DILIGENCE')">
-BHR — HUMAN RIGHTS DUE DILIGENCE
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('FORCED_LABOUR')">
-BHR — FORCED LABOUR
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('CHILD_LABOUR')">
-BHR — CHILD LABOUR
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('DISCRIMINATION')">
-BHR — DISCRIMINATION
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('OCCUPATIONAL_HEALTH_AND_SAFETY')">
-BHR — OCCUPATIONAL HEALTH & SAFETY
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('MODERN_SLAVERY')">
-BHR — MODERN SLAVERY
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('COMMUNITY_IMPACT')">
-BHR — COMMUNITY IMPACT
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('INDIGENOUS_RIGHTS')">
-BHR — INDIGENOUS RIGHTS
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('SUPPLY_CHAIN_RISK')">
-BHR — SUPPLY CHAIN RISK
-</button>
-
-<button type="button" class="bhr-button"
-onclick="activateScenario('GRIEVANCE_MECHANISM')">
-BHR — GRIEVANCE MECHANISM
-</button>
-
-</div>
-</div>
-
-<!-- FIN DOMAIN -->
-
-<div class="panel">
-
-<div class="title">
-💰 FIN — FINANCIAL RESILIENCE
-</div>
-
-<div class="muted">
-Local simulator engine: FINRuleEngine<br>
-FIN scenarios are processed through the local Domain Integration Layer.
-</div>
-
-<br>
-
-<div class="fin-controls">
-
-<button type="button" class="fin-button"
-onclick="activateScenario('FIN_STRESS')">
-FIN STRESS
-</button>
-
-<button type="button" class="fin-button"
-onclick="activateScenario('BANKING_STRESS')">
-BANKING STRESS
-</button>
-
-<button type="button" class="fin-button"
-onclick="activateScenario('LIQUIDITY_CRISIS')">
-LIQUIDITY CRISIS
-</button>
-
-<button type="button" class="fin-button"
-onclick="activateScenario('CREDIT_STRESS')">
-CREDIT STRESS
-</button>
-
-<button type="button" class="fin-button"
-onclick="activateScenario('SOVEREIGN_DEBT')">
-SOVEREIGN DEBT
-</button>
-
-</div>
-</div>
-
-<!-- DC DOMAIN -->
-
-<div class="panel">
-
-<div class="title">
-🏢 DC — DATA CENTRE RESILIENCE
-</div>
-
-<div class="muted">
-Local simulator engine: DCRuleEngine
-</div>
-
-<br>
-
-<div class="dc-controls">
-
-<button type="button" class="dc-button"
-onclick="activateScenario('COOLING_FAILURE')">
-DC — COOLING FAILURE
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('POWER_INSTABILITY')">
-DC — POWER INSTABILITY
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('NETWORK_CONGESTION')">
-DC — NETWORK CONGESTION
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('COMPUTE_LOAD_SPIKE')">
-DC — COMPUTE LOAD SPIKE
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('BLACKOUT_RECOVERY')">
-DC — BLACKOUT RECOVERY
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('COOLING_RECOVERY_FAILURE')">
-DC — COOLING RECOVERY FAILURE
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('NETWORK_HARDWARE_FAILURE')">
-DC — NETWORK HARDWARE FAILURE
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('STORAGE_DEGRADATION')">
-DC — STORAGE DEGRADATION
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('COOLING_LOAD_SATURATION')">
-DC — COOLING LOAD SATURATION
-</button>
-
-<button type="button" class="dc-button"
-onclick="activateScenario('MULTI_SYSTEM_CASCADE')">
-DC — MULTI-SYSTEM CASCADE
-</button>
-
-</div>
-</div>
-
-<!-- CYBER DOMAIN -->
-
-<div class="panel">
-
-<div class="title">
-🛡️ CYB — CYBER RESILIENCE
-</div>
-
-<div class="muted">
-Local simulator engine: CYBRuleEngine
-</div>
-
-<br>
-
-<div class="cyb-controls">
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('DATA_BREACH_CREDENTIAL_LEAK')">
-CYB — DATA BREACH / CREDENTIAL LEAK
-</button>
 
 <!-- ============================================================
-     PART 1 ENDS HERE
-     PART 2 CONTINUES DIRECTLY FROM THIS BUTTON
+     SPD v13.1 — SINGLE JAVASCRIPT ENGINE
+     PART 1
 ============================================================ -->
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('DDOS')">
-CYB — DDOS
-</button>
-<button type="button" class="cyb-button"
-onclick="activateScenario('INSIDER_THREAT')">
-CYB — INSIDER THREAT
-</button>
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('API_ABUSE_TOKEN_MISUSE')">
-CYB — API ABUSE / TOKEN MISUSE
-</button>
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('SUPPLY_CHAIN_CYBER_COMPROMISE')">
-CYB — SUPPLY CHAIN CYBER COMPROMISE
-</button>
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('CLOUD_MISCONFIGURATION_EXPOSURE')">
-CYB — CLOUD MISCONFIGURATION EXPOSURE
-</button>
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('IDENTITY_PROVIDER_OUTAGE')">
-CYB — IDENTITY PROVIDER OUTAGE
-</button>
-
-<button type="button" class="cyb-button"
-onclick="activateScenario('MULTI_VECTOR_COORDINATED_CYBER_ATTACK')">
-CYB — MULTI-VECTOR COORDINATED CYBER ATTACK
-</button>
-
-</div>
-</div>
-
-<!-- SCENARIO CONTROL -->
-
-<div class="panel">
-
-<div class="title">
-🎛️ SCENARIO CONTROL
-</div>
-
-<div class="scenario-controls">
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('NORMAL')">
-NORMAL
-</button>
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('FX_SHOCK')">
-FX STRESS
-</button>
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('ENERGY_SPIKE')">
-ENERGY SPIKE
-</button>
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('CYBER_EVENT')">
-CYBER EVENT
-</button>
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('INFRASTRUCTURE_STRESS')">
-INFRA STRAIN
-</button>
-
-<button type="button" class="scenario-button"
-onclick="activateScenario('BIODIESEL_SHORTAGE')">
-BIODIESEL SHORTAGE
-</button>
-
-<button type="button" class="danger"
-onclick="resetScenario()">
-RESET
-</button>
-
-</div>
-</div>
-
-<!-- WORKING INTENSITY LEVER -->
-
-<div class="panel">
-
-<div class="title">
-🎚️ SCENARIO INTENSITY CONTROL
-</div>
-
-<div class="muted">
-Move the lever to change deterministic simulator
-scenario intensity from 0% to 100%.
-</div>
-
-<br>
-
-<input
-id="scenarioIntensity"
-type="range"
-min="0"
-max="100"
-step="1"
-value="50"
-oninput="updateIntensity()"
->
-
-<div>
-Intensity:
-<span class="intensity-value" id="intensityValue">50%</span>
-</div>
-
-</div>
-
-<!-- SCENARIO PANEL -->
-
-<div class="panel">
-
-<div class="title">
-🧪 SCENARIO PANEL
-</div>
-
-<pre id="scenarioPanel">Waiting...</pre>
-
-</div>
-
-<!-- RAW STATE -->
-
-<div class="panel">
-
-<div class="title">
-📊 RAW SYSTEM STATE
-</div>
-
-<pre id="state">Waiting...</pre>
-
-</div>
-
-<!-- GOLDEN RULE ENGINE -->
-
-<div class="panel">
-
-<div class="title">
-🛰️ GOLDEN RULE ENGINE
-</div>
-
-<div class="pipeline">
-
-<span class="stage" id="stageOBSERVE">OBSERVE</span>
-→
-<span class="stage" id="stageVERIFY">VERIFY</span>
-→
-<span class="stage" id="stageASSESS">ASSESS</span>
-→
-<span class="stage" id="stageDECIDE">DECIDE</span>
-→
-<span class="stage" id="stageACT">ACT</span>
-→
-<span class="stage" id="stageUPDATE">UPDATE</span>
-
-</div>
-
-<pre id="pipeline">Waiting...</pre>
-
-</div>
-
-<!-- SYSTEM ASSESSMENT -->
-
-<div class="panel">
-
-<div class="title">
-⚠️ SYSTEM ASSESSMENT
-</div>
-
-<pre id="assessment">Waiting...</pre>
-
-</div>
-
-<!-- DOMAIN ASSESSMENT -->
-
-<div class="panel">
-
-<div class="title">
-🔌 DOMAIN ASSESSMENT
-</div>
-
-<pre id="domainAssessment">Waiting...</pre>
-
-</div>
-
-<!-- RISK -->
-
-<div class="panel">
-
-<div class="title">
-🚨 RISK PANEL
-</div>
-
-<pre id="riskPanel">{
-  "risk": "UNKNOWN",
-  "resilienceScore": "N/A",
-  "goldenScore": "N/A"
-}</pre>
-
-</div>
-
-<!-- DECISION -->
-
-<div class="panel">
-
-<div class="title">
-⚙️ CAPTAIN AI LENA DECISION
-</div>
-
-<pre id="decision">Waiting...</pre>
-
-</div>
-
-<!-- SOLUTION OPTIONS -->
-
-<div class="panel">
-
-<div class="title">
-💡 SOLUTION OPTIONS
-</div>
-
-<div class="solution" id="solutionOptions">
-Waiting for system assessment...
-</div>
-
-</div>
-
-<!-- ACTION SEQUENCE -->
-
-<div class="panel">
-
-<div class="title">
-🚨 ACTION SEQUENCE PROMPT
-</div>
-
-<pre id="actions">Waiting...</pre>
-
-</div>
-
-<!-- EXECUTION GATE -->
-
-<div class="panel">
-
-<div class="title">
-🔒 EXECUTION GATE
-</div>
-
-<pre id="executionGate">
-HUMAN AUTHORIZATION REQUIRED.
-NO RECOVERY ACTION EXECUTED.
-</pre>
-
-</div>
-
-<!-- MEMORY CORE -->
-
-<div class="panel">
-
-<div class="title">
-🧠 MEMORY CORE
-</div>
-
-<pre id="memoryCore">
-Memory Core Waiting...
-</pre>
-
-</div>
-
-<!-- AUDIT RECORD -->
-
-<div class="panel">
-
-<div class="title">
-🧾 SPD v13.1 AUDIT RECORD
-</div>
-
-<pre id="audit">
-Waiting...
-</pre>
-
-</div>
-
-<!-- PIPELINE LOG -->
-
-<div class="panel">
-
-<div class="title">
-📜 PIPELINE LOG
-</div>
-
-<pre id="pipelineLog">
-PIPELINE LOG ACTIVE
-</pre>
-
-</div>
-
-<!-- TRIAL MANOEUVRE -->
-
-<div class="panel">
-
-<div class="title">
-🛰️ TRIAL MANOEUVRE SIMULATOR
-</div>
-
-<div class="muted">
-Local deterministic trial manoeuvre simulation.
-No physical execution. No backend connection.
-Human authorization remains mandatory.
-</div>
-
-<br>
-
-<div class="authority-controls">
-
-<button type="button"
-class="authority-button"
-onclick="runTrialManoeuvre()">
-🛰️ RUN TRIAL MANOEUVRE
-</button>
-
-<button type="button"
-class="authority-button"
-onclick="verifyTrialManoeuvre()">
-🔎 VERIFY TRIAL MANOEUVRE
-</button>
-
-</div>
-
-<pre id="trialManoeuvre">
-Trial manoeuvre not executed.
-</pre>
-
-</div>
-
-<!-- SELF TEST -->
-
-<div class="panel">
-
-<div class="title">
-🧪 SPD v13.1 SELF-TEST
-</div>
-
-<pre id="selfTest">
-Self-test not executed.
-</pre>
-
-</div>
-
-<!-- SELF TEST INTERPRETATION -->
-
-<div class="panel">
-
-<div class="title">
-🔎 SELF-TEST INTERPRETATION
-</div>
-
-<pre id="selfTestInterpretation">
-Waiting for self-test execution...
-</pre>
-
-</div>
-
-<!-- FAULT IDENTIFICATION -->
-
-<div class="panel">
-
-<div class="title">
-⚠️ FAULT IDENTIFICATION
-</div>
-
-<pre id="faultIdentification">
-No fault assessment available.
-</pre>
-
-</div>
-
-<!-- CORRECTIVE ACTION -->
-
-<div class="panel">
-
-<div class="title">
-🛠️ CAPTAIN AI LENA CORRECTIVE ACTION
-</div>
-
-<pre id="correctiveAction">
-No corrective action available.
-</pre>
-
-</div>
-
-<!-- RETEST -->
-
-<div class="panel">
-
-<div class="title">
-🔁 RE-TEST VALIDATION
-</div>
-
-<pre id="retest">
-Re-test not executed.
-</pre>
-
-</div>
 
 <script>
 
 /* ============================================================
-   SPD v13.1 — LOCAL DETERMINISTIC SIMULATOR CORE
-   NO BACKEND CONNECTION
+   CORE CONSTANTS
 ============================================================ */
+
+"use strict";
 
 const PHI = 1.618033988749895;
 
-let scenarioIntensity = 50;
 
-let currentScenario = "NORMAL";
+/* ============================================================
+   CORE MEMORY
+============================================================ */
 
-let currentState = {
-  fx: 0,
-  dc: 0,
-  cyb: 0,
-  inf: 0,
-  energy: 0
+const memory = {
+
+  lastScenario:null,
+  lastDomain:null,
+  lastDecision:null,
+  lastAssessment:null,
+  lastSeverity:null,
+  lastRecovery:null,
+  timestamp:null
+
 };
+
+
+/* ============================================================
+   GLOBAL STATE
+============================================================ */
+
+const auditLog = [];
+
+let currentDomain = null;
+
+let currentScenario = null;
 
 let currentAssessment = null;
 
-let memory = {
-  lastScenario: null,
-  lastDecision: null,
-  lastRecovery: null,
-  lastSeverity: null,
-  timestamp: null
-};
+let scenarioIntensity = 50;
 
-let auditRecords = [];
+let humanDecision = null;
 
-let pipelineLog = [];
-
-const scenarioProfiles = {
-
-  NORMAL: {
-    fx:0, dc:0, cyb:0, inf:0, energy:0
-  },
-
-  FX_SHOCK: {
-    fx:90, dc:20, cyb:10, inf:20, energy:10
-  },
-
-  ENERGY_SPIKE: {
-    fx:10, dc:30, cyb:10, inf:20, energy:90
-  },
-
-  CYBER_EVENT: {
-    fx:10, dc:20, cyb:90, inf:40, energy:10
-  },
-
-  INFRASTRUCTURE_STRESS: {
-    fx:20, dc:80, cyb:20, inf:85, energy:60
-  },
-
-  BIODIESEL_SHORTAGE: {
-    fx:20, dc:30, cyb:10, inf:60, energy:90
-  },
-
-  LIQUIDITY_CRISIS: {
-    fx:70, dc:10, cyb:20, inf:30, energy:20
-  },
-
-  BANKING_STRESS: {
-    fx:60, dc:10, cyb:30, inf:30, energy:20
-  },
-
-  CREDIT_STRESS: {
-    fx:55, dc:10, cyb:20, inf:40, energy:20
-  },
-
-  SOVEREIGN_DEBT: {
-    fx:75, dc:10, cyb:10, inf:45, energy:20
-  },
-
-  FIN_STRESS: {
-    fx:65, dc:10, cyb:20, inf:40, energy:20
-  },
-
-  COOLING_FAILURE: {
-    fx:10, dc:90, cyb:10, inf:40, energy:70
-  },
-
-  POWER_INSTABILITY: {
-    fx:10, dc:60, cyb:10, inf:40, energy:90
-  },
-
-  NETWORK_CONGESTION: {
-    fx:10, dc:70, cyb:30, inf:70, energy:20
-  },
-
-  COMPUTE_LOAD_SPIKE: {
-    fx:10, dc:85, cyb:20, inf:50, energy:50
-  },
-
-  BLACKOUT_RECOVERY: {
-    fx:10, dc:90, cyb:10, inf:80, energy:95
-  },
-
-  COOLING_RECOVERY_FAILURE: {
-    fx:10, dc:95, cyb:10, inf:70, energy:80
-  },
-
-  NETWORK_HARDWARE_FAILURE: {
-    fx:10, dc:80, cyb:30, inf:75, energy:30
-  },
-
-  STORAGE_DEGRADATION: {
-    fx:10, dc:75, cyb:20, inf:65, energy:30
-  },
-
-  COOLING_LOAD_SATURATION: {
-    fx:10, dc:95, cyb:10, inf:65, energy:85
-  },
-
-  MULTI_SYSTEM_CASCADE: {
-    fx:70, dc:90, cyb:80, inf:90, energy:90
-  },
-
-  DATA_BREACH_CREDENTIAL_LEAK: {
-    fx:10, dc:30, cyb:95, inf:50, energy:20
-  },
-
-  DDOS: {
-    fx:10, dc:60, cyb:90, inf:70, energy:30
-  },
-
-  INSIDER_THREAT: {
-    fx:10, dc:30, cyb:85, inf:50, energy:20
-  },
-
-  API_ABUSE_TOKEN_MISUSE: {
-    fx:10, dc:40, cyb:90, inf:60, energy:20
-  },
-
-  SUPPLY_CHAIN_CYBER_COMPROMISE: {
-    fx:20, dc:50, cyb:95, inf:75, energy:30
-  },
-
-  CLOUD_MISCONFIGURATION_EXPOSURE: {
-    fx:10, dc:80, cyb:85, inf:70, energy:30
-  },
-
-  IDENTITY_PROVIDER_OUTAGE: {
-    fx:10, dc:60, cyb:80, inf:85, energy:30
-  },
-
-  MULTI_VECTOR_COORDINATED_CYBER_ATTACK: {
-    fx:60, dc:85, cyb:100, inf:90, energy:70
-  },
-
-  HUMAN_RIGHTS_DUE_DILIGENCE: {
-    fx:20, dc:20, cyb:20, inf:50, energy:20
-  },
-
-  FORCED_LABOUR: {
-    fx:20, dc:20, cyb:20, inf:75, energy:20
-  },
-
-  CHILD_LABOUR: {
-    fx:20, dc:20, cyb:20, inf:90, energy:20
-  },
-
-  DISCRIMINATION: {
-    fx:20, dc:20, cyb:20, inf:65, energy:20
-  },
-
-  OCCUPATIONAL_HEALTH_AND_SAFETY: {
-    fx:20, dc:30, cyb:20, inf:85, energy:50
-  },
-
-  MODERN_SLAVERY: {
-    fx:20, dc:20, cyb:20, inf:95, energy:20
-  },
-
-  COMMUNITY_IMPACT: {
-    fx:20, dc:20, cyb:20, inf:70, energy:30
-  },
-
-  INDIGENOUS_RIGHTS: {
-    fx:20, dc:20, cyb:20, inf:75, energy:20
-  },
-
-  SUPPLY_CHAIN_RISK: {
-    fx:40, dc:30, cyb:50, inf:75, energy:30
-  },
-
-  GRIEVANCE_MECHANISM: {
-    fx:20, dc:20, cyb:30, inf:60, energy:20
-  }
-};
 
 /* ============================================================
-   DOM HELPERS
+   DP STATE
 ============================================================ */
 
-function setText(id,value){
-  const el = document.getElementById(id);
-  if(el) el.textContent = value;
-}
+const dpState = {
 
-function setJSON(id,value){
-  const el = document.getElementById(id);
-  if(el){
-    el.textContent = JSON.stringify(value,null,2);
+  vesselStatus:"STABLE",
+
+  positionError:0,
+  headingError:0,
+
+  surge:0,
+  sway:0,
+  yaw:0,
+
+  windLoad:0,
+  currentLoad:0,
+  waveLoad:0,
+
+  thrusterAvailability:100,
+  powerAvailability:100,
+  redundancy:100,
+
+  driftRisk:0,
+  stationKeeping:100,
+
+  severity:"LOW",
+  recoveryRequired:false,
+
+  timestamp:null
+
+};
+
+
+/* ============================================================
+   ORBITAL STATE
+============================================================ */
+
+const orbitalState = {
+
+  spacecraftStatus:"STABILIZED",
+
+  communication:100,
+  power:100,
+  attitude:100,
+  propulsion:100,
+  navigation:100,
+  thermal:100,
+  missionIntegrity:100,
+
+  severity:"LOW",
+  recoveryRequired:false,
+
+  timestamp:null
+
+};
+
+
+/* ============================================================
+   DP SCENARIO PROFILES
+============================================================ */
+
+const DP_SCENARIOS = {
+
+  DP_THRUSTER_FAILURE:{
+    vesselStatus:"DEGRADED",
+    positionError:35,
+    headingError:20,
+    surge:30,
+    sway:25,
+    yaw:20,
+    windLoad:35,
+    currentLoad:25,
+    waveLoad:20,
+    thrusterAvailability:65,
+    powerAvailability:100,
+    redundancy:60
+  },
+
+  DP_POWER_FAILURE:{
+    vesselStatus:"CRITICAL",
+    positionError:55,
+    headingError:35,
+    surge:50,
+    sway:45,
+    yaw:35,
+    windLoad:40,
+    currentLoad:30,
+    waveLoad:30,
+    thrusterAvailability:70,
+    powerAvailability:45,
+    redundancy:40
+  },
+
+  DP_POSITION_DEVIATION:{
+    vesselStatus:"DEGRADED",
+    positionError:65,
+    headingError:30,
+    surge:55,
+    sway:50,
+    yaw:30,
+    windLoad:30,
+    currentLoad:35,
+    waveLoad:25,
+    thrusterAvailability:90,
+    powerAvailability:95,
+    redundancy:85
+  },
+
+  DP_WIND_LOAD:{
+    vesselStatus:"STRESSED",
+    positionError:30,
+    headingError:25,
+    surge:35,
+    sway:45,
+    yaw:25,
+    windLoad:85,
+    currentLoad:30,
+    waveLoad:40,
+    thrusterAvailability:95,
+    powerAvailability:95,
+    redundancy:90
+  },
+
+  DP_DRIFT_OFF:{
+    vesselStatus:"CRITICAL",
+    positionError:85,
+    headingError:55,
+    surge:75,
+    sway:70,
+    yaw:50,
+    windLoad:60,
+    currentLoad:55,
+    waveLoad:50,
+    thrusterAvailability:75,
+    powerAvailability:80,
+    redundancy:70
+  },
+
+  DP_MULTI_THRUSTER_FAILURE:{
+    vesselStatus:"CRITICAL",
+    positionError:75,
+    headingError:50,
+    surge:70,
+    sway:65,
+    yaw:55,
+    windLoad:45,
+    currentLoad:35,
+    waveLoad:35,
+    thrusterAvailability:35,
+    powerAvailability:80,
+    redundancy:30
+  },
+
+  DP_WORST_CASE_FAILURE:{
+    vesselStatus:"CRITICAL",
+    positionError:95,
+    headingError:85,
+    surge:90,
+    sway:90,
+    yaw:80,
+    windLoad:90,
+    currentLoad:80,
+    waveLoad:80,
+    thrusterAvailability:20,
+    powerAvailability:30,
+    redundancy:15
   }
-}
+
+};
+
+
+/* ============================================================
+   ORBITAL SCENARIO PROFILES
+============================================================ */
+
+const ORBITAL_SCENARIOS = {
+
+  ORBITAL_SIGNAL_LOSS:{
+    spacecraftStatus:"ISOLATED",
+    communication:5,
+    power:95,
+    attitude:95,
+    propulsion:100,
+    navigation:90,
+    thermal:95,
+    missionIntegrity:80
+  },
+
+  ORBITAL_POWER_FAILURE:{
+    spacecraftStatus:"CRITICAL",
+    communication:60,
+    power:20,
+    attitude:75,
+    propulsion:70,
+    navigation:80,
+    thermal:60,
+    missionIntegrity:65
+  },
+
+  ORBITAL_ATTITUDE_ANOMALY:{
+    spacecraftStatus:"DEGRADED",
+    communication:90,
+    power:90,
+    attitude:30,
+    propulsion:75,
+    navigation:55,
+    thermal:85,
+    missionIntegrity:65
+  },
+
+  ORBITAL_COMMUNICATION_FAILURE:{
+    spacecraftStatus:"ISOLATED",
+    communication:10,
+    power:90,
+    attitude:90,
+    propulsion:90,
+    navigation:85,
+    thermal:90,
+    missionIntegrity:75
+  },
+
+  ORBITAL_MANOEUVRE_FAILURE:{
+    spacecraftStatus:"DEGRADED",
+    communication:90,
+    power:85,
+    attitude:65,
+    propulsion:35,
+    navigation:75,
+    thermal:85,
+    missionIntegrity:60
+  },
+
+  ORBITAL_PROPULSION_FAILURE:{
+    spacecraftStatus:"CRITICAL",
+    communication:90,
+    power:85,
+    attitude:70,
+    propulsion:15,
+    navigation:65,
+    thermal:85,
+    missionIntegrity:55
+  },
+
+  ORBITAL_CASCADE_FAILURE:{
+    spacecraftStatus:"CRITICAL",
+    communication:25,
+    power:30,
+    attitude:35,
+    propulsion:30,
+    navigation:40,
+    thermal:45,
+    missionIntegrity:25
+  }
+
+};
+
+
+/* ============================================================
+   UTILITY FUNCTIONS
+============================================================ */
 
 function nowISO(){
+
   return new Date().toISOString();
+
 }
 
-/* ============================================================
-   WORKING INTENSITY LEVER
-============================================================ */
 
-function updateIntensity(){
+function setText(id,value){
 
-  const slider =
-    document.getElementById("scenarioIntensity");
+  const element =
+    document.getElementById(id);
 
-  const value =
-    Number(slider.value);
+  if(element){
 
-  scenarioIntensity = value;
+    element.textContent =
+      value;
 
-  setText(
-    "intensityValue",
-    value + "%"
-  );
-
-  if(currentScenario !== "NORMAL"){
-    applyScenario(currentScenario,false);
   }
 
-  addPipelineLog(
-    "Scenario intensity changed to " + value + "%"
-  );
 }
 
-/* ============================================================
-   SCENARIO ENGINE
-============================================================ */
 
-function activateScenario(name){
+function setJSON(id,value){
 
-  currentScenario = name;
+  const element =
+    document.getElementById(id);
 
-  applyScenario(name,true);
+  if(element){
 
-  addPipelineLog(
-    "Scenario activated: " + name
-  );
+    element.textContent =
+      JSON.stringify(
+        value,
+        null,
+        2
+      );
 
-  runGoldenRulePipeline();
-}
-
-function applyScenario(name,runPipeline){
-
-  const profile =
-    scenarioProfiles[name] ||
-    scenarioProfiles.NORMAL;
-
-  const multiplier =
-    scenarioIntensity / 100;
-
-  currentState = {
-    fx: Math.round(profile.fx * multiplier),
-    dc: Math.round(profile.dc * multiplier),
-    cyb: Math.round(profile.cyb * multiplier),
-    inf: Math.round(profile.inf * multiplier),
-    energy: Math.round(profile.energy * multiplier)
-  };
-
-  updateMonitor();
-
-  setJSON("scenarioPanel",{
-    scenario:name,
-    intensity:scenarioIntensity,
-    mode:"LOCAL_DETERMINISTIC_SIMULATOR",
-    backendConnection:false
-  });
-
-  setJSON("state",currentState);
-
-  if(runPipeline){
-    runGoldenRulePipeline();
   }
+
 }
 
-function resetScenario(){
 
-  currentScenario = "NORMAL";
-  scenarioIntensity = 50;
+function addPipelineLog(message){
 
-  const slider =
-    document.getElementById("scenarioIntensity");
+  const entry = {
 
-  slider.value = 50;
+    timestamp:nowISO(),
 
-  setText("intensityValue","50%");
+    message
 
-  currentState = {
-    fx:0,
-    dc:0,
-    cyb:0,
-    inf:0,
-    energy:0
   };
 
-  updateMonitor();
+  auditLog.push(entry);
 
-  setText("scenarioPanel","Scenario reset.");
-  setText("state","Waiting...");
-  setText("assessment","Waiting...");
-  setText("domainAssessment","Waiting...");
-  setText("decision","Waiting...");
-  setText("pipeline","Waiting...");
-  setText("actions","Waiting...");
+  const log =
+    document.getElementById(
+      "pipelineLog"
+    );
 
-  setJSON("riskPanel",{
-    risk:"UNKNOWN",
-    resilienceScore:"N/A",
-    goldenScore:"N/A"
-  });
+  if(log){
 
-  setText(
-    "executionGate",
-    "HUMAN AUTHORIZATION REQUIRED.\nNO RECOVERY ACTION EXECUTED."
+    const div =
+      document.createElement(
+        "div"
+      );
+
+    div.textContent =
+      entry.timestamp
+      + " | "
+      + entry.message;
+
+    log.prepend(div);
+
+  }
+
+  setJSON(
+    "auditRecord",
+    auditLog
   );
 
-  addPipelineLog("Simulator reset.");
 }
 
-/* ============================================================
-   DOMAIN MONITOR
-============================================================ */
 
-function updateMonitor(){
+function updateAudit(event,data={}){
 
-  setText("domainFX",currentState.fx);
-  setText("domainDC",currentState.dc);
-  setText("domainCYB",currentState.cyb);
-  setText("domainINF",currentState.inf);
-  setText("domainEN",currentState.energy);
+  auditLog.push({
+
+    timestamp:nowISO(),
+
+    event,
+
+    data
+
+  });
+
+  setJSON(
+    "auditRecord",
+    auditLog
+  );
+
 }
 
-/* ============================================================
-   GOLDEN RULE ENGINE
-============================================================ */
 
-function activateStage(stage){
+function renderGoldenRulePipeline(active){
 
-  [
+  const stages = [
+
     "OBSERVE",
     "VERIFY",
     "ASSESS",
     "DECIDE",
     "ACT",
     "UPDATE"
-  ].forEach(name=>{
 
-    const el =
-      document.getElementById(
-        "stage" + name
-      );
+  ];
 
-    if(el){
-      el.classList.toggle(
-        "active",
-        name === stage
-      );
+  stages.forEach(
+    function(stage){
+
+      const element =
+        document.getElementById(
+          "stage-"+stage
+        );
+
+      if(element){
+
+        element.classList.toggle(
+          "active",
+          stage === active
+        );
+
+      }
+
     }
-  });
+  );
+
 }
 
-function runGoldenRulePipeline(){
-
-  activateStage("OBSERVE");
-
-  const observed =
-    {...currentState};
-
-  activateStage("VERIFY");
-
-  const verification = {
-    verified:true,
-    deterministic:true,
-    backendConnected:false,
-    scenario:currentScenario
-  };
-
-  activateStage("ASSESS");
-
-  currentAssessment =
-    calculateAssessment(observed);
-
-  activateStage("DECIDE");
-
-  const decision =
-    generateDecision(currentAssessment);
-
-  activateStage("ACT");
-
-  const actionPrompt =
-    generateActionPrompt(
-      currentAssessment,
-      decision
-    );
-
-  activateStage("UPDATE");
-
-  updateMemory(
-    decision,
-    currentAssessment
-  );
-
-  const result = {
-    pipeline:
-      "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
-    scenario:currentScenario,
-    intensity:scenarioIntensity,
-    observed,
-    verification,
-    assessment:currentAssessment,
-    decision,
-    actionPrompt,
-    execution:
-      "HUMAN AUTHORIZATION REQUIRED"
-  };
-
-  setJSON("pipeline",result);
-
-  setJSON(
-    "assessment",
-    currentAssessment
-  );
-
-  setJSON(
-    "decision",
-    decision
-  );
-
-  setText(
-    "actions",
-    actionPrompt
-  );
-
-  updateAudit(
-    "GOLDEN_RULE_PIPELINE_COMPLETE",
-    result
-  );
-
-  addPipelineLog(
-    "Golden Rule pipeline completed."
-  );
-}
 
 /* ============================================================
-   ASSESSMENT
+   SCENARIO INTENSITY
 ============================================================ */
 
-function calculateAssessment(state){
+function updateScenarioIntensity(value){
 
-  const rawStress =
-    (
-      state.fx * 0.25 +
-      state.energy * 0.20 +
-      state.cyb * 0.20 +
-      state.inf * 0.20 +
-      state.dc * 0.15
-    );
-
-  const goldenScore =
-    rawStress * (1 / PHI);
-
-  const resilienceScore =
+  scenarioIntensity =
     Math.max(
       0,
-      100 - goldenScore
+      Math.min(
+        100,
+        Number(value)
+      )
     );
 
-  let risk;
-
-  if(goldenScore < 30){
-    risk = "LOW";
-  }
-  else if(goldenScore < 50){
-    risk = "MEDIUM";
-  }
-  else{
-    risk = "HIGH";
-  }
-
-  const severity =
-    risk === "HIGH"
-      ? "HIGH"
-      : risk === "MEDIUM"
-        ? "MEDIUM"
-        : "LOW";
-
-  const result = {
-    rawStress:Number(rawStress.toFixed(3)),
-    goldenScore:Number(goldenScore.toFixed(3)),
-    resilienceScore:Number(resilienceScore.toFixed(3)),
-    risk,
-    severity
-  };
-
-  setJSON("riskPanel",{
-    risk,
-    resilienceScore:
-      result.resilienceScore,
-    goldenScore:
-      result.goldenScore
-  });
-
-  setJSON(
-    "domainAssessment",
-    calculateDomainAssessment(state)
+  setText(
+    "intensityValue",
+    scenarioIntensity + "%"
   );
 
-  return result;
 }
+
 
 /* ============================================================
-   DOMAIN ASSESSMENT
-============================================================ */
-
-function calculateDomainAssessment(state){
-
-  const highestDomain =
-    Object.entries(state)
-      .sort((a,b)=>b[1]-a[1])[0];
-
-  return {
-    scenario:currentScenario,
-    dominantDomain:highestDomain[0],
-    dominantStress:highestDomain[1],
-    engine:"LOCAL DOMAIN RULE ENGINE",
-    result:"DOMAIN ASSESSMENT COMPLETE"
-  };
-}
-
-/* ============================================================
-   DECISION CORE
-============================================================ */
-
-function generateDecision(assessment){
-
-  let action;
-  let recovery;
-
-  if(assessment.risk === "HIGH"){
-    action =
-      "INITIATE_RECOVERY_SEQUENCE";
-    recovery =
-      "STABILIZE_SYSTEM_AND_ESCALATE";
-  }
-  else if(assessment.risk === "MEDIUM"){
-    action =
-      "INITIATE_PROTECTIVE_RESPONSE";
-    recovery =
-      "MAINTAIN_STABILIZATION_AND_MONITOR";
-  }
-  else{
-    action =
-      "MAINTAIN_SAFE_STATE";
-    recovery =
-      "CONTINUE_MONITORING";
-  }
-
-  return {
-    agent:"Captain AI Lena",
-    decision:action,
-    recommendedRecovery:recovery,
-    authority:
-      "HUMAN OPERATOR",
-    execution:
-      "NOT AUTHORIZED AUTOMATICALLY"
-  };
-}
-
-function generateActionPrompt(
-  assessment,
-  decision
-){
-
-  return [
-    "ACTION SEQUENCE PROMPT",
-    "",
-    "Scenario: " + currentScenario,
-    "Risk: " + assessment.risk,
-    "Severity: " + assessment.severity,
-    "",
-    "AI Recommendation:",
-    decision.decision,
-    "",
-    "Recommended Recovery:",
-    decision.recommendedRecovery,
-    "",
-    "EXECUTION GATE:",
-    "HUMAN AUTHORIZATION REQUIRED.",
-    "NO AUTOMATIC RECOVERY ACTION EXECUTED."
-  ].join("\n");
-}
-
-/* ============================================================
-   MEMORY CORE
+   MEMORY UPDATE
 ============================================================ */
 
 function updateMemory(
@@ -1736,556 +1360,496 @@ function updateMemory(
   assessment
 ){
 
-  memory = {
-    lastScenario:currentScenario,
-    lastDecision:decision.decision,
-    lastRecovery:
-      decision.recommendedRecovery,
-    lastSeverity:assessment.severity,
-    timestamp:nowISO()
-  };
+  memory.lastDecision =
+    decision || null;
 
-  setJSON("memoryCore",memory);
+  memory.lastScenario =
+    currentScenario;
 
-  addPipelineLog(
-    "Memory Core updated."
+  memory.lastDomain =
+    currentDomain;
+
+  memory.lastAssessment =
+    assessment || null;
+
+  memory.lastSeverity =
+    assessment
+      ? assessment.severity
+      : null;
+
+  memory.timestamp =
+    nowISO();
+
+  setJSON(
+    "memoryCore",
+    memory
   );
+
 }
+
 
 /* ============================================================
-   AUDIT CORE
+   DOMAIN MONITOR
 ============================================================ */
 
-function updateAudit(
-  event,
-  data
-){
+function updateDomainMonitor(){
 
-  const record = {
-    id:auditRecords.length + 1,
-    timestamp:nowISO(),
-    event,
-    scenario:currentScenario,
-    intensity:scenarioIntensity,
-    data
-  };
-
-  auditRecords.push(record);
-
-  setJSON(
-    "audit",
-    auditRecords
-  );
-}
-
-function addPipelineLog(message){
-
-  pipelineLog.push({
-    timestamp:nowISO(),
-    message
-  });
-
-  if(pipelineLog.length > 100){
-    pipelineLog.shift();
-  }
-
-  setJSON(
-    "pipelineLog",
-    pipelineLog
-  );
-}
-
-/* ============================================================
-   HUMAN DECISION AUTHORITY
-============================================================ */
-
-function recordHumanDecision(
-  decision,
-  status
-){
-
-  const record = {
-    authority:"MISSION_CONTROLLER",
-    status,
-    decision,
-    executionGate:
-      status === "AUTHORIZED"
-        ? "HUMAN_AUTHORIZATION_GRANTED"
-        : "HUMAN_AUTHORIZATION_REQUIRED",
-    timestamp:nowISO()
-  };
-
-  setJSON(
-    "humanDecisionAuthority",
-    record
+  setText(
+    "monitorFX",
+    currentDomain === "DP"
+      ? dpState.positionError
+      : 0
   );
 
   setText(
-    "executionGate",
-    status === "AUTHORIZED"
-      ? "HUMAN AUTHORIZATION GRANTED.\nAUTHORIZED DECISION: " + decision
-      : "HUMAN AUTHORIZATION REQUIRED.\nNO RECOVERY ACTION EXECUTED."
+    "monitorDC",
+    currentDomain === "ORBITAL"
+      ? 100-orbitalState.power
+      : 0
+  );
+
+  setText(
+    "monitorCYB",
+    currentDomain === "ORBITAL"
+      ? 100-orbitalState.communication
+      : 0
+  );
+
+  setText(
+    "monitorINF",
+    currentDomain === "DP"
+      ? dpState.windLoad
+      : 0
+  );
+
+  setText(
+    "monitorENERGY",
+    currentDomain === "DP"
+      ? 100-dpState.powerAvailability
+      : currentDomain === "ORBITAL"
+        ? 100-orbitalState.power
+        : 0
+  );
+
+}
+
+
+/* ============================================================
+   DOMAIN INTEGRATION STATUS
+============================================================ */
+
+function updateDomainIntegration(){
+
+  setJSON(
+    "domainIntegrationStatus",
+    {
+
+      SPDCore:
+        "CONNECTED",
+
+      activeDomain:
+        currentDomain,
+
+      activeScenario:
+        currentScenario,
+
+      DP:
+        currentDomain === "DP"
+          ? "ACTIVE"
+          : "STANDBY",
+
+      ORBITAL:
+        currentDomain === "ORBITAL"
+          ? "ACTIVE"
+          : "STANDBY",
+
+      CaptainAILena:
+        "CONNECTED",
+
+      GoldenRuleEngine:
+        "ACTIVE",
+
+      HumanDecisionAuthority:
+        "ACTIVE",
+
+      MemoryCore:
+        "CONNECTED",
+
+      AuditCore:
+        "CONNECTED",
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   SCENARIO PANEL
+============================================================ */
+
+function updateScenarioPanel(){
+
+  setJSON(
+    "scenarioPanel",
+    {
+
+      domain:
+        currentDomain,
+
+      scenario:
+        currentScenario,
+
+      intensity:
+        scenarioIntensity,
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   DP OBSERVE
+============================================================ */
+
+function dpObserve(){
+
+  renderGoldenRulePipeline(
+    "OBSERVE"
+  );
+
+  const observation = {
+
+    domain:"DP",
+
+    positionError:
+      dpState.positionError,
+
+    headingError:
+      dpState.headingError,
+
+    surge:
+      dpState.surge,
+
+    sway:
+      dpState.sway,
+
+    yaw:
+      dpState.yaw,
+
+    windLoad:
+      dpState.windLoad,
+
+    currentLoad:
+      dpState.currentLoad,
+
+    waveLoad:
+      dpState.waveLoad,
+
+    thrusterAvailability:
+      dpState.thrusterAvailability,
+
+    powerAvailability:
+      dpState.powerAvailability,
+
+    redundancy:
+      dpState.redundancy
+
+  };
+
+  setJSON(
+    "rawSystemState",
+    observation
+  );
+
+  addPipelineLog(
+    "DP OBSERVE — state acquired."
+  );
+
+  return observation;
+
+}
+
+
+/* ============================================================
+   DP VERIFY
+============================================================ */
+
+function dpVerify(
+  observation
+){
+
+  renderGoldenRulePipeline(
+    "VERIFY"
+  );
+
+  const valid =
+
+    observation !== null &&
+
+    typeof observation.positionError
+      === "number" &&
+
+    typeof observation.headingError
+      === "number" &&
+
+    typeof observation.thrusterAvailability
+      === "number" &&
+
+    typeof observation.powerAvailability
+      === "number" &&
+
+    typeof observation.redundancy
+      === "number";
+
+  addPipelineLog(
+    "DP VERIFY — "
+    + (
+      valid
+        ? "PASS"
+        : "FAIL"
+    )
   );
 
   updateAudit(
-    "HUMAN_DECISION",
-    record
+    "DP_STATE_VERIFICATION",
+    {
+      status:
+        valid
+          ? "PASS"
+          : "FAIL",
+
+      observation
+    }
   );
 
-  addPipelineLog(
-    "Human decision recorded: " + decision
-  );
+  return valid;
+
 }
 
-function authorizeRecovery(){
-
-  recordHumanDecision(
-    "AUTHORIZE_RECOVERY",
-    "AUTHORIZED"
-  );
-
-  setText(
-    "actions",
-    "HUMAN AUTHORIZATION GRANTED.\n"
-    + "Trial/recovery action may proceed within simulator constraints."
-  );
-}
-
-function maintainSafeState(){
-
-  recordHumanDecision(
-    "MAINTAIN_SAFE_STATE",
-    "AUTHORIZED"
-  );
-
-  setText(
-    "actions",
-    "MISSION CONTROLLER AUTHORIZED MAINTAIN SAFE STATE."
-  );
-}
-
-function requestDiagnostics(){
-
-  recordHumanDecision(
-    "REQUEST_ADDITIONAL_DIAGNOSTICS",
-    "AUTHORIZED"
-  );
-
-  runTrialManoeuvre();
-}
-
-function abortRecovery(){
-
-  recordHumanDecision(
-    "ABORT_RECOVERY",
-    "AUTHORIZED"
-  );
-
-  setText(
-    "actions",
-    "RECOVERY ABORTED BY MISSION CONTROLLER.\nSAFE STATE MAINTAINED."
-  );
-}
-
-function escalateMissionAuthority(){
-
-  recordHumanDecision(
-    "ESCALATE_TO_MISSION_AUTHORITY",
-    "AUTHORIZED"
-  );
-
-  setText(
-    "actions",
-    "ESCALATED TO MISSION AUTHORITY."
-  );
-}
 
 /* ============================================================
-   TRIAL MANOEUVRE
+   DP ASSESS
 ============================================================ */
 
-function runTrialManoeuvre(){
+function dpAssess(){
 
-  const trial = {
+  renderGoldenRulePipeline(
+    "ASSESS"
+  );
 
-    mode:
-      "LOCAL TRIAL MANOEUVRE SIMULATION",
+  const s =
+    dpState;
+
+  const rawStress =
+
+      s.positionError * 0.20
+
+    + s.headingError * 0.10
+
+    + s.surge * 0.10
+
+    + s.sway * 0.10
+
+    + s.yaw * 0.05
+
+    + s.windLoad * 0.10
+
+    + s.currentLoad * 0.05
+
+    + s.waveLoad * 0.05
+
+    + (100-s.thrusterAvailability)
+      * 0.10
+
+    + (100-s.powerAvailability)
+      * 0.10
+
+    + (100-s.redundancy)
+      * 0.05;
+
+
+  const normalizedStress =
+    Math.min(
+      100,
+      rawStress *
+      (
+        scenarioIntensity / 50
+      )
+    );
+
+
+  const goldenScore =
+    normalizedStress *
+    (1 / PHI);
+
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+
+  let risk =
+    "LOW";
+
+  if(resilienceScore < 50){
+
+    risk =
+      "HIGH";
+
+  }
+  else if(resilienceScore < 70){
+
+    risk =
+      "MEDIUM";
+
+  }
+
+
+  const severity =
+    risk === "HIGH"
+      ? "CRITICAL"
+      : risk === "MEDIUM"
+        ? "ELEVATED"
+        : "LOW";
+
+
+  const driftRisk =
+    Math.min(
+      100,
+      Math.round(
+        s.positionError * 0.60
+        +
+        (100-s.thrusterAvailability)
+        * 0.40
+      )
+    );
+
+
+  const stationKeeping =
+    Math.max(
+      0,
+      100-driftRisk
+    );
+
+
+  s.driftRisk =
+    driftRisk;
+
+  s.stationKeeping =
+    stationKeeping;
+
+  s.severity =
+    severity;
+
+  s.recoveryRequired =
+    risk !== "LOW";
+
+
+  const assessment = {
+
+    domain:"DP",
 
     scenario:
       currentScenario,
 
-    intensity:
-      scenarioIntensity,
+    rawStress:
+      Number(
+        rawStress.toFixed(3)
+      ),
 
-    currentState:
-      {...currentState},
+    normalizedStress:
+      Number(
+        normalizedStress.toFixed(3)
+      ),
 
-    manoeuvre:
-      "SIMULATED_RECOVERY_MANOEUVRE",
+    goldenScore:
+      Number(
+        goldenScore.toFixed(3)
+      ),
 
-    physicalExecution:
-      false,
+    resilienceScore:
+      Number(
+        resilienceScore.toFixed(3)
+      ),
 
-    backendConnection:
-      false,
+    risk,
 
-    humanAuthorization:
-      "REQUIRED",
+    severity,
 
-    status:
-      "TRIAL MANOEUVRE SIMULATED"
+    driftRisk,
+
+    stationKeeping
+
   };
 
-  setJSON(
-    "trialManoeuvre",
-    trial
-  );
 
-  updateAudit(
-    "TRIAL_MANOEUVRE_SIMULATION",
-    trial
-  );
+  currentAssessment =
+    assessment;
 
-  addPipelineLog(
-    "Trial manoeuvre simulation completed."
-  );
-}
-
-function verifyTrialManoeuvre(){
-
-  const verification = {
-
-    trialManoeuvreVerified:true,
-
-    scenario:currentScenario,
-
-    deterministic:true,
-
-    backendConnection:false,
-
-    physicalExecution:false,
-
-    result:
-      "TRIAL MANOEUVRE VALIDATION PASS"
-  };
 
   setJSON(
-    "trialManoeuvre",
-    verification
+    "systemAssessment",
+    assessment
   );
 
-  updateAudit(
-    "TRIAL_MANOEUVRE_VERIFICATION",
-    verification
+  setJSON(
+    "domainAssessment",
+    assessment
   );
 
-  addPipelineLog(
-    "Trial manoeuvre verification PASS."
-  );
-}
-
-/* ============================================================
-   SYSTEM RUN
-============================================================ */
-
-function runLiveSystem(){
-
-  setText(
-    "systemStatus",
-    "SYSTEM STATUS: RUNNING — LOCAL SIMULATOR"
-  );
-
-  activateScenario(
-    currentScenario || "NORMAL"
-  );
-
-  setText(
-    "systemStatus",
-    "SYSTEM STATUS: READY — SIMULATION COMPLETE"
-  );
-
-  updateAudit(
-    "SYSTEM_RUN_COMPLETE",
+  setJSON(
+    "riskPanel",
     {
-      scenario:currentScenario,
-      intensity:scenarioIntensity
+      risk,
+      resilienceScore:
+        assessment.resilienceScore,
+      goldenScore:
+        assessment.goldenScore
     }
   );
-}
 
-/* ============================================================
-   SELF TEST
-============================================================ */
-
-function runAuthoritativeSelfTest(){
-
-  const tests = [];
-
-  tests.push({
-    test:"DOM ELEMENTS",
-    result:
-      document.getElementById("scenarioIntensity")
-        ? "PASS"
-        : "FAIL"
-  });
-
-  tests.push({
-    test:"INTENSITY LEVER",
-    result:
-      typeof updateIntensity === "function"
-        ? "PASS"
-        : "FAIL"
-  });
-
-  tests.push({
-    test:"GOLDEN RULE ENGINE",
-    result:
-      typeof runGoldenRulePipeline === "function"
-        ? "PASS"
-        : "FAIL"
-  });
-
-  tests.push({
-    test:"AUDIT CORE",
-    result:
-      typeof updateAudit === "function"
-        ? "PASS"
-        : "FAIL"
-  });
-
-  tests.push({
-    test:"TRIAL MANOEUVRE",
-    result:
-      typeof runTrialManoeuvre === "function"
-        ? "PASS"
-        : "FAIL"
-  });
-
-  const passed =
-    tests.filter(
-      t => t.result === "PASS"
-    ).length;
-
-  const failed =
-    tests.length - passed;
-
-  const result = {
-    testType:
-      "SPD v13.1 AUTHORITATIVE LOCAL SELF-TEST",
-    timestamp:nowISO(),
-    passed,
-    failed,
-    status:
-      failed === 0
-        ? "PASS"
-        : "FAIL",
-    tests
-  };
-
-  setJSON(
-    "selfTest",
-    result
-  );
-
-  setText(
-    "selfTestInterpretation",
-    failed === 0
-      ? "SELF-TEST PASS — CORE SIMULATOR FUNCTIONS AVAILABLE."
-      : "SELF-TEST FAIL — ONE OR MORE CORE FUNCTIONS UNAVAILABLE."
-  );
-
-  setJSON(
-    "faultIdentification",
-    failed === 0
-      ? {
-          fault:false,
-          message:"No simulator fault identified."
-        }
-      : {
-          fault:true,
-          failedTests:
-            tests.filter(
-              t => t.result === "FAIL"
-            )
-        }
-  );
-
-  updateAudit(
-    "SELF_TEST",
-    result
-  );
 
   addPipelineLog(
-    "Authoritative self-test: " +
-    result.status
+    "DP ASSESS — Risk: "
+    + risk
+    + " | Resilience: "
+    + assessment.resilienceScore
   );
 
-  return result;
-}
-
-/* ============================================================
-   SELF TEST + CORRECTIVE ACTION
-============================================================ */
-
-function runSelfTestAndCorrect(){
-
-  const result =
-    runAuthoritativeSelfTest();
-
-  if(result.status === "PASS"){
-
-    setText(
-      "correctiveAction",
-      "NO CORRECTIVE ACTION REQUIRED.\n"
-      + "SIMULATOR CORE VALIDATED."
-    );
-
-    runReTest();
-
-    return;
-  }
-
-  setText(
-    "correctiveAction",
-    "CORRECTIVE ACTION:\n"
-    + "REINITIALIZE LOCAL SIMULATOR STATE."
-  );
-
-  resetScenario();
-
-  runReTest();
-}
-
-/* ============================================================
-   RE-TEST
-============================================================ */
-
-function runReTest(){
-
-  const result =
-    runAuthoritativeSelfTest();
-
-  const retest = {
-    timestamp:nowISO(),
-    status:
-      result.status === "PASS"
-        ? "RE-TEST PASS"
-        : "RE-TEST FAIL",
-    passed:result.passed,
-    failed:result.failed
-  };
-
-  setJSON(
-    "retest",
-    retest
-  );
 
   updateAudit(
-    "RETEST_VALIDATION",
-    retest
+    "DP_ASSESSMENT_COMPLETE",
+    assessment
   );
 
-  addPipelineLog(
-    "Re-test validation: " +
-    retest.status
-  );
+
+  return assessment;
+
 }
 
-/* ============================================================
-   DOMAIN INTEGRATION TEST
-============================================================ */
-
-function runDomainIntegrationTest(){
-
-  const result = {
-
-    cockpit:
-      "CONNECTED",
-
-    domainIntegration:
-      "LOCAL",
-
-    BHRRuleEngine:
-      "AVAILABLE",
-
-    FINRuleEngine:
-      "AVAILABLE",
-
-    DCRuleEngine:
-      "AVAILABLE",
-
-    CYBRuleEngine:
-      "AVAILABLE",
-
-    decisionCore:
-      "AVAILABLE",
-
-    goldenRuleEngine:
-      "AVAILABLE",
-
-    memoryCore:
-      "AVAILABLE",
-
-    auditCore:
-      "AVAILABLE",
-
-    backend:
-      "NOT CONNECTED",
-
-    status:
-      "PASS"
-  };
-
-  setJSON(
-    "domainIntegrationStatus",
-    result
-  );
-
-  updateAudit(
-    "DOMAIN_INTEGRATION_TEST",
-    result
-  );
-
-  addPipelineLog(
-    "Local domain integration test PASS."
-  );
-}
 
 /* ============================================================
-   INITIALIZATION
+   END PART 1
 ============================================================ */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function(){
-
-    updateMonitor();
-
-    setText(
-      "intensityValue",
-      scenarioIntensity + "%"
-    );
-
-    setText(
-      "systemStatus",
-      "SYSTEM STATUS: READY — LOCAL SIMULATOR"
-    );
-
-    addPipelineLog(
-      "SPD v13.1 local simulator initialized."
-    );
-
-    updateAudit(
-      "SIMULATOR_INITIALIZED",
-      {
-        backendConnection:false,
-        deterministic:true
-      }
-    );
-  }
-);
-
-</script>
-
-</body>
-</html>
