@@ -5947,6 +5947,1033 @@ function runIntegratedDPOrbitalTest(){
   return result;
 
 }
+/* ============================================================
+   SPD v13.1 — DP + ORBITAL INTEGRATED SIMULATOR
+   PART 5
+   OPERATOR DISPLAY + GOLDEN RULE + TRIAL MANOEUVRE LAYER
+============================================================ */
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE DISPLAY
+============================================================ */
+
+function renderGoldenRulePipeline(activeStage){
+
+  const pipelineElement =
+    document.getElementById("goldenRulePipeline");
+
+  if(!pipelineElement){
+    return;
+  }
+
+  const stages = [
+
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "DECIDE",
+    "ACT",
+    "UPDATE"
+
+  ];
+
+  pipelineElement.innerHTML = "";
+
+  stages.forEach(
+    function(stage){
+
+      const element =
+        document.createElement("span");
+
+      element.className =
+        "stage"
+        +
+        (
+          stage === activeStage
+          ? " active"
+          : ""
+        );
+
+      element.textContent =
+        stage;
+
+      pipelineElement.appendChild(
+        element
+      );
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   DP OPERATOR DISPLAY
+============================================================ */
+
+function renderDPState(){
+
+  const output =
+    document.getElementById(
+      "dpSimulator"
+    );
+
+  if(!output){
+    return;
+  }
+
+  const display = {
+
+    simulator:
+      "DP RESILIENCE SIMULATOR",
+
+    engine:
+      "DP Simulator Engine",
+
+    status:
+      dpState.vesselStatus,
+
+    scenario:
+      currentScenario,
+
+    vesselState:{
+
+      positionError:
+        dpState.positionError,
+
+      headingError:
+        dpState.headingError,
+
+      surge:
+        dpState.surge,
+
+      sway:
+        dpState.sway,
+
+      yaw:
+        dpState.yaw
+
+    },
+
+    environmentalLoad:{
+
+      wind:
+        dpState.windLoad,
+
+      current:
+        dpState.currentLoad,
+
+      wave:
+        dpState.waveLoad
+
+    },
+
+    capability:{
+
+      availableThrusters:
+        dpState.availableThrusters,
+
+      availablePower:
+        dpState.availablePower,
+
+      redundancy:
+        dpState.redundancy
+
+    },
+
+    consequence:
+      dpState.consequence,
+
+    severity:
+      dpState.severity,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+
+  };
+
+  output.textContent =
+    JSON.stringify(
+      display,
+      null,
+      2
+    );
+
+}
+
+
+/* ============================================================
+   ORBITAL OPERATOR DISPLAY
+============================================================ */
+
+function renderOrbitalState(){
+
+  const output =
+    document.getElementById(
+      "orbitalSimulator"
+    );
+
+  if(!output){
+    return;
+  }
+
+  const display = {
+
+    simulator:
+      "ORBITAL RESILIENCE SIMULATOR",
+
+    engine:
+      "Orbital Resilience Engine",
+
+    status:
+      orbitalState.spacecraftStatus,
+
+    scenario:
+      currentScenario,
+
+    spacecraftState:{
+
+      communication:
+        orbitalState.communication,
+
+      power:
+        orbitalState.power,
+
+      attitude:
+        orbitalState.attitude,
+
+      propulsion:
+        orbitalState.propulsion,
+
+      navigation:
+        orbitalState.navigation,
+
+      thermal:
+        orbitalState.thermal
+
+    },
+
+    missionIntegrity:
+      orbitalState.missionIntegrity,
+
+    redundancy:
+      orbitalState.redundancy,
+
+    orbitalDeviation:
+      orbitalState.orbitalDeviation,
+
+    severity:
+      orbitalState.severity,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+
+  };
+
+  output.textContent =
+    JSON.stringify(
+      display,
+      null,
+      2
+    );
+
+}
+
+
+/* ============================================================
+   DP TRIAL MANOEUVRE PLANNER
+============================================================ */
+
+function planDPTrialManoeuvre(){
+
+  if(
+    currentDomain !== "DP"
+  ){
+
+    addPipelineLog(
+      "DP manoeuvre request rejected: DP domain not active."
+    );
+
+    return null;
+
+  }
+
+  const assessment =
+    currentAssessment
+      ? currentAssessment.assessment
+      : assessDPResilience();
+
+  let manoeuvre =
+    "MAINTAIN_POSITION";
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    manoeuvre =
+      "CONTROLLED_DP_SAFE_STATE_MANOEUVRE";
+
+  }
+  else if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    manoeuvre =
+      "REDUCED_LOAD_POSITION_HOLD_MANOEUVRE";
+
+  }
+  else{
+
+    manoeuvre =
+      "NORMAL_POSITION_HOLD_MANOEUVRE";
+
+  }
+
+  const result = {
+
+    engine:
+      "DP Manoeuvre Engine",
+
+    domain:
+      "DP",
+
+    scenario:
+      currentScenario,
+
+    plannedManoeuvre:
+      manoeuvre,
+
+    target:
+
+      "PRESERVE_SAFE_POSITION_AND_HEADING",
+
+    thrusterUse:
+      "SIMULATED",
+
+    powerUse:
+      "SIMULATED",
+
+    environmentalCompensation:
+      "SIMULATED",
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED"
+
+  };
+
+  updateAudit(
+    "DP_TRIAL_MANOEUVRE_PLANNED",
+    result
+  );
+
+  addPipelineLog(
+    "DP trial manoeuvre planned: "
+    + manoeuvre
+  );
+
+  setJSON(
+    "dpSimulator",
+    result
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   ORBITAL TRIAL MANOEUVRE PLANNER
+============================================================ */
+
+function planOrbitalTrialManoeuvre(){
+
+  if(
+    currentDomain !== "ORBITAL"
+  ){
+
+    addPipelineLog(
+      "Orbital manoeuvre request rejected: ORBITAL domain not active."
+    );
+
+    return null;
+
+  }
+
+  const assessment =
+    currentAssessment
+      ? currentAssessment.assessment
+      : assessOrbitalResilience();
+
+  let manoeuvre =
+    "MAINTAIN_SAFE_ORBIT";
+
+  if(
+    assessment.risk === "HIGH"
+  ){
+
+    manoeuvre =
+      "ORBITAL_SAFE_STATE_RECOVERY_PROFILE";
+
+  }
+  else if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    manoeuvre =
+      "CONTROLLED_ORBITAL_STABILIZATION";
+
+  }
+  else{
+
+    manoeuvre =
+      "NORMAL_ORBIT_MAINTENANCE";
+
+  }
+
+  const result = {
+
+    engine:
+      "Orbital Manoeuvre Engine",
+
+    domain:
+      "ORBITAL",
+
+    scenario:
+      currentScenario,
+
+    plannedManoeuvre:
+      manoeuvre,
+
+    target:
+      "PRESERVE_SPACECRAFT_STABILITY_AND_MISSION_INTEGRITY",
+
+    propulsion:
+      "SIMULATED",
+
+    attitudeControl:
+      "SIMULATED",
+
+    navigation:
+      "SIMULATED",
+
+    communicationRecovery:
+      "SIMULATED",
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED"
+
+  };
+
+  updateAudit(
+    "ORBITAL_TRIAL_MANOEUVRE_PLANNED",
+    result
+  );
+
+  addPipelineLog(
+    "Orbital trial manoeuvre planned: "
+    + manoeuvre
+  );
+
+  setJSON(
+    "orbitalSimulator",
+    result
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   DP TRIAL MANOEUVRE SIMULATION
+============================================================ */
+
+function simulateDPTrialManoeuvre(){
+
+  if(
+    currentDomain !== "DP"
+  ){
+
+    return null;
+
+  }
+
+  const plan =
+    planDPTrialManoeuvre();
+
+  if(!plan){
+
+    return null;
+
+  }
+
+  renderGoldenRulePipeline(
+    "ACT"
+  );
+
+  const result = {
+
+    simulation:
+      "DP TRIAL MANOEUVRE",
+
+    status:
+      "SIMULATED",
+
+    plannedAction:
+      plan.plannedManoeuvre,
+
+    positionResponse:
+      "STABILIZATION RESPONSE SIMULATED",
+
+    headingResponse:
+      "STABILIZATION RESPONSE SIMULATED",
+
+    thrusterResponse:
+      "REDUNDANCY RESPONSE SIMULATED",
+
+    powerResponse:
+      "POWER MANAGEMENT RESPONSE SIMULATED",
+
+    environmentalResponse:
+      "COMPENSATION RESPONSE SIMULATED",
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED"
+
+  };
+
+  updateAudit(
+    "DP_TRIAL_MANOEUVRE_SIMULATED",
+    result
+  );
+
+  addPipelineLog(
+    "DP trial manoeuvre simulation complete."
+  );
+
+  setJSON(
+    "dpSimulator",
+    result
+  );
+
+  renderGoldenRulePipeline(
+    "UPDATE"
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   ORBITAL TRIAL MANOEUVRE SIMULATION
+============================================================ */
+
+function simulateOrbitalTrialManoeuvre(){
+
+  if(
+    currentDomain !== "ORBITAL"
+  ){
+
+    return null;
+
+  }
+
+  const plan =
+    planOrbitalTrialManoeuvre();
+
+  if(!plan){
+
+    return null;
+
+  }
+
+  renderGoldenRulePipeline(
+    "ACT"
+  );
+
+  const result = {
+
+    simulation:
+      "ORBITAL TRIAL MANOEUVRE",
+
+    status:
+      "SIMULATED",
+
+    plannedAction:
+      plan.plannedManoeuvre,
+
+    attitudeResponse:
+      "ATTITUDE STABILIZATION SIMULATED",
+
+    propulsionResponse:
+      "PROPULSION RESPONSE SIMULATED",
+
+    navigationResponse:
+      "NAVIGATION RESPONSE SIMULATED",
+
+    communicationResponse:
+      "COMMUNICATION RECOVERY RESPONSE SIMULATED",
+
+    powerResponse:
+      "POWER PRESERVATION RESPONSE SIMULATED",
+
+    physicalExecution:
+      false,
+
+    humanAuthorization:
+      "REQUIRED"
+
+  };
+
+  updateAudit(
+    "ORBITAL_TRIAL_MANOEUVRE_SIMULATED",
+    result
+  );
+
+  addPipelineLog(
+    "Orbital trial manoeuvre simulation complete."
+  );
+
+  setJSON(
+    "orbitalSimulator",
+    result
+  );
+
+  renderGoldenRulePipeline(
+    "UPDATE"
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   DP FULL GOLDEN RULE RUN
+============================================================ */
+
+function runDPGoldenRule(){
+
+  if(
+    currentDomain !== "DP"
+  ){
+
+    return;
+
+  }
+
+  renderGoldenRulePipeline(
+    "OBSERVE"
+  );
+
+  addPipelineLog(
+    "DP GOLDEN RULE — OBSERVE."
+  );
+
+  renderDPState();
+
+  renderGoldenRulePipeline(
+    "VERIFY"
+  );
+
+  addPipelineLog(
+    "DP GOLDEN RULE — VERIFY."
+  );
+
+  const assessment =
+    assessDPResilience();
+
+  renderGoldenRulePipeline(
+    "ASSESS"
+  );
+
+  addPipelineLog(
+    "DP GOLDEN RULE — ASSESS."
+  );
+
+  const decision =
+    generateDPDecision(
+      assessment
+    );
+
+  renderGoldenRulePipeline(
+    "DECIDE"
+  );
+
+  addPipelineLog(
+    "DP GOLDEN RULE — DECIDE: "
+    + decision.decision
+  );
+
+  const packageResult = {
+
+    domain:
+      "DP",
+
+    scenario:
+      currentScenario,
+
+    assessment,
+
+    captainAILenaDecision:
+      decision,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+
+  };
+
+  currentAssessment =
+    packageResult;
+
+  updateMemory(
+    decision.decision,
+    assessment
+  );
+
+  updateAudit(
+    "DP_GOLDEN_RULE_COMPLETE",
+    packageResult
+  );
+
+  renderGoldenRulePipeline(
+    "UPDATE"
+  );
+
+  setJSON(
+    "dpSimulator",
+    packageResult
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: DP ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL FULL GOLDEN RULE RUN
+============================================================ */
+
+function runOrbitalGoldenRule(){
+
+  if(
+    currentDomain !== "ORBITAL"
+  ){
+
+    return;
+
+  }
+
+  renderGoldenRulePipeline(
+    "OBSERVE"
+  );
+
+  addPipelineLog(
+    "ORBITAL GOLDEN RULE — OBSERVE."
+  );
+
+  renderOrbitalState();
+
+  renderGoldenRulePipeline(
+    "VERIFY"
+  );
+
+  addPipelineLog(
+    "ORBITAL GOLDEN RULE — VERIFY."
+  );
+
+  const assessment =
+    assessOrbitalResilience();
+
+  renderGoldenRulePipeline(
+    "ASSESS"
+  );
+
+  addPipelineLog(
+    "ORBITAL GOLDEN RULE — ASSESS."
+  );
+
+  const decision =
+    generateOrbitalDecision(
+      assessment
+    );
+
+  renderGoldenRulePipeline(
+    "DECIDE"
+  );
+
+  addPipelineLog(
+    "ORBITAL GOLDEN RULE — DECIDE: "
+    + decision.decision
+  );
+
+  const packageResult = {
+
+    domain:
+      "ORBITAL",
+
+    scenario:
+      currentScenario,
+
+    assessment,
+
+    captainAILenaDecision:
+      decision,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false
+
+  };
+
+  currentAssessment =
+    packageResult;
+
+  updateMemory(
+    decision.decision,
+    assessment
+  );
+
+  updateAudit(
+    "ORBITAL_GOLDEN_RULE_COMPLETE",
+    packageResult
+  );
+
+  renderGoldenRulePipeline(
+    "UPDATE"
+  );
+
+  setJSON(
+    "orbitalSimulator",
+    packageResult
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: ORBITAL ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+}
+
+
+/* ============================================================
+   DP + ORBITAL VALIDATION CORE
+============================================================ */
+
+function validateIntegratedSimulation(){
+
+  const dpChecks = {
+
+    stateModel:
+      typeof dpState === "object",
+
+    scenarioProfiles:
+      Object.keys(
+        dpScenarioProfiles
+      ).length > 0,
+
+    assessmentEngine:
+      typeof assessDPResilience === "function",
+
+    decisionEngine:
+      typeof generateDPDecision === "function",
+
+    manoeuvreEngine:
+      typeof simulateDPTrialManoeuvre === "function",
+
+    humanGate:
+      true,
+
+    physicalExecution:
+      false
+
+  };
+
+  const orbitalChecks = {
+
+    stateModel:
+      typeof orbitalState === "object",
+
+    scenarioProfiles:
+      Object.keys(
+        orbitalScenarioProfiles
+      ).length > 0,
+
+    assessmentEngine:
+      typeof assessOrbitalResilience === "function",
+
+    decisionEngine:
+      typeof generateOrbitalDecision === "function",
+
+    manoeuvreEngine:
+      typeof simulateOrbitalTrialManoeuvre === "function",
+
+    humanGate:
+      true,
+
+    physicalExecution:
+      false
+
+  };
+
+  const result = {
+
+    validationCore:
+      "ValidationCoreV1",
+
+    DP:
+      dpChecks,
+
+    ORBITAL:
+      orbitalChecks,
+
+    humanDecisionAuthority:
+      "ACTIVE",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    overall:
+      Object.values(dpChecks).every(Boolean)
+      &&
+      Object.values(orbitalChecks).every(Boolean)
+      ? "PASS"
+      : "FAIL"
+
+  };
+
+  updateAudit(
+    "DP_ORBITAL_VALIDATION",
+    result
+  );
+
+  addPipelineLog(
+    "DP + Orbital ValidationCoreV1: "
+    + result.overall
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   INTEGRATED TEST SEQUENCE
+============================================================ */
+
+function runDPOrbitalScenarioTest(){
+
+  const validation =
+    validateIntegratedSimulation();
+
+  if(
+    validation.overall !== "PASS"
+  ){
+
+    setText(
+      "systemStatus",
+      "SYSTEM STATUS: INTEGRATED VALIDATION FAILED"
+    );
+
+    return;
+
+  }
+
+  updateAudit(
+    "INTEGRATED_TEST_SEQUENCE_STARTED",
+    {
+      domains:[
+        "DP",
+        "ORBITAL"
+      ]
+    }
+  );
+
+  addPipelineLog(
+    "DP + ORBITAL integrated test sequence started."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: DP + ORBITAL INTEGRATED TEST READY"
+  );
+
+}
+
+
+/* ============================================================
+   INITIAL DISPLAY
+============================================================ */
+
+function initializeDPOrbitalDisplay(){
+
+  renderGoldenRulePipeline(
+    null
+  );
+
+  renderDPState();
+
+  renderOrbitalState();
+
+}
+
+
+/* ============================================================
+   DOM READY EXTENSION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    initializeDPOrbitalDisplay();
+
+    addPipelineLog(
+      "DP + Orbital operator display initialized."
+    );
+
+    updateAudit(
+      "DP_ORBITAL_DISPLAY_INITIALIZED",
+      {
+        DP:true,
+        ORBITAL:true,
+        FIN:false,
+        BHR:false,
+        DC:false,
+        CYB:false
+      }
+    );
+
+  }
+);
 
 </body>
 </html>
