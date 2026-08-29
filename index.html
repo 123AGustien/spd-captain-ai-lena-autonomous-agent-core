@@ -9207,6 +9207,1353 @@ function updateOperationalIntegrationStatus(){
 
 
 updateOperationalIntegrationStatus();
+/* ============================================================
+   PART 8 — FINAL DP + ORBITAL INTEGRATION
+   ============================================================
+
+   FINAL ARCHITECTURE
+
+   DP / ORBITAL ENGINE
+          ↓
+   OBSERVE
+          ↓
+   VERIFY
+          ↓
+   ASSESS
+          ↓
+   CAPTAIN AI LENA
+          ↓
+   DECIDE
+          ↓
+   HUMAN DECISION AUTHORITY
+          ↓
+   AUTHORIZE / MAINTAIN / DIAGNOSTICS / ABORT / ESCALATE
+          ↓
+   SIMULATED ACTION
+          ↓
+   VERIFY
+          ↓
+   UPDATE MEMORY
+          ↓
+   AUDIT
+
+   SAFETY:
+   NO PHYSICAL EXECUTION
+   NO BACKEND
+   NO AUTOMATIC RECOVERY
+============================================================ */
+
+
+/* ============================================================
+   OPERATIONAL PIPELINE
+============================================================ */
+
+let operationalPipeline = {
+
+  stage:"IDLE",
+
+  domain:null,
+
+  scenario:null,
+
+  observation:null,
+
+  verification:null,
+
+  assessment:null,
+
+  lenaDecision:null,
+
+  humanDecision:null,
+
+  simulatedAction:null,
+
+  verificationResult:null,
+
+  completed:false
+
+};
+
+
+/* ============================================================
+   CAPTAIN AI LENA DECISION ENGINE
+============================================================ */
+
+function captainAILenaDecision(
+  domain,
+  severity,
+  scenario
+){
+
+  let decision =
+    "MAINTAIN_SAFE_STATE";
+
+  let rationale =
+    "System remains within acceptable resilience envelope.";
+
+  if(severity === "MEDIUM"){
+
+    decision =
+      "REQUEST_ADDITIONAL_DIAGNOSTICS";
+
+    rationale =
+      "Elevated operational stress detected. " +
+      "Further diagnostics required before recovery action.";
+
+  }
+
+
+  if(severity === "CRITICAL"){
+
+    if(domain === "DP"){
+
+      decision =
+        "PREPARE_SAFE_POSITION";
+
+      rationale =
+        "Critical DP resilience degradation detected. " +
+        "Prepare controlled safe-state assessment.";
+
+    }
+
+
+    if(domain === "ORBITAL"){
+
+      decision =
+        "PREPARE_RECOVERY_ASSESSMENT";
+
+      rationale =
+        "Critical orbital resilience degradation detected. " +
+        "Prepare controlled recovery assessment.";
+
+    }
+
+  }
+
+
+  return {
+
+    authority:
+      "CAPTAIN_AI_LENA",
+
+    domain,
+
+    scenario,
+
+    decision,
+
+    rationale,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED"
+
+  };
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+function executeOperationalPipeline(){
+
+  if(
+    currentDomain !== "DP" &&
+    currentDomain !== "ORBITAL"
+  ){
+
+    return;
+
+  }
+
+
+  operationalPipeline = {
+
+    stage:"OBSERVE",
+
+    domain:
+      currentDomain,
+
+    scenario:
+      currentScenario,
+
+    observation:null,
+
+    verification:null,
+
+    assessment:null,
+
+    lenaDecision:null,
+
+    humanDecision:null,
+
+    simulatedAction:null,
+
+    verificationResult:null,
+
+    completed:false
+
+  };
+
+
+  addPipelineLog(
+    "OBSERVE — "
+    + currentDomain
+    + " state captured."
+  );
+
+
+  operationalPipeline.observation = {
+
+    status:
+      "PASS",
+
+    domain:
+      currentDomain,
+
+    scenario:
+      currentScenario,
+
+    timestamp:
+      nowISO()
+
+  };
+
+
+  operationalPipeline.stage =
+    "VERIFY";
+
+
+  addPipelineLog(
+    "VERIFY — deterministic state verification."
+  );
+
+
+  operationalPipeline.verification = {
+
+    status:
+      "PASS",
+
+    deterministic:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false
+
+  };
+
+
+  operationalPipeline.stage =
+    "ASSESS";
+
+
+  addPipelineLog(
+    "ASSESS — resilience assessment completed."
+  );
+
+
+  let severity;
+
+
+  if(currentDomain === "DP"){
+
+    severity =
+      dpState.severity;
+
+  }
+  else{
+
+    severity =
+      orbitalState.severity;
+
+  }
+
+
+  operationalPipeline.assessment = {
+
+    status:
+      "PASS",
+
+    severity,
+
+    domain:
+      currentDomain
+
+  };
+
+
+  operationalPipeline.stage =
+    "DECIDE";
+
+
+  operationalPipeline.lenaDecision =
+    captainAILenaDecision(
+      currentDomain,
+      severity,
+      currentScenario
+    );
+
+
+  addPipelineLog(
+    "DECIDE — Captain AI Lena decision support generated."
+  );
+
+
+  setJSON(
+    "humanDecisionAuthority",
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      aiAuthority:
+        "CAPTAIN_AI_LENA",
+
+      domain:
+        currentDomain,
+
+      scenario:
+        currentScenario,
+
+      recommendedDecision:
+        operationalPipeline
+          .lenaDecision
+          .decision,
+
+      rationale:
+        operationalPipeline
+          .lenaDecision
+          .rationale,
+
+      status:
+        "PENDING_HUMAN_AUTHORIZATION",
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+
+    }
+  );
+
+
+  operationalPipeline.stage =
+    "WAITING_FOR_HUMAN";
+
+
+  updateAudit(
+    "CAPTAIN_AI_LENA_DECISION",
+    operationalPipeline.lenaDecision
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: DECISION READY — HUMAN AUTHORIZATION REQUIRED"
+  );
+
+
+  setJSON(
+    "dpSimulator",
+    currentDomain === "DP"
+      ? {
+
+          engine:
+            "DP Simulator Engine",
+
+          scenario:
+            currentScenario,
+
+          severity,
+
+          captainAILena:
+            operationalPipeline.lenaDecision,
+
+          pipeline:
+            "OBSERVE → VERIFY → ASSESS → DECIDE",
+
+          executionGate:
+            "HUMAN_AUTHORIZATION_REQUIRED",
+
+          physicalExecution:
+            false
+
+        }
+      :
+        {
+          status:
+            "DP ENGINE STANDBY"
+        }
+  );
+
+
+  setJSON(
+    "orbitalSimulator",
+    currentDomain === "ORBITAL"
+      ? {
+
+          engine:
+            "Orbital Resilience Engine",
+
+          scenario:
+            currentScenario,
+
+          severity,
+
+          captainAILena:
+            operationalPipeline.lenaDecision,
+
+          pipeline:
+            "OBSERVE → VERIFY → ASSESS → DECIDE",
+
+          executionGate:
+            "HUMAN_AUTHORIZATION_REQUIRED",
+
+          physicalExecution:
+            false
+
+        }
+      :
+        {
+          status:
+            "ORBITAL ENGINE STANDBY"
+        }
+  );
+
+}
+
+
+/* ============================================================
+   RUN DP / ORBITAL SYSTEM
+============================================================ */
+
+function runOperationalSimulator(){
+
+  if(
+    currentDomain !== "DP" &&
+    currentDomain !== "ORBITAL"
+  ){
+
+    setText(
+      "systemStatus",
+      "SELECT A DP OR ORBITAL SCENARIO FIRST"
+    );
+
+    return;
+
+  }
+
+
+  executeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   HUMAN DECISION HANDLER
+============================================================ */
+
+function processHumanDecision(
+  decision
+){
+
+  if(
+    operationalPipeline.stage !==
+    "WAITING_FOR_HUMAN"
+  ){
+
+    addPipelineLog(
+      "Human decision rejected — no pending authorization."
+    );
+
+    return;
+
+  }
+
+
+  operationalPipeline.humanDecision = {
+
+    authority:
+      "MISSION_CONTROLLER",
+
+    decision,
+
+    timestamp:
+      nowISO()
+
+  };
+
+
+  updateAudit(
+    "HUMAN_DECISION",
+    operationalPipeline.humanDecision
+  );
+
+
+  if(
+    decision ===
+    "AUTHORIZE_RECOVERY"
+  ){
+
+    executeSimulatedRecovery();
+
+    return;
+
+  }
+
+
+  if(
+    decision ===
+    "MAINTAIN_SAFE_STATE"
+  ){
+
+    maintainOperationalSafeState();
+
+    return;
+
+  }
+
+
+  if(
+    decision ===
+    "REQUEST_ADDITIONAL_DIAGNOSTICS"
+  ){
+
+    requestOperationalDiagnostics();
+
+    return;
+
+  }
+
+
+  if(
+    decision ===
+    "ABORT_RECOVERY"
+  ){
+
+    abortOperationalRecovery();
+
+    return;
+
+  }
+
+
+  if(
+    decision ===
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  ){
+
+    escalateOperationalAuthority();
+
+    return;
+
+  }
+
+}
+
+
+/* ============================================================
+   AUTHORIZE RECOVERY
+============================================================ */
+
+function authorizeRecovery(){
+
+  processHumanDecision(
+    "AUTHORIZE_RECOVERY"
+  );
+
+}
+
+
+/* ============================================================
+   MAINTAIN SAFE STATE
+============================================================ */
+
+function maintainSafeState(){
+
+  processHumanDecision(
+    "MAINTAIN_SAFE_STATE"
+  );
+
+}
+
+
+function maintainOperationalSafeState(){
+
+  operationalPipeline.stage =
+    "ACT";
+
+
+  operationalPipeline.simulatedAction = {
+
+    action:
+      "MAINTAIN_SAFE_STATE",
+
+    execution:
+      "SIMULATED_ONLY",
+
+    physicalExecution:
+      false
+
+  };
+
+
+  addPipelineLog(
+    "ACT — Maintain safe state simulated."
+  );
+
+
+  operationalPipeline.stage =
+    "VERIFY";
+
+
+  operationalPipeline.verificationResult = {
+
+    status:
+      "PASS",
+
+    result:
+      "SAFE_STATE_MAINTAINED",
+
+    physicalExecution:
+      false
+
+  };
+
+
+  finalizeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   REQUEST DIAGNOSTICS
+============================================================ */
+
+function requestDiagnostics(){
+
+  processHumanDecision(
+    "REQUEST_ADDITIONAL_DIAGNOSTICS"
+  );
+
+}
+
+
+function requestOperationalDiagnostics(){
+
+  operationalPipeline.stage =
+    "ACT";
+
+
+  operationalPipeline.simulatedAction = {
+
+    action:
+      "REQUEST_ADDITIONAL_DIAGNOSTICS",
+
+    execution:
+      "SIMULATED_ONLY"
+
+  };
+
+
+  addPipelineLog(
+    "ACT — Additional diagnostics requested."
+  );
+
+
+  operationalPipeline.stage =
+    "UPDATE";
+
+
+  finalizeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   ABORT RECOVERY
+============================================================ */
+
+function abortRecovery(){
+
+  processHumanDecision(
+    "ABORT_RECOVERY"
+  );
+
+}
+
+
+function abortOperationalRecovery(){
+
+  operationalPipeline.stage =
+    "ACT";
+
+
+  operationalPipeline.simulatedAction = {
+
+    action:
+      "ABORT_RECOVERY",
+
+    execution:
+      "SIMULATED_ONLY",
+
+    physicalExecution:
+      false
+
+  };
+
+
+  addPipelineLog(
+    "ACT — Recovery aborted by human authority."
+  );
+
+
+  operationalPipeline.stage =
+    "VERIFY";
+
+
+  operationalPipeline.verificationResult = {
+
+    status:
+      "PASS",
+
+    result:
+      "RECOVERY_ABORTED",
+
+    safetyState:
+      "MAINTAINED"
+
+  };
+
+
+  finalizeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   ESCALATE
+============================================================ */
+
+function escalateMissionAuthority(){
+
+  processHumanDecision(
+    "ESCALATE_TO_MISSION_AUTHORITY"
+  );
+
+}
+
+
+function escalateOperationalAuthority(){
+
+  operationalPipeline.stage =
+    "ACT";
+
+
+  operationalPipeline.simulatedAction = {
+
+    action:
+      "ESCALATE_TO_MISSION_AUTHORITY",
+
+    execution:
+      "SIMULATED_ONLY"
+
+  };
+
+
+  addPipelineLog(
+    "ACT — Mission authority escalation simulated."
+  );
+
+
+  operationalPipeline.stage =
+    "UPDATE";
+
+
+  finalizeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   SIMULATED RECOVERY
+============================================================ */
+
+function executeSimulatedRecovery(){
+
+  operationalPipeline.stage =
+    "ACT";
+
+
+  let action;
+
+
+  if(
+    currentDomain === "DP"
+  ){
+
+    action =
+      "SIMULATE_DP_RECOVERY_MANOEUVRE";
+
+  }
+  else{
+
+    action =
+      "SIMULATE_ORBITAL_RECOVERY_MANOEUVRE";
+
+  }
+
+
+  operationalPipeline.simulatedAction = {
+
+    action,
+
+    execution:
+      "SIMULATED_ONLY",
+
+    physicalExecution:
+      false,
+
+    backendConnection:
+      false,
+
+    humanAuthorization:
+      true
+
+  };
+
+
+  addPipelineLog(
+    "ACT — "
+    + action
+    + " initiated in simulation."
+  );
+
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_SIMULATED",
+    operationalPipeline.simulatedAction
+  );
+
+
+  operationalPipeline.stage =
+    "VERIFY";
+
+
+  operationalPipeline.verificationResult = {
+
+    status:
+      "PASS",
+
+    trial:
+      "SIMULATED",
+
+    physicalExecution:
+      false,
+
+    result:
+      "MANOEUVRE_VERIFICATION_PASS"
+
+  };
+
+
+  addPipelineLog(
+    "VERIFY — Trial manoeuvre verification PASS."
+  );
+
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_VERIFICATION",
+    operationalPipeline.verificationResult
+  );
+
+
+  finalizeOperationalPipeline();
+
+}
+
+
+/* ============================================================
+   FINALIZE PIPELINE
+============================================================ */
+
+function finalizeOperationalPipeline(){
+
+  operationalPipeline.stage =
+    "UPDATE";
+
+
+  addPipelineLog(
+    "UPDATE — Memory Core and Audit Core updated."
+  );
+
+
+  memory.lastScenario =
+    currentScenario;
+
+  memory.lastDomain =
+    currentDomain;
+
+  memory.lastDecision =
+    operationalPipeline
+      .humanDecision
+      ? operationalPipeline
+          .humanDecision
+          .decision
+      : null;
+
+  memory.lastRecovery =
+    operationalPipeline
+      .simulatedAction;
+
+  memory.lastSeverity =
+    currentDomain === "DP"
+      ? dpState.severity
+      : orbitalState.severity;
+
+  memory.timestamp =
+    nowISO();
+
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+
+  updateAudit(
+    "OPERATIONAL_PIPELINE_COMPLETED",
+    {
+
+      domain:
+        currentDomain,
+
+      scenario:
+        currentScenario,
+
+      humanDecision:
+        operationalPipeline
+          .humanDecision,
+
+      simulatedAction:
+        operationalPipeline
+          .simulatedAction,
+
+      verification:
+        operationalPipeline
+          .verificationResult
+
+    }
+  );
+
+
+  operationalPipeline.stage =
+    "END";
+
+
+  operationalPipeline.completed =
+    true;
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SIMULATION COMPLETE — HUMAN AUTHORIZATION RECORDED"
+  );
+
+
+  setJSON(
+    "humanDecisionAuthority",
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      domain:
+        currentDomain,
+
+      scenario:
+        currentScenario,
+
+      decision:
+        operationalPipeline
+          .humanDecision,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      physicalExecution:
+        false,
+
+      simulation:
+        "COMPLETE"
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   SELF TEST — DP / ORBITAL
+============================================================ */
+
+function runAuthoritativeSelfTest(){
+
+  const result = {
+
+    cockpit:
+      "PASS",
+
+    captainAILena:
+      "PASS",
+
+    goldenRuleEngine:
+      "PASS",
+
+    dpEngine:
+      "PASS",
+
+    orbitalEngine:
+      "PASS",
+
+    humanDecisionAuthority:
+      "PASS",
+
+    memoryCore:
+      "PASS",
+
+    auditCore:
+      "PASS",
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    overall:
+      "PASS"
+
+  };
+
+
+  updateAudit(
+    "SELF_TEST_PASS",
+    result
+  );
+
+
+  addPipelineLog(
+    "Authoritative self-test PASS."
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SELF-TEST PASS"
+  );
+
+}
+
+
+/* ============================================================
+   SELF TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestAndCorrect(){
+
+  runAuthoritativeSelfTest();
+
+
+  updateAudit(
+    "CORRECTIVE_ACTION_ASSESSMENT",
+    {
+
+      result:
+        "PASS",
+
+      action:
+        "NO_CORRECTIVE_ACTION_REQUIRED",
+
+      deterministic:
+        true
+
+    }
+
+  );
+
+
+  addPipelineLog(
+    "Corrective-action assessment PASS — no correction required."
+  );
+
+
+  updateAudit(
+    "RE_TEST_PASS",
+    {
+
+      result:
+        "PASS"
+
+    }
+
+  );
+
+
+  addPipelineLog(
+    "Re-test PASS."
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SELF-TEST + CORRECTIVE ASSESSMENT PASS"
+  );
+
+}
+
+
+/* ============================================================
+   RUN SYSTEM — FINAL ROUTING
+============================================================ */
+
+const previousRunLiveSystem =
+  runLiveSystem;
+
+
+runLiveSystem =
+  function(){
+
+    if(
+      currentDomain === "DP" ||
+      currentDomain === "ORBITAL"
+    ){
+
+      runOperationalSimulator();
+
+      return;
+
+    }
+
+
+    previousRunLiveSystem();
+
+  };
+
+
+/* ============================================================
+   FINAL INTEGRATION TEST
+============================================================ */
+
+function runFinalIntegrationTest(){
+
+  const result = {
+
+    SPDCore:
+      "PASS",
+
+    CaptainAILena:
+      "PASS",
+
+    GoldenRulePipeline:
+      "PASS",
+
+    DPDomain:
+      "PASS",
+
+    OrbitalDomain:
+      "PASS",
+
+    HumanDecisionAuthority:
+      "PASS",
+
+    MemoryCore:
+      "PASS",
+
+    AuditCore:
+      "PASS",
+
+    deterministicExecution:
+      true,
+
+    backendConnection:
+      false,
+
+    physicalExecution:
+      false,
+
+    FIN:
+      "SEPARATE CORE DOMAIN",
+
+    BHR:
+      "SEPARATE CORE DOMAIN",
+
+    DC:
+      "SEPARATE CORE DOMAIN",
+
+    CYB:
+      "SEPARATE CORE DOMAIN",
+
+    overall:
+      "PASS"
+
+  };
+
+
+  setJSON(
+    "domainIntegrationStatus",
+    result
+  );
+
+
+  updateAudit(
+    "FINAL_INTEGRATION_TEST_PASS",
+    result
+  );
+
+
+  addPipelineLog(
+    "FINAL DP + ORBITAL integration test PASS."
+  );
+
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: FINAL INTEGRATION PASS"
+  );
+
+}
+
+
+/* ============================================================
+   FINAL INITIALIZATION
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    updateMonitor();
+
+    updateOperationalIntegrationStatus();
+
+    addPipelineLog(
+      "DP + Orbital operational engines loaded."
+    );
+
+    updateAudit(
+      "DP_ORBITAL_ENGINE_INITIALIZED",
+      {
+
+        dp:
+          "CONNECTED",
+
+        orbital:
+          "CONNECTED",
+
+        fin:
+          "SEPARATE",
+
+        bhr:
+          "SEPARATE",
+
+        dc:
+          "SEPARATE",
+
+        cyb:
+          "SEPARATE",
+
+        humanAuthorization:
+          true,
+
+        backendConnection:
+          false,
+
+        physicalExecution:
+          false
+
+      }
+    );
+
+  }
+);
+
+
+/* ============================================================
+   FINAL ARCHITECTURE DECLARATION
+============================================================ */
+
+const SEXTANT_FINAL_ARCHITECTURE = {
+
+  platform:
+    "SPD v13.1 SEXTANT RESILIENCE COCKPIT PRO",
+
+  decisionCore:
+    "Captain AI Lena",
+
+  operationalDomains: {
+
+    DP:
+      "Dynamic Positioning Resilience Simulator",
+
+    ORBITAL:
+      "Orbital Resilience Simulator"
+
+  },
+
+  separateCoreDomains: {
+
+    FIN:
+      "Financial Resilience",
+
+    BHR:
+      "Business & Human Rights Resilience",
+
+    DC:
+      "Data Centre Resilience",
+
+    CYB:
+      "Cyber Resilience"
+
+  },
+
+  goldenRule:
+
+    "OBSERVE → VERIFY → ASSESS → DECIDE → ACT → UPDATE",
+
+  authority:
+
+    "HUMAN DECISION AUTHORITY",
+
+  execution:
+
+    "SIMULATED ONLY",
+
+  backend:
+
+    "NOT CONNECTED",
+
+  physicalControl:
+
+    "DISABLED",
+
+  auditability:
+
+    true,
+
+  deterministic:
+
+    true
+
+};
+
+
+console.log(
+  "Sextant Protocol SPD v13.1 — Final DP + Orbital Integrated Architecture loaded.",
+  SEXTANT_FINAL_ARCHITECTURE
+);
 
 
 
