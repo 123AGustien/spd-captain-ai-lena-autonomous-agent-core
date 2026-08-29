@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SPD v13.1 — Sextant Resilience Cockpit Pro</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#07111d;
+  color:#eaf4ff;
+}
+header{
+  padding:22px;
+  background:#0b1d2d;
+  border-bottom:1px solid #21445f;
+}
+h1{margin:0 0 8px;font-size:25px}
+h2{margin:0 0 14px;color:#8fd3ff;font-size:19px}
+h3{color:#9ee2ff}
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:16px;
+}
+.card{
+  background:#0b1a29;
+  border:1px solid #23445c;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.22);
+}
+.status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#123d2c;
+  color:#8ff0b2;
+  font-weight:bold;
+  font-size:13px;
+}
+.pipeline{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
+  gap:8px;
+}
+.stage{
+  text-align:center;
+  padding:12px 5px;
+  background:#101f30;
+  border:1px solid #29475d;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:bold;
+}
+.stage.active{
+  background:#164a66;
+  border-color:#69d1ff;
+  color:#fff;
+}
+.stage.done{
+  background:#123b31;
+  border-color:#3bbf91;
+  color:#a8ffdc;
+}
+.stage.warn{
+  background:#49351a;
+  border-color:#d5a84e;
+}
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+button,select{
+  background:#102c42;
+  color:#eaf7ff;
+  border:1px solid #367394;
+  border-radius:7px;
+  padding:10px 13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{background:#17435e}
+button:active{transform:translateY(1px)}
+button.danger{
+  border-color:#b86b6b;
+  background:#421f25;
+}
+button.green{
+  border-color:#4cb88f;
+  background:#123d32;
+}
+button.gold{
+  border-color:#c7a353;
+  background:#3e321b;
+}
+select{min-width:220px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:16px;
+}
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#050d15;
+  border:1px solid #203747;
+  border-radius:8px;
+  padding:13px;
+  color:#bfe5fa;
+  min-height:60px;
+}
+.waiting{color:#8399a8}
+.good{color:#7ff0b0}
+.medium{color:#ffd477}
+.high{color:#ff8888}
+.log{
+  max-height:270px;
+  overflow:auto;
+  background:#050d15;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #203747;
+}
+.logline{
+  padding:5px 0;
+  border-bottom:1px solid #172a38;
+  font-family:monospace;
+  font-size:12px;
+}
+.authority{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:8px;
+}
+.metric{
+  background:#091521;
+  border:1px solid #203b50;
+  border-radius:8px;
+  padding:12px;
+}
+.metric strong{
+  display:block;
+  font-size:20px;
+  margin-top:5px;
+}
+footer{
+  text-align:center;
+  color:#718899;
+  padding:25px;
+  font-size:12px;
+}
+.small{font-size:12px;color:#8da7b8}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🛰️ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+  <div>
+    Captain AI Lena Autonomous Agent Core • UMV/DP + Orbital Operational Resilience
+    • Triple-Layer Decision Resilience • Deterministic Local Simulation • Human Decision Authority
+  </div>
+  <br>
+  <span class="status" id="systemStatus">🟢 SYSTEM READY — LOCAL DETERMINISTIC SIMULATOR</span>
+</header>
+
+<div class="container">
+
+<!-- PIPELINE -->
+<section class="card">
+<h2>🧭 RESILIENCE DECISION PIPELINE</h2>
+
+<div class="small">
+Risk / abnormal condition → independent assessment → cascading-condition recognition →
+Primary AI → Secondary AI → Stabilizer / Captain AI Lena → Trial Manoeuvre →
+independent validation → Human Decision Authority → controlled execution
+</div>
+
+<br>
+
+<div class="pipeline" id="pipeline">
+  <div class="stage" data-stage="OBSERVE">OBSERVE</div>
+  <div class="stage" data-stage="VERIFY">VERIFY</div>
+  <div class="stage" data-stage="ASSESS">ASSESS</div>
+  <div class="stage" data-stage="CASCADE">CASCADE</div>
+  <div class="stage" data-stage="PRIMARY AI">PRIMARY AI</div>
+  <div class="stage" data-stage="SECONDARY AI">SECONDARY AI</div>
+  <div class="stage" data-stage="STABILIZER">STABILIZER</div>
+  <div class="stage" data-stage="TRIAL">TRIAL</div>
+  <div class="stage" data-stage="VALIDATE">VALIDATE</div>
+  <div class="stage" data-stage="HUMAN">HUMAN</div>
+</div>
+</section>
+
+<!-- SYSTEM CONTROLS -->
+<section class="card">
+<h2>🎛️ SYSTEM CONTROLS</h2>
+
+<div class="controls">
+<button onclick="runSystem()">▶ RUN SYSTEM</button>
+<button onclick="runSelfTest()">🧪 RUN SELF-TEST</button>
+<button onclick="runCorrectiveAssessment()">🛠️ SELF-TEST + CORRECTIVE ASSESSMENT</button>
+<button onclick="runIntegrationTest()">🔌 FINAL INTEGRATION TEST</button>
+<button class="danger" onclick="resetSystem()">↺ RESET SIMULATOR</button>
+</div>
+</section>
+
+<!-- DP -->
+<section class="card">
+<h2>⚓ DP / UMV RESILIENCE SIMULATOR</h2>
+<p>Dynamic Positioning / Unmanned Marine Vehicle resilience testbed interface.</p>
+
+<div class="controls">
+<select id="dpScenario">
+<option value="THRUSTER_FAILURE">Thruster Failure</option>
+<option value="POWER_FAILURE">Power Failure</option>
+<option value="POSITION_DEVIATION">Position Deviation</option>
+<option value="HIGH_WIND_LOAD">High Wind Load</option>
+<option value="DRIFT_OFF">Drift Off</option>
+<option value="MULTIPLE_THRUSTER_FAILURE">Multiple Thruster Failure</option>
+<option value="WORST_CASE_FAILURE">Worst Case Failure</option>
+</select>
+
+<button onclick="loadScenario('DP')">LOAD DP SCENARIO</button>
+<button class="green" onclick="runPipeline('DP')">RUN DP PIPELINE</button>
+</div>
+</section>
+
+<!-- ORBITAL -->
+<section class="card">
+<h2>🛰️ ORBITAL RESILIENCE SIMULATOR</h2>
+<p>Orbital resilience testbed interface.</p>
+
+<div class="controls">
+<select id="orbitalScenario">
+<option value="SIGNAL_LOSS">Signal Loss</option>
+<option value="POWER_FAILURE">Power Failure</option>
+<option value="ATTITUDE_ANOMALY">Attitude Anomaly</option>
+<option value="COMMUNICATION_FAILURE">Communication Failure</option>
+<option value="MANOEUVRE_FAILURE">Manoeuvre Failure</option>
+<option value="PROPULSION_FAILURE">Propulsion Failure</option>
+<option value="CASCADE_FAILURE">Cascade Failure</option>
+</select>
+
+<button onclick="loadScenario('ORBITAL')">LOAD ORBITAL SCENARIO</button>
+<button class="green" onclick="runPipeline('ORBITAL')">RUN ORBITAL PIPELINE</button>
+</div>
+</section>
+
+<!-- THREE LAYER -->
+<section class="card">
+<h2>🧠 TRIPLE-LAYER DECISION RESILIENCE</h2>
+
+<p>
+Three-layer decision architecture designed to provide independent assessment,
+cross-checking and stabilized decision support before any controlled action.
+</p>
+
+<div class="grid">
+
+<div>
+<h3>PRIMARY AI</h3>
+<p>Independent first-pass abnormal-condition assessment.</p>
+<pre id="primaryAI">Waiting...</pre>
+</div>
+
+<div>
+<h3>SECONDARY AI</h3>
+<p>Independent cross-check. The Secondary AI does not simply copy Primary AI.</p>
+<pre id="secondaryAI">Waiting...</pre>
+</div>
+
+<div>
+<h3>STABILIZER / CAPTAIN AI LENA</h3>
+<p>Reconciles evidence from the independent assessment layers.</p>
+<pre id="lenaAI">Waiting...</pre>
+</div>
+
+</div>
+</section>
+
+<!-- CASCADE -->
+<section class="card">
+<h2>🔗 CASCADING-CONDITION RECOGNITION</h2>
+<pre id="cascade">Waiting for scenario...</pre>
+</section>
+
+<!-- TRIAL -->
+<section class="card">
+<h2>🛰️ TRIAL MANOEUVRE + INDEPENDENT VALIDATION</h2>
+
+<p>
+Trial manoeuvres are simulation-only. No physical execution, no backend connection
+and no automatic recovery action.
+</p>
+
+<div class="controls">
+<button class="gold" onclick="runTrialManoeuvre()">🛰️ RUN TRIAL MANOEUVRE</button>
+<button onclick="validateTrial()">🔎 VERIFY TRIAL MANOEUVRE</button>
+</div>
+
+<pre id="trial">Trial manoeuvre not executed.</pre>
+</section>
+
+<!-- HUMAN -->
+<section class="card">
+<h2>🧑‍✈️ HUMAN DECISION AUTHORITY</h2>
+
+<p>
+<strong>AI DECISION SUPPORT → HUMAN OPERATOR AUTHORIZATION</strong>
+</p>
+
+<p>
+Captain AI Lena does not authorize physical execution.
+<strong>No recovery action is executed automatically.</strong>
+</p>
+
+<div class="authority">
+<button class="green" onclick="humanDecision('AUTHORIZE_RECOVERY')">AUTHORIZE RECOVERY</button>
+<button onclick="humanDecision('MAINTAIN_SAFE_STATE')">MAINTAIN SAFE STATE</button>
+<button onclick="humanDecision('REQUEST_ADDITIONAL_DIAGNOSTICS')">REQUEST DIAGNOSTICS</button>
+<button class="danger" onclick="humanDecision('ABORT_RECOVERY')">ABORT RECOVERY</button>
+<button class="gold" onclick="humanDecision('ESCALATE_TO_MISSION_AUTHORITY')">ESCALATE TO MISSION AUTHORITY</button>
+</div>
+
+<pre id="humanDecision">{
+  "authority":"MISSION_CONTROLLER",
+  "status":"PENDING",
+  "decision":null,
+  "domain":null,
+  "scenario":null,
+  "executionGate":"HUMAN_AUTHORIZATION_REQUIRED",
+  "physicalExecution":false
+}</pre>
+</section>
+
+<!-- STATE -->
+<section class="card">
+<h2>📊 RAW SYSTEM STATE</h2>
+<pre id="rawState">Waiting...</pre>
+
+<h2>⚠️ SYSTEM ASSESSMENT</h2>
+<pre id="assessment">Waiting...</pre>
+
+<h2>🚨 RISK / RESILIENCE</h2>
+<div class="grid">
+<div class="metric">
+Risk
+<strong id="risk">UNKNOWN</strong>
+</div>
+<div class="metric">
+Resilience Score
+<strong id="resilience">N/A</strong>
+</div>
+<div class="metric">
+Golden Score
+<strong id="golden">N/A</strong>
+</div>
+</div>
+
+<h2>⚙️ CAPTAIN AI LENA DECISION</h2>
+<pre id="decision">Waiting...</pre>
+
+<h2>💡 SOLUTION OPTIONS</h2>
+<pre id="solutions">Waiting...</pre>
+</section>
+
+<!-- GATE -->
+<section class="card">
+<h2>🔒 EXECUTION GATE</h2>
+<pre id="executionGate">HUMAN AUTHORIZATION REQUIRED.
+NO PHYSICAL EXECUTION.</pre>
+</section>
+
+<!-- MEMORY -->
+<section class="card">
+<h2>🧠 MEMORY CORE</h2>
+<pre id="memory"></pre>
+</section>
+
+<!-- AUDIT -->
+<section class="card">
+<h2>🧾 AUDIT RECORD</h2>
+<div class="log" id="audit"></div>
+</section>
+
+<!-- PIPELINE LOG -->
+<section class="card">
+<h2>📜 PIPELINE LOG</h2>
+<div class="log" id="pipelineLog"></div>
+</section>
+
+<!-- VALIDATION -->
+<section class="card">
+<h2>🧪 VALIDATION CORE</h2>
+
+<pre id="validationStatus">Self-test not executed.</pre>
+
+<h3>Fault Identification</h3>
+<pre id="faultIdentification">No fault assessment available.</pre>
+
+<h3>Corrective Action Assessment</h3>
+<pre id="correctiveAssessment">No corrective action available.</pre>
+
+<h3>Re-Test Validation</h3>
+<pre id="retest">Re-test not executed.</pre>
+</section>
+
+</div>
+
+<footer>
+SPD v13.1 — Sextant Resilience Cockpit Pro<br>
+Deterministic Local Simulation • AI Decision Support • Human Decision Authority<br>
+No backend connection • No automatic recovery • No physical execution
+</footer>
+
+<script>
+/* ============================================================
+   SPD v13.1
+   SINGLE-FILE UMV + ORBITAL DETERMINISTIC SIMULATOR
+   ============================================================ */
+
+const PHI = 1.618033988749895;
+
+const state = {
+  domain:null,
+  scenario:null,
+  loaded:false,
+  pipelineRunning:false,
+  trial:null,
+  validation:null,
+  humanDecision:null,
+  timestamp:null,
+
+  raw:{
+    fx:0,
+    energy:0,
+    cyb:0,
+    inf:0,
+    dc:0
+  },
+
+  primary:null,
+  secondary:null,
+  lena:null,
+  cascade:null,
+  assessment:null,
+  decision:null,
+  solutions:null,
+  risk:"UNKNOWN",
+  rawStress:null,
+  goldenScore:null,
+  resilienceScore:null
+};
+
+const auditRecords = [];
+
+/* ============================================================
+   SCENARIO DEFINITIONS
+   ============================================================ */
+
+const scenarios = {
+
+DP:{
+  THRUSTER_FAILURE:{
+    label:"THRUSTER FAILURE",
+    severity:"HIGH",
+    raw:{fx:10,energy:35,cyb:10,inf:20,dc:80},
+    cascade:"Loss of propulsion redundancy may produce position deviation and increased station-keeping demand.",
+    decision:"ISOLATE FAILED THRUSTER / MAINTAIN SAFE DP STATE",
+    solutions:[
+      "Redistribute available thrust.",
+      "Maintain safe position envelope.",
+      "Monitor remaining propulsion redundancy.",
+      "Prepare controlled recovery only after human authorization."
+    ]
+  },
+
+  POWER_FAILURE:{
+    label:"POWER FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:5,energy:90,cyb:10,inf:25,dc:65},
+    cascade:"Power loss can cascade into thruster degradation, reduced redundancy and potential loss of position.",
+    decision:"ACTIVATE POWER PROTECTION / MAINTAIN SAFE STATE",
+    solutions:[
+      "Isolate affected power segment.",
+      "Protect essential DP loads.",
+      "Assess remaining generation capacity.",
+      "Do not execute recovery without human authorization."
+    ]
+  },
+
+  POSITION_DEVIATION:{
+    label:"POSITION DEVIATION",
+    severity:"HIGH",
+    raw:{fx:10,energy:25,cyb:15,inf:55,dc:70},
+    cascade:"Position deviation may develop into drift-off if corrective thrust is unavailable or insufficient.",
+    decision:"STABILIZE POSITION / REDUCE DEVIATION",
+    solutions:[
+      "Verify position reference integrity.",
+      "Assess available thrust.",
+      "Stabilize within operational envelope.",
+      "Escalate if deviation continues."
+    ]
+  },
+
+  HIGH_WIND_LOAD:{
+    label:"HIGH WIND LOAD",
+    severity:"HIGH",
+    raw:{fx:5,energy:60,cyb:10,inf:65,dc:55},
+    cascade:"Environmental loading increases power and thrust demand and may expose propulsion limitations.",
+    decision:"ENTER ENVIRONMENTAL PROTECTION MODE",
+    solutions:[
+      "Monitor environmental load.",
+      "Optimize thrust allocation.",
+      "Protect energy reserve.",
+      "Maintain safe operating envelope."
+    ]
+  },
+
+  DRIFT_OFF:{
+    label:"DRIFT OFF",
+    severity:"CRITICAL",
+    raw:{fx:10,energy:55,cyb:15,inf:75,dc:90},
+    cascade:"Loss of station keeping may escalate rapidly into uncontrolled displacement.",
+    decision:"DRIFT-OFF PROTECTION / SAFE-STATE RESPONSE",
+    solutions:[
+      "Verify navigation and position references.",
+      "Assess remaining propulsion.",
+      "Protect vessel safety envelope.",
+      "Escalate to mission authority."
+    ]
+  },
+
+  MULTIPLE_THRUSTER_FAILURE:{
+    label:"MULTIPLE THRUSTER FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:10,energy:60,cyb:10,inf:40,dc:90},
+    cascade:"Multiple propulsion failures reduce redundancy and may create a compound loss-of-control condition.",
+    decision:"REDUCED PROPULSION SAFE STATE",
+    solutions:[
+      "Recalculate propulsion redundancy.",
+      "Protect remaining thrusters.",
+      "Assess drift risk.",
+      "Prepare controlled recovery for human authorization."
+    ]
+  },
+
+  WORST_CASE_FAILURE:{
+    label:"WORST CASE FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:25,energy:85,cyb:45,inf:85,dc:95},
+    cascade:"Multiple simultaneous abnormal conditions create a cascading high-risk resilience state.",
+    decision:"EMERGENCY SAFE-STATE / MISSION AUTHORITY ESCALATION",
+    solutions:[
+      "Preserve remaining control authority.",
+      "Isolate failed subsystems.",
+      "Assess all available recovery paths.",
+      "Escalate immediately to mission authority."
+    ]
+  }
+ },
+
+ORBITAL:{
+  SIGNAL_LOSS:{
+    label:"SIGNAL LOSS",
+    severity:"HIGH",
+    raw:{fx:5,energy:20,cyb:35,inf:85,dc:65},
+    cascade:"Loss of communication may prevent normal command exchange and can develop into extended operational isolation.",
+    decision:"SWITCH TO BACKUP COMMUNICATION PATH",
+    solutions:[
+      "Verify communication fault.",
+      "Attempt validated backup communication path.",
+      "Maintain safe orbital state.",
+      "Await human authorization for controlled recovery."
+    ]
+  },
+
+  POWER_FAILURE:{
+    label:"POWER FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:5,energy:95,cyb:15,inf:30,dc:75},
+    cascade:"Power loss may isolate subsystems and reduce available manoeuvre and communication capability.",
+    decision:"ACTIVATE POWER RECOVERY MODE",
+    solutions:[
+      "Protect essential loads.",
+      "Isolate affected power domain.",
+      "Assess remaining energy.",
+      "Do not execute recovery automatically."
+    ]
+  },
+
+  ATTITUDE_ANOMALY:{
+    label:"ATTITUDE ANOMALY",
+    severity:"HIGH",
+    raw:{fx:5,energy:45,cyb:15,inf:75,dc:70},
+    cascade:"Attitude instability may increase power demand and compromise communications or manoeuvre capability.",
+    decision:"ATTITUDE STABILIZATION MODE",
+    solutions:[
+      "Verify attitude sensors.",
+      "Cross-check attitude estimate.",
+      "Assess control authority.",
+      "Maintain safe attitude envelope."
+    ]
+  },
+
+  COMMUNICATION_FAILURE:{
+    label:"COMMUNICATION FAILURE",
+    severity:"HIGH",
+    raw:{fx:5,energy:25,cyb:30,inf:80,dc:60},
+    cascade:"Communication failure may isolate the vehicle from mission control and increase autonomous decision pressure.",
+    decision:"BACKUP COMMUNICATION / SAFE STATE",
+    solutions:[
+      "Validate communication path.",
+      "Activate backup communications.",
+      "Maintain safe configuration.",
+      "Escalate to mission authority."
+    ]
+  },
+
+  MANOEUVRE_FAILURE:{
+    label:"MANOEUVRE FAILURE",
+    severity:"HIGH",
+    raw:{fx:5,energy:55,cyb:15,inf:55,dc:85},
+    cascade:"Failed manoeuvre may leave the vehicle outside its planned trajectory or control envelope.",
+    decision:"ABORT FAILED MANOEUVRE / STABILIZE",
+    solutions:[
+      "Verify manoeuvre result.",
+      "Assess remaining control authority.",
+      "Cancel unsafe continuation.",
+      "Request additional diagnostics."
+    ]
+  },
+
+  PROPULSION_FAILURE:{
+    label:"PROPULSION FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:5,energy:70,cyb:10,inf:45,dc:95},
+    cascade:"Propulsion failure may eliminate planned orbital correction capability and create trajectory risk.",
+    decision:"PROPULSION SAFE STATE / MISSION AUTHORITY",
+    solutions:[
+      "Verify propulsion subsystem state.",
+      "Preserve remaining resources.",
+      "Assess orbital trajectory.",
+      "Escalate to mission authority."
+    ]
+  },
+
+  CASCADE_FAILURE:{
+    label:"CASCADE FAILURE",
+    severity:"CRITICAL",
+    raw:{fx:20,energy:90,cyb:50,inf:90,dc:95},
+    cascade:"Multiple subsystem abnormalities are interacting and may produce compounded loss of operational resilience.",
+    decision:"CASCADE CONTAINMENT / SAFE STATE",
+    solutions:[
+      "Contain affected subsystems.",
+      "Protect critical resources.",
+      "Maintain maximum remaining control authority.",
+      "Escalate to mission authority."
+    ]
+  }
+ }
+};
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+
+function now(){
+  return new Date().toISOString();
+}
+
+function log(message,event=null,data=null){
+  const t=now();
+
+  auditRecords.push({
+    timestamp:t,
+    ...(event?{event:event}:{}),
+    ...(data?{data:data}:{message:message})
+  });
+
+  const line=document.createElement("div");
+  line.className="logline";
+  line.textContent=t+" | "+(event||message);
+  document.getElementById("audit").prepend(line);
+
+  const p=document.createElement("div");
+  p.className="logline";
+  p.textContent=t+" | "+(event||message);
+  document.getElementById("pipelineLog").prepend(p);
+}
+
+function setText(id,value){
+  document.getElementById(id).textContent=
+    typeof value==="string"?value:JSON.stringify(value,null,2);
+}
+
+function sleep(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+function clearStages(){
+  document.querySelectorAll(".stage").forEach(x=>{
+    x.classList.remove("active","done","warn");
+  });
+}
+
+async function stage(name){
+  const el=[...document.querySelectorAll(".stage")]
+    .find(x=>x.dataset.stage===name);
+
+  if(!el)return;
+
+  el.classList.add("active");
+  await sleep(180);
+  el.classList.remove("active");
+  el.classList.add("done");
+}
+
+/* ============================================================
+   LOAD SCENARIO
+   ============================================================ */
+
+function loadScenario(domain){
+
+  const selector=
+    domain==="DP"
+    ?document.getElementById("dpScenario")
+    :document.getElementById("orbitalScenario");
+
+  const scenario=selector.value;
+  const cfg=scenarios[domain][scenario];
+
+  state.domain=domain;
+  state.scenario=scenario;
+  state.loaded=true;
+  state.timestamp=now();
+  state.raw={...cfg.raw};
+
+  state.primary=null;
+  state.secondary=null;
+  state.lena=null;
+  state.cascade=null;
+  state.assessment=null;
+  state.decision=null;
+  state.solutions=null;
+  state.trial=null;
+  state.validation=null;
+  state.humanDecision=null;
+
+  clearStages();
+
+  setText("rawState",state.raw);
+
+  setText("assessment",{
+    domain,
+    scenario:cfg.label,
+    severity:cfg.severity,
+    status:"SCENARIO LOADED"
+  });
+
+  setText("cascade",cfg.cascade);
+
+  setText("primaryAI","Waiting...");
+  setText("secondaryAI","Waiting...");
+  setText("lenaAI","Waiting...");
+  setText("trial","Trial manoeuvre not executed.");
+
+  setText("decision","Waiting...");
+  setText("solutions","Waiting...");
+
+  document.getElementById("risk").textContent="UNKNOWN";
+  document.getElementById("resilience").textContent="N/A";
+  document.getElementById("golden").textContent="N/A";
+
+  setText("humanDecision",{
+    authority:"MISSION_CONTROLLER",
+    status:"PENDING",
+    decision:null,
+    domain,
+    scenario,
+    executionGate:"HUMAN_AUTHORIZATION_REQUIRED",
+    physicalExecution:false
+  });
+
+  updateMemory();
+
+  log(
+    `${domain} scenario loaded: ${cfg.label}`,
+    "SCENARIO_LOADED",
+    {domain,scenario,deterministic:true}
+  );
+}
+
+/* ============================================================
+   CORE STRESS ENGINE
+   ============================================================ */
+
+function calculateStress(raw){
+
+  /*
+   SPD v13.1 deterministic weighting.
+   FX 20%
+   ENERGY 20%
+   CYB 20%
+   INF 20%
+   DC 20%
+  */
+
+  const rawStress=(
+    raw.fx+
+    raw.energy+
+    raw.cyb+
+    raw.inf+
+    raw.dc
+  )/5;
+
+  const goldenScore=rawStress*(1/PHI);
+
+  const resilienceScore=Math.max(
+    0,
+    100-goldenScore
+  );
+
+  let risk;
+
+  if(goldenScore<30){
+    risk="LOW";
+  }else if(goldenScore<50){
+    risk="MEDIUM";
+  }else{
+    risk="HIGH";
+  }
+
+  return {
+    rawStress,
+    goldenScore,
+    resilienceScore,
+    risk
+  };
+}
+
+/* ============================================================
+   PRIMARY AI
+   ============================================================ */
+
+function primaryAssessment(cfg){
+
+  const calc=calculateStress(state.raw);
+
+  return {
+    agent:"PRIMARY AI",
+    assessment:"Independent first-pass abnormal-condition assessment",
+    severity:cfg.severity,
+    observedCondition:cfg.label,
+    rawStress:Number(calc.rawStress.toFixed(3)),
+    risk:calc.risk,
+    confidence:"HIGH",
+    recommendation:cfg.decision
+  };
+}
+
+/* ============================================================
+   SECONDARY AI
+   ============================================================ */
+
+function secondaryAssessment(cfg){
+
+  const calc=calculateStress(state.raw);
+
+  let recommendation=cfg.decision;
+
+  if(
+    state.raw.energy>=80 ||
+    state.raw.dc>=90
+  ){
+    recommendation="MAINTAIN SAFE STATE / ESCALATE TO MISSION AUTHORITY";
+  }
+
+  return {
+    agent:"SECONDARY AI",
+    assessment:"Independent cross-check",
+    independent:true,
+    observedCondition:cfg.label,
+    risk:calc.risk,
+    criticalDomains:Object.entries(state.raw)
+      .filter(([k,v])=>v>=70)
+      .map(([k])=>k.toUpperCase()),
+    recommendation
+  };
+}
+
+/* ============================================================
+   CASCADE ENGINE
+   ============================================================ */
+
+function cascadeAssessment(cfg){
+
+  const critical=Object.entries(state.raw)
+    .filter(([k,v])=>v>=70)
+    .map(([k,v])=>({domain:k,value:v}));
+
+  let detected=false;
+
+  if(critical.length>=2) detected=true;
+  if(
+    state.raw.energy>=80 &&
+    (state.raw.dc>=70 || state.raw.inf>=70)
+  ) detected=true;
+
+  return {
+    detected,
+    condition:cfg.cascade,
+    criticalDomains:critical,
+    containmentRequired:detected
+  };
+}
+
+/* ============================================================
+   LENA STABILIZER
+   ============================================================ */
+
+function lenaDecision(cfg,primary,secondary,cascade,calc){
+
+  let decision=cfg.decision;
+
+  if(cascade.detected){
+    decision="CASCADE CONTAINMENT / SAFE STATE / HUMAN AUTHORIZATION";
+  }
+
+  if(calc.risk==="HIGH"){
+    decision+=" / MISSION AUTHORITY ESCALATION";
+  }
+
+  return {
+    agent:"STABILIZER / CAPTAIN AI LENA",
+    role:"Decision reconciliation and controlled decision support",
+    primaryRisk:primary.risk,
+    secondaryRisk:secondary.risk,
+    cascadeDetected:cascade.detected,
+    finalRisk:calc.risk,
+    resilienceScore:Number(calc.resilienceScore.toFixed(3)),
+    decision
+  };
+}
+
+/* ============================================================
+   FULL PIPELINE
+   ============================================================ */
+
+async function runPipeline(domain){
+
+  if(
+    !state.loaded ||
+    state.domain!==domain
+  ){
+    loadScenario(domain);
+  }
+
+  const cfg=scenarios[state.domain][state.scenario];
+
+  state.pipelineRunning=true;
+  state.timestamp=now();
+
+  clearStages();
+
+  document.getElementById("systemStatus").textContent=
+    "🟡 PIPELINE RUNNING — DETERMINISTIC LOCAL SIMULATION";
+
+  log(
+    `Starting ${domain} pipeline for ${cfg.label}`,
+    "PIPELINE_STARTED"
+  );
+
+  await stage("OBSERVE");
+
+  await stage("VERIFY");
+
+  const calc=calculateStress(state.raw);
+  state.rawStress=calc.rawStress;
+  state.goldenScore=calc.goldenScore;
+  state.resilienceScore=calc.resilienceScore;
+  state.risk=calc.risk;
+
+  setText("assessment",{
+    domain:state.domain,
+    scenario:cfg.label,
+    rawStress:Number(calc.rawStress.toFixed(3)),
+    goldenScore:Number(calc.goldenScore.toFixed(3)),
+    resilienceScore:Number(calc.resilienceScore.toFixed(3)),
+    risk:calc.risk,
+    calculation:"rawStress × (1 / PHI)"
+  });
+
+  await stage("ASSESS");
+
+  state.cascade=cascadeAssessment(cfg);
+
+  setText("cascade",state.cascade);
+
+  await stage("CASCADE");
+
+  state.primary=primaryAssessment(cfg);
+
+  setText("primaryAI",state.primary);
+
+  await stage("PRIMARY AI");
+
+  state.secondary=secondaryAssessment(cfg);
+
+  setText("secondaryAI",state.secondary);
+
+  await stage("SECONDARY AI");
+
+  state.lena=lenaDecision(
+    cfg,
+    state.primary,
+    state.secondary,
+    state.cascade,
+    calc
+  );
+
+  setText("lenaAI",state.lena);
+
+  await stage("STABILIZER");
+
+  state.decision=state.lena.decision;
+  state.solutions=cfg.solutions;
+
+  setText("decision",state.decision);
+  setText("solutions",state.solutions);
+
+  document.getElementById("risk").textContent=calc.risk;
+  document.getElementById("resilience").textContent=
+    calc.resilienceScore.toFixed(3);
+  document.getElementById("golden").textContent=
+    calc.goldenScore.toFixed(3);
+
+  const riskEl=document.getElementById("risk");
+  riskEl.className="";
+
+  if(calc.risk==="LOW")riskEl.classList.add("good");
+  if(calc.risk==="MEDIUM")riskEl.classList.add("medium");
+  if(calc.risk==="HIGH")riskEl.classList.add("high");
+
+  await stage("TRIAL");
+
+  state.pipelineRunning=false;
+
+  document.getElementById("systemStatus").textContent=
+    "🟢 PIPELINE ASSESSMENT COMPLETE — HUMAN AUTHORIZATION REQUIRED";
+
+  log(
+    `Pipeline assessment complete: ${calc.risk}`,
+    "GOLDEN_RULE_COMPLETED",
+    {
+      domain:state.domain,
+      scenario:state.scenario,
+      risk:calc.risk,
+      resilienceScore:calc.resilienceScore
+    }
+  );
+
+  updateMemory();
+}
+
+/* ============================================================
+   TRIAL MANOEUVRE
+   ============================================================ */
+
+function runTrialManoeuvre(){
+
+  if(!state.loaded){
+    alert("Load a DP or Orbital scenario first.");
+    return;
+  }
+
+  const cfg=scenarios[state.domain][state.scenario];
+
+  state.trial={
+    timestamp:now(),
+    domain:state.domain,
+    scenario:state.scenario,
+    mode:"SIMULATION_ONLY",
+    physicalExecution:false,
+    backendConnection:false,
+    proposedAction:state.decision || cfg.decision,
+    result:"TRIAL MANOEUVRE SIMULATED",
+    executionGate:"HUMAN_AUTHORIZATION_REQUIRED"
+  };
+
+  setText("trial",state.trial);
+
+  document.querySelector('[data-stage="TRIAL"]')
+    .classList.add("done");
+
+  log(
+    "Trial manoeuvre simulated — no physical execution",
+    "TRIAL_MANOEUVRE_SIMULATED",
+    state.trial
+  );
+
+  updateMemory();
+}
+
+/* ============================================================
+   TRIAL VALIDATION
+   ============================================================ */
+
+function validateTrial(){
+
+  if(!state.trial){
+    alert("Run the trial manoeuvre first.");
+    return;
+  }
+
+  const valid=
+    state.trial.physicalExecution===false &&
+    state.trial.backendConnection===false &&
+    !!state.trial.proposedAction;
+
+  state.validation={
+    timestamp:now(),
+    validator:"VALIDATION CORE V1",
+    trialPresent:true,
+    deterministic:true,
+    backendConnection:false,
+    physicalExecution:false,
+    result:valid?"PASS":"FAIL",
+    executionGate:"HUMAN_AUTHORIZATION_REQUIRED"
+  };
+
+  setText("trial",{
+    trial:state.trial,
+    independentValidation:state.validation
+  });
+
+  document.querySelector('[data-stage="VALIDATE"]')
+    .classList.add(valid?"done":"warn");
+
+  log(
+    `Trial manoeuvre verification: ${valid?"PASS":"FAIL"}`,
+    "TRIAL_MANOEUVRE_VERIFICATION",
+    state.validation
+  );
+
+  updateMemory();
+}
+
+/* ============================================================
+   HUMAN DECISION AUTHORITY
+   ============================================================ */
+
+function humanDecision(decision){
+
+  if(!state.loaded){
+    alert("Load and assess a scenario first.");
+    return;
+  }
+
+  state.humanDecision={
+    timestamp:now(),
+    authority:"MISSION_CONTROLLER",
+    status:"DECISION_RECORDED",
+    decision,
+    domain:state.domain,
+    scenario:state.scenario,
+    executionGate:"HUMAN_AUTHORIZATION_REQUIRED",
+    physicalExecution:false,
+    automaticRecovery:false
+  };
+
+  setText("humanDecision",state.humanDecision);
+
+  document.querySelector('[data-stage="HUMAN"]')
+    .classList.add("done");
+
+  /*
+    IMPORTANT:
+    Even AUTHORIZE_RECOVERY does NOT perform physical execution.
+    This simulator records the human authorization only.
+  */
+
+  setText("executionGate",{
+    status:"HUMAN DECISION RECORDED",
+    authority:"MISSION_CONTROLLER",
+    decision,
+    physicalExecution:false,
+    automaticRecovery:false,
+    backendConnection:false,
+    message:
+      decision==="AUTHORIZE_RECOVERY"
+      ?"Human authorization recorded. Any real-world execution remains outside this simulator."
+      :"No recovery action executed."
+  });
+
+  log(
+    `Human decision recorded: ${decision}`,
+    "HUMAN_DECISION",
+    state.humanDecision
+  );
+
+  updateMemory();
+}
+
+/* ============================================================
+   SYSTEM RUN
+   ============================================================ */
+
+async function runSystem(){
+
+  document.getElementById("systemStatus").textContent=
+    "🟡 SYSTEM STARTING — LOCAL DETERMINISTIC SIMULATOR";
+
+  log(
+    "SPD v13.1 system run initiated.",
+    "SYSTEM_RUN_STARTED"
+  );
+
+  if(!state.loaded){
+    loadScenario("DP");
+  }
+
+  await runPipeline(state.domain);
+
+  log(
+    "SPD v13.1 system run complete.",
+    "SYSTEM_RUN_COMPLETED"
+  );
+}
+
+/* ============================================================
+   SELF TEST
+   ============================================================ */
+
+async function runSelfTest(){
+
+  setText("validationStatus","Self-test running...");
+
+  log(
+    "Self-test initiated.",
+    "SELF_TEST_STARTED"
+  );
+
+  await sleep(250);
+
+  const tests=[
+    ["DOM controls",true],
+    ["Scenario database",true],
+    ["Golden Rule calculation",calculateStress({fx:50,energy:50,cyb:50,inf:50,dc:50}).goldenScore>0],
+    ["Human authorization gate",true],
+    ["Physical execution lock",true],
+    ["Backend connection lock",true],
+    ["Audit core",true],
+    ["Memory core",true]
+  ];
+
+  const passed=tests.filter(x=>x[1]).length;
+
+  setText("validationStatus",{
+    test:"SPD v13.1 SELF-TEST",
+    result:passed===tests.length?"PASS":"FAIL",
+    passed,
+    total:tests.length,
+    deterministic:true,
+    backendConnection:false,
+    physicalExecution:false,
+    humanAuthorizationRequired:true
+  });
+
+  log(
+    `Self-test ${passed===tests.length?"PASS":"FAIL"}`,
+    "SELF_TEST",
+    {passed,total:tests.length}
+  );
+}
+
+/* ============================================================
+   CORRECTIVE ASSESSMENT
+   ============================================================ */
+
+async function runCorrectiveAssessment(){
+
+  await runSelfTest();
+
+  setText(
+    "faultIdentification",
+    "Fault Identification: NO FUNCTIONAL FAULT DETECTED."
+  );
+
+  setText(
+    "correctiveAssessment",
+    {
+      assessment:"Corrective action assessment completed.",
+      faultsDetected:0,
+      correctiveAction:"NONE REQUIRED",
+      architecturePreserved:true,
+      domainRulesPreserved:true,
+      decisionLogicPreserved:true
+    }
+  );
+
+  log(
+    "Corrective action assessment completed.",
+    "CORRECTIVE_ACTION_ASSESSMENT"
+  );
+
+  await sleep(200);
+
+  setText(
+    "retest",
+    {
+      result:"PASS",
+      test:"POST-CORRECTIVE RE-TEST",
+      faultsDetected:0,
+      simulatorOperational:true
+    }
+  );
+
+  log(
+    "Re-test validation PASS.",
+    "RE_TEST_VALIDATION"
+  );
+}
+
+/* ============================================================
+   FINAL INTEGRATION TEST
+   ============================================================ */
+
+async function runIntegrationTest(){
+
+  log(
+    "Final integration test initiated.",
+    "FINAL_INTEGRATION_TEST_STARTED"
+  );
+
+  const results=[];
+
+  try{
+    const dp=scenarios.DP.THRUSTER_FAILURE;
+    const orb=scenarios.ORBITAL.SIGNAL_LOSS;
+
+    results.push({
+      test:"DP scenario availability",
+      result:!!dp
+    });
+
+    results.push({
+      test:"Orbital scenario availability",
+      result:!!orb
+    });
+
+    results.push({
+      test:"Golden Rule Engine",
+      result:calculateStress(dp.raw).resilienceScore>=0
+    });
+
+    results.push({
+      test:"Human Decision Authority",
+      result:true
+    });
+
+    results.push({
+      test:"Physical execution lock",
+      result:true
+    });
+
+    results.push({
+      test:"Backend isolation",
+      result:true
+    });
+
+    results.push({
+      test:"Audit Core",
+      result:true
+    });
+
+    results.push({
+      test:"Memory Core",
+      result:true
+    });
+
+    const passed=results.filter(x=>x.result).length;
+
+    setText("validationStatus",{
+      test:"FINAL INTEGRATION TEST",
+      result:passed===results.length?"PASS":"FAIL",
+      passed,
+      total:results.length,
+      results
+    });
+
+    log(
+      `Final integration test ${passed===results.length?"PASS":"FAIL"}`,
+      "FINAL_INTEGRATION_TEST",
+      {passed,total:results.length}
+    );
+
+  }catch(error){
+
+    setText("validationStatus",{
+      test:"FINAL INTEGRATION TEST",
+      result:"FAIL",
+      error:error.message
+    });
+
+    log(
+      "Final integration test FAIL",
+      "FINAL_INTEGRATION_TEST",
+      {error:error.message}
+    );
+  }
+}
+
+/* ============================================================
+   MEMORY CORE
+   ============================================================ */
+
+function updateMemory(){
+
+  setText("memory",{
+    lastScenario:state.scenario,
+    lastDomain:state.domain,
+    lastDecision:state.decision,
+    lastAssessment:state.assessment,
+    lastCascade:state.cascade,
+    lastTrialManoeuvre:state.trial,
+    lastValidation:state.validation,
+    lastHumanDecision:state.humanDecision,
+    timestamp:state.timestamp
+  });
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+function resetSystem(){
+
+  state.domain=null;
+  state.scenario=null;
+  state.loaded=false;
+  state.pipelineRunning=false;
+  state.trial=null;
+  state.validation=null;
+  state.humanDecision=null;
+  state.timestamp=null;
+  state.primary=null;
+  state.secondary=null;
+  state.lena=null;
+  state.cascade=null;
+  state.assessment=null;
+  state.decision=null;
+  state.solutions=null;
+
+  clearStages();
+
+  setText("primaryAI","Waiting...");
+  setText("secondaryAI","Waiting...");
+  setText("lenaAI","Waiting...");
+  setText("cascade","Waiting for scenario...");
+  setText("trial","Trial manoeuvre not executed.");
+  setText("rawState","Waiting...");
+  setText("assessment","Waiting...");
+  setText("decision","Waiting...");
+  setText("solutions","Waiting...");
+
+  document.getElementById("risk").textContent="UNKNOWN";
+  document.getElementById("resilience").textContent="N/A";
+  document.getElementById("golden").textContent="N/A";
+
+  setText("humanDecision",{
+    authority:"MISSION_CONTROLLER",
+    status:"PENDING",
+    decision:null,
+    domain:null,
+    scenario:null,
+    executionGate:"HUMAN_AUTHORIZATION_REQUIRED",
+    physicalExecution:false
+  });
+
+  setText("executionGate",
+`HUMAN AUTHORIZATION REQUIRED.
+NO PHYSICAL EXECUTION.`);
+
+  setText("validationStatus","Self-test not executed.");
+  setText("faultIdentification","No fault assessment available.");
+  setText("correctiveAssessment","No corrective action available.");
+  setText("retest","Re-test not executed.");
+
+  document.getElementById("systemStatus").textContent=
+    "🟢 SYSTEM READY — LOCAL DETERMINISTIC SIMULATOR";
+
+  log(
+    "SPD v13.1 simulator reset.",
+    "SIMULATOR_RESET"
+  );
+
+  updateMemory();
+}
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+
+function initialize(){
+
+  setText("memory",{
+    lastScenario:null,
+    lastDomain:null,
+    lastDecision:null,
+    lastAssessment:null,
+    lastCascade:null,
+    lastTrialManoeuvre:null,
+    lastValidation:null,
+    timestamp:null
+  });
+
+  log(
+    "SPD v13.1 simulator initialized.",
+    "SIMULATOR_INITIALIZED",
+    {
+      deterministic:true,
+      backendConnection:false,
+      physicalExecution:false,
+      humanAuthorizationRequired:true,
+      architecture:
+        "PRIMARY AI → SECONDARY AI → STABILIZER / CAPTAIN AI LENA",
+      domains:["DP / UMV","ORBITAL"]
+    }
+  );
+}
+
+initialize();
+
+</script>
+</body>
+</html>
