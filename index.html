@@ -6974,6 +6974,1251 @@ document.addEventListener(
 
   }
 );
+/* ============================================================
+   PART 2 — DP RESILIENCE SIMULATOR ENGINE
+   SPD v13.1
+   ============================================================
+
+   DESIGN RULES
+
+   • DP is a dedicated operational simulator domain.
+   • FIN / BHR / DC / CYB are NOT displayed as DP controls.
+   • DP state is passed to the common Captain AI Lena layer.
+   • Local deterministic execution only.
+   • No physical vessel control.
+   • No automatic recovery execution.
+   • Human Decision Authority remains mandatory.
+
+   GOLDEN RULE:
+
+   OBSERVE
+      ↓
+   VERIFY
+      ↓
+   ASSESS
+      ↓
+   DECIDE
+      ↓
+   ACT
+      ↓
+   UPDATE
+
+============================================================ */
+
+
+/* ============================================================
+   DP STATE MODEL
+============================================================ */
+
+const dpState = {
+
+  vesselStatus:
+    "STABLE",
+
+  positionError:
+    0,
+
+  headingError:
+    0,
+
+  surge:
+    0,
+
+  sway:
+    0,
+
+  yaw:
+    0,
+
+  windLoad:
+    0,
+
+  currentLoad:
+    0,
+
+  waveLoad:
+    0,
+
+  powerAvailability:
+    100,
+
+  thrustersAvailable:
+    100,
+
+  thrusterFailureCount:
+    0,
+
+  redundancy:
+    100,
+
+  driftRisk:
+    0,
+
+  stationKeeping:
+    100,
+
+  severity:
+    "LOW",
+
+  timestamp:
+    null
+
+};
+
+
+/* ============================================================
+   DP SCENARIO PROFILES
+============================================================ */
+
+const dpScenarioProfiles = {
+
+  DP_THRUSTER_FAILURE: {
+
+    description:
+      "Single thruster failure",
+
+    positionError:
+      18,
+
+    headingError:
+      12,
+
+    windLoad:
+      35,
+
+    currentLoad:
+      25,
+
+    waveLoad:
+      20,
+
+    powerAvailability:
+      100,
+
+    thrustersAvailable:
+      85,
+
+    thrusterFailureCount:
+      1
+
+  },
+
+
+  DP_POWER_FAILURE: {
+
+    description:
+      "DP power generation failure",
+
+    positionError:
+      25,
+
+    headingError:
+      20,
+
+    windLoad:
+      45,
+
+    currentLoad:
+      35,
+
+    waveLoad:
+      30,
+
+    powerAvailability:
+      55,
+
+    thrustersAvailable:
+      65,
+
+    thrusterFailureCount:
+      2
+
+  },
+
+
+  DP_POSITION_DEVIATION: {
+
+    description:
+      "Position reference deviation",
+
+    positionError:
+      65,
+
+    headingError:
+      35,
+
+    windLoad:
+      40,
+
+    currentLoad:
+      30,
+
+    waveLoad:
+      25,
+
+    powerAvailability:
+      100,
+
+    thrustersAvailable:
+      100,
+
+    thrusterFailureCount:
+      0
+
+  },
+
+
+  DP_WIND_LOAD: {
+
+    description:
+      "High environmental wind loading",
+
+    positionError:
+      30,
+
+    headingError:
+      28,
+
+    windLoad:
+      85,
+
+    currentLoad:
+      35,
+
+    waveLoad:
+      45,
+
+    powerAvailability:
+      100,
+
+    thrustersAvailable:
+      100,
+
+    thrusterFailureCount:
+      0
+
+  },
+
+
+  DP_DRIFT_OFF: {
+
+    description:
+      "Loss of station keeping capability",
+
+    positionError:
+      85,
+
+    headingError:
+      55,
+
+    windLoad:
+      70,
+
+    currentLoad:
+      55,
+
+    waveLoad:
+      50,
+
+    powerAvailability:
+      75,
+
+    thrustersAvailable:
+      60,
+
+    thrusterFailureCount:
+      3
+
+  },
+
+
+  DP_MULTI_THRUSTER_FAILURE: {
+
+    description:
+      "Multiple thruster failures",
+
+    positionError:
+      70,
+
+    headingError:
+      65,
+
+    windLoad:
+      65,
+
+    currentLoad:
+      45,
+
+    waveLoad:
+      45,
+
+    powerAvailability:
+      70,
+
+    thrustersAvailable:
+      35,
+
+    thrusterFailureCount:
+      4
+
+  },
+
+
+  DP_WORST_CASE_FAILURE: {
+
+    description:
+      "Combined DP worst-case failure",
+
+    positionError:
+      95,
+
+    headingError:
+      90,
+
+    windLoad:
+      95,
+
+    currentLoad:
+      80,
+
+    waveLoad:
+      85,
+
+    powerAvailability:
+      35,
+
+    thrustersAvailable:
+      20,
+
+    thrusterFailureCount:
+      6
+
+  }
+
+};
+
+
+/* ============================================================
+   DP OBSERVE
+============================================================ */
+
+function dpObserve(){
+
+  addPipelineLog(
+    "DP OBSERVE — vessel state acquired."
+  );
+
+  return {
+
+    positionError:
+      dpState.positionError,
+
+    headingError:
+      dpState.headingError,
+
+    windLoad:
+      dpState.windLoad,
+
+    currentLoad:
+      dpState.currentLoad,
+
+    waveLoad:
+      dpState.waveLoad,
+
+    powerAvailability:
+      dpState.powerAvailability,
+
+    thrustersAvailable:
+      dpState.thrustersAvailable,
+
+    stationKeeping:
+      dpState.stationKeeping
+
+  };
+
+}
+
+
+/* ============================================================
+   DP VERIFY
+============================================================ */
+
+function dpVerify(observation){
+
+  const valid =
+    observation !== null
+    &&
+    typeof observation.positionError === "number"
+    &&
+    typeof observation.headingError === "number"
+    &&
+    typeof observation.powerAvailability === "number"
+    &&
+    typeof observation.thrustersAvailable === "number";
+
+  addPipelineLog(
+    "DP VERIFY — "
+    + (valid ? "PASS" : "FAIL")
+  );
+
+  updateAudit(
+    "DP_STATE_VERIFICATION",
+    {
+      status:
+        valid ? "PASS" : "FAIL",
+
+      observation
+    }
+  );
+
+  return valid;
+
+}
+
+
+/* ============================================================
+   DP STRESS CALCULATION
+============================================================ */
+
+function calculateDPStress(){
+
+  const position =
+    dpState.positionError * 0.25;
+
+  const heading =
+    dpState.headingError * 0.15;
+
+  const wind =
+    dpState.windLoad * 0.15;
+
+  const current =
+    dpState.currentLoad * 0.10;
+
+  const wave =
+    dpState.waveLoad * 0.10;
+
+  const power =
+    (100 - dpState.powerAvailability)
+    * 0.10;
+
+  const thruster =
+    (100 - dpState.thrustersAvailable)
+    * 0.15;
+
+  const rawStress =
+    position
+    + heading
+    + wind
+    + current
+    + wave
+    + power
+    + thruster;
+
+  const goldenScore =
+    rawStress * (1 / PHI);
+
+  const resilienceScore =
+    Math.max(
+      0,
+      100 - goldenScore
+    );
+
+  return {
+
+    rawStress:
+      Number(rawStress.toFixed(3)),
+
+    goldenScore:
+      Number(goldenScore.toFixed(3)),
+
+    resilienceScore:
+      Number(resilienceScore.toFixed(3))
+
+  };
+
+}
+
+
+/* ============================================================
+   DP RISK CLASSIFICATION
+============================================================ */
+
+function classifyDPRisk(
+  resilienceScore
+){
+
+  if(resilienceScore >= 70){
+
+    return "LOW";
+
+  }
+
+  if(resilienceScore >= 50){
+
+    return "MEDIUM";
+
+  }
+
+  return "HIGH";
+
+}
+
+
+/* ============================================================
+   DP ASSESS
+============================================================ */
+
+function dpAssess(){
+
+  const stress =
+    calculateDPStress();
+
+  const risk =
+    classifyDPRisk(
+      stress.resilienceScore
+    );
+
+  let severity =
+    "LOW";
+
+  if(risk === "MEDIUM"){
+
+    severity =
+      "ELEVATED";
+
+  }
+
+  if(risk === "HIGH"){
+
+    severity =
+      "CRITICAL";
+
+  }
+
+  dpState.severity =
+    severity;
+
+  dpState.driftRisk =
+    Math.min(
+      100,
+      Math.round(
+        (
+          dpState.positionError * 0.6
+          +
+          (100 - dpState.thrustersAvailable) * 0.4
+        )
+      )
+    );
+
+  dpState.stationKeeping =
+    Math.max(
+      0,
+      Math.round(
+        100 - dpState.driftRisk
+      )
+    );
+
+  const assessment = {
+
+    domain:
+      "DP",
+
+    scenario:
+      currentScenario,
+
+    rawStress:
+      stress.rawStress,
+
+    goldenScore:
+      stress.goldenScore,
+
+    resilienceScore:
+      stress.resilienceScore,
+
+    risk:
+
+      risk,
+
+    severity:
+      severity,
+
+    driftRisk:
+      dpState.driftRisk,
+
+    stationKeeping:
+      dpState.stationKeeping
+
+  };
+
+  currentAssessment =
+    assessment;
+
+  addPipelineLog(
+    "DP ASSESS — Risk: "
+    + risk
+    + " | Resilience: "
+    + stress.resilienceScore
+  );
+
+  updateAudit(
+    "DP_ASSESSMENT_COMPLETE",
+    assessment
+  );
+
+  return assessment;
+
+}
+
+
+/* ============================================================
+   DP DECISION ENGINE
+============================================================ */
+
+function dpDecision(
+  assessment
+){
+
+  let decision;
+
+  if(
+    assessment.risk === "LOW"
+  ){
+
+    decision =
+      "MAINTAIN_SAFE_STATE";
+
+  }
+  else if(
+    assessment.risk === "MEDIUM"
+  ){
+
+    decision =
+      "REQUEST_ADDITIONAL_DIAGNOSTICS";
+
+  }
+  else {
+
+    decision =
+      "PREPARE_EMERGENCY_STATION_KEEPING_RECOVERY";
+
+  }
+
+  addPipelineLog(
+    "DP DECIDE — "
+    + decision
+  );
+
+  updateMemory(
+    decision,
+    assessment
+  );
+
+  updateAudit(
+    "DP_DECISION_GENERATED",
+    {
+      decision,
+      assessment
+    }
+  );
+
+  return decision;
+
+}
+
+
+/* ============================================================
+   DP MANOEUVRE PLANNER
+============================================================ */
+
+function planDPManoeuvre(
+  decision
+){
+
+  let manoeuvre;
+
+  switch(decision){
+
+    case "MAINTAIN_SAFE_STATE":
+
+      manoeuvre =
+        "MAINTAIN_CURRENT_STATION_KEEPING";
+
+      break;
+
+
+    case "REQUEST_ADDITIONAL_DIAGNOSTICS":
+
+      manoeuvre =
+        "VERIFY_POSITION_REFERENCE_AND_THRUSTER_HEALTH";
+
+      break;
+
+
+    case "PREPARE_EMERGENCY_STATION_KEEPING_RECOVERY":
+
+      manoeuvre =
+        "PREPARE_CONTROLLED_STATION_KEEPING_RECOVERY";
+
+      break;
+
+
+    default:
+
+      manoeuvre =
+        "NO_MANOEUVRE";
+
+  }
+
+  const result = {
+
+    engine:
+      "DPManoeuvreEngineV1",
+
+    manoeuvre:
+
+      manoeuvre,
+
+    execution:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalControl:
+      "DISABLED"
+
+  };
+
+  addPipelineLog(
+    "DP MANOEUVRE PLAN — "
+    + manoeuvre
+  );
+
+  updateAudit(
+    "DP_MANOEUVRE_PLANNED",
+    result
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   DP VERIFICATION
+============================================================ */
+
+function verifyDPManoeuvre(
+  manoeuvre
+){
+
+  const verification = {
+
+    engine:
+      "DPValidationCoreV1",
+
+    manoeuvre:
+      manoeuvre.manoeuvre,
+
+    verified:
+      true,
+
+    physicalExecution:
+      false,
+
+    humanAuthorizationRequired:
+      true,
+
+    status:
+      "PASS"
+
+  };
+
+  addPipelineLog(
+    "DP MANOEUVRE VERIFICATION — PASS"
+  );
+
+  updateAudit(
+    "DP_MANOEUVRE_VERIFICATION",
+    verification
+  );
+
+  return verification;
+
+}
+
+
+/* ============================================================
+   DP SIMULATOR DISPLAY
+============================================================ */
+
+function updateDPSimulatorDisplay(
+  assessment,
+  decision,
+  manoeuvre,
+  verification
+){
+
+  const output = {
+
+    simulator:
+      "SPD v13.1 DP Resilience Simulator",
+
+    domain:
+      "DP",
+
+    scenario:
+      currentScenario,
+
+    vesselStatus:
+      dpState.vesselStatus,
+
+    positionError:
+      dpState.positionError,
+
+    headingError:
+      dpState.headingError,
+
+    windLoad:
+      dpState.windLoad,
+
+    currentLoad:
+      dpState.currentLoad,
+
+    waveLoad:
+      dpState.waveLoad,
+
+    powerAvailability:
+      dpState.powerAvailability,
+
+    thrustersAvailable:
+      dpState.thrustersAvailable,
+
+    thrusterFailureCount:
+      dpState.thrusterFailureCount,
+
+    driftRisk:
+      dpState.driftRisk,
+
+    stationKeeping:
+      dpState.stationKeeping,
+
+    assessment,
+
+    captainAILenaDecision:
+      decision,
+
+    manoeuvre,
+
+    verification,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      "DISABLED",
+
+    backend:
+      "NOT_CONNECTED",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "dpSimulator",
+    output
+  );
+
+}
+
+
+/* ============================================================
+   DP SCENARIO EXECUTION
+============================================================ */
+
+function runDPSimulation(
+  scenarioName
+){
+
+  const profile =
+    dpScenarioProfiles[
+      scenarioName
+    ];
+
+  if(!profile){
+
+    addPipelineLog(
+      "DP scenario not found: "
+      + scenarioName
+    );
+
+    return;
+
+  }
+
+  currentScenario =
+    scenarioName;
+
+  currentDomain =
+    "DP";
+
+  scenarioIntensity =
+    50;
+
+  dpState.positionError =
+    profile.positionError;
+
+  dpState.headingError =
+    profile.headingError;
+
+  dpState.windLoad =
+    profile.windLoad;
+
+  dpState.currentLoad =
+    profile.currentLoad;
+
+  dpState.waveLoad =
+    profile.waveLoad;
+
+  dpState.powerAvailability =
+    profile.powerAvailability;
+
+  dpState.thrustersAvailable =
+    profile.thrustersAvailable;
+
+  dpState.thrusterFailureCount =
+    profile.thrusterFailureCount;
+
+  dpState.timestamp =
+    nowISO();
+
+  dpState.vesselStatus =
+    "SCENARIO_ACTIVE";
+
+
+  updateMonitor();
+
+  addPipelineLog(
+    "DP scenario loaded: "
+    + scenarioName
+  );
+
+  updateAudit(
+    "DP_SCENARIO_INITIALIZED",
+    {
+      scenario:
+        scenarioName,
+
+      description:
+        profile.description,
+
+      domain:
+        "DP"
+    }
+  );
+
+
+  /* ----------------------------------------------------------
+     GOLDEN RULE PIPELINE
+  ---------------------------------------------------------- */
+
+  const observation =
+    dpObserve();
+
+
+  const verified =
+    dpVerify(
+      observation
+    );
+
+
+  if(!verified){
+
+    setJSON(
+      "dpSimulator",
+      {
+        status:
+          "DP VERIFICATION FAILED",
+
+        execution:
+          "BLOCKED"
+      }
+    );
+
+    return;
+
+  }
+
+
+  const assessment =
+    dpAssess();
+
+
+  const decision =
+    dpDecision(
+      assessment
+    );
+
+
+  const manoeuvre =
+    planDPManoeuvre(
+      decision
+    );
+
+
+  const verification =
+    verifyDPManoeuvre(
+      manoeuvre
+    );
+
+
+  updateDPSimulatorDisplay(
+    assessment,
+    decision,
+    manoeuvre,
+    verification
+  );
+
+
+  addPipelineLog(
+    "DP simulation completed — "
+    + "HUMAN AUTHORIZATION REQUIRED."
+  );
+
+  updateAudit(
+    "DP_SIMULATION_COMPLETE",
+    {
+      scenario:
+        scenarioName,
+
+      risk:
+        assessment.risk,
+
+      decision:
+        decision,
+
+      manoeuvre:
+        manoeuvre.manoeuvre,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED"
+    }
+  );
+
+}
+
+
+/* ============================================================
+   DP BUTTON ROUTING
+   Existing buttons already call activateScenario().
+   This wrapper allows DP scenarios to execute directly.
+============================================================ */
+
+function runSelectedDPScenario(){
+
+  if(
+    currentDomain !== "DP"
+  ){
+
+    addPipelineLog(
+      "DP execution blocked — "
+      + "active domain is not DP."
+    );
+
+    return;
+
+  }
+
+  runDPSimulation(
+    currentScenario
+  );
+
+}
+
+
+/* ============================================================
+   EXTEND activateScenario()
+   DP scenarios now load and execute through DP engine.
+============================================================ */
+
+const originalActivateScenario =
+  activateScenario;
+
+activateScenario =
+  function(name){
+
+    originalActivateScenario(name);
+
+    if(
+      name.startsWith("DP_")
+    ){
+
+      runDPSimulation(name);
+
+    }
+
+  };
+
+
+/* ============================================================
+   DP HUMAN AUTHORIZATION BRIDGE
+============================================================ */
+
+function authorizeDPRecovery(){
+
+  if(
+    currentDomain !== "DP"
+  ){
+
+    return;
+
+  }
+
+  updateAudit(
+    "DP_RECOVERY_AUTHORIZATION",
+    {
+      authority:
+        "HUMAN_OPERATOR",
+
+      decision:
+        "AUTHORIZE_RECOVERY",
+
+      execution:
+        "SIMULATED_ONLY"
+    }
+  );
+
+  setJSON(
+    "humanDecisionAuthority",
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      domain:
+        "DP",
+
+      status:
+        "AUTHORIZED",
+
+      decision:
+        "AUTHORIZE_RECOVERY",
+
+      executionGate:
+        "SIMULATED_EXECUTION_ONLY",
+
+      physicalExecution:
+        false
+
+    }
+  );
+
+  addPipelineLog(
+    "DP recovery authorized by human operator — "
+    + "SIMULATION ONLY."
+  );
+
+}
+
+
+/* ============================================================
+   DP SAFE STATE
+============================================================ */
+
+function maintainDPSafeState(){
+
+  updateAudit(
+    "DP_MAINTAIN_SAFE_STATE",
+    {
+      authority:
+        "HUMAN_OPERATOR",
+
+      physicalExecution:
+        false
+    }
+  );
+
+  setJSON(
+    "humanDecisionAuthority",
+    {
+
+      authority:
+        "MISSION_CONTROLLER",
+
+      domain:
+        "DP",
+
+      status:
+        "CONFIRMED",
+
+      decision:
+        "MAINTAIN_SAFE_STATE",
+
+      executionGate:
+        "NO_EXECUTION"
+
+    }
+  );
+
+  addPipelineLog(
+    "DP safe state maintained."
+  );
+
+}
+
+
+/* ============================================================
+   DP INITIALIZATION
+============================================================ */
+
+function initializeDPEngine(){
+
+  dpState.timestamp =
+    nowISO();
+
+  updateAudit(
+    "DP_ENGINE_INITIALIZED",
+    {
+
+      engine:
+        "DPResilienceEngineV1",
+
+      deterministic:
+        true,
+
+      backendConnection:
+        false,
+
+      physicalControl:
+        false,
+
+      humanAuthorizationRequired:
+        true
+
+    }
+  );
+
+  addPipelineLog(
+    "DP Resilience Engine V1 initialized."
+  );
+
+}
+
+
+/* ============================================================
+   START DP ENGINE
+============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    initializeDPEngine();
+
+  }
+);
+
+
+
 
 </body>
 </html>
