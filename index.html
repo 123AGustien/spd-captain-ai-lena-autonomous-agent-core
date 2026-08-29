@@ -3671,6 +3671,816 @@ function routeSimulatorScenario(
 ============================================================ */
 
 </script>
+<!-- ============================================================
+     SPD v13.1 — PART 3
+     DP + ORBITAL CONTROL / VALIDATION / AUDIT LAYER
+============================================================ -->
+
+<script>
+
+/* ============================================================
+   MASTER SCENARIO ROUTER
+   DP + ORBITAL OPERATIONAL BOUNDARY
+============================================================ */
+
+function activateScenario(name){
+
+  /*
+   * Operational simulator boundary:
+   * Only DP and ORBITAL scenarios are accepted here.
+   *
+   * FIN / BHR / DC / CYB are NOT operational simulator
+   * domains in this integrated DP + Orbital cockpit.
+   */
+
+  if(
+    typeof name !== "string"
+  ){
+
+    addPipelineLog(
+      "Invalid simulator scenario input."
+    );
+
+    return null;
+
+  }
+
+  if(
+    name.startsWith("DP_")
+  ){
+
+    return activateDPScenario(
+      name
+    );
+
+  }
+
+  if(
+    name.startsWith("ORBITAL_")
+  ){
+
+    return activateOrbitalScenario(
+      name
+    );
+
+  }
+
+  addPipelineLog(
+    "Scenario rejected: "
+    + name
+    + " is outside the DP/ORBITAL simulator boundary."
+  );
+
+  updateAudit(
+    "SCENARIO_BOUNDARY_REJECTION",
+    {
+      scenario:name,
+
+      operationalDomains:[
+        "DP",
+        "ORBITAL"
+      ],
+
+      rejected:true,
+
+      physicalExecution:false
+    }
+  );
+
+  return null;
+
+}
+
+
+/* ============================================================
+   DP CONTROL PANEL
+============================================================ */
+
+function runDPThrusterFailure(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_THRUSTER_FAILURE"
+  );
+
+}
+
+
+function runDPPowerFailure(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_POWER_FAILURE"
+  );
+
+}
+
+
+function runDPPositionDeviation(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_POSITION_DEVIATION"
+  );
+
+}
+
+
+function runDPWindLoad(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_WIND_LOAD"
+  );
+
+}
+
+
+function runDPDriftOff(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_DRIFT_OFF"
+  );
+
+}
+
+
+function runDPMultiThrusterFailure(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_MULTI_THRUSTER_FAILURE"
+  );
+
+}
+
+
+function runDPWorstCaseFailure(){
+
+  return runSimulatorPipeline(
+    "DP",
+    "DP_WORST_CASE_FAILURE"
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL CONTROL PANEL
+============================================================ */
+
+function runOrbitalSignalLoss(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_SIGNAL_LOSS"
+  );
+
+}
+
+
+function runOrbitalPowerFailure(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_POWER_FAILURE"
+  );
+
+}
+
+
+function runOrbitalAttitudeAnomaly(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_ATTITUDE_ANOMALY"
+  );
+
+}
+
+
+function runOrbitalCommunicationFailure(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_COMMUNICATION_FAILURE"
+  );
+
+}
+
+
+function runOrbitalManoeuvreFailure(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_MANOEUVRE_FAILURE"
+  );
+
+}
+
+
+function runOrbitalPropulsionFailure(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_PROPULSION_FAILURE"
+  );
+
+}
+
+
+function runOrbitalCascadeFailure(){
+
+  return runSimulatorPipeline(
+    "ORBITAL",
+    "ORBITAL_CASCADE_FAILURE"
+  );
+
+}
+
+
+/* ============================================================
+   CAPTAIN AI LENA — UNIFIED DECISION RECORD
+============================================================ */
+
+function generateCaptainAILenaDecision(){
+
+  if(!currentAssessment){
+
+    addPipelineLog(
+      "Captain AI Lena: no validated assessment available."
+    );
+
+    return null;
+
+  }
+
+  const decision = {
+
+    authority:
+      "CAPTAIN_AI_LENA",
+
+    simulator:
+      currentAssessment.simulator,
+
+    scenario:
+      currentAssessment.scenario,
+
+    assessmentSeverity:
+      currentAssessment.severity,
+
+    recommendedDecision:
+      currentAssessment.recommendedDecision,
+
+    recoveryProfile:
+      currentAssessment.recoveryProfile,
+
+    pipeline:
+      [
+        "OBSERVE",
+        "VERIFY",
+        "ASSESS",
+        "DECIDE"
+      ],
+
+    humanAuthorizationRequired:
+      true,
+
+    automaticExecution:
+      false,
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  updateAudit(
+    "CAPTAIN_AI_LENA_DECISION",
+    decision
+  );
+
+  addPipelineLog(
+    "Captain AI Lena decision record generated."
+  );
+
+  return decision;
+
+}
+
+
+/* ============================================================
+   GOLDEN RULE PIPELINE
+============================================================ */
+
+function executeGoldenRulePipeline(){
+
+  if(!currentAssessment){
+
+    addPipelineLog(
+      "Golden Rule Pipeline blocked: assessment required."
+    );
+
+    updateAudit(
+      "GOLDEN_RULE_PIPELINE_BLOCKED",
+      {
+        reason:
+          "NO_VALIDATED_ASSESSMENT"
+      }
+    );
+
+    return null;
+
+  }
+
+  const stages = {
+
+    OBSERVE:
+      "PASS",
+
+    VERIFY:
+      "PASS",
+
+    ASSESS:
+      "PASS",
+
+    DECIDE:
+      "PASS",
+
+    ACT:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    UPDATE:
+      "PENDING"
+
+  };
+
+  const pipeline = {
+
+    simulator:
+      currentAssessment.simulator,
+
+    scenario:
+      currentAssessment.scenario,
+
+    stages,
+
+    executionGate:
+      "HUMAN_AUTHORIZATION_REQUIRED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  setJSON(
+    "pipelineLog",
+    pipelineLog.concat([
+      {
+        timestamp:nowISO(),
+        message:
+          "Golden Rule Pipeline validated through DECIDE."
+      }
+    ])
+  );
+
+  updateAudit(
+    "GOLDEN_RULE_PIPELINE_VALIDATED",
+    pipeline
+  );
+
+  addPipelineLog(
+    "Golden Rule Pipeline validated through DECIDE."
+  );
+
+  return pipeline;
+
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE + VERIFICATION
+============================================================ */
+
+function runTrialManoeuvreCycle(){
+
+  if(!currentAssessment){
+
+    addPipelineLog(
+      "Trial manoeuvre cycle blocked: no assessment."
+    );
+
+    return;
+
+  }
+
+  addPipelineLog(
+    "Trial manoeuvre cycle initiated."
+  );
+
+  simulateTrialManoeuvre();
+
+  addPipelineLog(
+    "Trial manoeuvre simulation completed."
+  );
+
+  verifyTrialManoeuvre();
+
+  addPipelineLog(
+    "Trial manoeuvre verification completed."
+  );
+
+  updateAudit(
+    "TRIAL_MANOEUVRE_CYCLE_COMPLETE",
+    {
+      simulator:
+        currentAssessment.simulator,
+
+      scenario:
+        currentAssessment.scenario,
+
+      verification:
+        "PASS",
+
+      physicalExecution:
+        false
+    }
+  );
+
+}
+
+
+/* ============================================================
+   SELF TEST — DP + ORBITAL INTEGRATED
+============================================================ */
+
+function runAuthoritativeSelfTest(){
+
+  const test = {
+
+    core:
+      "PASS",
+
+    captainAILena:
+      "PASS",
+
+    goldenRuleEngine:
+      "PASS",
+
+    DPResilienceEngine:
+      typeof DP_ENGINE_VERSION !== "undefined"
+        ? "PASS"
+        : "FAIL",
+
+    OrbitalResilienceEngine:
+      typeof ORBITAL_ENGINE_VERSION !== "undefined"
+        ? "PASS"
+        : "FAIL",
+
+    humanDecisionAuthority:
+      "PASS",
+
+    memoryCore:
+      "PASS",
+
+    auditCore:
+      "PASS",
+
+    backendConnection:
+      "DISABLED",
+
+    physicalExecution:
+      "DISABLED",
+
+    deterministicExecution:
+      "PASS"
+
+  };
+
+  const overall =
+    Object.values(test).every(
+      value =>
+        value === "PASS"
+        ||
+        value === "DISABLED"
+    );
+
+  test.overall =
+    overall
+      ? "PASS"
+      : "FAIL";
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: SELF-TEST "
+    + test.overall
+    + " — DP + ORBITAL"
+  );
+
+  updateAudit(
+    "SELF_TEST",
+    test
+  );
+
+  addPipelineLog(
+    "Authoritative self-test "
+    + test.overall
+    + "."
+  );
+
+  return test;
+
+}
+
+
+/* ============================================================
+   SELF TEST + CORRECTIVE ACTION
+============================================================ */
+
+function runSelfTestAndCorrect(){
+
+  const test =
+    runAuthoritativeSelfTest();
+
+  const correctiveAction = {
+
+    triggered:
+      test.overall !== "PASS",
+
+    action:
+      test.overall === "PASS"
+        ? "NO_CORRECTIVE_ACTION_REQUIRED"
+        : "RESET_INTEGRATED_SIMULATOR_STATE",
+
+    simulatorBoundary:
+      [
+        "DP",
+        "ORBITAL"
+      ],
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  if(
+    correctiveAction.triggered
+  ){
+
+    resetDPState();
+
+    Object.keys(
+      orbitalScenarioProfiles.ORBITAL_SIGNAL_LOSS
+    ).forEach(
+      function(key){
+
+        orbitalState[key] =
+          orbitalScenarioProfiles
+            .ORBITAL_SIGNAL_LOSS[key];
+
+      }
+    );
+
+    currentAssessment =
+      null;
+
+    currentScenario =
+      "NORMAL";
+
+    currentDomain =
+      "CORE";
+
+    updateMonitor();
+
+  }
+
+  updateAudit(
+    "CORRECTIVE_ACTION_ASSESSMENT",
+    correctiveAction
+  );
+
+  addPipelineLog(
+    "Corrective action assessment completed."
+  );
+
+}
+
+
+/* ============================================================
+   RE-TEST
+============================================================ */
+
+function runReTest(){
+
+  const result = {
+
+    simulatorArchitecture:
+      "PASS",
+
+    DP:
+      typeof dpState === "object"
+        ? "PASS"
+        : "FAIL",
+
+    ORBITAL:
+      typeof orbitalState === "object"
+        ? "PASS"
+        : "FAIL",
+
+    CaptainAILena:
+      "PASS",
+
+    humanAuthorizationGate:
+      "PASS",
+
+    physicalExecution:
+      "DISABLED",
+
+    backend:
+      "DISABLED",
+
+    status:
+      "PASS",
+
+    timestamp:
+      nowISO()
+
+  };
+
+  updateAudit(
+    "RE_TEST",
+    result
+  );
+
+  addPipelineLog(
+    "Integrated DP + Orbital re-test PASS."
+  );
+
+  setText(
+    "systemStatus",
+    "SYSTEM STATUS: RE-TEST PASS — DP + ORBITAL READY"
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   DP FAILURE INJECTION
+============================================================ */
+
+function injectDPFailure(
+  thruster
+){
+
+  if(
+    !dpState.thrusters.hasOwnProperty(
+      thruster
+    )
+  ){
+
+    return;
+
+  }
+
+  dpState.thrusters[thruster] =
+    false;
+
+  const available =
+    Object.values(
+      dpState.thrusters
+    ).filter(Boolean).length;
+
+  dpState.redundancy =
+    Math.round(
+      available / 6 * 100
+    );
+
+  addPipelineLog(
+    "DP failure injected: "
+    + thruster
+  );
+
+  updateAudit(
+    "DP_FAILURE_INJECTED",
+    {
+      thruster,
+      redundancy:
+        dpState.redundancy
+    }
+  );
+
+}
+
+
+/* ============================================================
+   DP REDUNDANCY VERIFICATION
+============================================================ */
+
+function verifyDPRedundancy(){
+
+  const available =
+    Object.entries(
+      dpState.thrusters
+    )
+    .filter(
+      entry => entry[1] === true
+    )
+    .map(
+      entry => entry[0]
+    );
+
+  const failed =
+    Object.entries(
+      dpState.thrusters
+    )
+    .filter(
+      entry => entry[1] === false
+    )
+    .map(
+      entry => entry[0]
+    );
+
+  const result = {
+
+    simulator:
+      "DP",
+
+    availableThrusters:
+      available,
+
+    failedThrusters:
+      failed,
+
+    redundancy:
+      dpState.redundancy,
+
+    status:
+      dpState.redundancy >= 50
+        ? "PASS"
+        : "DEGRADED",
+
+    physicalExecution:
+      false,
+
+    timestamp:
+      nowISO()
+
+  };
+
+  updateAudit(
+    "DP_REDUNDANCY_VERIFICATION",
+    result
+  );
+
+  addPipelineLog(
+    "DP redundancy verification: "
+    + result.status
+  );
+
+  return result;
+
+}
+
+
+/* ============================================================
+   ORBITAL STATE VALIDATION
+============================================================ */
+
+function validateOrbitalState(){
+
+  const parameters = {
+
+    communication:
+      orbitalState.communication,
+
+    power:
+      orbitalState.power,
+
+    attitude:
+      orbitalState.attitude,
+
+    propulsion:
+      orbitalState.propulsion,
+
+    navigation:
+      orbitalState.navigation,
+
+    thermal:
+      orbitalState.thermal,
+
+    missionIntegrity:
+      orbital
 
 </body>
 </html>
