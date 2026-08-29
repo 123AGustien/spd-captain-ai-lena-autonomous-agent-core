@@ -8216,6 +8216,997 @@ document.addEventListener(
 
   }
 );
+/* ============================================================
+   PART 7
+   DP + ORBITAL DETERMINISTIC ENGINE CORE
+   ============================================================
+
+   DESIGN RULES:
+   - DP and ORBITAL are independent operational domains.
+   - FIN / BHR / DC / CYB are NOT displayed inside
+     the DP or ORBITAL simulator interfaces.
+   - No backend connection.
+   - No physical execution.
+   - Deterministic local simulation.
+   - Captain AI Lena provides decision support.
+   - Human Decision Authority remains mandatory.
+============================================================ */
+
+
+/* ============================================================
+   DP SIMULATOR STATE
+============================================================ */
+
+let dpState = {
+
+  vesselStatus: "STABLE",
+
+  positionError: 0,
+
+  headingError: 0,
+
+  surge: 0,
+
+  sway: 0,
+
+  yaw: 0,
+
+  windLoad: 0,
+
+  currentLoad: 0,
+
+  waveLoad: 0,
+
+  thrusterAvailability: 100,
+
+  powerAvailability: 100,
+
+  redundancy: 100,
+
+  severity: "LOW",
+
+  recoveryRequired: false,
+
+  recommendedAction: "MAINTAIN_SAFE_STATE"
+
+};
+
+
+/* ============================================================
+   ORBITAL SIMULATOR STATE
+============================================================ */
+
+let orbitalState = {
+
+  spacecraftStatus: "STABILIZED",
+
+  communication: 100,
+
+  power: 100,
+
+  attitude: 100,
+
+  propulsion: 100,
+
+  navigation: 100,
+
+  thermal: 100,
+
+  missionIntegrity: 100,
+
+  severity: "LOW",
+
+  recoveryRequired: false,
+
+  recommendedAction: "MAINTAIN_SAFE_STATE"
+
+};
+
+
+/* ============================================================
+   DP SCENARIO PROFILES
+============================================================ */
+
+const dpScenarioProfiles = {
+
+  DP_THRUSTER_FAILURE: {
+
+    vesselStatus: "DEGRADED",
+
+    positionError: 35,
+
+    headingError: 20,
+
+    surge: 30,
+
+    sway: 25,
+
+    yaw: 20,
+
+    windLoad: 35,
+
+    currentLoad: 25,
+
+    waveLoad: 20,
+
+    thrusterAvailability: 65,
+
+    powerAvailability: 100,
+
+    redundancy: 60
+
+  },
+
+
+  DP_POWER_FAILURE: {
+
+    vesselStatus: "CRITICAL",
+
+    positionError: 55,
+
+    headingError: 35,
+
+    surge: 50,
+
+    sway: 45,
+
+    yaw: 35,
+
+    windLoad: 40,
+
+    currentLoad: 30,
+
+    waveLoad: 30,
+
+    thrusterAvailability: 70,
+
+    powerAvailability: 45,
+
+    redundancy: 40
+
+  },
+
+
+  DP_POSITION_DEVIATION: {
+
+    vesselStatus: "DEGRADED",
+
+    positionError: 65,
+
+    headingError: 30,
+
+    surge: 55,
+
+    sway: 50,
+
+    yaw: 30,
+
+    windLoad: 30,
+
+    currentLoad: 35,
+
+    waveLoad: 25,
+
+    thrusterAvailability: 90,
+
+    powerAvailability: 95,
+
+    redundancy: 85
+
+  },
+
+
+  DP_WIND_LOAD: {
+
+    vesselStatus: "STRESSED",
+
+    positionError: 30,
+
+    headingError: 25,
+
+    surge: 35,
+
+    sway: 45,
+
+    yaw: 25,
+
+    windLoad: 85,
+
+    currentLoad: 30,
+
+    waveLoad: 40,
+
+    thrusterAvailability: 95,
+
+    powerAvailability: 95,
+
+    redundancy: 90
+
+  },
+
+
+  DP_DRIFT_OFF: {
+
+    vesselStatus: "CRITICAL",
+
+    positionError: 85,
+
+    headingError: 55,
+
+    surge: 75,
+
+    sway: 70,
+
+    yaw: 50,
+
+    windLoad: 60,
+
+    currentLoad: 55,
+
+    waveLoad: 50,
+
+    thrusterAvailability: 75,
+
+    powerAvailability: 80,
+
+    redundancy: 70
+
+  },
+
+
+  DP_MULTI_THRUSTER_FAILURE: {
+
+    vesselStatus: "CRITICAL",
+
+    positionError: 75,
+
+    headingError: 50,
+
+    surge: 70,
+
+    sway: 65,
+
+    yaw: 55,
+
+    windLoad: 45,
+
+    currentLoad: 35,
+
+    waveLoad: 35,
+
+    thrusterAvailability: 35,
+
+    powerAvailability: 80,
+
+    redundancy: 30
+
+  },
+
+
+  DP_WORST_CASE_FAILURE: {
+
+    vesselStatus: "CRITICAL",
+
+    positionError: 95,
+
+    headingError: 85,
+
+    surge: 90,
+
+    sway: 90,
+
+    yaw: 80,
+
+    windLoad: 90,
+
+    currentLoad: 80,
+
+    waveLoad: 80,
+
+    thrusterAvailability: 20,
+
+    powerAvailability: 30,
+
+    redundancy: 15
+
+  }
+
+};
+
+
+/* ============================================================
+   ORBITAL SCENARIO PROFILES
+============================================================ */
+
+const orbitalScenarioProfiles = {
+
+  ORBITAL_SIGNAL_LOSS: {
+
+    spacecraftStatus: "ISOLATED",
+
+    communication: 5,
+
+    power: 95,
+
+    attitude: 95,
+
+    propulsion: 100,
+
+    navigation: 90,
+
+    thermal: 95,
+
+    missionIntegrity: 80
+
+  },
+
+
+  ORBITAL_POWER_FAILURE: {
+
+    spacecraftStatus: "CRITICAL",
+
+    communication: 60,
+
+    power: 20,
+
+    attitude: 75,
+
+    propulsion: 70,
+
+    navigation: 80,
+
+    thermal: 60,
+
+    missionIntegrity: 65
+
+  },
+
+
+  ORBITAL_ATTITUDE_ANOMALY: {
+
+    spacecraftStatus: "DEGRADED",
+
+    communication: 90,
+
+    power: 90,
+
+    attitude: 30,
+
+    propulsion: 75,
+
+    navigation: 55,
+
+    thermal: 85,
+
+    missionIntegrity: 65
+
+  },
+
+
+  ORBITAL_COMMUNICATION_FAILURE: {
+
+    spacecraftStatus: "ISOLATED",
+
+    communication: 10,
+
+    power: 90,
+
+    attitude: 90,
+
+    propulsion: 90,
+
+    navigation: 85,
+
+    thermal: 90,
+
+    missionIntegrity: 75
+
+  },
+
+
+  ORBITAL_MANOEUVRE_FAILURE: {
+
+    spacecraftStatus: "DEGRADED",
+
+    communication: 90,
+
+    power: 85,
+
+    attitude: 65,
+
+    propulsion: 35,
+
+    navigation: 75,
+
+    thermal: 85,
+
+    missionIntegrity: 60
+
+  },
+
+
+  ORBITAL_PROPULSION_FAILURE: {
+
+    spacecraftStatus: "CRITICAL",
+
+    communication: 90,
+
+    power: 85,
+
+    attitude: 70,
+
+    propulsion: 15,
+
+    navigation: 65,
+
+    thermal: 85,
+
+    missionIntegrity: 55
+
+  },
+
+
+  ORBITAL_CASCADE_FAILURE: {
+
+    spacecraftStatus: "CRITICAL",
+
+    communication: 25,
+
+    power: 30,
+
+    attitude: 35,
+
+    propulsion: 30,
+
+    navigation: 40,
+
+    thermal: 45,
+
+    missionIntegrity: 25
+
+  }
+
+};
+
+
+/* ============================================================
+   DP ENGINE
+============================================================ */
+
+function runDPSimulator(scenario){
+
+  const profile =
+    dpScenarioProfiles[scenario];
+
+  if(!profile){
+
+    setJSON(
+      "dpSimulator",
+      {
+        status:"ERROR",
+        message:"Unknown DP scenario."
+      }
+    );
+
+    return;
+
+  }
+
+
+  dpState = {
+
+    ...dpState,
+
+    ...profile
+
+  };
+
+
+  const stress = (
+
+    dpState.positionError * 0.20 +
+
+    dpState.headingError * 0.10 +
+
+    dpState.surge * 0.10 +
+
+    dpState.sway * 0.10 +
+
+    dpState.yaw * 0.05 +
+
+    dpState.windLoad * 0.10 +
+
+    dpState.currentLoad * 0.05 +
+
+    dpState.waveLoad * 0.05 +
+
+    (100 - dpState.thrusterAvailability) * 0.10 +
+
+    (100 - dpState.powerAvailability) * 0.10 +
+
+    (100 - dpState.redundancy) * 0.05
+
+  );
+
+
+  const normalizedStress =
+    Math.min(
+      100,
+      stress * (scenarioIntensity / 50)
+    );
+
+
+  let severity =
+    "LOW";
+
+  let action =
+    "MAINTAIN_SAFE_STATE";
+
+
+  if(normalizedStress >= 70){
+
+    severity =
+      "CRITICAL";
+
+    action =
+      "PREPARE_SAFE_POSITION / RECOVERY ASSESSMENT";
+
+  }
+
+  else if(normalizedStress >= 40){
+
+    severity =
+      "MEDIUM";
+
+    action =
+      "STABILIZE DP SYSTEM / REQUEST ADDITIONAL DIAGNOSTICS";
+
+  }
+
+
+  dpState.severity =
+    severity;
+
+  dpState.recoveryRequired =
+    severity !== "LOW";
+
+  dpState.recommendedAction =
+    action;
+
+
+  currentDomain =
+    "DP";
+
+  currentScenario =
+    scenario;
+
+  currentState.dp =
+    Math.round(normalizedStress);
+
+
+  updateMonitor();
+
+
+  setJSON(
+    "dpSimulator",
+    {
+
+      engine:
+        "DP Simulator Engine",
+
+      domain:
+        "DP",
+
+      scenario,
+
+      vesselStatus:
+        dpState.vesselStatus,
+
+      positionError:
+        dpState.positionError,
+
+      headingError:
+        dpState.headingError,
+
+      surge:
+        dpState.surge,
+
+      sway:
+        dpState.sway,
+
+      yaw:
+        dpState.yaw,
+
+      windLoad:
+        dpState.windLoad,
+
+      currentLoad:
+        dpState.currentLoad,
+
+      waveLoad:
+        dpState.waveLoad,
+
+      thrusterAvailability:
+        dpState.thrusterAvailability,
+
+      powerAvailability:
+        dpState.powerAvailability,
+
+      redundancy:
+        dpState.redundancy,
+
+      resilienceStress:
+        Math.round(normalizedStress * 100) / 100,
+
+      severity,
+
+      captainAILenaRecommendation:
+        action,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      physicalExecution:
+        false,
+
+      backendConnection:
+        false
+
+    }
+
+  );
+
+
+  addPipelineLog(
+    "DP Engine assessment completed: "
+    + scenario
+  );
+
+
+  updateAudit(
+    "DP_SIMULATION_ASSESSMENT",
+    {
+
+      scenario,
+
+      severity,
+
+      stress:
+        normalizedStress,
+
+      recommendation:
+        action
+
+    }
+
+  );
+
+
+  memory.lastScenario =
+    scenario;
+
+  memory.lastDomain =
+    "DP";
+
+  memory.lastSeverity =
+    severity;
+
+  memory.timestamp =
+    nowISO();
+
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+}
+
+
+/* ============================================================
+   ORBITAL ENGINE
+============================================================ */
+
+function runOrbitalSimulator(scenario){
+
+  const profile =
+    orbitalScenarioProfiles[scenario];
+
+  if(!profile){
+
+    setJSON(
+      "orbitalSimulator",
+      {
+        status:"ERROR",
+        message:"Unknown orbital scenario."
+      }
+    );
+
+    return;
+
+  }
+
+
+  orbitalState = {
+
+    ...orbitalState,
+
+    ...profile
+
+  };
+
+
+  const stress = (
+
+    (100 - orbitalState.communication) * 0.15 +
+
+    (100 - orbitalState.power) * 0.15 +
+
+    (100 - orbitalState.attitude) * 0.15 +
+
+    (100 - orbitalState.propulsion) * 0.15 +
+
+    (100 - orbitalState.navigation) * 0.10 +
+
+    (100 - orbitalState.thermal) * 0.10 +
+
+    (100 - orbitalState.missionIntegrity) * 0.20
+
+  );
+
+
+  const normalizedStress =
+    Math.min(
+      100,
+      stress * (scenarioIntensity / 50)
+    );
+
+
+  let severity =
+    "LOW";
+
+  let action =
+    "MAINTAIN_SAFE_STATE";
+
+
+  if(normalizedStress >= 70){
+
+    severity =
+      "CRITICAL";
+
+    action =
+      "ISOLATE FAULT / PREPARE RECOVERY ASSESSMENT";
+
+  }
+
+  else if(normalizedStress >= 40){
+
+    severity =
+      "MEDIUM";
+
+    action =
+      "STABILIZE SPACECRAFT / REQUEST ADDITIONAL DIAGNOSTICS";
+
+  }
+
+
+  orbitalState.severity =
+    severity;
+
+  orbitalState.recoveryRequired =
+    severity !== "LOW";
+
+  orbitalState.recommendedAction =
+    action;
+
+
+  currentDomain =
+    "ORBITAL";
+
+  currentScenario =
+    scenario;
+
+  currentState.orbital =
+    Math.round(normalizedStress);
+
+
+  updateMonitor();
+
+
+  setJSON(
+    "orbitalSimulator",
+    {
+
+      engine:
+        "Orbital Resilience Engine",
+
+      domain:
+        "ORBITAL",
+
+      scenario,
+
+      spacecraftStatus:
+        orbitalState.spacecraftStatus,
+
+      communication:
+        orbitalState.communication,
+
+      power:
+        orbitalState.power,
+
+      attitude:
+        orbitalState.attitude,
+
+      propulsion:
+        orbitalState.propulsion,
+
+      navigation:
+        orbitalState.navigation,
+
+      thermal:
+        orbitalState.thermal,
+
+      missionIntegrity:
+        orbitalState.missionIntegrity,
+
+      resilienceStress:
+        Math.round(normalizedStress * 100) / 100,
+
+      severity,
+
+      captainAILenaRecommendation:
+        action,
+
+      executionGate:
+        "HUMAN_AUTHORIZATION_REQUIRED",
+
+      physicalExecution:
+        false,
+
+      backendConnection:
+        false
+
+    }
+
+  );
+
+
+  addPipelineLog(
+    "Orbital Engine assessment completed: "
+    + scenario
+  );
+
+
+  updateAudit(
+    "ORBITAL_SIMULATION_ASSESSMENT",
+    {
+
+      scenario,
+
+      severity,
+
+      stress:
+        normalizedStress,
+
+      recommendation:
+        action
+
+    }
+
+  );
+
+
+  memory.lastScenario =
+    scenario;
+
+  memory.lastDomain =
+    "ORBITAL";
+
+  memory.lastSeverity =
+    severity;
+
+  memory.timestamp =
+    nowISO();
+
+
+  setJSON(
+    "memoryCore",
+    memory
+  );
+
+}
+
+
+/* ============================================================
+   ROUTER OVERRIDE
+   Keeps DP and ORBITAL isolated from the legacy domains.
+============================================================ */
+
+const originalActivateScenario =
+  activateScenario;
+
+
+activateScenario =
+  function(name){
+
+    if(
+      name.startsWith("DP_")
+    ){
+
+      runDPSimulator(name);
+
+      return;
+
+    }
+
+
+    if(
+      name.startsWith("ORBITAL_")
+    ){
+
+      runOrbitalSimulator(name);
+
+      return;
+
+    }
+
+
+    originalActivateScenario(name);
+
+  };
+
+
+/* ============================================================
+   DP / ORBITAL INTEGRATION STATUS
+============================================================ */
+
+function updateOperationalIntegrationStatus(){
+
+  setJSON(
+    "domainIntegrationStatus",
+    {
+
+      core:
+        "CONNECTED",
+
+      dpSimulator:
+        "CONNECTED",
+
+      orbitalResilienceSimulator:
+        "CONNECTED",
+
+      captainAILena:
+        "CONNECTED",
+
+      goldenRuleEngine:
+        "ACTIVE",
+
+      humanDecisionAuthority:
+        "ACTIVE",
+
+      memoryCore:
+        "CONNECTED",
+
+      auditCore:
+        "CONNECTED",
+
+      backend:
+        "NOT_CONNECTED",
+
+      physicalExecution:
+        "DISABLED",
+
+      status:
+        "PASS"
+
+    }
+
+  );
+
+}
+
+
+updateOperationalIntegrationStatus();
 
 
 
