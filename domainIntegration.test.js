@@ -947,3 +947,29 @@ if (
   }
 
 }
+/* =========================================================
+   FINAL TEST SUMMARY
+========================================================= */
+
+console.log("\n========================================");
+console.log("SPD v13.1 DOMAIN INTEGRATION SYSTEM TEST");
+console.log("========================================");
+
+console.log("PASSED:", passed);
+console.log("FAILED:", failed);
+
+if (failed === 0) {
+
+  console.log(
+    "SYSTEM TEST RESULT: PASS"
+  );
+
+} else {
+
+  console.error(
+    "SYSTEM TEST RESULT: FAIL"
+  );
+
+  process.exitCode = 1;
+
+}
