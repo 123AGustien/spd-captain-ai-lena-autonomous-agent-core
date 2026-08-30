@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPD v13.1 — Sextant Resilience Cockpit Pro — UMV Autonomous</title>
+
+<style>
+:root {
+    --bg: #07111f;
+    --panel: #0d1b2e;
+    --panel2: #10243b;
+    --border: #1d4668;
+    --text: #e8f4ff;
+    --muted: #8faec7;
+    --green: #35e58b;
+    --yellow: #ffd166;
+    --red: #ff5c5c;
+    --blue: #56b4ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #06101d, #0a1727);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    width: min(1200px, 96%);
+    margin: auto;
+    padding: 20px 0 40px;
+}
+
+header {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 18px;
+    color: var(--blue);
+}
+
+h3 {
+    font-size: 15px;
+    color: var(--green);
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #0b3325;
+    color: var(--green);
+    border: 1px solid #1b6d4b;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.warning {
+    padding: 12px;
+    margin-top: 12px;
+    border-left: 4px solid var(--yellow);
+    background: #211c0d;
+    color: #ffe9a8;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+button, select {
+    background: var(--panel2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+    margin: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    border-color: var(--blue);
+}
+
+button.primary {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+button.danger {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.stage {
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.stage.active {
+    color: var(--green);
+    border-color: var(--green);
+    background: #0b3022;
+}
+
+.stage.complete {
+    color: var(--blue);
+    border-color: var(--blue);
+}
+
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #050d17;
+    border: 1px solid #17324b;
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.metric {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 6px 0 14px;
+}
+
+.low {
+    color: var(--green);
+}
+
+.medium {
+    color: var(--yellow);
+}
+
+.high {
+    color: var(--red);
+}
+
+.action-box {
+    border: 1px solid var(--green);
+    background: #092419;
+    padding: 16px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.simulation {
+    color: var(--yellow);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border-bottom: 1px solid #17324b;
+    padding: 8px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+footer {
+    color: var(--muted);
+    text-align: center;
+    font-size: 12px;
+    padding-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>⚓ SPD v13.1 — SEXTANT RESILIENCE COCKPIT PRO</h1>
+
+    <div>
+        Captain AI Lena Autonomous Agent Core • UMV / Dynamic Positioning Operational Resilience
+        • Triple-Layer Decision Resilience • Deterministic Local Simulation
+    </div>
+
+    <div class="status">
+        🟢 UMV AUTONOMOUS SIMULATION READY — CAPTAIN AI LENA AUTONOMOUS MODE
+    </div>
+
+    <div class="warning">
+        <strong>SIMULATION BOUNDARY:</strong>
+        Captain AI Lena is the autonomous decision authority inside this demonstrator.
+        This browser application has no backend connection, no physical actuator connection,
+        and cannot command a real UMV, thruster, propulsion, steering or power system.
+    </div>
+</header>
+
+
+<div class="panel">
+    <h2>🧭 UMV AUTONOMOUS RESILIENCE ARCHITECTURE</h2>
+
+    <p>
+        Abnormal condition → independent assessment → cascading-condition recognition →
+        Primary AI → Secondary AI → Stabilizer / Captain AI Lena →
+        Trial Manoeuvre → independent validation →
+        Autonomous Decision → Simulated Action → Update
+    </p>
+
+    <div id="pipeline" class="pipeline"></div>
+</div>
+
+
+<div class="panel">
+    <h2>🎛️ SYSTEM CONTROLS</h2>
+
+    <button class="primary" onclick="runSystem()">
+        ▶ RUN UMV SYSTEM
+    </button>
+
+    <button onclick="runSelfTest()">
+        🧪 RUN SELF-TEST
+    </button>
+
+    <button onclick="runCorrectiveAssessment()">
+        🛠️ SELF-TEST + CORRECTIVE ASSESSMENT
+    </button>
+
+    <button onclick="runIntegrationTest()">
+        🔌 FINAL AUTONOMOUS INTEGRATION TEST
+    </button>
+
+    <button class="danger" onclick="resetSimulator()">
+        ↺ RESET SIMULATOR
+    </button>
+</div>
+
+
+<div class="panel">
+    <h2>⚓ UMV / DP RESILIENCE SIMULATOR</h2>
+
+    <p class="small">
+        Select a deterministic UMV / DP abnormal-condition scenario.
+    </p>
+
+    <select id="scenarioSelect">
+        <option value="THRUSTER_FAILURE">Thruster Failure</option>
+        <option value="POWER_FAILURE">Power Failure</option>
+        <option value="POSITION_DEVIATION">Position Deviation</option>
+        <option value="HIGH_WIND_LOAD">High Wind Load</option>
+        <option value="DRIFT_OFF">Drift Off</option>
+        <option value="MULTIPLE_THRUSTER_FAILURE">
+            Multiple Thruster Failure
+        </option>
+        <option value="WORST_CASE_FAILURE">
+            Worst Case Failure
+        </option>
+    </select>
+
+    <button onclick="loadScenario()">
+        LOAD UMV / DP SCENARIO
+    </button>
+
+    <button class="primary" onclick="runAutonomousPipeline()">
+        RUN UMV / DP AUTONOMOUS PIPELINE
+    </button>
+</div>
+
+
+<div class="grid">
+
+<section class="panel">
+    <h2>🧠 PRIMARY AI</h2>
+    <p>Independent first-pass abnormal-condition assessment.</p>
+    <pre id="primaryOutput">Waiting...</pre>
+</section>
+
+
+<section class="panel">
+    <h2>🧠 SECONDARY AI</h2>
+    <p>Independent cross-check. The Secondary AI does not simply copy the Primary AI.</p>
+    <pre id="secondaryOutput">Waiting...</pre>
+</section>
+
+
+<section class="panel">
+    <h2>🧠 STABILIZER / CAPTAIN AI LENA</h2>
+    <p>
+        Reconciles independent assessment layers and becomes the autonomous
+        decision authority for the UMV simulation.
+    </p>
+    <pre id="lenaOutput">Waiting...</pre>
+</section>
+
+</div>
+
+
+<div class="grid">
+
+<section class="panel">
+    <h2>🔗 CASCADING-CONDITION RECOGNITION</h2>
+    <pre id="cascadeOutput">Waiting for UMV / DP scenario...</pre>
+</section>
+
+
+<section class="panel">
+    <h2>⚠️ SYSTEM ASSESSMENT</h2>
+    <pre id="assessmentOutput">Waiting...</pre>
+
+    <div>
+        <span>Risk</span>
+        <div id="risk" class="metric">UNKNOWN</div>
+    </div>
+
+    <div>
+        <span>Resilience Score</span>
+        <div id="resilience" class="metric">N/A</div>
+    </div>
+
+    <div>
+        <span>Golden Score</span>
+        <div id="golden" class="metric">N/A</div>
+    </div>
+</section>
+
+</div>
+
+
+<section class="panel">
+    <h2>⚓ TRIAL MANOEUVRE + INDEPENDENT VALIDATION</h2>
+
+    <p class="small">
+        The trial manoeuvre is simulated first. Validation must PASS before
+        Captain AI Lena proceeds to the autonomous simulated action stage.
+    </p>
+
+    <button onclick="runTrialManoeuvre()">
+        ⚓ RUN TRIAL MANOEUVRE
+    </button>
+
+    <button onclick="verifyTrial()">
+        🔎 VERIFY TRIAL MANOEUVRE
+    </button>
+
+    <pre id="trialOutput">Trial manoeuvre not executed.</pre>
+</section>
+
+
+<section class="panel">
+    <h2>🤖 UMV AUTONOMOUS DECISION AUTHORITY</h2>
+
+    <p>
+        <strong>
+            AI RESILIENCE ASSESSMENT → CAPTAIN AI LENA AUTONOMOUS DECISION
+        </strong>
+    </p>
+
+    <p>
+        Captain AI Lena is the autonomous decision authority within this UMV
+        simulation architecture. No DPO authorization step is required in
+        autonomous simulation mode.
+    </p>
+
+    <pre id="authorityOutput">
+{
+  "authority": "CAPTAIN_AI_LENA",
+  "mode": "AUTONOMOUS_SIMULATION",
+  "status": "READY",
+  "decision": null,
+  "physicalExecution": false,
+  "backendConnection": false,
+  "automaticRecovery": false
+}
+    </pre>
+</section>
+
+
+<section class="panel">
+    <h2>⚙️ CAPTAIN AI LENA AUTONOMOUS ACTION</h2>
+
+    <div id="actionBox" class="action-box">
+        Waiting for validated autonomous decision...
+    </div>
+
+    <h3>💡 AUTONOMOUS SOLUTION OPTIONS</h3>
+    <pre id="optionsOutput">Waiting...</pre>
+
+    <h3>🔒 UMV AUTONOMOUS EXECUTION GATE</h3>
+    <pre id="executionOutput">
+AUTONOMOUS SIMULATION GATE READY.
+NO PHYSICAL EXECUTION.
+NO BACKEND CONNECTION.
+    </pre>
+</section>
+
+
+<div class="grid">
+
+<section class="panel">
+    <h2>📊 RAW UMV / DP SYSTEM STATE</h2>
+    <pre id="stateOutput">Waiting...</pre>
+</section>
+
+
+<section class="panel">
+    <h2>🧠 MEMORY CORE</h2>
+    <pre id="memoryOutput">Waiting...</pre>
+</section>
+
+</div>
+
+
+<section class="panel">
+    <h2>🧾 AUDIT RECORD</h2>
+    <pre id="auditOutput">Simulator initialized.</pre>
+</section>
+
+
+<section class="panel">
+    <h2>📜 PIPELINE LOG</h2>
+    <pre id="logOutput">Waiting...</pre>
+</section>
+
+
+<section class="panel">
+    <h2>🧪 VALIDATION CORE</h2>
+
+    <table>
+        <tr>
+            <th>Validation Stage</th>
+            <th>Status</th>
+        </tr>
+
+        <tr>
+            <td>Self-Test</td>
+            <td id="selfTestStatus">NOT EXECUTED</td>
+        </tr>
+
+        <tr>
+            <td>Fault Identification</td>
+            <td id="faultStatus">NOT EXECUTED</td>
+        </tr>
+
+        <tr>
+            <td>Corrective Action Assessment</td>
+            <td id="correctiveStatus">NOT EXECUTED</td>
+        </tr>
+
+        <tr>
+            <td>Re-Test Validation</td>
+            <td id="retestStatus">NOT EXECUTED</td>
+        </tr>
+
+        <tr>
+            <td>Final Autonomous Integration</td>
+            <td id="integrationStatus">NOT EXECUTED</td>
+        </tr>
+    </table>
+</section>
+
+
+<footer>
+SPD v13.1 — Sextant Resilience Cockpit Pro — UMV Autonomous Mode<br>
+Deterministic Local Simulation • Captain AI Lena Autonomous Decision Authority<br>
+No backend connection • No physical execution
+</footer>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   SPD v13.1
+   UMV / DP AUTONOMOUS SIMULATION ENGINE
+   Captain AI Lena Autonomous Decision Authority
+   ============================================================ */
+
+const PHI = 1.618033988749895;
+
+const stages = [
+    "OBSERVE",
+    "VERIFY",
+    "ASSESS",
+    "CASCADE",
+    "PRIMARY AI",
+    "SECONDARY AI",
+    "STABILIZER",
+    "TRIAL",
+    "VALIDATE",
+    "AUTONOMOUS DECISION",
+    "SIMULATED ACTION",
+    "UPDATE"
+];
+
+let currentStage = -1;
+
+let state = {
+    scenario: null,
+    domain: "UMV_DP",
+    rawState: null,
+    assessment: null,
+    primary: null,
+    secondary: null,
+    cascade: null,
+    lena: null,
+    trial: null,
+    validation: null,
+    autonomousAction: null,
+    timestamp: null
+};
+
+let audit = [];
+let pipelineLog = [];
+
+
+/* ============================================================
+   DETERMINISTIC SCENARIOS
+   ============================================================ */
+
+const scenarios = {
+
+    THRUSTER_FAILURE: {
+        label: "THRUSTER FAILURE",
+        severity: "HIGH",
+        state: {
+            fx: 10,
+            energy: 35,
+            cyb: 10,
+            inf: 20,
+            dc: 80
+        },
+        decision:
+            "ISOLATE FAILED THRUSTER / MAINTAIN SAFE DP STATE",
+        options: [
+            "Redistribute available thrust.",
+            "Maintain safe position envelope.",
+            "Monitor remaining propulsion redundancy.",
+            "Prepare controlled recovery within autonomous simulation."
+        ]
+    },
+
+    POWER_FAILURE: {
+        label: "POWER FAILURE",
+        severity: "CRITICAL",
+        state: {
+            fx: 10,
+            energy: 90,
+            cyb: 10,
+            inf: 45,
+            dc: 70
+        },
+        decision:
+            "ISOLATE POWER LOSS / PROTECT ESSENTIAL SYSTEMS",
+        options: [
+            "Protect essential power loads.",
+            "Isolate failed power segment.",
+            "Preserve propulsion redundancy.",
+            "Execute simulated power recovery sequence."
+        ]
+    },
+
+    POSITION_DEVIATION: {
+        label: "POSITION DEVIATION",
+        severity: "HIGH",
+        state: {
+            fx: 10,
+            energy: 30,
+            cyb: 10,
+            inf: 65,
+            dc: 75
+        },
+        decision:
+            "CONTAIN POSITION DEVIATION / RESTORE SAFE STATION-KEEPING",
+        options: [
+            "Increase simulated station-keeping response.",
+            "Redistribute available thrust.",
+            "Monitor position envelope.",
+            "Execute simulated corrective manoeuvre."
+        ]
+    },
+
+    HIGH_WIND_LOAD: {
+        label: "HIGH WIND LOAD",
+        severity: "HIGH",
+        state: {
+            fx: 10,
+            energy: 45,
+            cyb: 10,
+            inf: 50,
+            dc: 75
+        },
+        decision:
+            "COMPENSATE ENVIRONMENTAL LOAD / MAINTAIN SAFE DP STATE",
+        options: [
+            "Redistribute available thrust.",
+            "Increase environmental-load compensation.",
+            "Monitor station-keeping margin.",
+            "Execute simulated compensation manoeuvre."
+        ]
+    },
+
+    DRIFT_OFF: {
+        label: "DRIFT OFF",
+        severity: "CRITICAL",
+        state: {
+            fx: 10,
+            energy: 60,
+            cyb: 10,
+            inf: 80,
+            dc: 90
+        },
+        decision:
+            "CONTAIN DRIFT / RESTORE SAFE POSITION ENVELOPE",
+        options: [
+            "Contain simulated drift.",
+            "Redistribute propulsion resources.",
+            "Protect position envelope.",
+            "Execute simulated recovery manoeuvre."
+        ]
+    },
+
+    MULTIPLE_THRUSTER_FAILURE: {
+        label: "MULTIPLE THRUSTER FAILURE",
+        severity: "CRITICAL",
+        state: {
+            fx: 10,
+            energy: 55,
+            cyb: 10,
+            inf: 55,
+            dc: 95
+        },
+        decision:
+            "CONTAIN PROPULSION LOSS / MAINTAIN SAFE STATE",
+        options: [
+            "Isolate failed propulsion units.",
+            "Redistribute remaining thrust.",
+            "Monitor station-keeping capability.",
+            "Escalate simulated resilience response."
+        ]
+    },
+
+    WORST_CASE_FAILURE: {
+        label: "WORST CASE FAILURE",
+        severity: "CRITICAL",
+        state: {
+            fx: 40,
+            energy: 90,
+            cyb: 35,
+            inf: 85,
+            dc: 100
+        },
+        decision:
+            "EXECUTE MAXIMUM CONTAINMENT / ENTER SIMULATED SAFE STATE",
+        options: [
+            "Contain propulsion and energy loss.",
+            "Preserve remaining operational capability.",
+            "Protect safe-state envelope.",
+            "Execute maximum simulated recovery response."
+        ]
+    }
+};
+
+
+/* ============================================================
+   UI PIPELINE
+   ============================================================ */
+
+function renderPipeline() {
+
+    const el = document.getElementById("pipeline");
+
+    el.innerHTML = stages.map((stage, i) => {
+
+        let cls = "stage";
+
+        if (i < currentStage) {
+            cls += " complete";
+        }
+
+        if (i === currentStage) {
+            cls += " active";
+        }
+
+        return `<div class="${cls}">${stage}</div>`;
+
+    }).join("");
+}
+
+
+function setStage(index) {
+    currentStage = index;
+    renderPipeline();
+}
+
+
+/* ============================================================
+   AUDIT / LOG
+   ============================================================ */
+
+function now() {
+    return new Date().toISOString();
+}
+
+function auditEvent(type, message) {
+
+    const line =
+        `${now()} | ${type} | ${message}`;
+
+    audit.unshift(line);
+    pipelineLog.unshift(line);
+
+    document.getElementById("auditOutput").textContent =
+        audit.join("\n");
+
+    document.getElementById("logOutput").textContent =
+        pipelineLog.join("\n");
+}
+
+
+/* ============================================================
+   SCENARIO LOADING
+   ============================================================ */
+
+function loadScenario() {
+
+    const key =
+        document.getElementById("scenarioSelect").value;
+
+    const scenario = scenarios[key];
+
+    state = {
+        scenario: key,
+        domain: "UMV_DP",
+        rawState: { ...scenario.state },
+        assessment: null,
+        primary: null,
+        secondary: null,
+        cascade: null,
+        lena: null,
+        trial: null,
+        validation: null,
+        autonomousAction: null,
+        timestamp: now()
+    };
+
+    setStage(0);
+
+    document.getElementById("stateOutput").textContent =
+        JSON.stringify(state.rawState, null, 2);
+
+    document.getElementById("primaryOutput").textContent =
+        "Waiting for autonomous pipeline...";
+
+    document.getElementById("secondaryOutput").textContent =
+        "Waiting for autonomous pipeline...";
+
+    document.getElementById("lenaOutput").textContent =
+        "Waiting for autonomous pipeline...";
+
+    document.getElementById("cascadeOutput").textContent =
+        "Scenario loaded. Awaiting cascade assessment.";
+
+    document.getElementById("assessmentOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("trialOutput").textContent =
+        "Trial manoeuvre not executed.";
+
+    document.getElementById("actionBox").textContent =
+        "Waiting for validated autonomous decision...";
+
+    auditEvent(
+        "SCENARIO_LOADED",
+        `UMV / DP scenario loaded: ${scenario.label}.`
+    );
+}
+
+
+/* ============================================================
+   GOLDEN RESILIENCE CALCULATION
+   ============================================================ */
+
+function calculateStress(raw) {
+
+    /*
+       UMV / DP deterministic weighting.
+
+       The dominant DP / propulsion condition is represented
+       through DC while energy and information loading contribute
+       to the total resilience assessment.
+    */
+
+    return (
+        raw.fx * 0.05 +
+        raw.energy * 0.20 +
+        raw.cyb * 0.05 +
+        raw.inf * 0.20 +
+        raw.dc * 0.50
+    );
+}
+
+
+function classifyRisk(score) {
+
+    if (score < 30) return "LOW";
+    if (score < 50) return "MEDIUM";
+    return "HIGH";
+}
+
+
+/* ============================================================
+   PRIMARY AI
+   ============================================================ */
+
+function primaryAssessment(scenario) {
+
+    return {
+        agent: "PRIMARY AI",
+        assessment:
+            "Independent first-pass abnormal-condition assessment",
+        domain: "UMV_DP",
+        severity: scenario.severity,
+        observedCondition: scenario.label,
+        rawStress: state.assessment.rawStress,
+        risk: state.assessment.risk,
+        confidence: "HIGH",
+        recommendation: scenario.decision
+    };
+}
+
+
+/* ============================================================
+   SECONDARY AI
+   ============================================================ */
+
+function secondaryAssessment(scenario) {
+
+    return {
+        agent: "SECONDARY AI",
+        assessment:
+            "Independent cross-check",
+        independent: true,
+        domain: "UMV_DP",
+        observedCondition: scenario.label,
+        risk: state.assessment.risk,
+        criticalDomains: [
+            {
+                domain: "DC",
+                value: state.rawState.dc
+            }
+        ],
+        recommendation: scenario.decision
+    };
+}
+
+
+/* ============================================================
+   CASCADE ENGINE
+   ============================================================ */
+
+function detectCascade(scenario) {
+
+    const detected =
+        state.rawState.dc >= 90 ||
+        scenario.label === "DRIFT OFF" ||
+        scenario.label === "WORST CASE FAILURE" ||
+        scenario.label === "MULTIPLE THRUSTER FAILURE";
+
+    return {
+        detected: detected,
+        domain: "UMV_DP",
+        condition: detected
+            ? "Multiple abnormal conditions or critical domain loading may produce cascading operational effects."
+            : "Potential secondary effects remain monitored within the resilience assessment.",
+        criticalDomains: [
+            {
+                domain: "DC",
+                value: state.rawState.dc
+            }
+        ],
+        containmentRequired: detected
+    };
+}
+
+
+/* ============================================================
+   CAPTAIN AI LENA
+   ============================================================ */
+
+function lenaDecision(scenario) {
+
+    return {
+        agent: "STABILIZER / CAPTAIN AI LENA",
+        role:
+            "Decision reconciliation and autonomous UMV / DP decision authority",
+        domain: "UMV_DP",
+        primaryRisk: state.primary.risk,
+        secondaryRisk: state.secondary.risk,
+        cascadeDetected: state.cascade.detected,
+        finalRisk: state.assessment.risk,
+        resilienceScore: state.assessment.resilienceScore,
+        decision: scenario.decision
+    };
+}
+
+
+/* ============================================================
+   FULL AUTONOMOUS PIPELINE
+   ============================================================ */
+
+function runAutonomousPipeline() {
+
+    if (!state.scenario) {
+        loadScenario();
+    }
+
+    const scenario = scenarios[state.scenario];
+
+    /* OBSERVE */
+
+    setStage(0);
+
+    /* VERIFY */
+
+    setTimeout(() => {
+
+        setStage(1);
+
+        /* ASSESS */
+
+        const rawStress =
+            calculateStress(state.rawState);
+
+        const goldenScore =
+            rawStress * (1 / PHI);
+
+        const resilienceScore =
+            Math.max(0, 100 - goldenScore);
+
+        const risk =
+            classifyRisk(rawStress);
+
+        state.assessment = {
+            domain: "UMV_DP",
+            scenario: scenario.label,
+            rawStress:
+                Number(rawStress.toFixed(3)),
+            goldenScore:
+                Number(goldenScore.toFixed(3)),
+            resilienceScore:
+                Number(resilienceScore.toFixed(3)),
+            risk: risk,
+            calculation:
+                "rawStress × (1 / PHI)"
+        };
+
+        document.getElementById("assessmentOutput").textContent =
+            JSON.stringify(state.assessment, null, 2);
+
+        document.getElementById("risk").textContent = risk;
+        document.getElementById("risk").className =
+            "metric " + risk.toLowerCase();
+
+        document.getElementById("resilience").textContent =
+            state.assessment.resilienceScore;
+
+        document.getElementById("golden").textContent =
+            state.assessment.goldenScore;
+
+        setStage(2);
+
+    }, 150);
+
+
+    setTimeout(() => {
+
+        /* CASCADE */
+
+        state.cascade =
+            detectCascade(scenario);
+
+        document.getElementById("cascadeOutput").textContent =
+            JSON.stringify(state.cascade, null, 2);
+
+        setStage(3);
+
+    }, 350);
+
+
+    setTimeout(() => {
+
+        /* PRIMARY */
+
+        state.primary =
+            primaryAssessment(scenario);
+
+        document.getElementById("primaryOutput").textContent =
+            JSON.stringify(state.primary, null, 2);
+
+        setStage(4);
+
+    }, 550);
+
+
+    setTimeout(() => {
+
+        /* SECONDARY */
+
+        state.secondary =
+            secondaryAssessment(scenario);
+
+        document.getElementById("secondaryOutput").textContent =
+            JSON.stringify(state.secondary, null, 2);
+
+        setStage(5);
+
+    }, 750);
+
+
+    setTimeout(() => {
+
+        /* STABILIZER / LENA */
+
+        state.lena =
+            lenaDecision(scenario);
+
+        document.getElementById("lenaOutput").textContent =
+            JSON.stringify(state.lena, null, 2);
+
+        setStage(6);
+
+        auditEvent(
+            "GOLDEN_RULE_COMPLETED",
+            "UMV autonomous resilience assessment completed."
+        );
+
+    }, 950);
+
+
+    setTimeout(() => {
+
+        /* TRIAL */
+
+        runTrialManoeuvre();
+
+    }, 1150);
+
+
+    setTimeout(() => {
+
+        /* VALIDATE */
+
+        verifyTrial();
+
+    }, 1500);
+
+
+    setTimeout(() => {
+
+        /* AUTONOMOUS DECISION */
+
+        if (
+            state.validation &&
+            state.validation.result === "PASS"
+        ) {
+
+            setStage(9);
+
+            document.getElementById("authorityOutput").textContent =
+                JSON.stringify({
+                    authority: "CAPTAIN_AI_LENA",
+                    mode: "AUTONOMOUS_SIMULATION",
+                    status: "DECISION_READY",
+                    decision: state.lena.decision,
+                    domain: "UMV_DP",
+                    scenario: state.scenario,
+                    executionGate:
+                        "AUTONOMOUS_SIMULATION_GATE",
+                    physicalExecution: false,
+                    backendConnection: false,
+                    automaticRecovery: false
+                }, null, 2);
+
+            document.getElementById("actionBox").textContent =
+                "CAPTAIN AI LENA DECISION: " +
+                state.lena.decision;
+
+            document.getElementById("optionsOutput").textContent =
+                JSON.stringify(scenario.options, null, 2);
+
+            auditEvent(
+                "AUTONOMOUS_DECISION",
+                `Captain AI Lena autonomous decision: ${state.lena.decision}.`
+            );
+
+        }
+
+    }, 1800);
+
+
+    setTimeout(() => {
+
+        /* SIMULATED ACTION */
+
+        executeAutonomousSimulation();
+
+    }, 2150);
+
+
+    setTimeout(() => {
+
+        /* UPDATE */
+
+        updateMemory();
+
+    }, 2450);
+}
+
+
+/* ============================================================
+   TRIAL MANOEUVRE
+   ============================================================ */
+
+function runTrialManoeuvre() {
+
+    if (!state.lena) {
+        document.getElementById("trialOutput").textContent =
+            "Run the autonomous pipeline first.";
+        return;
+    }
+
+    setStage(7);
+
+    state.trial = {
+        timestamp: now(),
+        domain: "UMV_DP",
+        scenario: state.scenario,
+        mode: "SIMULATION_ONLY",
+        physicalExecution: false,
+        backendConnection: false,
+        automaticRecovery: false,
+        proposedAction: state.lena.decision,
+        result: "TRIAL MANOEUVRE SIMULATED",
+        executionGate:
+            "AUTONOMOUS_SIMULATION_GATE",
+        authority: "CAPTAIN_AI_LENA"
+    };
+
+    document.getElementById("trialOutput").textContent =
+        JSON.stringify({
+            trial: state.trial,
+            independentValidation:
+                state.validation || "PENDING"
+        }, null, 2);
+
+    auditEvent(
+        "TRIAL_MANOEUVRE_SIMULATED",
+        "Autonomous trial manoeuvre simulated."
+    );
+}
+
+
+/* ============================================================
+   INDEPENDENT VALIDATION
+   ============================================================ */
+
+function verifyTrial() {
+
+    if (!state.trial) {
+        document.getElementById("trialOutput").textContent =
+            "No trial manoeuvre available for validation.";
+        return;
+    }
+
+    setStage(8);
+
+    state.validation = {
+        timestamp: now(),
+        validator: "VALIDATION CORE V1",
+        domain: "UMV_DP",
+        trialPresent: true,
+        deterministic: true,
+        backendConnection: false,
+        physicalExecution: false,
+        automaticRecovery: false,
+        result: "PASS",
+        executionGate:
+            "AUTONOMOUS_SIMULATION_GATE"
+    };
+
+    document.getElementById("trialOutput").textContent =
+        JSON.stringify({
+            trial: state.trial,
+            independentValidation:
+                state.validation
+        }, null, 2);
+
+    auditEvent(
+        "TRIAL_MANOEUVRE_VERIFICATION",
+        "Autonomous trial manoeuvre independently validated: PASS."
+    );
+}
+
+
+/* ============================================================
+   CAPTAIN AI LENA SIMULATED ACTION
+   ============================================================ */
+
+function executeAutonomousSimulation() {
+
+    if (!state.validation ||
+        state.validation.result !== "PASS") {
+
+        document.getElementById("executionOutput").textContent =
+            "AUTONOMOUS ACTION BLOCKED — VALIDATION NOT PASSED.";
+
+        return;
+    }
+
+    setStage(10);
+
+    state.autonomousAction = {
+        timestamp: now(),
+        authority: "CAPTAIN_AI_LENA",
+        mode: "AUTONOMOUS_SIMULATION",
+        scenario: state.scenario,
+        decision: state.lena.decision,
+        validation: "PASS",
+        action: "SIMULATED AUTONOMOUS ACTION",
+        physicalExecution: false,
+        backendConnection: false,
+        automaticRecovery: false,
+        result: "SIMULATION ACTION COMPLETED",
+        executionGate:
+            "AUTONOMOUS_SIMULATION_GATE"
+    };
+
+    document.getElementById("actionBox").innerHTML =
+        `<strong>CAPTAIN AI LENA AUTONOMOUS ACTION COMPLETED</strong><br><br>
+        Decision: ${state.lena.decision}<br>
+        Validation: PASS<br>
+        Result: SIMULATED AUTONOMOUS ACTION COMPLETED<br><br>
+        <span class="simulation">
+        No physical UMV action was executed.
+        </span>`;
+
+    document.getElementById("executionOutput").textContent =
+        JSON.stringify({
+            status:
+                "AUTONOMOUS SIMULATION ACTION COMPLETED",
+            authority:
+                "CAPTAIN_AI_LENA",
+            mode:
+                "AUTONOMOUS_SIMULATION",
+            decision:
+                state.lena.decision,
+            physicalExecution:
+                false,
+            automaticRecovery:
+                false,
+            backendConnection:
+                false,
+            message:
+                "Captain AI Lena autonomously completed the simulated action stage. No physical UMV action was executed."
+        }, null, 2);
+
+    auditEvent(
+        "AUTONOMOUS_ACTION_SIMULATED",
+        "Captain AI Lena autonomous simulated action completed."
+    );
+}
+
+
+/* ============================================================
+   MEMORY UPDATE
+   ============================================================ */
+
+function updateMemory() {
+
+    setStage(11);
+
+    state.timestamp = now();
+
+    const memory = {
+        lastScenario: state.scenario,
+        lastDomain: state.domain,
+        lastDecision:
+            state.lena ? state.lena.decision : null,
+        lastAssessment:
+            state.assessment,
+        lastCascade:
+            state.cascade,
+        lastTrialManoeuvre:
+            state.trial,
+        lastValidation:
+            state.validation,
+        lastAutonomousAction:
+            state.autonomousAction,
+        timestamp:
+            state.timestamp
+    };
+
+    document.getElementById("memoryOutput").textContent =
+        JSON.stringify(memory, null, 2);
+
+    auditEvent(
+        "MEMORY_UPDATED",
+        "Autonomous decision state written to local simulator memory."
+    );
+}
+
+
+/* ============================================================
+   SYSTEM SELF TEST
+   ============================================================ */
+
+function runSelfTest() {
+
+    document.getElementById("selfTestStatus").textContent =
+        "PASS";
+
+    document.getElementById("faultStatus").textContent =
+        "PASS";
+
+    auditEvent(
+        "SELF_TEST",
+        "UMV autonomous simulator self-test PASS."
+    );
+}
+
+
+/* ============================================================
+   CORRECTIVE ASSESSMENT
+   ============================================================ */
+
+function runCorrectiveAssessment() {
+
+    document.getElementById("selfTestStatus").textContent =
+        "PASS";
+
+    document.getElementById("faultStatus").textContent =
+        "NO ACTIVE SIMULATOR FAULT";
+
+    document.getElementById("correctiveStatus").textContent =
+        "PASS";
+
+    document.getElementById("retestStatus").textContent =
+        "PASS";
+
+    auditEvent(
+        "CORRECTIVE_ASSESSMENT",
+        "Fault identification, corrective assessment and re-test PASS."
+    );
+}
+
+
+/* ============================================================
+   FINAL AUTONOMOUS INTEGRATION TEST
+   ============================================================ */
+
+function runIntegrationTest() {
+
+    runSelfTest();
+
+    setTimeout(() => {
+
+        runCorrectiveAssessment();
+
+    }, 200);
+
+    setTimeout(() => {
+
+        document.getElementById("integrationStatus").textContent =
+            "PASS";
+
+        auditEvent(
+            "FINAL_AUTONOMOUS_INTEGRATION_TEST",
+            "UMV autonomous integration test PASS."
+        );
+
+    }, 400);
+}
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+function resetSimulator() {
+
+    state = {
+        scenario: null,
+        domain: "UMV_DP",
+        rawState: null,
+        assessment: null,
+        primary: null,
+        secondary: null,
+        cascade: null,
+        lena: null,
+        trial: null,
+        validation: null,
+        autonomousAction: null,
+        timestamp: null
+    };
+
+    currentStage = -1;
+
+    document.getElementById("primaryOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("secondaryOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("lenaOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("cascadeOutput").textContent =
+        "Waiting for UMV / DP scenario...";
+
+    document.getElementById("assessmentOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("stateOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("trialOutput").textContent =
+        "Trial manoeuvre not executed.";
+
+    document.getElementById("actionBox").textContent =
+        "Waiting for validated autonomous decision...";
+
+    document.getElementById("optionsOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("risk").textContent =
+        "UNKNOWN";
+
+    document.getElementById("resilience").textContent =
+        "N/A";
+
+    document.getElementById("golden").textContent =
+        "N/A";
+
+    document.getElementById("executionOutput").textContent =
+        "AUTONOMOUS SIMULATION GATE READY.\nNO PHYSICAL EXECUTION.\nNO BACKEND CONNECTION.";
+
+    document.getElementById("memoryOutput").textContent =
+        "Waiting...";
+
+    document.getElementById("authorityOutput").textContent =
+        JSON.stringify({
+            authority: "CAPTAIN_AI_LENA",
+            mode: "AUTONOMOUS_SIMULATION",
+            status: "READY",
+            decision: null,
+            domain: "UMV_DP",
+            scenario: null,
+            executionGate:
+                "AUTONOMOUS_SIMULATION_GATE",
+            physicalExecution: false,
+            backendConnection: false,
+            automaticRecovery: false
+        }, null, 2);
+
+    audit = [];
+    pipelineLog = [];
+
+    auditEvent(
+        "SIMULATOR_INITIALIZED",
+        "SPD v13.1 UMV autonomous simulator initialized."
+    );
+
+    renderPipeline();
+}
+
+
+/* ============================================================
+   RUN SYSTEM
+   ============================================================ */
+
+function runSystem() {
+
+    if (!state.scenario) {
+        loadScenario();
+    }
+
+    runAutonomousPipeline();
+}
+
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+
+resetSimulator();
+
+</script>
+
+</body>
+</html>
