@@ -2244,6 +2244,193 @@ document.getElementById(
 
 </script>
 
+/* =========================================================
+   DP RESILIENCE SCENARIO CONTROL
+========================================================= */
+
+function getDPScenario() {
+
+  const element =
+    document.getElementById("dpScenario");
+
+  if (!element) {
+    return null;
+  }
+
+  return element.value;
+
+}
+
+
+/* =========================================================
+   LOAD DP SCENARIO
+========================================================= */
+
+window.loadDPScenario =
+function () {
+
+  const scenario =
+    getDPScenario();
+
+  if (!scenario) {
+
+    document.getElementById(
+      "dpScenarioOutput"
+    ).innerText =
+      "DP SCENARIO CONTROL NOT FOUND";
+
+    return;
+
+  }
+
+  document.getElementById(
+    "dpScenarioOutput"
+  ).innerText =
+    JSON.stringify(
+      {
+        domain: "DP",
+        scenario,
+        status: "SCENARIO_LOADED",
+        executionAuthority: "HUMAN_OPERATOR",
+        humanAuthorizationRequired: true,
+        autonomousExecution: false
+      },
+      null,
+      2
+    );
+
+};
+
+
+/* =========================================================
+   RUN DP PIPELINE
+========================================================= */
+
+window.runDPPipeline =
+function () {
+
+  try {
+
+    const scenario =
+      getDPScenario();
+
+    if (!scenario) {
+
+      document.getElementById(
+        "dpScenarioOutput"
+      ).innerText =
+        "DP SCENARIO CONTROL NOT FOUND";
+
+      return;
+
+    }
+
+
+    const state = {
+
+      domain: "DP",
+
+      event:
+        scenario,
+
+      scenario:
+        scenario,
+
+      intensity:
+        getIntensity(),
+
+      wind:
+        getNumber("dpWind"),
+
+      current:
+        getNumber("dpCurrent"),
+
+      wave:
+        getNumber("dpWave"),
+
+      tidal:
+        getNumber("dpTidal"),
+
+      time:
+        new Date().toISOString(),
+
+      executionAuthority:
+        "HUMAN_OPERATOR",
+
+      humanAuthorizationRequired:
+        true,
+
+      autonomousExecution:
+        false
+
+    };
+
+
+    const result =
+      runEngine(state);
+
+
+    renderResult(
+      state,
+      result
+    );
+
+
+    document.getElementById(
+      "dpScenarioOutput"
+    ).innerText =
+      JSON.stringify(
+        {
+          domain: "DP",
+          scenario,
+          status:
+            result.output?.status ||
+            "COMPLETE",
+          executionAuthority:
+            "HUMAN_OPERATOR",
+          executionStatus:
+            "HUMAN_AUTHORIZATION_REQUIRED",
+          physicalExecution:
+            false,
+          result
+        },
+        null,
+        2
+      );
+
+  }
+
+  catch (error) {
+
+    document.getElementById(
+      "dpScenarioOutput"
+    ).innerText =
+      error.stack ||
+      error.message;
+
+  }
+
+};
+
+
+/* =========================================================
+   DP SCENARIO LISTENER
+========================================================= */
+
+const dpScenarioElement =
+  document.getElementById(
+    "dpScenario"
+  );
+
+if (dpScenarioElement) {
+
+  dpScenarioElement.addEventListener(
+    "change",
+    loadDPScenario
+  );
+
+}
+
 </body>
 
 </html>
