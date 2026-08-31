@@ -66,7 +66,7 @@ import * as INFRuleEngine
 ========================================================= */
 
 
-import * as FINRuleEngine
+ FINRuleEngine
   from "./FIN/FINRuleEngine.js";
 
 import * as BHRRuleEngine
