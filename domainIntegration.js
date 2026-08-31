@@ -62,27 +62,6 @@ import * as INFRuleEngine
 
 
 /* =========================================================
-   DOMAIN ENGINE REGISTRY
-========================================================= */
-
-
- FINRuleEngine
-  from "./FIN/FINRuleEngine.js";
-
-import * as BHRRuleEngine
-  from "./BHR/BHRRuleEngine.js";
-
-import * as DCRuleEngine
-  from "./DC/DCRuleEngine.js";
-
-import * as CYBRuleEngine
-  from "./CYB/CYBRuleEngine.js";
-
-import * as INFRuleEngine
-  from "./INF/INFRuleEngine.js";
-
-
-/* =========================================================
    DOMAIN REGISTRY
 ========================================================= */
 
@@ -143,22 +122,94 @@ const DOMAIN_REGISTRY = {
    DOMAIN ENGINE REGISTRY
 ========================================================= */
 
-const DOMAIN_ENGINES = {
+const DOMAIN_ENGINE_REGISTRY = {
 
   FIN: FINRuleEngine,
-
   BHR: BHRRuleEngine,
-
   DC: DCRuleEngine,
-
   CYB: CYBRuleEngine,
-
   INF: INFRuleEngine
 
 };
 
 
 /* =========================================================
+   DOMAIN ENGINE ACCESSOR
+========================================================= */
+
+export function getDomainEngine(domainId) {
+
+  const engine = DOMAIN_ENGINE_REGISTRY[domainId];
+
+  if (!engine) {
+    throw new Error(
+      `No active domain engine registered for domain: ${domainId}`
+    );
+  }
+
+  return engine;
+}
+
+
+/* =========================================================
+   DOMAIN REGISTRY ACCESSOR
+========================================================= */
+
+export function getDomainDefinition(domainId) {
+
+  return DOMAIN_REGISTRY[domainId] || null;
+
+}
+
+
+/* =========================================================
+   ACTIVE DOMAIN CHECK
+========================================================= */
+
+export function isDomainActive(domainId) {
+
+  const domain = DOMAIN_REGISTRY[domainId];
+
+  return Boolean(
+    domain &&
+    domain.status === "ACTIVE" &&
+    DOMAIN_ENGINE_REGISTRY[domainId]
+  );
+
+}
+
+
+/* =========================================================
+   REGISTERED ACTIVE DOMAINS
+========================================================= */
+
+export function getActiveDomains() {
+
+  return Object.keys(DOMAIN_ENGINE_REGISTRY);
+
+}
+
+ 
+  ======================================================
+   DOMAIN ENGINE REGISTRY
+========================================================= */
+
+
+ FINRuleEngine
+  from "./FIN/FINRuleEngine.js";
+
+import * as BHRRuleEngine
+  from "./BHR/BHRRuleEngine.js";
+
+import * as DCRuleEngine
+  from "./DC/DCRuleEngine.js";
+
+import * as CYBRuleEngine
+  from "./CYB/CYBRuleEngine.js";
+
+import * as INFRuleEngine
+  from "./INF/INFRuleEngine.js"
+  ====================================
    BHR SCENARIO REGISTRY
 ========================================================= */
 
