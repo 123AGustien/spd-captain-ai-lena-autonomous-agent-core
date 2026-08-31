@@ -118,22 +118,7 @@ const DOMAIN_REGISTRY = {
 };
 
 
-/* =========================================================
-   DOMAIN ENGINE REGISTRY
-========================================================= */
-
-const DOMAIN_ENGINE_REGISTRY = {
-
-  FIN: FINRuleEngine,
-  BHR: BHRRuleEngine,
-  DC: DCRuleEngine,
-  CYB: CYBRuleEngine,
-  INF: INFRuleEngine
-
-};
-
-
-/* =========================================================
+/*  =========================================================
    DOMAIN ENGINE ACCESSOR
 ========================================================= */
 
