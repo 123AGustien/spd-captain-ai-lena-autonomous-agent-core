@@ -1,3 +1,12 @@
+🛰️ Orbital Resilience Simulator
+⚓ DP Resilience Simulator
+🤖 UMV Captain AI Lena Simulator
+🔗 feature/integrated-dp-orbital-spd-v1 — preserved original integrated DP/Orbital/SPD branch
+🛠️ fix/domain-integration-validation — correction/validation branch
+⚡ Edge Optimization & Deployment Validation
+🛢️ Biodiesel Energy Resilience Module
+🧠 SPD-v13.1.0-→-Antipodean-FIN-→-client-specific-development
+⏱️ feature/SPD-v13.1-assessment-latency-catalogue
 Yes, the orchestration engine is a possible future backbone for FIN/BHR integration.
 No, we are not replacing the current SPD workflow yet.
 First we complete Orbital module validation.
